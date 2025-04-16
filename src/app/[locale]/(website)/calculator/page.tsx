@@ -1,6 +1,8 @@
 // src/app/(website)/calculator/page.tsx
 import { api, HydrateClient } from "~/trpc/server";
 import { CalculatorFlow } from "./_components/CalculatorFlow";
+// import { AquariumScene } from "./_world/AquariumScene";
+import { AquariumSceneDynamic as AquariumScene } from "./_hooks/useAquariumScene";
 
 export const dynamic = "force-dynamic";
 
@@ -9,8 +11,17 @@ export default async function CalculatorPage() {
 	const categories = await api.calculator.getCalculatorModels({ locale: "en" });
 
 	return (
-		<HydrateClient>
+		// <HydrateClient>
 			<main className="min-h-screen">
+
+				<div className="w-screen h-[60vh]">
+					<AquariumScene
+						width={120}
+						height={60}
+						depth={45}
+					/>
+				</div>
+
 				{/* Hero Section */}
 				<section className="pt-16 md:pt-24 bg-gradient-to-b from-muted/50 via-muted/30 to-transparent">
 					<div className="container px-4 max-w-7xl mx-auto text-center space-y-3">
@@ -54,6 +65,6 @@ export default async function CalculatorPage() {
 					</div>
 				</section>
 			</main>
-		</HydrateClient>
+		// </HydrateClient>
 	);
 }

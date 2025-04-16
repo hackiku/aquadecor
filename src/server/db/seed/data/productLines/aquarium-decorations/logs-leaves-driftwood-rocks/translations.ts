@@ -1,6 +1,5 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/logs-leaves-driftwood-rocks/translations.ts
 
-
 export const translations = {
 	"d-1-standing-roots": {
 		"en": {

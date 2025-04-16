@@ -45,8 +45,8 @@ export function StickyCalculator({
 									width={dimensions.width}
 									height={dimensions.height}
 									depth={dimensions.depth}
-									backgroundTexture={backgroundTexture}
-									subcategoryTexture={subcategoryTexture}
+									// backgroundTexture={backgroundTexture}
+									// subcategoryTexture={subcategoryTexture}
 								/>
 							</div>
 
