@@ -7,13 +7,10 @@ import { ZigZagSection } from "./_components/ZigzagSection";
 import { ProductGallery } from "./_components/ProductGallery";
 import { Features } from "./_components/Features";
 import { CTASection } from "./_components/CTASection";
-import { Nav } from "~/components/navigation/Nav";
-import { Footer } from "~/components/navigation/Footer";
 
 export default async function Home() {
 	return (
 		<HydrateClient>
-			<Nav />
 			<main className="min-h-screen">
 				<Hero />
 				<ZigZagSection
@@ -34,7 +31,6 @@ export default async function Home() {
 				<Features />
 				<CTASection />
 			</main>
-			<Footer />
 		</HydrateClient>
 	);
 }

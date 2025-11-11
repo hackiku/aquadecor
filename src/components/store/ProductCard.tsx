@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
 		>
 			<div className="overflow-hidden rounded-2xl border bg-card transition-all hover:shadow-lg hover:border-primary/20">
 				{/* Product Image */}
-				<div className="relative aspect-[4/3] overflow-hidden bg-muted">
+				<div className="relative aspect-4/3 overflow-hidden bg-muted">
 					<Image
 						src={product.image}
 						alt={product.name}
