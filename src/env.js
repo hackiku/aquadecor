@@ -8,7 +8,8 @@ export const env = createEnv({
 	 */
 	server: {
 		AUTH_SECRET:
-			process.env.NODE_ENV === "production"
+			// process.env.NODE_ENV === "production"
+			process.env.NODE_ENV === "development"
 				? z.string()
 				: z.string().optional(),
 		AUTH_DISCORD_ID: z.string(),
