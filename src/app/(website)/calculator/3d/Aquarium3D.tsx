@@ -81,7 +81,7 @@ export function Aquarium3D() {
 	const squareMeters = ((dimensions.width * dimensions.height) / 10000).toFixed(2);
 
 	return (
-		<div className="w-full h-[600px] rounded-xl overflow-hidden bg-gradient-to-b from-background to-accent/5 flex flex-col lg:flex-row">
+		<div className="w-full h-[600px] rounded-xl overflow-hidden bg-linear-to-b from-background to-accent/5 flex flex-col lg:flex-row">
 			{/* 3D Canvas - takes remaining space */}
 			<div className="flex-1 relative">
 				<Canvas

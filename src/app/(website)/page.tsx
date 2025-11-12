@@ -8,6 +8,7 @@ import { FeaturedCategoriesSection } from "./landing/_sections/FeaturedCategorie
 import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
 import { api, HydrateClient } from "~/trpc/server";
 import { LazyAquarium3D } from "./calculator/3d/LazyAquarium3D";
+import { Aquarium3D } from "./calculator/3d/Aquarium3D";
 
 export default async function LandingPage() {
 	return (
@@ -75,7 +76,8 @@ export default async function LandingPage() {
 				<ComparisonSection />
 
 				<section className="border border-dashed py-12">
-					<LazyAquarium3D />
+					<Aquarium3D />
+					{/* <LazyAquarium3D /> */}
 				</section>
 				{/* Featured Categories - Horizontal Scroll */}
 				{/* <FeaturedCategoriesSection /> */}

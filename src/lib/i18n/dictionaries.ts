@@ -1,226 +1,193 @@
-// src/lib/i18n/dictionaries.ts
+export type Locale = "us" | "de" | "nl"
 
 export const dictionaries = {
-	en: {
-		nav: {
-			home: "Home",
-			shop: "Shop",
-			about: "About",
-			contact: "Contact",
-		},
-		hero: {
-			tagline: "Only nature can copy us",
-			headline: "The most realistic 3D Aquarium Backgrounds & Decorations",
-			subheadline: "A simple and effective way to create a natural habitat in your fish tank.",
-			shopNow: "Shop Now",
-			orderCustom: "Order Custom",
-		},
-		products: {
-			title: "Only nature can copy us",
-			subtitle: "Handcrafted 3D backgrounds so realistic, even nature takes notes.",
-			viewAll: "View all products",
-			from: "From",
-		},
-		about: {
-			title: "20+ years of excellence in aquarium design",
-			description: "Since 2003, we've designed over 1,000 unique models and shipped 50,000+ products worldwide. Our handcrafted 3D backgrounds transform ordinary aquariums into natural masterpieces that even experts struggle to distinguish from the real thing.",
-		},
-		stats: {
-			years: "Years in business",
-			products: "Products shipped",
-			designs: "Unique designs",
-			countries: "Countries served",
-		},
-		comparison: {
-			title: "Whatever you choose, you won't regret it!",
-			standard: {
-				title: "Standard dimensions",
-				description: "Products in standard dimensions and sizes.",
-				cta: "Shop now",
-			},
-			custom: {
-				title: "Custom dimensions",
-				description: "Customize dimensions and sizes based on your needs.",
-				cta: "Order custom",
-			},
-			features: {
-				handmade: "Entirely handmade",
-				handmadeDesc: "These products are completely hand-made to bring nature into your fish tank. Only nature can copy us.",
-				easySelection: "Easy selection",
-				easySelectionDesc: "Customers can easily choose from available variations without needing customization.",
-				fastProduction: "Fast production and delivery",
-				fastProductionDesc: "Standard dimensions guarantee faster order and delivery compared to custom-sized products.",
-				limitedCustomization: "Limited customization",
-				limitedCustomizationDesc: "Customers may not find the exact size or dimensions they need among available variations.",
-				personalization: "Personalization",
-				personalizationDesc: "Customers can customize dimensions and sizes according to their specific needs and preferences.",
-				extendedTime: "Extended production time",
-				extendedTimeDesc: "Custom products may require longer lead times for production.",
-				unique: "Unique products",
-				uniqueDesc: "Custom-sized products are made to order, ensuring each product is unique and tailored to requirements.",
-			},
-		},
-		newsletter: {
-			title: "Ready to transform your aquarium?",
-			description: "Get exclusive updates, custom design previews, and special offers delivered to your inbox.",
-			placeholder: "Enter your email",
-			subscribe: "Subscribe",
-			subscribing: "Subscribing...",
-			success: "Thanks for subscribing! Check your inbox.",
-			error: "Something went wrong. Please try again.",
-			disclaimer: "Join 10,000+ aquarium enthusiasts. Unsubscribe anytime.",
-		},
-		footer: {
-			copyright: "© 2025 Aquadecor LLC. All rights reserved.",
-		},
-	},
-	de: {
-		nav: {
-			home: "Startseite",
-			shop: "Shop",
-			about: "Über uns",
-			contact: "Kontakt",
-		},
-		hero: {
-			tagline: "Nur die Natur kann uns kopieren",
-			headline: "Die realistischsten 3D-Aquarienhintergründe & Dekorationen",
-			subheadline: "Eine einfache und effektive Möglichkeit, einen natürlichen Lebensraum in Ihrem Aquarium zu schaffen.",
-			shopNow: "Jetzt einkaufen",
-			orderCustom: "Individuell bestellen",
-		},
-		products: {
-			title: "Nur die Natur kann uns kopieren",
-			subtitle: "Handgefertigte 3D-Hintergründe, so realistisch, dass sogar die Natur Notizen macht.",
-			viewAll: "Alle Produkte ansehen",
-			from: "Ab",
-		},
-		about: {
-			title: "20+ Jahre Exzellenz im Aquariendesign",
-			description: "Seit 2003 haben wir über 1.000 einzigartige Modelle entworfen und 50.000+ Produkte weltweit versandt. Unsere handgefertigten 3D-Hintergründe verwandeln gewöhnliche Aquarien in natürliche Meisterwerke, die selbst Experten kaum vom Original unterscheiden können.",
-		},
-		stats: {
-			years: "Jahre im Geschäft",
-			products: "Versendete Produkte",
-			designs: "Einzigartige Designs",
-			countries: "Belieferte Länder",
-		},
-		comparison: {
-			title: "Was auch immer Sie wählen, Sie werden es nicht bereuen!",
-			standard: {
-				title: "Standardmaße",
-				description: "Produkte in Standardmaßen und -größen.",
-				cta: "Jetzt einkaufen",
-			},
-			custom: {
-				title: "Individuelle Maße",
-				description: "Passen Sie Maße und Größen nach Ihren Bedürfnissen an.",
-				cta: "Individuell bestellen",
-			},
-			features: {
-				handmade: "Vollständig handgefertigt",
-				handmadeDesc: "Diese Produkte sind vollständig handgefertigt, um die Natur in Ihr Aquarium zu bringen. Nur die Natur kann uns kopieren.",
-				easySelection: "Einfache Auswahl",
-				easySelectionDesc: "Kunden können problemlos aus den verfügbaren Varianten wählen, ohne Anpassungen vornehmen zu müssen.",
-				fastProduction: "Schnelle Produktion und Lieferung",
-				fastProductionDesc: "Standardmaße garantieren eine schnellere Bestellung und Lieferung im Vergleich zu maßgefertigten Produkten.",
-				limitedCustomization: "Begrenzte Anpassung",
-				limitedCustomizationDesc: "Kunden finden möglicherweise nicht die genaue Größe oder Abmessungen, die sie unter den verfügbaren Varianten benötigen.",
-				personalization: "Personalisierung",
-				personalizationDesc: "Kunden können Abmessungen und Größen entsprechend ihren spezifischen Bedürfnissen und Vorlieben anpassen.",
-				extendedTime: "Verlängerte Produktionszeit",
-				extendedTimeDesc: "Maßgefertigte Produkte können längere Vorlaufzeiten für die Produktion erfordern.",
-				unique: "Einzigartige Produkte",
-				uniqueDesc: "Maßgefertigte Produkte werden auf Bestellung gefertigt, wodurch jedes Produkt einzigartig und auf die Anforderungen zugeschnitten ist.",
-			},
-		},
-		newsletter: {
-			title: "Bereit, Ihr Aquarium zu verwandeln?",
-			description: "Erhalten Sie exklusive Updates, individuelle Design-Vorschauen und Sonderangebote in Ihr Postfach.",
-			placeholder: "E-Mail eingeben",
-			subscribe: "Abonnieren",
-			subscribing: "Wird abonniert...",
-			success: "Danke fürs Abonnieren! Überprüfen Sie Ihr Postfach.",
-			error: "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
-			disclaimer: "Schließen Sie sich 10.000+ Aquarium-Enthusiasten an. Jederzeit abbestellbar.",
-		},
-		footer: {
-			copyright: "© 2025 Aquadecor LLC. Alle Rechte vorbehalten.",
-		},
-	},
-	nl: {
-		nav: {
-			home: "Home",
-			shop: "Winkel",
-			about: "Over ons",
-			contact: "Contact",
-		},
-		hero: {
-			tagline: "Alleen de natuur kan ons kopiëren",
-			headline: "De meest realistische 3D aquariumachtergronden & decoraties",
-			subheadline: "Een eenvoudige en effectieve manier om een natuurlijke habitat in uw aquarium te creëren.",
-			shopNow: "Nu winkelen",
-			orderCustom: "Op maat bestellen",
-		},
-		products: {
-			title: "Alleen de natuur kan ons kopiëren",
-			subtitle: "Handgemaakte 3D-achtergronden zo realistisch dat zelfs de natuur aantekeningen maakt.",
-			viewAll: "Bekijk alle producten",
-			from: "Vanaf",
-		},
-		about: {
-			title: "20+ jaar uitmuntendheid in aquariumdesign",
-			description: "Sinds 2003 hebben we meer dan 1.000 unieke modellen ontworpen en 50.000+ producten wereldwijd verzonden. Onze handgemaakte 3D-achtergronden transformeren gewone aquaria in natuurlijke meesterwerken die zelfs experts nauwelijks van het echte werk kunnen onderscheiden.",
-		},
-		stats: {
-			years: "Jaar in bedrijf",
-			products: "Verzonden producten",
-			designs: "Unieke ontwerpen",
-			countries: "Bediende landen",
-		},
-		comparison: {
-			title: "Wat u ook kiest, u zult er geen spijt van krijgen!",
-			standard: {
-				title: "Standaardafmetingen",
-				description: "Producten in standaardafmetingen en -maten.",
-				cta: "Nu winkelen",
-			},
-			custom: {
-				title: "Op maat gemaakte afmetingen",
-				description: "Pas afmetingen en maten aan op basis van uw behoeften.",
-				cta: "Op maat bestellen",
-			},
-			features: {
-				handmade: "Volledig handgemaakt",
-				handmadeDesc: "Deze producten zijn volledig handgemaakt om de natuur in uw aquarium te brengen. Alleen de natuur kan ons kopiëren.",
-				easySelection: "Gemakkelijke selectie",
-				easySelectionDesc: "Klanten kunnen gemakkelijk kiezen uit de beschikbare variaties zonder aanpassing nodig te hebben.",
-				fastProduction: "Snelle productie en levering",
-				fastProductionDesc: "Standaardafmetingen garanderen snellere bestelling en levering in vergelijking met op maat gemaakte producten.",
-				limitedCustomization: "Beperkte aanpassing",
-				limitedCustomizationDesc: "Klanten vinden mogelijk niet de exacte maat of afmetingen die ze nodig hebben onder de beschikbare variaties.",
-				personalization: "Personalisatie",
-				personalizationDesc: "Klanten kunnen afmetingen en maten aanpassen volgens hun specifieke behoeften en voorkeuren.",
-				extendedTime: "Verlengde productietijd",
-				extendedTimeDesc: "Op maat gemaakte producten kunnen langere doorlooptijden voor productie vereisen.",
-				unique: "Unieke producten",
-				uniqueDesc: "Op maat gemaakte producten worden op bestelling gemaakt, zodat elk product uniek is en op maat gemaakt voor de vereisten.",
-			},
-		},
-		newsletter: {
-			title: "Klaar om uw aquarium te transformeren?",
-			description: "Ontvang exclusieve updates, aangepaste ontwerpvoorbeelden en speciale aanbiedingen in uw inbox.",
-			placeholder: "Voer uw e-mail in",
-			subscribe: "Abonneren",
-			subscribing: "Bezig met abonneren...",
-			success: "Bedankt voor het abonneren! Controleer uw inbox.",
-			error: "Er is iets misgegaan. Probeer het opnieuw.",
-			disclaimer: "Sluit u aan bij 10.000+ aquarium-enthousiastelingen. U kunt zich op elk moment afmelden.",
-		},
-		footer: {
-			copyright: "© 2025 Aquadecor LLC. Alle rechten voorbehouden.",
-		},
-	},
-} as const;
-
-export type Locale = keyof typeof dictionaries;
-export type Dictionary = typeof dictionaries.en;
+  us: {
+    meta: {
+      title: "Handcrafted 3D Aquarium Backgrounds | AquaDecor",
+      description:
+        "Transform your aquarium with hand-crafted, realistic 3D backgrounds. Shop standard collections or create custom designs tailored to your tank.",
+      keywords: "3D aquarium backgrounds, decorations, custom aquarium, handmade backgrounds",
+    },
+    hero: {
+      tagline: "Premium 3D Aquarium Backgrounds",
+      headline: "Transform Your Aquarium",
+      subheadline: "Hand-crafted, professionally designed 3D backgrounds for the ultimate aquarium experience",
+      shopNow: "Shop Now",
+      orderCustom: "Order Custom",
+    },
+    products: {
+      title: "Our Collections",
+      subtitle: "Explore our curated selection of aquarium backgrounds",
+      from: "From",
+      viewAll: "View All Products",
+    },
+    about: {
+      title: "About Our Backgrounds",
+      description:
+        "We create premium 3D aquarium backgrounds with exceptional detail and durability. Each piece is carefully crafted to enhance your aquatic environment while providing a natural habitat for your fish.",
+    },
+    stats: {
+      years: "Years of Experience",
+      products: "Products Sold",
+      designs: "Unique Designs",
+      countries: "Countries Worldwide",
+    },
+    comparison: {
+      title: "Standard vs Custom",
+      standard: {
+        title: "Standard Collections",
+        description: "Choose from our popular pre-designed backgrounds",
+        cta: "Browse Standard",
+      },
+      custom: {
+        title: "Custom Designs",
+        description: "Create your perfect aquarium with a custom background",
+        cta: "Start Custom Design",
+      },
+      features: {
+        handmade: "Hand-crafted Quality",
+        handmadeDesc: "Each background is carefully made to ensure quality",
+        easySelection: "Easy Selection",
+        easySelectionDesc: "Simple, intuitive browsing and purchasing",
+        personalization: "Full Personalization",
+        personalizationDesc: "Customize colors, sizes, and designs to your preference",
+      },
+    },
+    newsletter: {
+      title: "Stay Updated",
+      description: "Get exclusive offers and new design announcements",
+      placeholder: "Enter your email",
+      subscribe: "Subscribe",
+      disclaimer: "We respect your privacy. Unsubscribe at any time.",
+    },
+    footer: {
+      copyright: "© 2025 AquaDecor Backgrounds. All rights reserved.",
+    },
+  },
+  de: {
+    meta: {
+			title: "Handgefertigte 3D Aquariumhintergründe | AquaDecor",
+      description:
+        "Transformieren Sie Ihr Aquarium mit handgefertigten, realistischen 3D-Hintergründen. Kaufen Sie Standard-Kollektionen oder erstellen Sie benutzerdefinierte Designs.",
+      keywords: "3D Aquariumhintergründe, Dekoration, individuelles Aquarium, handgefertigte Hintergründe",
+    },
+    hero: {
+      tagline: "Premium 3D Aquarium-Hintergründe",
+      headline: "Transformieren Sie Ihr Aquarium",
+      subheadline: "Handgefertigte, professionell gestaltete 3D-Hintergründe für das ultimative Aquarium-Erlebnis",
+      shopNow: "Jetzt Kaufen",
+      orderCustom: "Benutzerdefiniert Bestellen",
+    },
+    products: {
+      title: "Unsere Kollektionen",
+      subtitle: "Entdecken Sie unsere kuratierte Auswahl an Aquarium-Hintergründen",
+      from: "Ab",
+      viewAll: "Alle Produkte Anzeigen",
+    },
+    about: {
+      title: "Über Unsere Hintergründe",
+      description:
+        "Wir erstellen hochwertige 3D-Aquarium-Hintergründe mit außergewöhnlichen Details und Langlebigkeit. Jedes Stück wird sorgfältig gestaltet, um Ihre aquatische Umgebung zu verbessern.",
+    },
+    stats: {
+      years: "Jahre Erfahrung",
+      products: "Verkaufte Produkte",
+      designs: "Einzigartige Designs",
+      countries: "Länder Weltweit",
+    },
+    comparison: {
+      title: "Standard vs. Benutzerdefiniert",
+      standard: {
+        title: "Standard-Kollektionen",
+        description: "Wählen Sie aus unseren beliebten vorgestalteten Hintergründen",
+        cta: "Standard Durchsuchen",
+      },
+      custom: {
+        title: "Benutzerdefinierte Designs",
+        description: "Erstellen Sie Ihren perfekten Aquarium-Hintergrund",
+        cta: "Benutzerdefinierten Design Starten",
+      },
+      features: {
+        handmade: "Handwerkliche Qualität",
+        handmadeDesc: "Jeder Hintergrund wird sorgfältig hergestellt",
+        easySelection: "Einfache Auswahl",
+        easySelectionDesc: "Einfaches, intuitives Durchsuchen und Kaufen",
+        personalization: "Vollständige Personalisierung",
+        personalizationDesc: "Passen Sie Farben, Größen und Designs nach Ihren Wünschen an",
+      },
+    },
+    newsletter: {
+      title: "Bleiben Sie Auf Dem Laufenden",
+      description: "Erhalten Sie exklusive Angebote und Ankündigungen neuer Designs",
+      placeholder: "Geben Sie Ihre E-Mail ein",
+      subscribe: "Abonnieren",
+      disclaimer: "Wir respektieren Ihre Privatsphäre. Sie können sich jederzeit abmelden.",
+    },
+    footer: {
+      copyright: "© 2025 AquaDecor Backgrounds. Alle Rechte vorbehalten.",
+    },
+  },
+  nl: {
+    meta: {
+			title: "Ambachtelijke 3D Aquariumachtergronden | AquaDecor",
+      description:
+        "Transformeer uw aquarium met handgemaakte, realistische 3D-achtergronden. Koop standaardcollecties of maak aangepaste ontwerpen voor uw tank.",
+      keywords: "3D aquariumachtergronden, decoraties, aangepast aquarium, handgemaakte achtergronden",
+    },
+    hero: {
+      tagline: "Premium 3D Aquarium Achtergronden",
+      headline: "Transformeer Uw Aquarium",
+      subheadline: "Handgemaakte, professioneel ontworpen 3D-achtergronden voor de ultieme aquariumervaring",
+      shopNow: "Nu Kopen",
+      orderCustom: "Aangepast Bestellen",
+    },
+    products: {
+      title: "Onze Collecties",
+      subtitle: "Verken onze gecureerde selectie van aquariumachtergronden",
+      from: "Vanaf",
+      viewAll: "Alle Producten Weergeven",
+    },
+    about: {
+      title: "Over Onze Achtergronden",
+      description:
+        "Wij creëren premium 3D aquariumachtergronden met uitzonderlijke details en duurzaamheid. Elk stuk wordt zorgvuldig ontworpen om uw aquatische omgeving te verbeteren.",
+    },
+    stats: {
+      years: "Jaar Ervaring",
+      products: "Verkochte Producten",
+      designs: "Unieke Ontwerpen",
+      countries: "Landen Wereldwijd",
+    },
+    comparison: {
+      title: "Standaard vs. Aangepast",
+      standard: {
+        title: "Standaard Collecties",
+        description: "Kies uit onze populaire voorontworpen achtergronden",
+        cta: "Standaard Bladeren",
+      },
+      custom: {
+        title: "Aangepaste Ontwerpen",
+        description: "Maak uw perfecte aquariumachtergrond",
+        cta: "Aangepast Ontwerp Starten",
+      },
+      features: {
+        handmade: "Handgemaakte Kwaliteit",
+        handmadeDesc: "Elke achtergrond wordt voorzichtig gemaakt",
+        easySelection: "Eenvoudige Selectie",
+        easySelectionDesc: "Eenvoudig, intuïtief bladeren en kopen",
+        personalization: "Volledige Personalisatie",
+        personalizationDesc: "Pas kleuren, formaten en ontwerpen naar uw voorkeur aan",
+      },
+    },
+    newsletter: {
+      title: "Blijf Op De Hoogte",
+      description: "Ontvang exclusieve aanbiedingen en aankondigingen van nieuwe ontwerpen",
+      placeholder: "Voer uw e-mailadres in",
+      subscribe: "Abonneren",
+      disclaimer: "Wij respecteren uw privacy. U kunt zich op elk moment afmelden.",
+    },
+    footer: {
+      copyright: "© 2025 AquaDecor Backgrounds. Alle rechten voorbehouden.",
+    },
+  },
+} as const

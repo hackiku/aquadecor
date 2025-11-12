@@ -26,7 +26,7 @@ export function Nav() {
 						>
 							Shop
 						</Link>
-						<Link
+						{/* <Link
 							href="/about"
 							className="text-sm font-medium transition-colors hover:text-primary"
 						>
@@ -37,12 +37,24 @@ export function Nav() {
 							className="text-sm font-medium transition-colors hover:text-primary"
 						>
 							Blog
+						</Link> */}
+						<Link
+							href="/en/lang"
+							className="text-sm font-medium transition-colors hover:text-primary"
+						>
+							Lang
 						</Link>
 						<Link
 							href="/admin"
 							className="text-sm font-medium transition-colors hover:text-primary"
 						>
 							Admin
+						</Link>
+						<Link
+							href="/sanctions"
+							className="text-sm font-medium transition-colors hover:text-primary"
+						>
+							Sanctions
 						</Link>
 					</nav>
 
