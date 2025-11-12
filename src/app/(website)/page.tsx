@@ -1,4 +1,4 @@
-// src/app/(website)/landing/page.tsx
+// src/app/(website)/page.tsx
 
 import { ProductSlider } from "~/components/store/ProductSlider";
 // sections
@@ -7,6 +7,7 @@ import { ComparisonSection } from "./landing/_sections/ComparisonSection";
 import { FeaturedCategoriesSection } from "./landing/_sections/FeaturedCategoriesSection";
 import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
 import { api, HydrateClient } from "~/trpc/server";
+import { LazyAquarium3D } from "./calculator/3d/LazyAquarium3D";
 
 export default async function LandingPage() {
 	return (
@@ -73,8 +74,11 @@ export default async function LandingPage() {
 				{/* Comparison - Standard vs Custom */}
 				<ComparisonSection />
 
+				<section className="border border-dashed py-12">
+					<LazyAquarium3D />
+				</section>
 				{/* Featured Categories - Horizontal Scroll */}
-				<FeaturedCategoriesSection />
+				{/* <FeaturedCategoriesSection /> */}
 
 				{/* Newsletter CTA */}
 				<NewsletterSection />
