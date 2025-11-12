@@ -6,7 +6,7 @@ import { HeroSection } from "./landing/_sections/HeroSection";
 import { ComparisonSection } from "./landing/_sections/ComparisonSection";
 import { FeaturedCategoriesSection } from "./landing/_sections/FeaturedCategoriesSection";
 import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 export default async function LandingPage() {
 	return (
