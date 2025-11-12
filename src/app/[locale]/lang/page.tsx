@@ -48,7 +48,7 @@ export default async function LocaleLandingPage({
 					<div className="mx-auto max-w-4xl text-center space-y-8">
 						<div className="space-y-4">
 							<p className="text-sm font-medium text-primary tracking-wider uppercase font-display">{t.hero.tagline}</p>
-							<h1 className="text-4xl font-bold font-display font-extralight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+							<h1 className="text-4xl __font-bold font-display font-extralight tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
 								{t.hero.headline}
 							</h1>
 							<p className="mx-auto max-w-2xl text-lg text-muted-foreground font-display font-light md:text-xl">
