@@ -16,7 +16,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
-interface Column<T = any> {
+export interface Column<T = any> {
 	header: string;
 	accessorKey: keyof T;
 	cell?: (row: T) => React.ReactNode;

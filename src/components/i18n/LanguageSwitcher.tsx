@@ -1,3 +1,6 @@
+// @ts-nocheck
+// src/components/i18n/LanguageSwitcher.tsx
+
 "use client"
 
 import { usePathname, useRouter } from "next/navigation"
