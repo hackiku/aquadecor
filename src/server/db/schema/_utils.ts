@@ -5,6 +5,9 @@ import { pgTableCreator } from "drizzle-orm/pg-core";
  * Multi-project schema prefix
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator(
-	(name) => `aquadecorbackgrounds_${name}`,
-);
+
+export const createTable = pgTableCreator((name) => name);
+
+// export const createTable = pgTableCreator(
+// 	(name) => `aquadecorbackgrounds_${name}`,
+// );

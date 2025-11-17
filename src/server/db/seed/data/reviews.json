@@ -1,0 +1,30 @@
+[
+	{
+		"id": "review-kevin-fishbubbles",
+		"productId": null,
+		"authorName": "Kevin 'fishbubbles'",
+		"authorLocation": "Florida",
+		"rating": 5,
+		"title": "Completely worth it",
+		"content": "I looked at every website known to mankind and I finally settled on a custom 3D background from Aquadecor. Completely worth it. Every single person that has seen it has thought that it was real wood and rocks that I cut and assembled together.",
+		"source": "forum",
+		"sourceUrl": "https://forum.simplydiscus.com/forum/main-discus-topics/hardware-technical-and-do-it-yourself/tanks-and-equipment/101677-the-costs-of-setting-up-and-maintaining-a-265-gallon-discus-tank",
+		"isFeatured": true,
+		"isApproved": true,
+		"verifiedPurchase": false
+	},
+	{
+		"id": "review-joey-mullen",
+		"productId": null,
+		"authorName": "Joey Mullen (King of DIY)",
+		"authorLocation": "YouTube",
+		"rating": 5,
+		"title": "Most realistic aquarium backgrounds ever!",
+		"content": "The hand-painted details really stand out and make this background a work of art. It has a Styrofoam core, but on the surface it feels just like a rock. Every classic rock aquarium background is entirely customized to the build of your fish tank and matches perfectly the exact dimensions.",
+		"source": "youtube",
+		"sourceUrl": "https://youtube.com/@KingOfDIY",
+		"isFeatured": true,
+		"isApproved": true,
+		"verifiedPurchase": false
+	}
+]
