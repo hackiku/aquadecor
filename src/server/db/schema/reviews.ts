@@ -1,4 +1,4 @@
-// Add to shop.ts or create reviews.ts
+// src/server/db/schema/reviews.ts
 import { relations } from "drizzle-orm";
 import { createTable } from "./_utils";
 import { products } from "./shop";
@@ -9,7 +9,7 @@ export const reviews = createTable(
 	"review",
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-		productId: d.text().notNull().references(() => products.id),
+		productId: d.text().references(() => products.id), // NULLABLE for general reviews
 		userId: d.text(), // Nullable for imported reviews
 
 		// Content
