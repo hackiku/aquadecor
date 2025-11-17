@@ -12,7 +12,7 @@ export default async function ReviewsPage() {
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Header */}
-				<section className="border-b bg-gradient-to-b from-background to-muted/30">
+				<section className="border-b bg-linear-to-b from-background to-muted/30">
 					<div className="container px-4 py-12 md:py-16">
 						<div className="max-w-3xl">
 							<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-tight">
