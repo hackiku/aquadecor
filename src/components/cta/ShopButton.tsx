@@ -11,7 +11,7 @@ interface ShopButtonProps {
 }
 
 export function ShopButton({
-	href = "/store",
+	href = "/shop",
 	children = "Shop Now",
 	className = ""
 }: ShopButtonProps) {
