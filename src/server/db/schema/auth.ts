@@ -28,9 +28,7 @@ export const users = createTable("user", (d) => ({
 export const usersRelations = relations(users, ({ many }) => ({
 	accounts: many(accounts),
 	sessions: many(sessions),
-	posts: many(posts), // ← ADD THIS LINE
 }));
-
 
 export const accounts = createTable(
 	"account",
@@ -88,26 +86,7 @@ export const verificationTokens = createTable(
 );
 
 // ============================================================================
-// LEGACY T3 EXAMPLE TABLE - Keep for reference or delete later
+// LEGACY T3 EXAMPLE TABLE - REMOVED
+// The posts table and its relation to users has been removed.
+// If you need a blog/posts feature, recreate it properly in a separate schema file.
 // ============================================================================
-
-export const posts = createTable(
-	"post",
-	(d) => ({
-		id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-		name: d.varchar({ length: 256 }),
-		createdById: d
-			.varchar({ length: 255 })
-			.notNull()
-			.references(() => users.id),
-		createdAt: d
-			.timestamp({ withTimezone: true })
-			.$defaultFn(() => new Date())
-			.notNull(),
-		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-	}),
-	(t) => [
-		index("post_created_by_idx").on(t.createdById),
-		index("post_name_idx").on(t.name),
-	],
-);

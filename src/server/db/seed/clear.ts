@@ -1,4 +1,4 @@
-#!/usr/bin / env bun
+#!/usr/bin/env bun
 // src/server/db/seed/clear.ts
 
 import { drizzle } from "drizzle-orm/postgres-js";
@@ -15,18 +15,25 @@ async function clear() {
 	console.log("🗑️  Clearing tables...");
 
 	try {
-		// Use CASCADE and IF EXISTS to avoid errors
+		// Clear all shop tables - CASCADE will handle foreign key constraints
+		// Note: PostgreSQL TRUNCATE doesn't support IF EXISTS, so we catch errors instead
 		await db.execute(sql`
-			TRUNCATE TABLE IF EXISTS aquadecorbackgrounds_product_image CASCADE;
-			TRUNCATE TABLE IF EXISTS aquadecorbackgrounds_product_translation CASCADE;
-			TRUNCATE TABLE IF EXISTS aquadecorbackgrounds_product CASCADE;
-			TRUNCATE TABLE IF EXISTS aquadecorbackgrounds_category_translation CASCADE;
-			TRUNCATE TABLE IF EXISTS aquadecorbackgrounds_category CASCADE;
+			TRUNCATE TABLE 
+				product_image,
+				product_translation,
+				product,
+				category_translation,
+				category,
+				review_media,
+				review,
+				social_proof_source
+			CASCADE;
 		`);
 
-		console.log("✅ Cleared!");
+		console.log("✅ Cleared all shop tables!");
 	} catch (error) {
 		console.error("❌ Clear failed:", error);
+		console.log("\n💡 Tip: If tables don't exist yet, run 'bun db:push' first to create them.");
 		process.exit(1);
 	} finally {
 		await client.end();
