@@ -1,4 +1,4 @@
-// src/components/store/ProductCard.tsx
+// src/components/shop/ProductCard.tsx
 
 import Image from "next/image";
 import Link from "next/link";

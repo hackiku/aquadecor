@@ -1,6 +1,7 @@
 // src/components/navigation/Nav.tsx
 
 import Link from "next/link";
+import Image from "next/image";
 import { ModeToggle } from "../ui/mode-toggle";
 import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
 import { ShoppingCart, Search, User } from "lucide-react";
@@ -12,16 +13,18 @@ export function Nav() {
 				<div className="flex h-16 items-center justify-between">
 					{/* Logo */}
 					<Link href="/" className="flex items-center space-x-2">
-						<div className="text-2xl font-bold">
-							<span className="text-primary">AQUA</span>
-							<span className="text-foreground">DECOR</span>
-						</div>
+						<Image 
+							src="logos/logo.svg"
+							width={200}
+							height={20}
+							alt="Aquadecor Logo"
+						/>
 					</Link>
 
 					{/* Desktop Navigation */}
 					<nav className="hidden md:flex items-center space-x-6">
 						<Link
-							href="/store"
+							href="/shop"
 							className="text-sm font-medium transition-colors hover:text-primary"
 						>
 							Shop

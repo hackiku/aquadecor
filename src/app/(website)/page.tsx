@@ -1,6 +1,6 @@
 // src/app/(website)/page.tsx
 
-import { ProductSlider } from "~/components/store/ProductSlider";
+import { ProductSlider } from "~/components/shop/ProductSlider";
 // sections
 import { HeroSection } from "./landing/_sections/HeroSection";
 import { ComparisonSection } from "./landing/_sections/ComparisonSection";

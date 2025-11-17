@@ -1,4 +1,4 @@
-// src/components/store/ProductSlider.tsx
+// src/components/shop/ProductSlider.tsx
 
 "use client";
 

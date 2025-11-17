@@ -1,71 +1,84 @@
-// src/app/store/page.tsx
+// src/app/shop/page.tsx
 
 import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { api } from "~/trpc/server";
 
-// import { LatestPost } from "~/app/_components/post";
-import { auth } from "~/server/auth";
-import { api, HydrateClient } from "~/trpc/server";
-
-export default async function Home() {
-	// const hello = await api.post.hello({ text: "from tRPC" });
-	const session = await auth();
-
-	// if (session?.user) {
-	// 	void api.post.getLatest.prefetch();
-	// }
+export default async function ShopPage() {
+	// TODO: Replace with actual tRPC query once router is set up
+	const categories = [
+		{
+			id: "3d-backgrounds",
+			slug: "3d-backgrounds",
+			name: "3D Backgrounds",
+			description: "Natural look with our 3D aquarium backgrounds",
+			productCount: 42,
+		},
+		{
+			id: "3d-backgrounds-a-models",
+			slug: "a-models",
+			name: "A Models - Classic Rocky",
+			description: "Realistic 3D aquarium stone decor",
+			productCount: 24,
+		},
+		{
+			id: "3d-backgrounds-slim",
+			slug: "slim-models",
+			name: "A Slim Models - Thin Rocky",
+			description: "Space-saving thin design",
+			productCount: 11,
+		},
+		{
+			id: "aquarium-decorations",
+			slug: "aquarium-decorations",
+			name: "Aquarium Decorations",
+			description: "Natural effect with aquarium decorations",
+			productCount: 76,
+		},
+	];
 
 	return (
-		<HydrateClient>
-			<main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-				<div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-					<h1 className="font-extrabold text-5xl tracking-tight sm:text-[5rem]">
-						Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-					</h1>
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/usage/first-steps"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">First Steps →</h3>
-							<div className="text-lg">
-								Just the basics - Everything you need to know to set up your
-								database and authentication.
-							</div>
-						</Link>
-						<Link
-							className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-							href="https://create.t3.gg/en/introduction"
-							target="_blank"
-						>
-							<h3 className="font-bold text-2xl">Documentation →</h3>
-							<div className="text-lg">
-								Learn more about Create T3 App, the libraries it uses, and how
-								to deploy it.
-							</div>
-						</Link>
+		<main className="min-h-screen">
+			{/* Header */}
+			<section className="border-b bg-muted/30">
+				<div className="container px-4 py-16 md:py-24">
+					<div className="max-w-3xl">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-light tracking-tight">
+							Aquadecor shop
+						</h1>
+						<p className="mt-4 text-lg md:text-xl text-muted-foreground font-display font-light">
+							Choose one of the categories...
+						</p>
 					</div>
-					<div className="flex flex-col items-center gap-2">
-						{/* <p className="text-2xl text-white">
-							{hello ? hello.greeting : "Loading tRPC query..."}
-						</p> */}
-
-						<div className="flex flex-col items-center justify-center gap-4">
-							<p className="text-center text-2xl text-white">
-								{session && <span>Logged in as {session.user?.name}</span>}
-							</p>
-							<Link
-								className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-								href={session ? "/api/auth/signout" : "/api/auth/signin"}
-							>
-								{session ? "Sign out" : "Sign in"}
-							</Link>
-						</div>
-					</div>
-
-					{/* {session?.user && <LatestPost />} */}
 				</div>
-			</main>
-		</HydrateClient>
+			</section>
+
+			{/* Category Grid */}
+			<section className="py-12 md:py-16">
+				<div className="container px-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
+						{categories.map((category) => (
+							<Link key={category.id} href={`/shop/${category.slug}`}>
+								<Card className="h-full transition-all hover:shadow-lg hover:border-primary/50 cursor-pointer group">
+									<CardHeader>
+										<CardTitle className="text-2xl font-display font-normal group-hover:text-primary transition-colors">
+											{category.name}
+										</CardTitle>
+										<CardDescription className="text-base font-display font-light">
+											{category.description}
+										</CardDescription>
+									</CardHeader>
+									<CardContent>
+										<p className="text-sm text-muted-foreground">
+											{category.productCount} products
+										</p>
+									</CardContent>
+								</Card>
+							</Link>
+						))}
+					</div>
+				</div>
+			</section>
+		</main>
 	);
 }
