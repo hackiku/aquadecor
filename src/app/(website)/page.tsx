@@ -22,7 +22,7 @@ export default async function LandingPage() {
 					<div className="container px-4">
 						<div className="text-center mb-12 md:mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal">
-								Only nature can copy us
+								Even Nature Takes Notes
 							</h2>
 							<p className="mt-4 text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
 								Handcrafted 3D backgrounds so realistic, even nature takes notes.
