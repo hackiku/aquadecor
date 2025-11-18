@@ -17,16 +17,15 @@ export default async function ShopPage() {
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Hero Section */}
-				<section className="border-b bg-muted/30">
-					<div className="container px-4 py-16 md:py-24">
-						<div className="max-w-3xl">
-							<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-light tracking-tight">
-								Shop Aquadecor
-							</h1>
-							<p className="mt-4 text-lg md:text-xl text-muted-foreground font-display font-light">
-								Choose your product line to explore our handcrafted aquarium solutions
-							</p>
-						</div>
+				<section className="bg-linear-to-b from-muted via-muted/30 to-transparent">
+					<div className="container px-4 py-16 md:py-36 text-center">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-light tracking-tight">
+							Shop Aquadecor
+						</h1>
+						<p className="mt-4 text-lg md:text-xl text-muted-foreground font-display font-light">
+							Choose your product line to explore our handcrafted aquarium solutions
+						</p>
+
 					</div>
 				</section>
 

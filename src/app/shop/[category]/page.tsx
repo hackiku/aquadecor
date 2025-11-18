@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
-import { api } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 import { ArrowRight } from "lucide-react";
 
 interface CategoryPageProps {
@@ -36,6 +36,7 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 	const productLineName = productLineNames[params.category] || params.category;
 
 	return (
+		<HydrateClient>
 		<main className="min-h-screen">
 			{/* Breadcrumbs */}
 			<div className="border-b bg-muted/30">
@@ -97,5 +98,6 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 				</div>
 			</section>
 		</main>
+		</HydrateClient>
 	);
 }

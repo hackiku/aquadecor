@@ -2,118 +2,115 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { ShopButton } from "~/components/cta/ShopButton";
 import { Button } from "~/components/ui/button";
 
 export function HeroSection() {
-	const bubbleRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		if (!bubbleRef.current) return;
-
-		let animationFrameId: number;
-		let time = 0;
-
-		const animate = () => {
-			time += 0.001; // Speed of movement
-
-			// Lissajous curve for smooth, organic movement
-			const x = Math.sin(time * 1.2) * 8; // Horizontal movement (±8%)
-			const y = Math.cos(time * 0.8) * 5; // Vertical movement (±5%)
-			const scale = 1 + Math.sin(time * 0.5) * 0.03; // Subtle breathing (±3%)
-
-			if (bubbleRef.current) {
-				bubbleRef.current.style.transform = `translate(${x}%, ${y}%) scale(${scale})`;
-			}
-
-			animationFrameId = requestAnimationFrame(animate);
-		};
-
-		animate();
-
-		return () => {
-			if (animationFrameId) {
-				cancelAnimationFrame(animationFrameId);
-			}
-		};
-	}, []);
-
 	return (
 		<section className="relative overflow-hidden bg-zinc-950 h-dvh flex items-center justify-center">
-			{/* Animated Bubble Video Cutout */}
-			<div className="absolute inset-0 z-0">
-				{/* Gradient overlay for text readability */}
-				<div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/50 to-zinc-950/80 z-20" />
-
-				{/* Animated bubble mask container */}
+			{/* Video with Animated Blob Mask */}
+			<div className="absolute inset-0">
+				{/* Video layer */}
 				<div
-					ref={bubbleRef}
-					className="absolute inset-0 flex items-center justify-center"
+					className="absolute inset-0 opacity-30"
 					style={{
-						willChange: "transform",
-						transition: "transform 0.1s ease-out",
+						clipPath: "url(#blobMask)",
+						WebkitClipPath: "url(#blobMask)",
 					}}
 				>
-					{/* SVG mask for bubble shape */}
-					<svg
-						className="absolute inset-0 w-full h-full"
-						style={{ mixBlendMode: "normal" }}
+					<video
+						autoPlay
+						loop
+						muted
+						playsInline
+						className="w-full h-full object-cover"
 					>
-						<defs>
-							<clipPath id="bubbleClip">
-								{/* Organic bubble shape - not quite a perfect circle */}
-								<ellipse
-									cx="50%"
-									cy="50%"
-									rx="45%"
-									ry="47%"
-								/>
-							</clipPath>
-						</defs>
-					</svg>
-
-					{/* Video with bubble clip */}
-					<div
-						className="absolute inset-0 opacity-30"
-						style={{
-							clipPath: "url(#bubbleClip)",
-							WebkitClipPath: "url(#bubbleClip)",
-						}}
-					>
-						<video
-							autoPlay
-							loop
-							muted
-							playsInline
-							className="w-full h-full object-cover"
-						>
-							<source src="/media/videos/banner-video.mp4" type="video/mp4" />
-						</video>
-					</div>
+						<source src="/media/videos/banner-video.mp4" type="video/mp4" />
+					</video>
 				</div>
 
-				{/* Subtle vignette */}
-				<div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-zinc-950/40 z-10" />
+				{/* Animated SVG Mask - organic blob with wavy bottom */}
+				<svg className="absolute inset-0 w-full h-full pointer-events-none">
+					<defs>
+						<clipPath id="blobMask" clipPathUnits="objectBoundingBox">
+							<path d="
+								M 0.05,0.08
+								C 0.08,0.03 0.15,0.01 0.25,0.02
+								C 0.35,0.03 0.42,0.01 0.52,0.01
+								C 0.62,0.01 0.68,0.03 0.75,0.03
+								C 0.85,0.03 0.92,0.02 0.95,0.08
+								L 0.98,0.82
+								Q 0.75,0.79 0.5,0.82
+								T 0.02,0.82
+								Z
+							">
+								<animate
+									attributeName="d"
+									dur="12s"
+									repeatCount="indefinite"
+									values="
+										M 0.05,0.08
+										C 0.08,0.03 0.15,0.01 0.25,0.02
+										C 0.35,0.03 0.42,0.01 0.52,0.01
+										C 0.62,0.01 0.68,0.03 0.75,0.03
+										C 0.85,0.03 0.92,0.02 0.95,0.08
+										L 0.98,0.82
+										Q 0.75,0.79 0.5,0.82
+										T 0.02,0.82
+										Z;
+
+										M 0.03,0.10
+										C 0.06,0.04 0.13,0.02 0.23,0.03
+										C 0.33,0.04 0.40,0.02 0.50,0.02
+										C 0.60,0.02 0.67,0.04 0.77,0.04
+										C 0.87,0.04 0.94,0.03 0.97,0.10
+										L 0.98,0.84
+										Q 0.70,0.81 0.5,0.84
+										T 0.02,0.84
+										Z;
+
+										M 0.04,0.06
+										C 0.07,0.02 0.16,0.01 0.26,0.01
+										C 0.36,0.01 0.43,0.02 0.53,0.02
+										C 0.63,0.02 0.70,0.01 0.78,0.02
+										C 0.88,0.02 0.93,0.01 0.96,0.07
+										L 0.97,0.83
+										Q 0.73,0.80 0.5,0.83
+										T 0.03,0.83
+										Z;
+
+										M 0.05,0.08
+										C 0.08,0.03 0.15,0.01 0.25,0.02
+										C 0.35,0.03 0.42,0.01 0.52,0.01
+										C 0.62,0.01 0.68,0.03 0.75,0.03
+										C 0.85,0.03 0.92,0.02 0.95,0.08
+										L 0.98,0.82
+										Q 0.75,0.79 0.5,0.82
+										T 0.02,0.82
+										Z
+									"
+								/>
+							</path>
+						</clipPath>
+					</defs>
+				</svg>
+
+				{/* Gradient overlays */}
+				<div className="absolute inset-0 bg-linear-to-b from-zinc-950/60 via-zinc-950/40 to-zinc-950/90" />
+				<div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-transparent to-transparent" />
 			</div>
 
 			{/* Hero Content */}
-			<div className="relative z-30 container px-4 max-w-7xl">
+			<div className="relative z-20 container px-4 max-w-7xl mt-24">
 				<div className="max-w-3xl space-y-6">
-					{/* Slogan/Tagline */}
-					<div className="inline-block">
-						<p className="text-sm md:text-base text-primary font-display font-medium tracking-wide uppercase">
-							Only nature can copy us
-						</p>
-					</div>
 
-					{/* Main Headline */}
-					<h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-display font-extralight leading-tight tracking-tight">
-						The most realistic 3D Aquarium Backgrounds & Decorations
+					{/* Headline */}
+					<h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white font-display font-extralight leading-tight tracking-tight">
+						World's most realistic 3D Aquarium Backgrounds & Decorations
 					</h1>
 
 					{/* Subheadline */}
-					<p className="text-lg md:text-xl text-zinc-200 font-display font-light max-w-2xl leading-relaxed">
+					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl leading-relaxed">
 						A simple and effective way to create a natural habitat in your fish tank.
 					</p>
 
