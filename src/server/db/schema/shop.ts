@@ -165,6 +165,59 @@ export const productImages = createTable(
 	],
 );
 
+
+// Add to: src/server/db/schema/shop.ts
+// Quotes table for calculator submissions
+
+export const quotes = createTable(
+	"quote",
+	(d) => ({
+		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
+
+		// Customer info
+		name: d.text().notNull(),
+		email: d.text().notNull(),
+		country: d.text().notNull(),
+
+		// Configuration (store as JSONB for flexibility)
+		config: d.jsonb().notNull().$type<{
+			modelCategory: string;
+			flexibility: "solid" | "flexible";
+			dimensions: { width: number; height: number; depth: number };
+			unit: "cm" | "inch";
+			sidePanels: "none" | "single" | "both";
+			sidePanelWidth?: number;
+			filtrationCutout?: boolean;
+			notes?: string;
+		}>(),
+
+		// Pricing (stored in EUR cents)
+		estimatedPriceEurCents: d.integer().notNull(),
+		finalPriceEurCents: d.integer(), // After manual review/adjustment
+
+		// Status tracking
+		status: d.text().notNull().default("pending"),
+		// Possible values: "pending", "quoted", "accepted", "paid", "in_production", "shipped", "cancelled"
+
+		// Notes
+		customerNotes: d.text(),
+		adminNotes: d.text(),
+
+		// Timestamps
+		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
+		quotedAt: d.timestamp({ withTimezone: true }), // When admin sends quote
+		acceptedAt: d.timestamp({ withTimezone: true }), // When customer accepts
+		paidAt: d.timestamp({ withTimezone: true }),    // When payment received
+	}),
+	(t) => [
+		index("quote_email_idx").on(t.email),
+		index("quote_status_idx").on(t.status),
+		index("quote_created_at_idx").on(t.createdAt),
+	],
+);
+
+
+
 // ============================================================================
 // RELATIONS
 // ============================================================================
@@ -214,4 +267,10 @@ export const productImagesRelations = relations(productImages, ({ one }) => ({
 		fields: [productImages.productId],
 		references: [products.id],
 	}),
+}));
+
+
+// FOR CALCULATOR 
+export const quotesRelations = relations(quotes, ({ one }) => ({
+	// Could link to users table if auth is added
 }));

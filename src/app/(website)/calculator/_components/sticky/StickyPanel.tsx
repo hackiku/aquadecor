@@ -54,7 +54,7 @@ export function StickyPanel({
 				</div>
 
 				{/* 3D Aquarium Scene */}
-				<div className="rounded-xl overflow-hidden border bg-gradient-to-b from-background to-accent/5">
+				<div className="rounded-xl overflow-hidden border bg-linear-to-b from-background to-accent/5">
 					<AquariumScene
 						width={dimensions.width}
 						height={dimensions.height}
