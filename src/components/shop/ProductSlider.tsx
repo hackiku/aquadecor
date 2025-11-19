@@ -81,7 +81,7 @@ export function ProductSlider() {
 					size="lg"
 					className="rounded-full"
 				>
-					<Link href="/store">View all products</Link>
+					<Link href="/shop">Shop all products</Link>
 				</Button>
 			</div>
 		</div>

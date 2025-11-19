@@ -9,6 +9,10 @@ import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
 import { api, HydrateClient } from "~/trpc/server";
 import { LazyAquarium3D } from "./calculator/3d/LazyAquarium3D";
 import { Aquarium3D } from "./calculator/3d/Aquarium3D";
+import { SocialLinks } from "~/components/social/SocialLinks";
+import { SocialGrid } from "~/components/proof/SocialGrid";
+import { WaveDivider } from "~/components/ui/wave-divider";
+import { QuickShoutout } from "~/components/proof/QuickShoutout";
 
 export default async function LandingPage() {
 	return (
@@ -19,7 +23,13 @@ export default async function LandingPage() {
 
 				{/* Tagline + Product Slider */}
 				<section className="py-16 md:py-24"> 
-					<div className="container px-4">
+					<WaveDivider
+						position="top"
+						color="red"
+						className="text-background -mt-px"
+					/>
+					
+					<div className="px-4">
 						<div className="text-center mb-12 md:mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal">
 								Even Nature Takes Notes
@@ -30,22 +40,42 @@ export default async function LandingPage() {
 						</div>
 						<ProductSlider />
 					</div>
+
 				</section>
 
-				{/* About - Why Aquadecor */}
-				<section className="py-16 md:py-24 bg-accent/5">
-					<div className="container px-4">
-						<div className="max-w-4xl mx-auto text-center space-y-6">
-							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light">
-								20+ years of excellence in aquarium design
+
+
+				{/* Social Proof - Customer Content */}
+				<section className="relative py-16 md:py-24 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
+					{/* Top Wave Divider */}
+					<WaveDivider position="top" color="currentColor" className="text-background" />
+
+					{/* Optional: Blob Background for visual interest */}
+					{/* <BlobBackground color="#3781C2" opacity={0.05} className="top-1/4" /> */}
+
+					<div className="px-4 relative z-10">
+						{/* Headline */}
+						<div className="text-center mx-auto max-w-3xl mb-12 md:mb-16">
+							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
+								Trusted by 200K+ Aquarium Enthusiasts in 20 years
 							</h2>
-							<p className="text-lg md:text-xl text-muted-foreground font-display font-light leading-relaxed">
-								Since 2003, we've designed over 1,000 unique models and shipped 50,000+ products worldwide.
-								Our handcrafted 3D backgrounds transform ordinary aquariums into natural masterpieces that
-								even experts struggle to distinguish from the real thing.
+							<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
+								Real setups from aquarium enthusiasts worldwide. Join our community of 200,000+ followers.
 							</p>
 						</div>
+
+						{/* Social Grid */}
+						<SocialGrid initialLimit={6} showTabs={true} />
+
+						{/* Social Links with Follower Counts */}
+						<div className="flex justify-center mt-12">
+							<SocialLinks showFollowers={true} />
+						</div>
 					</div>
+
+					{/* Bottom Wave Divider (flipped) */}
+					<WaveDivider position="bottom" flip={true} color="currentColor" className="text-background" />
+					
 				</section>
 
 				{/* Stats - Social Proof */}
@@ -84,6 +114,7 @@ export default async function LandingPage() {
 
 				{/* Newsletter CTA */}
 				<NewsletterSection />
+
 			</main>
 		</HydrateClient>
 	);
