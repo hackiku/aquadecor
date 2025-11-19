@@ -60,7 +60,7 @@ export default async function LandingPage() {
 
 
 				{/* Social Proof - Customer Content */}
-				<section className="relative py-16 md:py-24 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
+				<section className="relative py-16 md:py-32 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
 					{/* Top Wave Divider */}
 					<WaveDivider position="top" color="currentColor" className="text-background" />
 
@@ -71,10 +71,10 @@ export default async function LandingPage() {
 						{/* Headline */}
 						<div className="text-center mx-auto max-w-3xl mb-12 md:mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
-								Trusted by 200K+ Aquarium Enthusiasts in 20 years
+								Trusted for 20+ years by 200K+ Aquarium Enthusiasts
 							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								Real setups from aquarium enthusiasts worldwide. Join our community of 200,000+ followers.
+							<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
+								Real-as-rain setups from aquarium enthusiasts worldwide.
 							</p>
 						</div>
 
