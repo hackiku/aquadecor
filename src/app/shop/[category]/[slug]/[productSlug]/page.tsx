@@ -48,11 +48,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Breadcrumbs */}
-				<div className="border-b bg-muted/30">
+				<div className="mt-16 border-b bg-muted/30">
 					<div className="container px-4 py-4">
 						<Breadcrumbs
 							items={[
-								{ label: "Home", href: "/" },
 								{ label: "Shop", href: "/shop" },
 								{ label: productLineName, href: `/shop/${category}` },
 								{ label: categoryName, href: `/shop/${category}/${slug}` },
@@ -161,17 +160,35 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 									Object.keys(product.specifications).length > 0 && (
 										<div className="space-y-4">
 											<h2 className="text-xl font-display font-normal">Specifications</h2>
-											<div className="space-y-3">
-												{Object.entries(product.specifications).map(([key, value]) => (
-													<div key={key} className="flex justify-between text-sm">
-														<span className="text-muted-foreground font-display capitalize">
-															{key.replace(/([A-Z])/g, " $1").replace(/Cm$/, " (cm)").trim()}:
-														</span>
-														<span className="font-display font-medium">
-															{typeof value === 'object' ? JSON.stringify(value) : String(value)}
-														</span>
-													</div>
-												))}
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-muted/30 rounded-xl">
+												{Object.entries(product.specifications).map(([key, value]) => {
+													// Format the key nicely
+													const formattedKey = key
+														.replace(/([A-Z])/g, " $1")
+														.replace(/Cm$/, "")
+														.trim()
+														.split(" ")
+														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+														.join(" ");
+
+													// Format the value
+													const formattedValue = typeof value === 'object'
+														? JSON.stringify(value)
+														: key.toLowerCase().includes('cm') || key.toLowerCase().includes('depth') || key.toLowerCase().includes('width') || key.toLowerCase().includes('height')
+															? `${value} cm`
+															: String(value);
+
+													return (
+														<div key={key} className="space-y-1">
+															<dt className="text-xs text-muted-foreground font-display uppercase tracking-wide">
+																{formattedKey}
+															</dt>
+															<dd className="text-base font-display font-medium">
+																{formattedValue}
+															</dd>
+														</div>
+													);
+												})}
 											</div>
 										</div>
 									)}
@@ -194,7 +211,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 								{/* CTA */}
 								<div className="pt-6 space-y-3">
-									<button className="w-full px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-[1.02]">
+									<button className="w-full px-8 py-4 bg-primary dark:bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-[1.02]">
 										{product.basePriceEurCents ? "Add to Cart" : "Request Quote"}
 									</button>
 									<p className="text-center text-sm text-muted-foreground font-display font-light">
@@ -221,6 +238,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							<div className="flex items-center gap-2">
 								<span className="text-primary text-lg">✓</span>
 								<span>Lifetime Warranty</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="text-primary text-lg">✓</span>
+								<span>Made in Serbia</span>
 							</div>
 						</div>
 					</div>

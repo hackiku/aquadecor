@@ -85,6 +85,7 @@
 :root {
 	--radius:
 		0.625rem;
+	
 	--background:
 		oklch(1 0 0);
 	--foreground:
@@ -98,7 +99,9 @@
 	--popover-foreground:
 		oklch(0.145 0 0);
 	--primary:
-		oklch(0.5966 0.124 247.84)
+		oklch(0.586 0.1363 241.33);
+		/* oklch(50.143% 0.15403 253.698); */
+		/* oklch(0.5966 0.124 247) */
 	--primary-foreground:
 		oklch(0.985 0 0);
 	--secondary:
@@ -163,7 +166,8 @@
 	--popover-foreground:
 		oklch(0.985 0 0);
 	--primary:
-		oklch(0.922 0 0);
+		oklch(0.586 0.1363 241.33);
+		/* oklch(68.5%, 37%, 237.323%) */
 	--primary-foreground:
 		oklch(0.205 0 0);
 	--secondary:
