@@ -8,16 +8,19 @@ import { ProductCard } from "~/app/shop/_components/product/ProductCard";
 import { api } from "~/trpc/server";
 
 interface PageProps {
-	params: {
+	params: Promise<{
 		category: string;
 		slug: string;
-	};
+	}>;
 }
 
 export default async function CategoryProductsPage({ params }: PageProps) {
+	// Await params for Next.js 15
+	const { category, slug } = await params;
+
 	// Try to load products for this category
 	const products = await api.product.getByCategory({
-		categorySlug: params.slug,
+		categorySlug: slug,
 		locale: "en",
 	});
 
@@ -48,8 +51,8 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 		"aquarium-decorations": "Aquarium Decorations",
 	};
 
-	const categoryName = categoryNames[params.slug] || params.slug;
-	const productLineName = productLineNames[params.category] || params.category;
+	const categoryName = categoryNames[slug] || slug;
+	const productLineName = productLineNames[category] || category;
 
 	return (
 		<main className="min-h-screen">
@@ -60,21 +63,26 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 						items={[
 							{ label: "Home", href: "/" },
 							{ label: "Shop", href: "/shop" },
-							{ label: productLineName, href: `/shop/${params.category}` },
-							{ label: categoryName, href: `/shop/${params.category}/${params.slug}` },
+							{ label: productLineName, href: `/shop/${category}` },
+							{ label: categoryName, href: `/shop/${category}/${slug}` },
 						]}
 					/>
 				</div>
 			</div>
 
 			{/* Header */}
-			<section className="border-b bg-gradient-to-b from-background to-muted/30">
-				<div className="container px-4 py-12 md:py-16">
-					<div className="max-w-3xl space-y-4">
-						<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-tight">
+			<section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-transparent">
+				<div className="container px-4">
+					<div className="max-w-4xl mx-auto text-center space-y-6">
+						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
+							<span className="text-sm text-primary font-display font-medium">
+								{productLineName}
+							</span>
+						</div>
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 							{categoryName}
 						</h1>
-						<p className="text-base md:text-lg text-muted-foreground font-display font-light">
+						<p className="text-lg md:text-xl text-muted-foreground font-display font-light">
 							{products.length} {products.length === 1 ? "product" : "products"} available
 						</p>
 					</div>
@@ -84,18 +92,41 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 			{/* Product Grid */}
 			<section className="py-12 md:py-16">
 				<div className="container px-4">
-					{/* TODO: Add filters/search bar here */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
 						{products.map((product) => (
 							<ProductCard
 								key={product.id}
 								product={{
 									...product,
-									categorySlug: params.slug,
-									productLineSlug: params.category,
+									categorySlug: slug,
+									productLineSlug: category,
 								}}
 							/>
 						))}
+					</div>
+				</div>
+			</section>
+
+			{/* Trust Bar */}
+			<section className="py-12 md:py-16 border-t bg-accent/5">
+				<div className="container px-4">
+					<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
+						<div className="flex items-center gap-2">
+							<span className="text-primary text-lg">✓</span>
+							<span>Free Worldwide Shipping</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="text-primary text-lg">✓</span>
+							<span>Made to Order</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="text-primary text-lg">✓</span>
+							<span>Custom Sizes Available</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<span className="text-primary text-lg">✓</span>
+							<span>20+ Years Experience</span>
+						</div>
 					</div>
 				</div>
 			</section>

@@ -18,11 +18,10 @@ export function Nav() {
 			<div className="container mx-auto px-4">
 				<div className="flex h-16 items-center justify-between">
 					{/* Logo */}
-					<Link href="/" className="flex items-center space-x-2 relative z-50">
+					<Link href="/" className="flex items-start space-x-2 relative z-50 h-full w-52">
 						<Image
 							src="/logos/logo.svg"
-							width={200}
-							height={20}
+							fill={true}
 							alt="Aquadecor Logo"
 							priority
 						/>
