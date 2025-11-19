@@ -1,183 +1,194 @@
 // src/app/(website)/calculator/page.tsx
 
-import { Aquarium3D } from "./3d/Aquarium3D";
-import { LazyAquarium3D } from "./3d/LazyAquarium3D";
-import { ShopButton } from "~/components/cta/ShopButton";
+"use client";
+
+import { useState } from "react";
+import { StickyPanel } from "./_components/sticky/StickyPanel";
+import { ModelCategoryGrid } from "./_components/product/ModelCategoryGrid";
+import { DimensionControls } from "./_components/dimensions/DimensionControls";
+import { FlexibilityToggle } from "./_components/options/FlexibilityToggle";
+import { SidePanelsSelector } from "./_components/options/SidePanelsSelector";
+import { CountrySelect } from "./_components/shipping/CountrySelect";
+import { QuoteModal } from "./_components/quote/QuoteModal";
+import { useQuoteEstimate } from "./_hooks/useQuoteEstimate";
+import type { QuoteConfig } from "./calculator-types";
+import { Button } from "~/components/ui/button";
+
+// Default configuration
+const DEFAULT_CONFIG: QuoteConfig = {
+	modelCategory: null,
+	flexibility: "solid",
+	dimensions: {
+		width: 100,
+		height: 50,
+		depth: 40,
+	},
+	unit: "cm",
+	sidePanels: "none",
+	country: "",
+};
 
 export default function CalculatorPage() {
+	const [config, setConfig] = useState<QuoteConfig>(DEFAULT_CONFIG);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const estimate = useQuoteEstimate(config);
+
+	// Calculate completion percentage for progress indicator
+	const completionSteps = [
+		config.modelCategory !== null, // Model selected
+		config.country !== "",          // Country selected
+	];
+	const completionPercent = (completionSteps.filter(Boolean).length / completionSteps.length) * 100;
+
+	const handleQuoteSubmit = async (data: { name: string; email: string; notes?: string }) => {
+		console.log("Quote submission:", { config, estimate, ...data });
+
+		// TODO: Call tRPC mutation here
+		// await api.calculator.createQuote.mutate({ ...config, ...data });
+
+		// For now, just close modal
+		setIsModalOpen(false);
+
+		// Show success message (you can add toast notification here)
+		alert("Quote request submitted! We'll email you within 24 hours.");
+	};
+
+	const canRequestQuote = config.modelCategory !== null && config.country !== "";
+
 	return (
 		<main className="min-h-screen">
 			{/* Hero Section */}
-			<section className="py-16 md:py-24 bg-linear-to-b from-background to-accent/5">
-				<div className="container px-4 max-w-4xl mx-auto text-center space-y-6">
-					<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-light tracking-tight">
+			<section className="py-16 md:py-24 bg-gradient-to-b from-muted/50 via-muted/30 to-transparent">
+				<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
+					<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 						Custom Aquarium Background Calculator
 					</h1>
-					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto leading-relaxed">
-						Configure your perfect aquarium background in 3D. Adjust dimensions in real-time and get an instant price estimate.
+					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto leading-relaxed">
+						Configure your perfect 3D background in real-time. Adjust dimensions, choose materials,
+						and get an instant price estimate.
 					</p>
+
+					{/* Progress bar */}
+					{completionPercent > 0 && completionPercent < 100 && (
+						<div className="max-w-md mx-auto pt-4">
+							<div className="flex items-center justify-between text-sm mb-2">
+								<span className="text-muted-foreground font-display font-light">
+									Configuration Progress
+								</span>
+								<span className="text-primary font-display font-medium">
+									{Math.round(completionPercent)}%
+								</span>
+							</div>
+							<div className="h-2 bg-muted rounded-full overflow-hidden">
+								<div
+									className="h-full bg-primary transition-all duration-500"
+									style={{ width: `${completionPercent}%` }}
+								/>
+							</div>
+						</div>
+					)}
 				</div>
 			</section>
 
-			{/* 3D Configurator */}
-			<section className="py-12 md:py-16">
-				<div className="container px-4 max-w-6xl mx-auto">
-					{/* <LazyAquarium3D /> */}
-					<Aquarium3D />
-				</div>
-			</section>
-
-			{/* Simple 3-Step Process */}
-			<section className="py-16 md:py-24 bg-accent/5">
-				<div className="container px-4 max-w-5xl mx-auto">
-					<h2 className="text-3xl md:text-4xl font-display font-light text-center mb-12">
-						How It Works
-					</h2>
-
-					<div className="grid md:grid-cols-3 gap-8">
-						{/* Step 1 */}
-						<div className="space-y-4 text-center">
-							<div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-								<span className="text-2xl font-bold text-primary">1</span>
-							</div>
-							<h3 className="text-xl font-display font-normal">
-								Configure Dimensions
-							</h3>
-							<p className="text-muted-foreground font-display font-light">
-								Use the 3D configurator above to adjust your aquarium's width, height, and depth. See your design come to life in real-time.
-							</p>
-						</div>
-
-						{/* Step 2 */}
-						<div className="space-y-4 text-center">
-							<div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-								<span className="text-2xl font-bold text-primary">2</span>
-							</div>
-							<h3 className="text-xl font-display font-normal">
-								Select Options
-							</h3>
-							<p className="text-muted-foreground font-display font-light">
-								Choose your background style, flexibility type, and any additional decorations. Customize to match your vision.
-							</p>
-						</div>
-
-						{/* Step 3 */}
-						<div className="space-y-4 text-center">
-							<div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-								<span className="text-2xl font-bold text-primary">3</span>
-							</div>
-							<h3 className="text-xl font-display font-normal">
-								Get Your Quote
-							</h3>
-							<p className="text-muted-foreground font-display font-light">
-								Receive an instant price estimate. Submit your request and we'll send you a custom Stripe payment link within 24 hours.
-							</p>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			{/* Options Form - Simplified */}
-			<section className="py-16 md:py-24">
-				<div className="container px-4 max-w-3xl mx-auto">
-					<h2 className="text-3xl md:text-4xl font-display font-light text-center mb-12">
-						Customize Your Background
-					</h2>
-
-					<div className="space-y-8">
-						{/* Background Style */}
-						<div className="space-y-3">
-							<label className="text-lg font-display font-normal block">
-								Background Style
-							</label>
-							<select className="w-full px-4 py-3 rounded-lg border bg-background">
-								<option>Rocky Cave (G Models)</option>
-								<option>Amazonian Roots (E Models)</option>
-								<option>Slim Stone (A Models)</option>
-								<option>Coral Reef</option>
-							</select>
-						</div>
-
-						{/* Flexibility */}
-						<div className="space-y-3">
-							<label className="text-lg font-display font-normal block">
-								Flexibility Type
-							</label>
-							<div className="grid grid-cols-2 gap-4">
-								<button className="px-6 py-4 rounded-lg border-2 border-primary bg-primary/5 text-left hover:bg-primary/10 transition-colors">
-									<div className="font-display font-medium">Solid</div>
-									<div className="text-sm text-muted-foreground">Vacuum suction cups</div>
-								</button>
-								<button className="px-6 py-4 rounded-lg border hover:border-primary text-left hover:bg-accent/50 transition-colors">
-									<div className="font-display font-medium">Flexible</div>
-									<div className="text-sm text-muted-foreground">Bendable material</div>
-								</button>
-							</div>
-						</div>
-
-						{/* Side Panels */}
-						<div className="space-y-3">
-							<label className="text-lg font-display font-normal block">
-								Side Panels (Optional)
-							</label>
-							<div className="grid grid-cols-3 gap-4">
-								<button className="px-6 py-4 rounded-lg border-2 border-primary bg-primary/5 hover:bg-primary/10 transition-colors">
-									<div className="font-display font-medium">None</div>
-								</button>
-								<button className="px-6 py-4 rounded-lg border hover:border-primary hover:bg-accent/50 transition-colors">
-									<div className="font-display font-medium">Single Side</div>
-								</button>
-								<button className="px-6 py-4 rounded-lg border hover:border-primary hover:bg-accent/50 transition-colors">
-									<div className="font-display font-medium">Both Sides</div>
-								</button>
-							</div>
-						</div>
-
-						{/* Shipping Country */}
-						<div className="space-y-3">
-							<label className="text-lg font-display font-normal block">
-								Shipping Country
-							</label>
-							<select className="w-full px-4 py-3 rounded-lg border bg-background">
-								<option>United States</option>
-								<option>Germany</option>
-								<option>Netherlands</option>
-								<option>United Kingdom</option>
-								<option>Other (specify in notes)</option>
-							</select>
-						</div>
-
-						{/* Additional Notes */}
-						<div className="space-y-3">
-							<label className="text-lg font-display font-normal block">
-								Additional Notes (Optional)
-							</label>
-							<textarea
-								className="w-full px-4 py-3 rounded-lg border bg-background min-h-[120px]"
-								placeholder="Any special requests or questions..."
+			{/* Main Content - 2 Column Layout */}
+			<section className="py-12">
+				<div className="container px-4 max-w-7xl mx-auto">
+					<div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
+						{/* Left Column - Configuration Steps */}
+						<div className="space-y-0">
+							{/* Step 1: Model Selection */}
+							<ModelCategoryGrid
+								selected={config.modelCategory}
+								onSelect={(category) => setConfig({ ...config, modelCategory: category })}
 							/>
+
+							{/* Only show remaining steps if model is selected */}
+							{config.modelCategory && (
+								<>
+									{/* Step 2: Dimensions */}
+									<DimensionControls
+										dimensions={config.dimensions}
+										unit={config.unit}
+										onChange={(dimensions) => setConfig({ ...config, dimensions })}
+									/>
+
+									{/* Step 3: Material Type */}
+									<FlexibilityToggle
+										selected={config.flexibility}
+										onChange={(flexibility) => setConfig({ ...config, flexibility })}
+									/>
+
+									{/* Step 4: Side Panels */}
+									<SidePanelsSelector
+										selected={config.sidePanels}
+										sidePanelWidth={config.sidePanelWidth}
+										onChange={(sidePanels, width) =>
+											setConfig({ ...config, sidePanels, sidePanelWidth: width })
+										}
+									/>
+
+									{/* Step 5: Shipping Country */}
+									<CountrySelect
+										selected={config.country}
+										onChange={(country) => setConfig({ ...config, country })}
+									/>
+
+									{/* CTA Section */}
+									<section className="py-12">
+										<div className="max-w-2xl p-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border-2 border-primary/20">
+											<div className="space-y-6 text-center">
+												<h2 className="text-3xl font-display font-light">
+													Ready to Get Your Custom Quote?
+												</h2>
+												<p className="text-muted-foreground font-display font-light text-lg">
+													Submit your configuration and receive a detailed quote within 24 hours.
+													No obligation to purchase.
+												</p>
+
+												<Button
+													onClick={() => setIsModalOpen(true)}
+													disabled={!canRequestQuote}
+													className="w-full md:w-auto px-12 py-6 bg-primary text-white hover:bg-primary/90 font-display font-medium text-lg rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+												>
+													{canRequestQuote
+														? "Request Custom Quote"
+														: "Complete configuration to continue"}
+												</Button>
+
+												{!canRequestQuote && (
+													<p className="text-sm text-muted-foreground font-display font-light">
+														{!config.modelCategory && "• Select a model"}
+														{!config.country && " • Choose shipping country"}
+													</p>
+												)}
+											</div>
+										</div>
+									</section>
+								</>
+							)}
 						</div>
 
-						{/* Submit */}
-						<div className="pt-6">
-							<ShopButton href="#" className="w-full text-center block">
-								Request Custom Quote
-							</ShopButton>
-							<p className="text-sm text-muted-foreground text-center mt-4 font-display font-light">
-								We'll send you a custom payment link within 24 hours
-							</p>
-						</div>
+						{/* Right Column - Sticky Sidebar */}
+						{config.modelCategory && (
+							<StickyPanel
+								dimensions={config.dimensions}
+								unit={config.unit}
+								estimate={estimate}
+								onUnitToggle={(unit) => setConfig({ ...config, unit })}
+								onDimensionsChange={(dimensions) => setConfig({ ...config, dimensions })}
+							/>
+						)}
 					</div>
 				</div>
 			</section>
 
 			{/* Trust Signals */}
-			<section className="py-16 bg-accent/5">
+			<section className="py-16 bg-accent/5 border-y">
 				<div className="container px-4 max-w-5xl mx-auto">
 					<div className="grid md:grid-cols-3 gap-8 text-center">
 						<div className="space-y-2">
 							<div className="text-4xl font-display font-light text-primary">24h</div>
-							<p className="text-sm text-muted-foreground font-display">Response Time</p>
+							<p className="text-sm text-muted-foreground font-display">Quote Response Time</p>
 						</div>
 						<div className="space-y-2">
 							<div className="text-4xl font-display font-light text-primary">20+</div>
@@ -190,6 +201,15 @@ export default function CalculatorPage() {
 					</div>
 				</div>
 			</section>
+
+			{/* Quote Modal */}
+			<QuoteModal
+				config={config}
+				estimate={estimate}
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				onSubmit={handleQuoteSubmit}
+			/>
 		</main>
 	);
 }
