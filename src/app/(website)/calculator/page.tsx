@@ -58,7 +58,7 @@ export default function CalculatorPage() {
 	return (
 		<main className="min-h-screen">
 			{/* Hero Section */}
-			<section className="py-16 md:py-24 bg-gradient-to-b from-muted/50 via-muted/30 to-transparent">
+			<section className="pt-32 md:pt-44 bg-linear-to-b from-muted/50 via-muted/30 to-transparent">
 				<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
 					<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 						Custom Aquarium Background Calculator

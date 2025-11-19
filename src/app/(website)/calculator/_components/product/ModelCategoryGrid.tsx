@@ -1,7 +1,5 @@
 // src/app/(website)/calculator/_components/product/ModelCategoryGrid.tsx
 
-// Model category selection grid - Visual cards for A/B/C/E/F/G/K/L/N models
-
 "use client";
 
 import Image from "next/image";
@@ -16,7 +14,7 @@ interface ModelCategoryGridProps {
 
 export function ModelCategoryGrid({ selected, onSelect }: ModelCategoryGridProps) {
 	return (
-		<section className="py-12 space-y-8">
+		<section className="py-12 space-y-6">
 			<div className="space-y-3">
 				<h2 className="text-2xl md:text-3xl font-display font-light">
 					Select Background Style
@@ -43,6 +41,11 @@ export function ModelCategoryGrid({ selected, onSelect }: ModelCategoryGridProps
 								alt={model.name}
 								fill
 								className="object-cover transition-transform duration-500 group-hover:scale-110"
+								onError={(e) => {
+									// Fallback to placeholder if CDN image fails
+									const target = e.target as HTMLImageElement;
+									target.src = "/media/images/3d-backgrounds_500px.webp";
+								}}
 							/>
 
 							{/* Selected badge */}
@@ -64,7 +67,7 @@ export function ModelCategoryGrid({ selected, onSelect }: ModelCategoryGridProps
 								</div>
 							)}
 
-							{/* Price tag */}
+							{/* Price tag - always visible */}
 							<div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/70 backdrop-blur-sm rounded-lg">
 								<p className="text-xs text-white font-display font-light">
 									From {formatEUR(model.baseRatePerM2)}/m²
@@ -72,18 +75,20 @@ export function ModelCategoryGrid({ selected, onSelect }: ModelCategoryGridProps
 							</div>
 						</div>
 
-						{/* Content */}
+						{/* Content - Compact by default, detailed on hover */}
 						<div className="p-5 space-y-2">
 							<h3 className={`text-lg font-display font-medium transition-colors ${selected === model.id ? "text-primary" : "group-hover:text-primary"
 								}`}>
 								{model.name}
 							</h3>
-							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
+
+							{/* Description - Only show on hover */}
+							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
 								{model.description}
 							</p>
 
-							{/* Min dimensions */}
-							<div className="pt-2 flex items-center gap-2 text-xs text-muted-foreground">
+							{/* Min dimensions - Only show on hover */}
+							<div className="pt-2 flex items-center gap-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="14"
