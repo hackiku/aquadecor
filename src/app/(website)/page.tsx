@@ -13,6 +13,7 @@ import { SocialLinks } from "~/components/social/SocialLinks";
 import { SocialGrid } from "~/components/proof/SocialGrid";
 import { WaveDivider } from "~/components/ui/wave-divider";
 import { QuickShoutout } from "~/components/proof/QuickShoutout";
+import { CompaniesLogos } from "~/components/proof/CompaniesLogos";
 
 export default async function LandingPage() {
 	return (
@@ -23,11 +24,6 @@ export default async function LandingPage() {
 
 				{/* Tagline + Product Slider */}
 				<section className="py-16 md:py-24"> 
-					<WaveDivider
-						position="top"
-						color="red"
-						className="text-background -mt-px"
-					/>
 					
 					<div className="px-4">
 						<div className="text-center mb-12 md:mb-16">
@@ -40,7 +36,25 @@ export default async function LandingPage() {
 						</div>
 						<ProductSlider />
 					</div>
+				</section>
 
+
+				<section className="py-16 md:py-24"> 
+					
+					<div className="px-4">
+						<div className="text-center mb-12 md:mb-16">
+							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal">
+								Features blah
+							</h2>
+							<p className="mt-4 text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
+								Safe to sleep with the fishes
+							</p>
+						</div>
+
+						<CompaniesLogos />
+						{/* <CompaniesLogos grayscale={true} /> */}
+
+					</div>
 				</section>
 
 
