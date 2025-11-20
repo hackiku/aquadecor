@@ -45,6 +45,14 @@ export const mainNavLinks: NavLink[] = [
 		description: "What our customers say",
 	},
 	{
+		label: "Blog",
+		href: "/blog",
+		enabled: true,
+		showInNav: true,
+		showInFooter: true,
+		description: "Aquadecor blog",
+	},
+	{
 		label: "About",
 		href: "/about",
 		enabled: false,

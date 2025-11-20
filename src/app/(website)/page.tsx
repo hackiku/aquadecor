@@ -60,7 +60,7 @@ export default async function LandingPage() {
 
 
 				{/* Social Proof - Customer Content */}
-				<section className="relative py-16 md:py-32 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
+				<section className="relative py-24 md:py-36 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
 					{/* Top Wave Divider */}
 					<WaveDivider position="top" color="currentColor" className="text-background" />
 
@@ -88,13 +88,13 @@ export default async function LandingPage() {
 					</div>
 
 					{/* Bottom Wave Divider (flipped) */}
-					<WaveDivider position="bottom" flip={true} color="currentColor" className="text-background" />
+					{/* <WaveDivider position="bottom" flip={true} color="currentColor" className="text-background" /> */}
 					
 				</section>
 
 				{/* Stats - Social Proof */}
 				<section className="py-16 md:py-24">
-					<div className="container px-4">
+					<div className="px-4">
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
 							<div className="text-center space-y-2">
 								<p className="text-4xl md:text-5xl font-display font-light text-primary">20+</p>

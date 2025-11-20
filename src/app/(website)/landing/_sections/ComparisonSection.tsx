@@ -53,57 +53,55 @@ const CUSTOM_FEATURES = [
 
 export function ComparisonSection() {
 	return (
-		<section className="py-16 md:py-24 bg-background">
-			<div className="container px-4">
-				<div className="text-center mb-12 md:mb-16">
-					<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
-						Whatever you choose, you won't regret it!
-					</h2>
-				</div>
-
-				{/* Desktop: Side-by-side comparison */}
-				<div className="hidden lg:grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-					<ComparisonCard
-						title="Standard dimensions"
-						description="Products in standard dimensions and sizes."
-						features={STANDARD_FEATURES}
-						ctaHref="/store"
-						ctaText="Shop now"
-						variant="outline"
-					/>
-					<ComparisonCard
-						title="Custom dimensions"
-						description="Customize dimensions and sizes based on your needs."
-						features={CUSTOM_FEATURES}
-						ctaHref="/store/configurator"
-						ctaText="Order custom"
-						variant="default"
-						highlighted
-					/>
-				</div>
-
-				{/* Mobile: Stacked cards */}
-				<div className="lg:hidden space-y-8 max-w-2xl mx-auto">
-					<ComparisonCard
-						title="Standard dimensions"
-						description="Products in standard dimensions and sizes."
-						features={STANDARD_FEATURES}
-						ctaHref="/store"
-						ctaText="Shop now"
-						variant="outline"
-					/>
-					<ComparisonCard
-						title="Custom dimensions"
-						description="Customize dimensions and sizes based on your needs."
-						features={CUSTOM_FEATURES}
-						ctaHref="/store/configurator"
-						ctaText="Order custom"
-						variant="default"
-						highlighted
-					/>
-				</div>
+		<div className="py-16 md:py-24 bg-background">
+			<div className="text-center mb-12 md:mb-16">
+				<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
+					Whatever you choose, you won't regret it!
+				</h2>
 			</div>
-		</section>
+
+			{/* Desktop: Side-by-side comparison */}
+			<div className="hidden lg:grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+				<ComparisonCard
+					title="Standard dimensions"
+					description="Products in standard dimensions and sizes."
+					features={STANDARD_FEATURES}
+					ctaHref="/store"
+					ctaText="Shop now"
+					variant="outline"
+				/>
+				<ComparisonCard
+					title="Custom dimensions"
+					description="Customize dimensions and sizes based on your needs."
+					features={CUSTOM_FEATURES}
+					ctaHref="/store/configurator"
+					ctaText="Order custom"
+					variant="default"
+					highlighted
+				/>
+			</div>
+
+			{/* Mobile: Stacked cards */}
+			<div className="lg:hidden space-y-8 max-w-2xl mx-auto">
+				<ComparisonCard
+					title="Standard dimensions"
+					description="Products in standard dimensions and sizes."
+					features={STANDARD_FEATURES}
+					ctaHref="/store"
+					ctaText="Shop now"
+					variant="outline"
+				/>
+				<ComparisonCard
+					title="Custom dimensions"
+					description="Customize dimensions and sizes based on your needs."
+					features={CUSTOM_FEATURES}
+					ctaHref="/store/configurator"
+					ctaText="Order custom"
+					variant="default"
+					highlighted
+				/>
+			</div>
+		</div>
 	);
 }
 
