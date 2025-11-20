@@ -3,7 +3,7 @@
 "use client";
 
 import { ShopButton } from "~/components/cta/ShopButton";
-import { ProductCard } from "~/components/store/ProductCard";
+import { ProductCard } from "~/components/shop/ProductCard";
 
 export function ProductGallery() {
 	// TODO: Fetch products from tRPC

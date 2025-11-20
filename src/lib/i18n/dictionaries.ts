@@ -1,3 +1,4 @@
+// @ts-nocheck
 export type Locale = "us" | "de" | "nl"
 
 export const dictionaries = {

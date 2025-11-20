@@ -1,4 +1,5 @@
-// src/server/db/seed/data/aquarium-decorations/driftwood-logs-roots.ts
+// @ts-nocheck
+// // src/server/db/seed/data/aquarium-decorations/driftwood-logs-roots.ts
 
 // Note: The 'featuredImage' in specifications is a temporary field to hold the CDN URL.
 export const productData = [

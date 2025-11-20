@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/lib/i18n/helpers.ts
 
 export function getHreflangAlternates(

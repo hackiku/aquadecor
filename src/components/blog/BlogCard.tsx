@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, Calendar } from "lucide-react";
-import { BlogPostPreview } from "~/lib/strapi/types";
+import type { BlogPostPreview } from "~/lib/strapi/types";
 
 interface BlogCardProps {
 	post: BlogPostPreview;

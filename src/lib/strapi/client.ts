@@ -1,6 +1,7 @@
 // src/lib/strapi/client.ts
 
 import { env } from "~/env.js";
+// import type { qs } from "qs";
 import qs from "qs";
 
 interface StrapiResponse<T> {

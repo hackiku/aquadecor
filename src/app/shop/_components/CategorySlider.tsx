@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 interface Category {
 	id: string;
 	slug: string;
-	name: string;
+	name: string | null;
 	description: string | null;
 }
 
@@ -32,7 +32,7 @@ export function CategorySlider({ categories, productLineSlug }: CategorySliderPr
 								<CardContent className="p-6 h-full flex flex-col">
 									<div className="flex items-start justify-between mb-4">
 										<h4 className="text-xl font-display font-normal leading-tight group-hover:text-primary transition-colors pr-4">
-											{category.name}
+											{category.name ?? category.slug}
 										</h4>
 										<ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-1" />
 									</div>

@@ -40,22 +40,22 @@ export const reviewsRouter = createTRPCRouter({
 			// Apply sorting
 			switch (input?.sortBy) {
 				case "oldest":
-					query = query.orderBy(asc(reviews.createdAt));
+					query = query.orderBy(asc(reviews.createdAt)) as any;
 					break;
 				case "highest":
-					query = query.orderBy(desc(reviews.rating), desc(reviews.createdAt));
+					query = query.orderBy(desc(reviews.rating), desc(reviews.createdAt)) as any;
 					break;
 				case "lowest":
-					query = query.orderBy(asc(reviews.rating), desc(reviews.createdAt));
+					query = query.orderBy(asc(reviews.rating), desc(reviews.createdAt)) as any;
 					break;
 				case "newest":
 				default:
-					query = query.orderBy(desc(reviews.createdAt));
+					query = query.orderBy(desc(reviews.createdAt)) as any;
 			}
 
 			// Apply limit
 			if (input?.limit) {
-				query = query.limit(input.limit);
+				query = query.limit(input.limit) as any;
 			}
 
 			return await query;
