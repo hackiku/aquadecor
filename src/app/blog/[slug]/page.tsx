@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, Calendar, ArrowLeft } from "lucide-react";
-import { FLORIAN_INTERVIEW } from "~/lib/strapi/test-data";
+import { getBlogPost } from "~/lib/strapi/queries";
+import { BlogBody } from "~/components/blog/BlogBody";
 import type { Metadata } from "next";
 
 interface BlogPostPageProps {
@@ -16,10 +17,7 @@ interface BlogPostPageProps {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
 	const { slug } = await params;
-
-	// TODO: Replace with actual Strapi fetch
-	// const post = await fetchStrapi(`/blogs/${slug}`, { ... })
-	const post = slug === FLORIAN_INTERVIEW.slug ? FLORIAN_INTERVIEW : null;
+	const post = await getBlogPost(slug);
 
 	if (!post) {
 		return {
@@ -61,6 +59,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 	};
 }
 
+// Revalidate every hour
+export const revalidate = 3600;
+
 function formatDate(dateString: string): string {
 	return new Date(dateString).toLocaleDateString("en-US", {
 		year: "numeric",
@@ -71,10 +72,7 @@ function formatDate(dateString: string): string {
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug } = await params;
-
-	// TODO: Replace with actual Strapi fetch
-	// const post = await fetchStrapi(`/blogs/${slug}`, { ... })
-	const post = slug === FLORIAN_INTERVIEW.slug ? FLORIAN_INTERVIEW : null;
+	const post = await getBlogPost(slug);
 
 	if (!post) {
 		notFound();
@@ -152,33 +150,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 				{/* Article Body */}
 				<div className="container px-4 max-w-3xl mx-auto">
 					<div className="prose prose-lg dark:prose-invert max-w-none">
-						{/* Simple paragraph renderer for now */}
-						{/* TODO: Add @strapi/blocks-react-renderer when integrating real Strapi */}
-						{post.body.map((block: any, index: number) => {
-							if (block.type === "paragraph") {
-								return (
-									<p
-										key={index}
-										className="text-base md:text-lg text-muted-foreground font-display font-light leading-relaxed mb-6"
-									>
-										{block.children.map((child: any) => child.text).join("")}
-									</p>
-								);
-							}
-							if (block.type === "heading") {
-								const Tag = `h${block.level}` as keyof JSX.IntrinsicElements;
-								return (
-									<Tag
-										key={index}
-										className={`font-display font-light mt-12 mb-6 ${block.level === 2 ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
-											}`}
-									>
-										{block.children.map((child: any) => child.text).join("")}
-									</Tag>
-								);
-							}
-							return null;
-						})}
+						<BlogBody content={post.body} />
 					</div>
 
 					{/* Share / CTA Section */}

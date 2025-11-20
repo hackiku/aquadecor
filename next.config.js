@@ -20,6 +20,10 @@ const config = {
 				protocol: "https",
 				hostname: "i.ytimg.com",
 			},
+			{
+				protocol: "https",
+				hostname: "generous-respect-339e42b270.media.strapiapp.com",
+			},
 		],
 	},
 };
