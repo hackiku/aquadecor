@@ -42,6 +42,44 @@ export async function getBlogPosts(): Promise<BlogPostPreview[]> {
 }
 
 /**
+ * Get recent blog posts (for FeaturedArticles component)
+ */
+export async function getRecentBlogPosts(limit: number = 3): Promise<BlogPostPreview[]> {
+	const response = await fetchStrapi("/blogs", {
+		sort: ["createdAt:desc"],
+		fields: ["title", "slug", "description", "createdAt", "publishedAt", "reading_time"],
+		populate: {
+			cover: {
+				fields: ["url", "alternativeText", "width", "height"],
+			},
+		},
+		pagination: {
+			start: 0,
+			limit,
+		},
+	});
+
+	const flattened = flattenStrapiResponse<any[]>(response.data);
+
+	// Transform to our type
+	return flattened.map((post) => ({
+		id: post.id,
+		slug: post.slug,
+		title: post.title,
+		description: post.description,
+		cover: {
+			url: getStrapiMedia(post.cover?.url),
+			alternativeText: post.cover?.alternativeText || post.title,
+			width: post.cover?.width || 1200,
+			height: post.cover?.height || 800,
+		},
+		reading_time: post.reading_time || 5,
+		createdAt: post.createdAt,
+		publishedAt: post.publishedAt || post.createdAt,
+	}));
+}
+
+/**
  * Get single blog post by slug
  */
 export async function getBlogPost(slug: string): Promise<BlogPost | null> {

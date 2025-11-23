@@ -47,7 +47,7 @@ export default async function LandingPage() {
 								Features blah
 							</h2>
 							<p className="mt-4 text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								Safe to sleep with the fishes
+								Obsessive about hyper-realistic rock/stone replicas made from polyurethane/resin blends. non-toxic, temperature-resistant, and come with 20-year or lifetime warranties
 							</p>
 						</div>
 

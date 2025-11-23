@@ -1,11 +1,13 @@
 // src/app/about/page.tsx
+// UPDATED VERSION - Add FeaturedArticles component
 
 import { HeroSection } from "./_components/HeroSection";
 import { StorySection } from "./_components/StorySection";
 import { TechSection } from "./_components/TechSection";
-import { ValuesSection, StoreSlider, BlogSlider } from "./_components/ValuesSection";
+import { ValuesSection } from "./_components/ValuesSection";
 import { FamilySection } from "./_components/FamilySection";
 import { DistributorsGrid } from "../distributors/DistributorsGrid";
+import { FeaturedArticles } from "~/components/blog/FeaturedArticles";
 
 export default function AboutPage() {
 	return (
@@ -14,8 +16,15 @@ export default function AboutPage() {
 			<ValuesSection />
 			<StorySection />
 			<TechSection />
-			<StoreSlider />
+			{/* <StoreSlider /> */}
 			<FamilySection />
+
+			{/* Blog Articles - NEW! */}
+			<FeaturedArticles
+				limit={3}
+				title="Latest from Our Blog"
+				description="Expert tips, guides, and inspiration for your aquarium"
+			/>
 
 			{/* Distributors Preview */}
 			<section className="py-16 md:py-24 bg-accent/5">
@@ -41,8 +50,6 @@ export default function AboutPage() {
 					<DistributorsGrid className="lg:grid-cols-3" />
 				</div>
 			</section>
-
-			<BlogSlider />
 		</main>
 	);
 }

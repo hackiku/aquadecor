@@ -1,3 +1,4 @@
+
 // src/server/db/seed/data/categories.ts
 
 export const categoryData = [
