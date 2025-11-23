@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight, Package, Wrench, Shield, Zap } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategorySlider } from "~/components/shop/category/CategorySlider";
+import { WaveDivider } from "~/components/ui/wave-divider";
 
 export default async function ThreeDBackgroundsPage() {
 	// Load categories for 3D backgrounds
@@ -141,6 +142,7 @@ export default async function ThreeDBackgroundsPage() {
 
 				{/* Material Specs CTA */}
 				<section className="py-16 md:py-20 bg-muted/30 border-t">
+					<WaveDivider position="top" color="currentColor" className="text-background" />
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="grid md:grid-cols-2 gap-12 items-center">
 							<div className="space-y-6">
