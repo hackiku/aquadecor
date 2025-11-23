@@ -1,10 +1,8 @@
 // src/app/shop/[category]/[slug]/page.tsx
-// NOTE: This handles BOTH product detail pages AND category product listings
-// We determine which by checking if params.slug matches a category or product
 
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
-import { ProductCard } from "~/app/shop/_components/product/ProductCard";
+import { ProductGrid } from "~/components/shop/product/ProductGrid";
 import { api } from "~/trpc/server";
 
 interface PageProps {
@@ -15,22 +13,19 @@ interface PageProps {
 }
 
 export default async function CategoryProductsPage({ params }: PageProps) {
-	// Await params for Next.js 15
 	const { category, slug } = await params;
 
-	// Try to load products for this category
+	// Load products for this category
 	const products = await api.product.getByCategory({
 		categorySlug: slug,
 		locale: "en",
 	});
 
-	// If no products found, this might be a product detail page
-	// That will be handled separately
 	if (!products || products.length === 0) {
 		notFound();
 	}
 
-	// Category name mapping (temporary until we add a proper query)
+	// Category name mapping (temporary until proper i18n)
 	const categoryNames: Record<string, string> = {
 		"a-models": "A Models - Classic Rocky Backgrounds",
 		"slim-models": "A Slim Models - Thin Rocky Backgrounds",
@@ -54,14 +49,20 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 	const categoryName = categoryNames[slug] || slug;
 	const productLineName = productLineNames[category] || category;
 
+	// Add category and product line slugs to products for routing
+	const productsWithSlugs = products.map(product => ({
+		...product,
+		categorySlug: slug,
+		productLineSlug: category,
+	}));
+
 	return (
 		<main className="min-h-screen">
-			{/* Breadcrumbs */}
-			<div className="border-b bg-muted/30">
-				<div className="container px-4 py-4">
+			{/* Breadcrumbs - Sticky with Nav awareness */}
+			<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
+				<div className="px-4 py-4 max-w-7xl mx-auto">
 					<Breadcrumbs
 						items={[
-							{ label: "Home", href: "/" },
 							{ label: "Shop", href: "/shop" },
 							{ label: productLineName, href: `/shop/${category}` },
 							{ label: categoryName, href: `/shop/${category}/${slug}` },
@@ -72,7 +73,7 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 
 			{/* Header */}
 			<section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-transparent">
-				<div className="container px-4">
+				<div className="px-4 max-w-7xl mx-auto">
 					<div className="max-w-4xl mx-auto text-center space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
 							<span className="text-sm text-primary font-display font-medium">
@@ -91,25 +92,17 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 
 			{/* Product Grid */}
 			<section className="py-12 md:py-16">
-				<div className="container px-4">
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-						{products.map((product) => (
-							<ProductCard
-								key={product.id}
-								product={{
-									...product,
-									categorySlug: slug,
-									productLineSlug: category,
-								}}
-							/>
-						))}
-					</div>
+				<div className="px-4 max-w-7xl mx-auto">
+					<ProductGrid
+						products={productsWithSlugs}
+						columns="4"
+					/>
 				</div>
 			</section>
 
 			{/* Trust Bar */}
 			<section className="py-12 md:py-16 border-t bg-accent/5">
-				<div className="container px-4">
+				<div className="px-4 max-w-7xl mx-auto">
 					<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
 						<div className="flex items-center gap-2">
 							<span className="text-primary text-lg">✓</span>

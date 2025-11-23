@@ -4,6 +4,8 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
+import { AddToCartButton } from "~/components/shop/cart/AddToCartButton";
+import { WishlistButton } from "~/components/shop/wishlist/WishlistButton";
 import { api, HydrateClient } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { Package, Truck, Clock } from "lucide-react";
@@ -17,7 +19,6 @@ interface ProductDetailPageProps {
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-	// Await params for Next.js 15
 	const { category, slug, productSlug } = await params;
 
 	// Load product
@@ -30,11 +31,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		notFound();
 	}
 
-	// Temporary name mappings (until you add proper queries)
+	// Temporary name mappings
 	const categoryNames: Record<string, string> = {
 		"a-models": "A Models",
 		"aquarium-plants": "Aquarium Plants",
-		// Add more as needed
 	};
 
 	const productLineNames: Record<string, string> = {
@@ -48,9 +48,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Breadcrumbs */}
-				<div className="mt-16 border-b bg-muted/30">
-					<div className="container px-4 py-4">
+				{/* Breadcrumbs - Sticky with Nav awareness */}
+				<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
+					<div className="px-4 py-4 max-w-7xl mx-auto">
 						<Breadcrumbs
 							items={[
 								{ label: "Shop", href: "/shop" },
@@ -64,8 +64,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 				{/* Product Content */}
 				<section className="py-12 md:py-20">
-					<div className="container px-4">
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+					<div className="px-4 max-w-7xl mx-auto">
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 							{/* Left: Images */}
 							<div className="space-y-6">
 								{/* Main Image */}
@@ -80,7 +80,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 										/>
 									) : (
 										<div className="absolute inset-0 flex items-center justify-center">
-											<Package className="h-20 w-20 text-muted-foreground" />
+											<Package className="h-20 w-20 text-muted-foreground/20" />
 										</div>
 									)}
 								</div>
@@ -94,7 +94,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 												className="relative aspect-square rounded-lg overflow-hidden border border-border cursor-pointer hover:border-primary transition-colors"
 											>
 												<Image
-													src={image.url}
+													src={image.storageUrl}
 													alt={image.altText || `${product.name} ${idx + 2}`}
 													fill
 													className="object-cover"
@@ -114,19 +114,23 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 											{product.sku}
 										</Badge>
 										{product.stockStatus === "in_stock" && (
-											<Badge className="bg-green-500/10 text-green-700 border-green-500/20">
+											<Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20">
 												In Stock
 											</Badge>
 										)}
 										{product.stockStatus === "made_to_order" && (
-											<Badge className="bg-blue-500/10 text-blue-700 border-blue-500/20">
+											<Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20">
 												Made to Order
 											</Badge>
 										)}
 									</div>
-									<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-tight">
-										{product.name ?? "Product"}
-									</h1>
+
+									<div className="flex items-start justify-between gap-4">
+										<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-tight">
+											{product.name ?? "Product"}
+										</h1>
+										<WishlistButton productId={product.id} />
+									</div>
 								</div>
 
 								{/* Price */}
@@ -141,7 +145,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 										</div>
 									)}
 									{product.priceNote && (
-										<p className="text-sm text-muted-foreground font-display">
+										<p className="text-sm text-muted-foreground font-display font-light">
 											{product.priceNote}
 										</p>
 									)}
@@ -163,7 +167,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 											<h2 className="text-xl font-display font-normal">Specifications</h2>
 											<div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-muted/30 rounded-xl">
 												{Object.entries(product.specifications).map(([key, value]) => {
-													// Format the key nicely
 													const formattedKey = key
 														.replace(/([A-Z])/g, " $1")
 														.replace(/Cm$/, "")
@@ -172,7 +175,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 														.join(" ");
 
-													// Format the value
 													const formattedValue = typeof value === 'object'
 														? JSON.stringify(value)
 														: key.toLowerCase().includes('cm') || key.toLowerCase().includes('depth') || key.toLowerCase().includes('width') || key.toLowerCase().includes('height')
@@ -212,9 +214,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 								{/* CTA */}
 								<div className="pt-6 space-y-3">
-									<button className="w-full px-8 py-4 bg-primary dark:bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-[1.02]">
-										{product.basePriceEurCents ? "Add to Cart" : "Request Quote"}
-									</button>
+									<AddToCartButton
+										product={product}
+										size="lg"
+										className="w-full rounded-full"
+									/>
 									<p className="text-center text-sm text-muted-foreground font-display font-light">
 										Questions? Contact us for custom sizing
 									</p>
@@ -226,7 +230,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 				{/* Trust Bar */}
 				<section className="py-12 md:py-16 border-t bg-accent/5">
-					<div className="container px-4">
+					<div className="px-4 max-w-7xl mx-auto">
 						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
 							<div className="flex items-center gap-2">
 								<span className="text-primary text-lg">✓</span>

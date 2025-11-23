@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
+import { CategorySlider } from "~/components/shop/category/CategorySlider";
 import { api, HydrateClient } from "~/trpc/server";
-import { ArrowRight, Package } from "lucide-react";
+import { Package } from "lucide-react";
 
 interface CategoryPageProps {
 	params: Promise<{
@@ -14,21 +15,19 @@ interface CategoryPageProps {
 }
 
 export default async function ProductLinePage({ params }: CategoryPageProps) {
-	// Await params for Next.js 15
 	const { category } = await params;
 
-	// Try to load as product line first
+	// Load categories for this product line
 	const categories = await api.product.getCategoriesForProductLine({
 		productLineSlug: category,
 		locale: "en",
 	});
 
-	// If no categories found, might be a direct category - redirect to products
 	if (!categories || categories.length === 0) {
 		notFound();
 	}
 
-	// Get the product line name and details
+	// Product line data (static for now - only 2 product lines)
 	const productLineData: Record<string, { name: string; description: string; image: string }> = {
 		"3d-backgrounds": {
 			name: "3D Backgrounds",
@@ -48,12 +47,11 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Breadcrumbs */}
-				<div className="border-b bg-muted/30">
-					<div className="container px-4 py-4">
+				{/* Breadcrumbs - Sticky with Nav awareness */}
+				<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
+					<div className="px-4 py-4 max-w-7xl mx-auto">
 						<Breadcrumbs
 							items={[
-								{ label: "Home", href: "/" },
 								{ label: "Shop", href: "/shop" },
 								{ label: productLine.name, href: `/shop/${category}` },
 							]}
@@ -64,7 +62,6 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 				{/* Hero Section with Background Image */}
 				<section className="relative overflow-hidden border-b">
 					<div className="relative h-[400px] md:h-[500px]">
-						{/* Background Image */}
 						<Image
 							src={productLine.image}
 							alt={productLine.name}
@@ -73,12 +70,10 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 							priority
 						/>
 
-						{/* Gradient Overlay */}
 						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
 
-						{/* Content */}
 						<div className="absolute inset-0 flex items-end">
-							<div className="container px-4 pb-12 md:pb-16">
+							<div className="px-4 pb-12 md:pb-16 max-w-7xl mx-auto w-full">
 								<div className="max-w-3xl space-y-6">
 									<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
 										<Package className="h-4 w-4 text-primary" />
@@ -98,9 +93,9 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 					</div>
 				</section>
 
-				{/* Categories Grid */}
+				{/* Categories Slider */}
 				<section className="py-16 md:py-24">
-					<div className="container px-4">
+					<div className="px-4 max-w-7xl mx-auto">
 						<div className="mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
 								Browse Categories
@@ -110,48 +105,16 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 							</p>
 						</div>
 
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-							{categories.map((cat) => (
-								<Link
-									key={cat.id}
-									href={`/shop/${category}/${cat.slug}`}
-									className="group"
-								>
-									<div className="h-full border-2 border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-xl hover:scale-[1.02] bg-card/50 backdrop-blur-sm">
-										<div className="space-y-4">
-											{/* Header with Arrow */}
-											<div className="flex items-start justify-between gap-3">
-												<h3 className="text-xl md:text-2xl font-display font-light leading-tight group-hover:text-primary transition-colors">
-													{cat.name}
-												</h3>
-												<ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-1" />
-											</div>
-
-											{/* Description */}
-											{cat.description && (
-												<p className="text-sm md:text-base text-muted-foreground font-display font-light leading-relaxed">
-													{cat.description}
-												</p>
-											)}
-
-											{/* CTA */}
-											<div className="pt-4 border-t border-border/50">
-												<span className="text-sm text-primary font-display font-medium inline-flex items-center gap-1.5">
-													View products
-													<ArrowRight className="h-3.5 w-3.5" />
-												</span>
-											</div>
-										</div>
-									</div>
-								</Link>
-							))}
-						</div>
+						<CategorySlider
+							categories={categories}
+							productLineSlug={category}
+						/>
 					</div>
 				</section>
 
 				{/* Trust Bar */}
 				<section className="py-12 md:py-16 border-t bg-accent/5">
-					<div className="container px-4">
+					<div className="px-4 max-w-7xl mx-auto">
 						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
 							<div className="flex items-center gap-2">
 								<span className="text-primary text-lg">✓</span>
