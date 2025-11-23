@@ -1,229 +1,214 @@
 // src/app/shop/page.tsx
 
-import Link from "next/link";
+import { ProductLineCard } from "~/components/shop/category/ProductLineCard";
+import { ProductCard } from "~/components/shop/product/ProductCard";
 import { api, HydrateClient } from "~/trpc/server";
-import { ReviewCard } from "~/components/proof/ReviewCard";
-import { ArrowRight } from "lucide-react";
-import { CategorySlider } from "./_components/CategorySlider";
-import { ProductLineCard } from "./_components/product/ProductLineCard";
+
+// Static product line data (not in DB - these are marketing pages)
+const productLines = [
+	{
+		slug: "3d-backgrounds",
+		name: "3D Backgrounds",
+		description: "Transform your aquarium with custom-made 3D backgrounds so realistic that even experts can't tell the difference from natural rock formations.",
+		image: "/media/images/3d-backgrounds_500px.webp",
+		label: "Handcrafted Since 2004",
+	},
+	{
+		slug: "aquarium-decorations",
+		name: "Aquarium Decorations",
+		description: "Realistic plants, rocks, driftwood, and accessories crafted from neutral materials for unlimited lifespan and zero water chemistry impact.",
+		image: "/media/images/additional-items_500px.webp",
+		label: "Complete Your Aquascape",
+	},
+];
 
 export default async function ShopPage() {
-	// Load product lines, their categories, and reviews
-	const [productLines, featuredReviews, backgroundCategories, decorationCategories] = await Promise.all([
-		// api.product.getProductLines({ locale: "en" }),
-		api.reviews.getFeatured({ limit: 6 }), // ✅ Fixed: Changed from api.product.getFeaturedReviews
-		api.product.getCategoriesForProductLine({ productLineSlug: "3d-backgrounds", locale: "en" }),
-		api.product.getCategoriesForProductLine({ productLineSlug: "aquarium-decorations", locale: "en" }),
-	]);
+	// Get category counts
+	const backgroundsCategories = await api.product.getCategoriesForProductLine({
+		productLineSlug: "3d-backgrounds",
+		locale: "en",
+	});
 
-	// Separate the two product lines
-	const backgroundsLine = productLines.find(line => line.slug === "3d-backgrounds");
-	const decorationsLine = productLines.find(line => line.slug === "aquarium-decorations");
+	const decorationsCategories = await api.product.getCategoriesForProductLine({
+		productLineSlug: "aquarium-decorations",
+		locale: "en",
+	});
+
+	// Get all featured products
+	const featuredProducts = await api.product.getFeatured({
+		locale: "en",
+		limit: 6,
+	});
+
+	// Split featured products by product line
+	const backgroundProducts = featuredProducts.filter(
+		p => p.productLineSlug === "3d-backgrounds"
+	).slice(0, 3);
+
+	const decorationProducts = featuredProducts.filter(
+		p => p.productLineSlug === "aquarium-decorations"
+	).slice(0, 3);
 
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Hero Section */}
-				<section className="relative bg-linear-to-b from-muted via-muted/30 to-transparent overflow-hidden">
-					<div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(55,129,194,0.1),transparent_50%)]" />
-					<div className="container relative px-4 py-20 md:py-32 text-center">
-						<h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-extralight tracking-tight">
-							Transform Your Aquarium
+				<section className="py-16 md:py-24 border-b">
+					<div className="px-4 max-w-7xl mx-auto text-center space-y-6">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
+							Shop Aquarium Products
 						</h1>
-						<p className="mt-6 text-xl md:text-2xl text-muted-foreground font-display font-light max-w-3xl mx-auto">
-							Handcrafted 3D backgrounds and decorations trusted by 50,000+ aquarium enthusiasts worldwide
+						<p className="text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto">
+							Explore our complete range of 3D backgrounds and decorations. Handcrafted in Serbia, trusted by 50,000+ aquarists worldwide.
 						</p>
-
-						{/* Trust Bar */}
-						<div className="flex flex-wrap items-center justify-center gap-6 md:gap-8 mt-10 text-sm md:text-base font-display font-light">
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>20+ Years</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>Free Shipping</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>50K+ Shipped</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>1000+ Designs</span>
-							</div>
-						</div>
 					</div>
 				</section>
 
-				{/* Interactive Product Line Cards - Sticky Scroll Effect */}
-				<section className="relative">
-					<div className="container px-4">
-						<div className="max-w-7xl mx-auto">
-							{/* 3D Backgrounds */}
-							{backgroundsLine && (
-								<div id="3d-backgrounds" className="scroll-mt-20 pb-16 md:pb-24">
-									<ProductLineCard
-										slug={backgroundsLine.slug}
-										name={backgroundsLine.name}
-										description="Natural look with our 3D aquarium backgrounds. Handcrafted backgrounds so realistic, even nature takes notes."
-										image="/media/images/3d-backgrounds_500px.webp"
-										label="Product Line 01"
-										position="left"
-										categoryCount={backgroundCategories.length}
-									/>
+				{/* 3D Backgrounds Section */}
+				<section className="py-16 md:py-24">
+					<div className="px-4 max-w-7xl mx-auto space-y-12">
+						{/* Product Line Card */}
+						<ProductLineCard
+							slug={productLines[0].slug}
+							name={productLines[0].name}
+							description={productLines[0].description}
+							image={productLines[0].image}
+							label={productLines[0].label}
+							position="left"
+							categoryCount={backgroundsCategories.length}
+						/>
 
-									{/* Category Slider */}
-									<div className="mt-12">
-										<div className="mb-8">
-											<h3 className="text-2xl md:text-3xl font-display font-light mb-3">
-												Browse 3D Background Categories
-											</h3>
-											<p className="text-muted-foreground font-display font-light text-lg">
-												From classic rocky designs to Amazonian tree trunks
-											</p>
-										</div>
-										<CategorySlider
-											categories={backgroundCategories}
-											productLineSlug="3d-backgrounds"
-										/>
-									</div>
+						{/* Featured Products */}
+						{backgroundProducts.length > 0 && (
+							<div className="space-y-6">
+								<div className="text-center">
+									<h3 className="text-2xl md:text-3xl font-display font-light">
+										Featured 3D Backgrounds
+									</h3>
+									<p className="mt-2 text-muted-foreground font-display font-light">
+										Custom-made to fit any aquarium size
+									</p>
 								</div>
-							)}
-
-							{/* Aquarium Decorations */}
-							{decorationsLine && (
-								<div id="aquarium-decorations" className="scroll-mt-20 pb-16 md:pb-24">
-									<ProductLineCard
-										slug={decorationsLine.slug}
-										name={decorationsLine.name}
-										description="Natural effect with aquarium decorations. Plants, rocks, and complete sets for your perfect aquascape."
-										image="/media/images/additional-items_500px.webp"
-										label="Product Line 02"
-										position="right"
-										categoryCount={decorationCategories.length}
-									/>
-
-									{/* Category Slider */}
-									<div className="mt-12">
-										<div className="mb-8">
-											<h3 className="text-2xl md:text-3xl font-display font-light mb-3">
-												Browse Decoration Categories
-											</h3>
-											<p className="text-muted-foreground font-display font-light text-lg">
-												Plants, rocks, driftwood, and complete starter sets
-											</p>
-										</div>
-										<CategorySlider
-											categories={decorationCategories}
-											productLineSlug="aquarium-decorations"
+								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+									{backgroundProducts.map((product) => (
+										<ProductCard
+											key={product.id}
+											product={product}
 										/>
-									</div>
+									))}
 								</div>
-							)}
-						</div>
-					</div>
-				</section>
+							</div>
+						)}
 
-				{/* Social Proof - Featured Reviews */}
-				<section className="py-20 md:py-32">
-					<div className="container px-4">
-						<div className="text-center mb-16">
-							<h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight mb-6">
-								Trusted Worldwide
-							</h2>
-							<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								See what aquarium enthusiasts are saying about Aquadecor
-							</p>
-						</div>
-
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-							{featuredReviews.map((review) => (
-								<ReviewCard key={review.id} review={review} />
-							))}
-						</div>
-
-						<div className="text-center mt-12">
-							<Link
-								href="/shop/reviews"
-								className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-display font-medium text-lg transition-colors group"
-							>
-								View all reviews
-								<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-							</Link>
-						</div>
-					</div>
-				</section>
-
-				{/* Why Choose Aquadecor */}
-				<section className="py-20 md:py-32 border-y bg-gradient-to-b from-accent/5 to-transparent">
-					<div className="container px-4">
-						<div className="max-w-4xl mx-auto text-center space-y-8">
-							<h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight">
-								20+ Years of Excellence
-							</h2>
-							<p className="text-xl md:text-2xl text-muted-foreground font-display font-light leading-relaxed">
-								Since 2003, we've designed over 1,000 unique models and shipped 50,000+ products worldwide.
-								Our handcrafted backgrounds transform ordinary aquariums into natural masterpieces that
-								even experts struggle to distinguish from the real thing.
-							</p>
-						</div>
-
-						{/* Stats Grid */}
-						<div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 max-w-5xl mx-auto mt-16">
+						{/* Key Features */}
+						<div className="grid md:grid-cols-3 gap-8 mt-12 p-8 bg-muted/30 rounded-2xl">
 							<div className="text-center space-y-3">
-								<p className="text-5xl md:text-6xl font-display font-extralight text-primary">20+</p>
-								<p className="text-base md:text-lg text-muted-foreground font-display font-light">
-									Years in business
+								<div className="text-4xl">🎨</div>
+								<h4 className="font-display font-medium">Hand-Painted</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Every background is individually hand-painted for realistic detail
 								</p>
 							</div>
 							<div className="text-center space-y-3">
-								<p className="text-5xl md:text-6xl font-display font-extralight text-primary">50K+</p>
-								<p className="text-base md:text-lg text-muted-foreground font-display font-light">
-									Products shipped
+								<div className="text-4xl">📐</div>
+								<h4 className="font-display font-medium">Custom Fit</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Made to your exact dimensions, including weirs and overflows
 								</p>
 							</div>
 							<div className="text-center space-y-3">
-								<p className="text-5xl md:text-6xl font-display font-extralight text-primary">1000+</p>
-								<p className="text-base md:text-lg text-muted-foreground font-display font-light">
-									Unique designs
-								</p>
-							</div>
-							<div className="text-center space-y-3">
-								<p className="text-5xl md:text-6xl font-display font-extralight text-primary">50+</p>
-								<p className="text-base md:text-lg text-muted-foreground font-display font-light">
-									Countries served
+								<div className="text-4xl">🛡️</div>
+								<h4 className="font-display font-medium">Lifetime Warranty</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Chemical-resistant materials that never leach or affect pH
 								</p>
 							</div>
 						</div>
 					</div>
 				</section>
 
-				{/* Final CTA */}
-				<section className="py-20 md:py-32">
-					<div className="container px-4">
-						<div className="max-w-3xl mx-auto text-center space-y-8">
-							<h2 className="text-4xl md:text-5xl font-display font-extralight">
-								Need Help Choosing?
-							</h2>
-							<p className="text-xl text-muted-foreground font-display font-light">
-								Not sure which product line is right for your aquarium? We're here to help.
-							</p>
-							<div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-								<Link
-									href="#3d-backgrounds"
-									className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
-								>
-									Browse 3D Backgrounds
-									<ArrowRight className="h-4 w-4" />
-								</Link>
-								<Link
-									href="#aquarium-decorations"
-									className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-border rounded-full font-display font-medium hover:border-primary/50 hover:bg-accent/30 transition-all"
-								>
-									Browse Decorations
-									<ArrowRight className="h-4 w-4" />
-								</Link>
+				{/* Aquarium Decorations Section */}
+				<section className="py-16 md:py-24 bg-muted/10">
+					<div className="px-4 max-w-7xl mx-auto space-y-12">
+						{/* Product Line Card */}
+						<ProductLineCard
+							slug={productLines[1].slug}
+							name={productLines[1].name}
+							description={productLines[1].description}
+							image={productLines[1].image}
+							label={productLines[1].label}
+							position="right"
+							categoryCount={decorationsCategories.length}
+						/>
+
+						{/* Featured Products */}
+						{decorationProducts.length > 0 && (
+							<div className="space-y-6">
+								<div className="text-center">
+									<h3 className="text-2xl md:text-3xl font-display font-light">
+										Featured Decorations
+									</h3>
+									<p className="mt-2 text-muted-foreground font-display font-light">
+										Plants, rocks, and driftwood that last forever
+									</p>
+								</div>
+								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+									{decorationProducts.map((product) => (
+										<ProductCard
+											key={product.id}
+											product={product}
+										/>
+									))}
+								</div>
+							</div>
+						)}
+
+						{/* Key Features */}
+						<div className="grid md:grid-cols-3 gap-8 mt-12 p-8 bg-background rounded-2xl border">
+							<div className="text-center space-y-3">
+								<div className="text-4xl">🌿</div>
+								<h4 className="font-display font-medium">100% Neutral</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Won't affect water chemistry or leach minerals into your tank
+								</p>
+							</div>
+							<div className="text-center space-y-3">
+								<div className="text-4xl">♾️</div>
+								<h4 className="font-display font-medium">Never Decays</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Unlike natural materials, these never rot, float, or need replacement
+								</p>
+							</div>
+							<div className="text-center space-y-3">
+								<div className="text-4xl">🐟</div>
+								<h4 className="font-display font-medium">Fish-Safe</h4>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									Even aggressive cichlids can't damage our decorations
+								</p>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				{/* Trust Bar */}
+				<section className="py-12 md:py-16 border-t">
+					<div className="px-4 max-w-7xl mx-auto">
+						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
+							<div className="flex items-center gap-2">
+								<span className="text-primary text-lg">✓</span>
+								<span>Free Worldwide Shipping</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="text-primary text-lg">✓</span>
+								<span>20+ Years in Business</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="text-primary text-lg">✓</span>
+								<span>50,000+ Products Shipped</span>
+							</div>
+							<div className="flex items-center gap-2">
+								<span className="text-primary text-lg">✓</span>
+								<span>Lifetime Warranty</span>
 							</div>
 						</div>
 					</div>

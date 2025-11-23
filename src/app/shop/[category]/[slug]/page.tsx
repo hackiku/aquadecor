@@ -15,10 +15,13 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 	const { category, slug } = await params;
 
 	// Load products for this category
-	const products = await api.product.getByCategory({
+	const result = await api.product.getByCategory({
 		categorySlug: slug,
 		locale: "en",
 	});
+
+	// ✅ NEW: API returns { products, categorySlug, productLineSlug }
+	const { products, categorySlug, productLineSlug } = result;
 
 	if (!products || products.length === 0) {
 		notFound();
@@ -48,11 +51,11 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 	const categoryName = categoryNames[slug] || slug;
 	const productLineName = productLineNames[category] || category;
 
-	// Add category and product line slugs to products for routing
+	// ✅ Add routing slugs to products (API already provides them, but add for consistency)
 	const productsWithSlugs = products.map(product => ({
 		...product,
-		categorySlug: slug,
-		productLineSlug: category,
+		categorySlug: categorySlug,
+		productLineSlug: productLineSlug,
 	}));
 
 	return (

@@ -23,8 +23,8 @@ export default async function LandingPage() {
 				<HeroSection />
 
 				{/* Tagline + Product Slider */}
-				<section className="py-16 md:py-24"> 
-					
+				<section className="py-16 md:py-24">
+
 					<div className="px-4">
 						<div className="text-center mb-12 md:mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal">
@@ -39,8 +39,8 @@ export default async function LandingPage() {
 				</section>
 
 
-				<section className="py-16 md:py-24"> 
-					
+				<section className="py-16 md:py-24">
+
 					<div className="px-4">
 						<div className="text-center mb-12 md:mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal">
@@ -89,7 +89,7 @@ export default async function LandingPage() {
 
 					{/* Bottom Wave Divider (flipped) */}
 					{/* <WaveDivider position="bottom" flip={true} color="currentColor" className="text-background" /> */}
-					
+
 				</section>
 
 				{/* Stats - Social Proof */}
