@@ -15,8 +15,8 @@ async function clear() {
 	console.log("🗑️  Clearing tables...");
 
 	try {
-		// Clear all shop tables - CASCADE will handle foreign key constraints
-		// Note: PostgreSQL TRUNCATE doesn't support IF EXISTS, so we catch errors instead
+		// Clear all shop tables in correct order (respects foreign keys)
+		// CASCADE will handle dependent records automatically
 		await db.execute(sql`
 			TRUNCATE TABLE 
 				product_image,
@@ -26,7 +26,8 @@ async function clear() {
 				category,
 				review_media,
 				review,
-				social_proof_source
+				social_proof_source,
+				quote
 			CASCADE;
 		`);
 

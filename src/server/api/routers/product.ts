@@ -9,71 +9,23 @@ import {
 	productImages,
 	categoryTranslations,
 } from "~/server/db/schema";
-import { eq, and, isNull, inArray } from "drizzle-orm";
+import { eq, and, inArray } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
 
-	// Get product lines (top-level categories with parentId = null)
-	getProductLines: publicProcedure
-		.input(z.object({
-			locale: z.string().default("en"),
-		}))
-		.query(async ({ ctx, input }) => {
-			const results = await ctx.db
-				.select({
-					id: categories.id,
-					slug: categories.slug,
-					sortOrder: categories.sortOrder,
-					name: categoryTranslations.name,
-					description: categoryTranslations.description,
-				})
-				.from(categories)
-				.leftJoin(
-					categoryTranslations,
-					and(
-						eq(categoryTranslations.categoryId, categories.id),
-						eq(categoryTranslations.locale, input.locale)
-					)
-				)
-				.where(
-					and(
-						isNull(categories.parentId),
-						eq(categories.isActive, true)
-					)
-				)
-				.orderBy(categories.sortOrder);
-
-			return results;
-		}),
-
-	// Get categories for a product line
+	// Get categories for a product line (now uses productLine tag instead of parentId)
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
 			productLineSlug: z.string(),
 			locale: z.string().default("en"),
 		}))
 		.query(async ({ ctx, input }) => {
-			// First find the product line
-			const [productLine] = await ctx.db
-				.select()
-				.from(categories)
-				.where(
-					and(
-						eq(categories.slug, input.productLineSlug),
-						isNull(categories.parentId)
-					)
-				)
-				.limit(1);
-
-			if (!productLine) {
-				return [];
-			}
-
-			// Get child categories
+			// Direct query with productLine tag (no need to find parent!)
 			const results = await ctx.db
 				.select({
 					id: categories.id,
 					slug: categories.slug,
+					productLine: categories.productLine,
 					sortOrder: categories.sortOrder,
 					name: categoryTranslations.name,
 					description: categoryTranslations.description,
@@ -88,7 +40,7 @@ export const productRouter = createTRPCRouter({
 				)
 				.where(
 					and(
-						eq(categories.parentId, productLine.id),
+						eq(categories.productLine, input.productLineSlug), // ✅ NEW: Direct productLine query
 						eq(categories.isActive, true)
 					)
 				)
@@ -115,7 +67,7 @@ export const productRouter = createTRPCRouter({
 				return [];
 			}
 
-			// Get products in this category with featured image
+			// Get products in this category with first image (sortOrder = 0)
 			const results = await ctx.db
 				.select({
 					id: products.id,
@@ -139,7 +91,10 @@ export const productRouter = createTRPCRouter({
 				)
 				.leftJoin(
 					productImages,
-					eq(productImages.id, products.featuredImageId)
+					and(
+						eq(productImages.productId, products.id),
+						eq(productImages.sortOrder, 0) // ✅ First image only
+					)
 				)
 				.where(
 					and(
@@ -149,7 +104,12 @@ export const productRouter = createTRPCRouter({
 				)
 				.orderBy(products.sortOrder);
 
-			return results;
+			// Add category metadata to response for breadcrumbs
+			return {
+				products: results,
+				categorySlug: category.slug,
+				productLineSlug: category.productLine, // ✅ NEW: For routing
+			};
 		}),
 
 	// Get single product by slug with all details
@@ -170,7 +130,6 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					specifications: products.specifications,
 					stockStatus: products.stockStatus,
-					featuredImageId: products.featuredImageId,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 					fullDescription: productTranslations.fullDescription,
@@ -207,13 +166,14 @@ export const productRouter = createTRPCRouter({
 	getByIds: publicProcedure
 		.input(z.object({
 			ids: z.array(z.string()),
+			locale: z.string().default("en"),
 		}))
 		.query(async ({ ctx, input }) => {
 			if (!input.ids || input.ids.length === 0) {
 				return [];
 			}
 
-			// Use inArray for proper SQL IN clause
+			// Get products with category info for routing
 			const results = await ctx.db
 				.select({
 					id: products.id,
@@ -223,26 +183,35 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
 					categoryId: products.categoryId,
+					categorySlug: categories.slug, // ✅ For routing
+					productLineSlug: categories.productLine, // ✅ For routing
 					featuredImageUrl: productImages.storageUrl,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
 				.leftJoin(
+					categories,
+					eq(categories.id, products.categoryId) // ✅ Join category
+				)
+				.leftJoin(
 					productTranslations,
 					and(
 						eq(productTranslations.productId, products.id),
-						eq(productTranslations.locale, "en") // TODO: Make dynamic
+						eq(productTranslations.locale, input.locale)
 					)
 				)
 				.leftJoin(
 					productImages,
-					eq(productImages.id, products.featuredImageId)
+					and(
+						eq(productImages.productId, products.id),
+						eq(productImages.sortOrder, 0) // ✅ First image only
+					)
 				)
 				.where(
 					and(
 						eq(products.isActive, true),
-						inArray(products.id, input.ids) // ✅ Fixed
+						inArray(products.id, input.ids)
 					)
 				);
 
@@ -264,11 +233,17 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					basePriceEurCents: products.basePriceEurCents,
 					categoryId: products.categoryId,
+					categorySlug: categories.slug, // ✅ For routing
+					productLineSlug: categories.productLine, // ✅ For routing
 					featuredImageUrl: productImages.storageUrl,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
+				.leftJoin(
+					categories,
+					eq(categories.id, products.categoryId) // ✅ Join category
+				)
 				.leftJoin(
 					productTranslations,
 					and(
@@ -278,7 +253,10 @@ export const productRouter = createTRPCRouter({
 				)
 				.leftJoin(
 					productImages,
-					eq(productImages.id, products.featuredImageId)
+					and(
+						eq(productImages.productId, products.id),
+						eq(productImages.sortOrder, 0) // ✅ First image only
+					)
 				)
 				.where(
 					and(

@@ -5,24 +5,22 @@ import { createTable } from "./_utils";
 
 // ============================================================================
 // CATEGORIES
-// Hierarchical structure:
-// - 3D Backgrounds (parent)
-//   - A Models - Classic Rocky (child)
-//   - A Slim Models - Thin Rocky (child)
-//   - B Models - Amazonian (child)
-// - Aquarium decorations (parent)
-//   - Aquarium Plants (child)
-//   - Aquarium Rocks (child)
-//   - D Models - Logs/Leaves/Driftwood (child)
-//   - H Models - Artificial Reefs (child)
+// Flat structure tagged by product line:
+// - A Models (productLine: "3d-backgrounds")
+// - A Slim Models (productLine: "3d-backgrounds")
+// - Aquarium Plants (productLine: "aquarium-decorations")
+// - D Models (productLine: "aquarium-decorations")
+// 
+// Product line landing pages (3d-backgrounds, aquarium-decorations) are 
+// hardcoded Next.js pages, not DB entities - better for CRO control.
 // ============================================================================
 
 export const categories = createTable(
 	"category",
 	(d) => ({
-		id: d.text().primaryKey(), // 'backgrounds-3d', 'backgrounds-3d-a-models'
-		slug: d.text().notNull().unique(), // 'backgrounds-3d', 'a-models'
-		parentId: d.text(), // null for top-level categories
+		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
+		slug: d.text().notNull().unique(), // 'a-models', 'aquarium-plants'
+		productLine: d.text().notNull(), // '3d-backgrounds' | 'aquarium-decorations'
 
 		// Display
 		sortOrder: d.integer().default(0).notNull(),
@@ -33,8 +31,8 @@ export const categories = createTable(
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
 	(t) => [
-		index("category_parent_id_idx").on(t.parentId),
 		index("category_slug_idx").on(t.slug),
+		index("category_product_line_idx").on(t.productLine),
 	],
 );
 
@@ -45,7 +43,7 @@ export const categoryTranslations = createTable(
 		categoryId: d.text().notNull().references(() => categories.id, { onDelete: "cascade" }),
 		locale: d.text().notNull(), // 'en', 'de', 'pl', 'cs', etc.
 
-		name: d.text().notNull(), // "3D Backgrounds", "A Models - Classic Rocky Backgrounds"
+		name: d.text().notNull(), // "A Models - Classic Rocky Backgrounds"
 		description: d.text(), // Category description
 
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
@@ -58,11 +56,8 @@ export const categoryTranslations = createTable(
 
 // ============================================================================
 // PRODUCTS
-// Based on Excel: Each row is a product variant with SKU like:
-// - F1: 3D Background
-// - F2: 3D Background  
-// - Z1: Aquarium Plant
-// - Z2: Aquarium Plant
+// Single table for both 3D backgrounds and decorations
+// SKU examples: F1, F2 (backgrounds), Z1, Z10 (plants), D1, D10 (logs/roots)
 // ============================================================================
 
 export const products = createTable(
@@ -70,37 +65,41 @@ export const products = createTable(
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
 		categoryId: d.text().notNull().references(() => categories.id),
-		slug: d.text().notNull().unique(), // 'rocky-cave-background', 'z1-aquarium-plant'
-		sku: d.text(), // 'F1', 'F2', 'Z1', 'Z2' from Excel
+		slug: d.text().notNull().unique(), // 'f1-3d-background', 'z1-aquarium-plant'
+		sku: d.text().unique(), // 'F1', 'Z1' - user-facing semantic ID
 
-		// Pricing - stored in EUR cents (€199 = 19900)
-		// Many products show "Production takes 10-12 business days" = made-to-order
-		basePriceEurCents: d.integer(), // null = request quote only
+		// Pricing - stored in EUR cents (€49 = 4900)
+		basePriceEurCents: d.integer(), // null = custom-only (quote required)
 		priceNote: d.text(), // "From €199", "Production takes 10-12 business days"
 
-		// Specifications (flexible JSON structure)
+		// Specifications (flexible JSON for both backgrounds and decorations)
 		specifications: jsonb().$type<{
-			// Dimensions for calculator
+			// Common fields
 			dimensions?: {
 				widthCm?: number;
 				heightCm?: number;
 				depthCm?: number;
 			};
-			// From Excel columns
-			weight?: string;
 			material?: string;
-			compatibility?: string[];
+			weight?: string;
 			productionTime?: string; // "10-12 business days"
+
+			// Background-specific (nullable)
+			modularity?: "single" | "sectioned";
+			filtrationCutout?: boolean;
+			sidePanels?: "none" | "single" | "both";
+
+			// Decoration-specific (nullable)
+			plantType?: "moss" | "cabomba" | "eucalyptus" | "other";
+			rockFormation?: "cichlid-spawning" | "tanganyika" | "loose" | "magnetic";
+			compatibility?: string[]; // Fish species compatibility
 		}>(),
 
 		// Inventory & Status
-		stockStatus: d.text().default("made_to_order").notNull(), // 'in_stock', 'low_stock', 'out_of_stock', 'made_to_order'
+		stockStatus: d.text().default("made_to_order").notNull(), // 'in_stock' | 'made_to_order' | 'out_of_stock'
 		isActive: d.boolean().default(true).notNull(),
-		isFeatured: d.boolean().default(false).notNull(), // For homepage slider
+		isFeatured: d.boolean().default(false).notNull(), // For homepage ProductSlider
 		sortOrder: d.integer().default(0).notNull(),
-
-		// Media
-		featuredImageId: d.text(), // Points to productImages.id
 
 		// Timestamps
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
@@ -122,8 +121,8 @@ export const productTranslations = createTable(
 		locale: d.text().notNull(),
 
 		name: d.text().notNull(), // Product title
-		shortDescription: d.text(), // One-liner for cards
-		fullDescription: d.text(), // Long HTML description from Excel "MiniDescription"
+		shortDescription: d.text(), // One-liner for ProductCard
+		fullDescription: d.text(), // Long description for product detail page
 
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
@@ -135,7 +134,8 @@ export const productTranslations = createTable(
 
 // ============================================================================
 // PRODUCT IMAGES
-// Stored in Supabase Storage at: product-images/[productId]/[filename]
+// Supports mixed sources: CDN URLs and local /public/ paths
+// Later: Migrate to Supabase Storage (storagePath will be used then)
 // ============================================================================
 
 export const productImages = createTable(
@@ -144,9 +144,9 @@ export const productImages = createTable(
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
 		productId: d.text().notNull().references(() => products.id, { onDelete: "cascade" }),
 
-		// Supabase Storage path
-		storagePath: d.text().notNull(), // 'products/abc123/hero.jpg'
-		storageUrl: d.text().notNull(), // Full Supabase public URL
+		// Image location (supports CDN, public folder, or future Supabase Storage)
+		storageUrl: d.text().notNull(), // Full URL or path
+		storagePath: d.text(), // Future: 'products/abc123/hero.jpg' (nullable for now)
 
 		// Metadata
 		altText: d.text(),
@@ -156,18 +156,20 @@ export const productImages = createTable(
 		mimeType: d.text(), // 'image/jpeg', 'image/png', 'image/webp'
 
 		// Display
-		sortOrder: d.integer().default(0).notNull(),
+		sortOrder: d.integer().default(0).notNull(), // 0 = featured/hero image
 
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
 	(t) => [
 		index("product_image_product_idx").on(t.productId),
+		index("product_image_sort_idx").on(t.sortOrder),
 	],
 );
 
-
-// Add to: src/server/db/schema/shop.ts
-// Quotes table for calculator submissions
+// ============================================================================
+// QUOTES
+// Calculator submissions for custom 3D backgrounds
+// ============================================================================
 
 export const quotes = createTable(
 	"quote",
@@ -197,7 +199,7 @@ export const quotes = createTable(
 
 		// Status tracking
 		status: d.text().notNull().default("pending"),
-		// Possible values: "pending", "quoted", "accepted", "paid", "in_production", "shipped", "cancelled"
+		// Values: "pending" | "quoted" | "accepted" | "paid" | "in_production" | "shipped" | "cancelled"
 
 		// Notes
 		customerNotes: d.text(),
@@ -205,9 +207,9 @@ export const quotes = createTable(
 
 		// Timestamps
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
-		quotedAt: d.timestamp({ withTimezone: true }), // When admin sends quote
-		acceptedAt: d.timestamp({ withTimezone: true }), // When customer accepts
-		paidAt: d.timestamp({ withTimezone: true }),    // When payment received
+		quotedAt: d.timestamp({ withTimezone: true }),
+		acceptedAt: d.timestamp({ withTimezone: true }),
+		paidAt: d.timestamp({ withTimezone: true }),
 	}),
 	(t) => [
 		index("quote_email_idx").on(t.email),
@@ -216,21 +218,11 @@ export const quotes = createTable(
 	],
 );
 
-
-
 // ============================================================================
 // RELATIONS
 // ============================================================================
 
-export const categoriesRelations = relations(categories, ({ one, many }) => ({
-	parent: one(categories, {
-		fields: [categories.parentId],
-		references: [categories.id],
-		relationName: "categoryHierarchy",
-	}),
-	children: many(categories, {
-		relationName: "categoryHierarchy",
-	}),
+export const categoriesRelations = relations(categories, ({ many }) => ({
 	translations: many(categoryTranslations),
 	products: many(products),
 }));
@@ -249,10 +241,6 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 	}),
 	translations: many(productTranslations),
 	images: many(productImages),
-	featuredImage: one(productImages, {
-		fields: [products.featuredImageId],
-		references: [productImages.id],
-	}),
 }));
 
 export const productTranslationsRelations = relations(productTranslations, ({ one }) => ({
@@ -269,8 +257,6 @@ export const productImagesRelations = relations(productImages, ({ one }) => ({
 	}),
 }));
 
-
-// FOR CALCULATOR 
 export const quotesRelations = relations(quotes, ({ one }) => ({
 	// Could link to users table if auth is added
 }));

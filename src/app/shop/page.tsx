@@ -10,7 +10,7 @@ import { ProductLineCard } from "./_components/product/ProductLineCard";
 export default async function ShopPage() {
 	// Load product lines, their categories, and reviews
 	const [productLines, featuredReviews, backgroundCategories, decorationCategories] = await Promise.all([
-		api.product.getProductLines({ locale: "en" }),
+		// api.product.getProductLines({ locale: "en" }),
 		api.reviews.getFeatured({ limit: 6 }), // ✅ Fixed: Changed from api.product.getFeaturedReviews
 		api.product.getCategoriesForProductLine({ productLineSlug: "3d-backgrounds", locale: "en" }),
 		api.product.getCategoriesForProductLine({ productLineSlug: "aquarium-decorations", locale: "en" }),

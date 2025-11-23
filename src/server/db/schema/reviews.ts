@@ -20,21 +20,22 @@ export const reviews = createTable(
 		// Attribution
 		authorName: d.text().notNull(), // "Kevin 'fishbubbles'"
 		authorLocation: d.text(), // "Florida"
-		verifiedPurchase: d.boolean().default(false),
+		verifiedPurchase: d.boolean().default(false).notNull(),
 
 		// Source
-		source: d.text(), // "youtube", "forum", "facebook", "email"
+		source: d.text(), // "youtube", "forum", "facebook", "email", "reddit"
 		sourceUrl: d.text(), // Link to original
 
 		// Status
-		isFeatured: d.boolean().default(false),
-		isApproved: d.boolean().default(false),
+		isFeatured: d.boolean().default(false).notNull(),
+		isApproved: d.boolean().default(false).notNull(),
 
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
 	(t) => [
 		index("review_product_idx").on(t.productId),
 		index("review_featured_idx").on(t.isFeatured),
+		index("review_approved_idx").on(t.isApproved),
 	],
 );
 
@@ -52,9 +53,12 @@ export const reviewMedia = createTable(
 		sortOrder: d.integer().default(0).notNull(),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
+	(t) => [
+		index("review_media_review_idx").on(t.reviewId),
+	],
 );
 
-// Social proof sources
+// Social proof sources (for tracking platforms)
 export const socialProofSources = createTable(
 	"social_proof_source",
 	(d) => ({
@@ -68,7 +72,26 @@ export const socialProofSources = createTable(
 		followerCount: d.integer(),
 		description: d.text(),
 
-		isActive: d.boolean().default(true),
+		isActive: d.boolean().default(true).notNull(),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
 );
+
+// ============================================================================
+// RELATIONS
+// ============================================================================
+
+export const reviewsRelations = relations(reviews, ({ one, many }) => ({
+	product: one(products, {
+		fields: [reviews.productId],
+		references: [products.id],
+	}),
+	media: many(reviewMedia),
+}));
+
+export const reviewMediaRelations = relations(reviewMedia, ({ one }) => ({
+	review: one(reviews, {
+		fields: [reviewMedia.reviewId],
+		references: [reviews.id],
+	}),
+}));
