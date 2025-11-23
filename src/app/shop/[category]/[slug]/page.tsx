@@ -1,7 +1,6 @@
 // src/app/shop/[category]/[slug]/page.tsx
 
 import { notFound } from "next/navigation";
-import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
 import { api } from "~/trpc/server";
 
@@ -58,19 +57,6 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 
 	return (
 		<main className="min-h-screen">
-			{/* Breadcrumbs - Sticky with Nav awareness */}
-			<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
-				<div className="px-4 py-4 max-w-7xl mx-auto">
-					<Breadcrumbs
-						items={[
-							{ label: "Shop", href: "/shop" },
-							{ label: productLineName, href: `/shop/${category}` },
-							{ label: categoryName, href: `/shop/${category}/${slug}` },
-						]}
-					/>
-				</div>
-			</div>
-
 			{/* Header */}
 			<section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-transparent">
 				<div className="px-4 max-w-7xl mx-auto">

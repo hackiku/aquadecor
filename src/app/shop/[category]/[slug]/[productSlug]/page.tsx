@@ -3,9 +3,9 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
 import { AddToCartButton } from "~/components/shop/cart/AddToCartButton";
 import { WishlistButton } from "~/components/shop/wishlist/WishlistButton";
+import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { api, HydrateClient } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { Package, Truck, Clock } from "lucide-react";
@@ -31,37 +31,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		notFound();
 	}
 
-	// Temporary name mappings
-	const categoryNames: Record<string, string> = {
-		"a-models": "A Models",
-		"aquarium-plants": "Aquarium Plants",
-	};
-
-	const productLineNames: Record<string, string> = {
-		"3d-backgrounds": "3D Backgrounds",
-		"aquarium-decorations": "Aquarium Decorations",
-	};
-
-	const categoryName = categoryNames[slug] || slug;
-	const productLineName = productLineNames[category] || category;
+	const isCustomOnly = !product.basePriceEurCents;
 
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Breadcrumbs - Sticky with Nav awareness */}
-				<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
-					<div className="px-4 py-4 max-w-7xl mx-auto">
-						<Breadcrumbs
-							items={[
-								{ label: "Shop", href: "/shop" },
-								{ label: productLineName, href: `/shop/${category}` },
-								{ label: categoryName, href: `/shop/${category}/${slug}` },
-								{ label: product.name ?? productSlug, href: `/shop/${category}/${slug}/${productSlug}` },
-							]}
-						/>
-					</div>
-				</div>
-
 				{/* Product Content */}
 				<section className="py-12 md:py-20">
 					<div className="px-4 max-w-7xl mx-auto">
@@ -109,7 +83,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							<div className="space-y-8">
 								{/* Title & SKU */}
 								<div className="space-y-3">
-									<div className="flex items-center gap-3">
+									<div className="flex items-center gap-3 flex-wrap">
 										<Badge variant="secondary" className="font-display">
 											{product.sku}
 										</Badge>
@@ -123,6 +97,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 												Made to Order
 											</Badge>
 										)}
+										{isCustomOnly && <CustomOnlyBadge variant="inline" />}
 									</div>
 
 									<div className="flex items-start justify-between gap-4">
@@ -133,23 +108,24 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 									</div>
 								</div>
 
+								{/* Custom Only Banner */}
+								{isCustomOnly && (
+									<CustomOnlyBadge variant="banner" showCalculatorLink />
+								)}
+
 								{/* Price */}
-								<div className="py-6 border-y space-y-2">
-									{product.basePriceEurCents ? (
+								{!isCustomOnly && (
+									<div className="py-6 border-y space-y-2">
 										<div className="text-4xl font-display font-light">
 											€{(product.basePriceEurCents / 100).toFixed(2)}
 										</div>
-									) : (
-										<div className="text-2xl font-display font-light text-muted-foreground">
-											Custom Pricing
-										</div>
-									)}
-									{product.priceNote && (
-										<p className="text-sm text-muted-foreground font-display font-light">
-											{product.priceNote}
-										</p>
-									)}
-								</div>
+										{product.priceNote && (
+											<p className="text-sm text-muted-foreground font-display font-light">
+												{product.priceNote}
+											</p>
+										)}
+									</div>
+								)}
 
 								{/* Description */}
 								<div className="space-y-4">
@@ -214,11 +190,20 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 								{/* CTA */}
 								<div className="pt-6 space-y-3">
-									<AddToCartButton
-										product={product}
-										size="lg"
-										className="w-full rounded-full"
-									/>
+									{isCustomOnly ? (
+										<a
+											href="/calculator"
+											className="block w-full px-8 py-4 bg-primary dark:bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-[1.02] text-center"
+										>
+											Get Custom Quote
+										</a>
+									) : (
+										<AddToCartButton
+											product={product}
+											size="lg"
+											className="w-full rounded-full"
+										/>
+									)}
 									<p className="text-center text-sm text-muted-foreground font-display font-light">
 										Questions? Contact us for custom sizing
 									</p>

@@ -1,4 +1,4 @@
-// src/data/features.ts
+// src/data/product/features.ts
 
 export interface Feature {
   id: string;

@@ -1,5 +1,6 @@
 // src/server/api/root.ts
 import { productRouter } from "~/server/api/routers/product";
+import { reviewsRouter } from "~/server/api/routers/reviews";
 
 // import { productRouter } from "~/server/api/routers/product";
 // import { orderRouter } from "~/server/api/routers/order";
@@ -12,6 +13,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
 	product: productRouter,
+	reviews: reviewsRouter,
 	// order: orderRouter,
 });
 

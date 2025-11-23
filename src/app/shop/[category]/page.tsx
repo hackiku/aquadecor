@@ -3,7 +3,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";
 import { CategorySlider } from "~/components/shop/category/CategorySlider";
 import { api, HydrateClient } from "~/trpc/server";
 import { Package } from "lucide-react";
@@ -47,17 +46,7 @@ export default async function ProductLinePage({ params }: CategoryPageProps) {
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Breadcrumbs - Sticky with Nav awareness */}
-				<div className="sticky top-16 z-40 border-b bg-background/95 backdrop-blur">
-					<div className="px-4 py-4 max-w-7xl mx-auto">
-						<Breadcrumbs
-							items={[
-								{ label: "Shop", href: "/shop" },
-								{ label: productLine.name, href: `/shop/${category}` },
-							]}
-						/>
-					</div>
-				</div>
+				
 
 				{/* Hero Section with Background Image */}
 				<section className="relative overflow-hidden border-b">

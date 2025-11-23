@@ -8,9 +8,8 @@ import {
 	productTranslations,
 	productImages,
 	categoryTranslations,
-	reviews,
 } from "~/server/db/schema";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, inArray } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
 
@@ -116,7 +115,7 @@ export const productRouter = createTRPCRouter({
 				return [];
 			}
 
-			// Get products in this category
+			// Get products in this category with featured image
 			const results = await ctx.db
 				.select({
 					id: products.id,
@@ -126,7 +125,7 @@ export const productRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					stockStatus: products.stockStatus,
 					categoryId: products.categoryId,
-					featuredImageId: products.featuredImageId,
+					featuredImageUrl: productImages.storageUrl,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
@@ -137,6 +136,10 @@ export const productRouter = createTRPCRouter({
 						eq(productTranslations.productId, products.id),
 						eq(productTranslations.locale, input.locale)
 					)
+				)
+				.leftJoin(
+					productImages,
+					eq(productImages.id, products.featuredImageId)
 				)
 				.where(
 					and(
@@ -200,8 +203,7 @@ export const productRouter = createTRPCRouter({
 			};
 		}),
 
-
-
+	// Get multiple products by IDs (for cart/wishlist)
 	getByIds: publicProcedure
 		.input(z.object({
 			ids: z.array(z.string()),
@@ -211,6 +213,7 @@ export const productRouter = createTRPCRouter({
 				return [];
 			}
 
+			// Use inArray for proper SQL IN clause
 			const results = await ctx.db
 				.select({
 					id: products.id,
@@ -229,7 +232,7 @@ export const productRouter = createTRPCRouter({
 					productTranslations,
 					and(
 						eq(productTranslations.productId, products.id),
-						eq(productTranslations.locale, "en") // TODO: Use input locale
+						eq(productTranslations.locale, "en") // TODO: Make dynamic
 					)
 				)
 				.leftJoin(
@@ -239,14 +242,10 @@ export const productRouter = createTRPCRouter({
 				.where(
 					and(
 						eq(products.isActive, true),
-						// Check if product ID is in the input array
-						// Note: This uses a SQL IN clause
-						// sql`${products.id} = ANY(${input.ids})`
+						inArray(products.id, input.ids) // ✅ Fixed
 					)
 				);
 
-			// Add category/product line slugs
-			// TODO: Join categories table properly, for now return results as-is
 			return results;
 		}),
 
@@ -263,7 +262,9 @@ export const productRouter = createTRPCRouter({
 					slug: products.slug,
 					sku: products.sku,
 					priceNote: products.priceNote,
+					basePriceEurCents: products.basePriceEurCents,
 					categoryId: products.categoryId,
+					featuredImageUrl: productImages.storageUrl,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
@@ -275,6 +276,10 @@ export const productRouter = createTRPCRouter({
 						eq(productTranslations.locale, input.locale)
 					)
 				)
+				.leftJoin(
+					productImages,
+					eq(productImages.id, products.featuredImageId)
+				)
 				.where(
 					and(
 						eq(products.isFeatured, true),
@@ -285,44 +290,5 @@ export const productRouter = createTRPCRouter({
 				.limit(input.limit);
 
 			return results;
-		}),
-
-	// Get featured reviews
-	getFeaturedReviews: publicProcedure
-		.input(z.object({
-			limit: z.number().default(3),
-		}))
-		.query(async ({ ctx, input }) => {
-			const results = await ctx.db
-				.select()
-				.from(reviews)
-				.where(
-					and(
-						eq(reviews.isFeatured, true),
-						eq(reviews.isApproved, true)
-					)
-				)
-				.limit(input.limit);
-
-			return results;
-		}),
-
-	// Get all approved reviews
-	getAllReviews: publicProcedure
-		.input(z.object({
-			limit: z.number().optional(),
-		}))
-		.query(async ({ ctx, input }) => {
-			const query = ctx.db
-				.select()
-				.from(reviews)
-				.where(eq(reviews.isApproved, true))
-				.orderBy(reviews.createdAt);
-
-			if (input.limit) {
-				return await query.limit(input.limit);
-			}
-
-			return await query;
 		}),
 });
