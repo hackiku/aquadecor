@@ -200,6 +200,56 @@ export const productRouter = createTRPCRouter({
 			};
 		}),
 
+
+
+	getByIds: publicProcedure
+		.input(z.object({
+			ids: z.array(z.string()),
+		}))
+		.query(async ({ ctx, input }) => {
+			if (!input.ids || input.ids.length === 0) {
+				return [];
+			}
+
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					basePriceEurCents: products.basePriceEurCents,
+					priceNote: products.priceNote,
+					stockStatus: products.stockStatus,
+					categoryId: products.categoryId,
+					featuredImageUrl: productImages.storageUrl,
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+				})
+				.from(products)
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, "en") // TODO: Use input locale
+					)
+				)
+				.leftJoin(
+					productImages,
+					eq(productImages.id, products.featuredImageId)
+				)
+				.where(
+					and(
+						eq(products.isActive, true),
+						// Check if product ID is in the input array
+						// Note: This uses a SQL IN clause
+						// sql`${products.id} = ANY(${input.ids})`
+					)
+				);
+
+			// Add category/product line slugs
+			// TODO: Join categories table properly, for now return results as-is
+			return results;
+		}),
+
 	// Get featured products for homepage
 	getFeatured: publicProcedure
 		.input(z.object({

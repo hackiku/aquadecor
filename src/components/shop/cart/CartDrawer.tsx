@@ -6,6 +6,8 @@ import { X, ShoppingCart, ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
+import { SignupIncentive } from "~/components/cta/SignupIncentive";
+import { api } from "~/trpc/react";
 
 interface CartDrawerProps {
 	isOpen: boolean;
@@ -15,42 +17,64 @@ interface CartDrawerProps {
 interface CartItemData {
 	id: string;
 	productId: string;
-	name: string;
-	slug: string;
-	priceEurCents: number;
 	quantity: number;
-	imageUrl?: string;
-	categorySlug: string;
-	productLineSlug: string;
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-	const [items, setItems] = useState<CartItemData[]>([]);
+	const [cartItems, setCartItems] = useState<CartItemData[]>([]);
+	const [showSignup, setShowSignup] = useState(false);
 
 	// Load cart from localStorage
 	useEffect(() => {
-		const cart = localStorage.getItem("cart");
-		if (cart) {
-			setItems(JSON.parse(cart));
+		const loadCart = () => {
+			const cart = localStorage.getItem("cart");
+			if (cart) {
+				setCartItems(JSON.parse(cart));
+			}
+		};
+
+		if (isOpen) {
+			loadCart();
 		}
-	}, []);
+	}, [isOpen]);
 
 	// Listen for cart updates
 	useEffect(() => {
 		const handleCartUpdate = (e: CustomEvent) => {
-			setItems(e.detail.items);
+			setCartItems(e.detail.items);
 		};
 
 		window.addEventListener("cart-updated", handleCartUpdate as EventListener);
 		return () => window.removeEventListener("cart-updated", handleCartUpdate as EventListener);
 	}, []);
 
-	const updateQuantity = (itemId: string, newQuantity: number) => {
-		const updatedItems = items.map(item =>
-			item.id === itemId ? { ...item, quantity: newQuantity } : item
-		).filter(item => item.quantity > 0);
+	// Fetch product details for cart items
+	const productIds = cartItems.map(item => item.productId);
+	const { data: products } = api.product.getByIds.useQuery(
+		{ ids: productIds },
+		{ enabled: productIds.length > 0 && isOpen }
+	);
 
-		setItems(updatedItems);
+	// Merge cart items with product data
+	const enrichedItems = cartItems.map(cartItem => {
+		const product = products?.find(p => p.id === cartItem.productId);
+		return {
+			...cartItem,
+			name: product?.name || "Unknown Product",
+			slug: product?.slug || "",
+			priceEurCents: product?.basePriceEurCents || 0,
+			imageUrl: product?.featuredImageUrl,
+			categorySlug: product?.categorySlug || "",
+			productLineSlug: product?.productLineSlug || "",
+		};
+	});
+
+	const updateQuantity = (itemId: string, newQuantity: number) => {
+		const updatedItems = cartItems
+			.map(item => (item.id === itemId ? { ...item, quantity: newQuantity } : item))
+			.filter(item => item.quantity > 0);
+
+		setCartItems(updatedItems);
 		localStorage.setItem("cart", JSON.stringify(updatedItems));
 		window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: updatedItems } }));
 	};
@@ -59,8 +83,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 		updateQuantity(itemId, 0);
 	};
 
-	const subtotal = items.reduce((sum, item) => sum + (item.priceEurCents * item.quantity), 0);
-	const isEmpty = items.length === 0;
+	const subtotal = enrichedItems.reduce((sum, item) => sum + (item.priceEurCents * item.quantity), 0);
+	const isEmpty = cartItems.length === 0;
 
 	return (
 		<>
@@ -82,7 +106,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 					<div className="flex items-center gap-3">
 						<ShoppingCart className="h-5 w-5 text-primary" />
 						<h2 className="text-xl font-display font-normal">
-							Cart ({items.length})
+							Cart ({cartItems.length})
 						</h2>
 					</div>
 					<Button variant="ghost" size="icon" onClick={onClose}>
@@ -91,7 +115,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 				</div>
 
 				{/* Items */}
-				<div className="flex-1 overflow-y-auto p-6">
+				<div className="flex-1 overflow-y-auto p-6 space-y-6">
 					{isEmpty ? (
 						<div className="flex flex-col items-center justify-center h-full text-center space-y-4">
 							<ShoppingCart className="h-16 w-16 text-muted-foreground/20" />
@@ -103,16 +127,43 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 							</Button>
 						</div>
 					) : (
-						<div className="space-y-4">
-							{items.map((item) => (
-								<CartItem
-									key={item.id}
-									item={item}
-									onUpdateQuantity={(newQuantity) => updateQuantity(item.id, newQuantity)}
-									onRemove={() => removeItem(item.id)}
+						<>
+							{/* Cart Items */}
+							<div className="space-y-4">
+								{enrichedItems.map((item) => (
+									<CartItem
+										key={item.id}
+										item={item}
+										onUpdateQuantity={(newQuantity) => updateQuantity(item.id, newQuantity)}
+										onRemove={() => removeItem(item.id)}
+									/>
+								))}
+							</div>
+
+							{/* Signup Incentive */}
+							{!showSignup && (
+								<button
+									onClick={() => setShowSignup(true)}
+									className="w-full text-left"
+								>
+									<div className="p-4 border-2 border-dashed border-primary/30 rounded-xl hover:border-primary/50 hover:bg-primary/5 transition-colors">
+										<p className="text-sm font-display font-medium text-primary">
+											💰 Save 10% with an account
+										</p>
+										<p className="text-xs text-muted-foreground font-display font-light mt-1">
+											Create account & get 10% off this order
+										</p>
+									</div>
+								</button>
+							)}
+
+							{showSignup && (
+								<SignupIncentive
+									trigger="cart"
+									onDismiss={() => setShowSignup(false)}
 								/>
-							))}
-						</div>
+							)}
+						</>
 					)}
 				</div>
 

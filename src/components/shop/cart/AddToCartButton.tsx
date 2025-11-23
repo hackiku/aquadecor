@@ -39,9 +39,27 @@ export function AddToCartButton({
 			console.log("Open quote modal for:", product.id);
 			// TODO: Implement quote modal
 		} else {
-			// Add to cart
-			console.log("Add to cart:", product.id);
-			// TODO: Implement cart logic
+			// Add to cart with full product data
+			const cart = localStorage.getItem("cart");
+			const items = cart ? JSON.parse(cart) : [];
+
+			// Check if product already in cart
+			const existingIndex = items.findIndex((item: any) => item.productId === product.id);
+
+			if (existingIndex > -1) {
+				// Increment quantity
+				items[existingIndex].quantity += 1;
+			} else {
+				// Add new item with full data
+				items.push({
+					id: `cart-${Date.now()}`,
+					productId: product.id,
+					quantity: 1,
+				});
+			}
+
+			localStorage.setItem("cart", JSON.stringify(items));
+			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items } }));
 		}
 
 		setTimeout(() => setIsLoading(false), 500);

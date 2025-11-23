@@ -2,71 +2,58 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Heart, ArrowRight } from "lucide-react";
+import { X, Heart } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { WishlistItem } from "./WishlistItem";
+import { SignupIncentive } from "~/components/cta/SignupIncentive";
+import { api } from "~/trpc/react";
 
 interface WishlistDrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-interface WishlistItemData {
-	id: string;
-	name: string;
-	slug: string;
-	priceEurCents?: number | null;
-	priceNote?: string;
-	imageUrl?: string;
-	categorySlug: string;
-	productLineSlug: string;
-}
-
 export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
-	const [items, setItems] = useState<WishlistItemData[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	const [wishlistIds, setWishlistIds] = useState<string[]>([]);
 
 	// Load wishlist from localStorage
 	useEffect(() => {
-		if (!isOpen) return;
+		const loadWishlist = () => {
+			const wishlist = localStorage.getItem("wishlist");
+			if (wishlist) {
+				setWishlistIds(JSON.parse(wishlist));
+			}
+		};
 
-		const wishlist = localStorage.getItem("wishlist");
-		if (wishlist) {
-			const productIds = JSON.parse(wishlist) as string[];
-
-			// TODO: Fetch actual product data from tRPC
-			// For now, just mock data
-			setIsLoading(false);
-		} else {
-			setIsLoading(false);
+		if (isOpen) {
+			loadWishlist();
 		}
 	}, [isOpen]);
 
 	// Listen for wishlist updates
 	useEffect(() => {
 		const handleWishlistUpdate = (e: CustomEvent) => {
-			// TODO: Reload wishlist items
-			console.log("Wishlist updated", e.detail);
+			setWishlistIds(e.detail.items);
 		};
 
 		window.addEventListener("wishlist-updated", handleWishlistUpdate as EventListener);
 		return () => window.removeEventListener("wishlist-updated", handleWishlistUpdate as EventListener);
 	}, []);
 
-	const removeItem = (productId: string) => {
-		const wishlist = localStorage.getItem("wishlist");
-		if (wishlist) {
-			const productIds = JSON.parse(wishlist) as string[];
-			const updated = productIds.filter(id => id !== productId);
-			localStorage.setItem("wishlist", JSON.stringify(updated));
-			window.dispatchEvent(new CustomEvent("wishlist-updated", { detail: { items: updated } }));
+	// Fetch product details
+	const { data: products, isLoading } = api.product.getByIds.useQuery(
+		{ ids: wishlistIds },
+		{ enabled: wishlistIds.length > 0 && isOpen }
+	);
 
-			// Update local state
-			setItems(items.filter(item => item.id !== productId));
-		}
+	const removeItem = (productId: string) => {
+		const updated = wishlistIds.filter(id => id !== productId);
+		setWishlistIds(updated);
+		localStorage.setItem("wishlist", JSON.stringify(updated));
+		window.dispatchEvent(new CustomEvent("wishlist-updated", { detail: { items: updated } }));
 	};
 
-	const isEmpty = items.length === 0;
+	const isEmpty = wishlistIds.length === 0;
 
 	return (
 		<>
@@ -88,7 +75,7 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 					<div className="flex items-center gap-3">
 						<Heart className="h-5 w-5 text-primary fill-primary" />
 						<h2 className="text-xl font-display font-normal">
-							Wishlist ({items.length})
+							Wishlist ({wishlistIds.length})
 						</h2>
 					</div>
 					<Button variant="ghost" size="icon" onClick={onClose}>
@@ -97,7 +84,7 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 				</div>
 
 				{/* Items */}
-				<div className="flex-1 overflow-y-auto p-6">
+				<div className="flex-1 overflow-y-auto p-6 space-y-6">
 					{isLoading ? (
 						<div className="flex items-center justify-center h-full">
 							<p className="text-muted-foreground font-display font-light">Loading...</p>
@@ -118,47 +105,23 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 							</Button>
 						</div>
 					) : (
-						<div className="space-y-4">
-							{items.map((item) => (
-								<WishlistItem
-									key={item.id}
-									item={item}
-									onRemove={() => removeItem(item.id)}
-								/>
-							))}
-						</div>
+						<>
+							{/* Wishlist Items */}
+							<div className="space-y-4">
+								{products?.map((product) => (
+									<WishlistItem
+										key={product.id}
+										item={product}
+										onRemove={() => removeItem(product.id)}
+									/>
+								))}
+							</div>
+
+							{/* Signup Incentive */}
+							<SignupIncentive trigger="wishlist" />
+						</>
 					)}
 				</div>
-
-				{/* Footer with Account CTA */}
-				{!isEmpty && (
-					<div className="border-t p-6 space-y-4 bg-gradient-to-t from-primary/5 to-transparent">
-						<div className="space-y-2">
-							<h3 className="font-display font-normal text-lg">
-								Save your wishlist
-							</h3>
-							<p className="text-sm text-muted-foreground font-display font-light">
-								Create an account to access your wishlist from anywhere
-							</p>
-						</div>
-
-						<Button
-							className="w-full rounded-full gap-2"
-							size="lg"
-							onClick={() => {
-								// TODO: Navigate to signup
-								console.log("Create account");
-							}}
-						>
-							Create Account
-							<ArrowRight className="h-4 w-4" />
-						</Button>
-
-						<p className="text-xs text-center text-muted-foreground font-display font-light">
-							Already have an account? <button className="text-primary hover:underline">Sign in</button>
-						</p>
-					</div>
-				)}
 			</div>
 		</>
 	);
