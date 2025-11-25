@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "./_components/layout/Sidebar";
 import { Header } from "./_components/layout/Header";
 import { motion } from "framer-motion";
+import { Toaster } from "sonner";
 
 export default function AdminLayout({
 	children,
@@ -55,6 +56,7 @@ export default function AdminLayout({
 					</div>
 				</main>
 			</motion.div>
+			<Toaster position="top-right" />
 		</div>
 	);
 }

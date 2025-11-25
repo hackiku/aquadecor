@@ -5,13 +5,23 @@
 import { useState, useMemo } from "react";
 import { mockOrders, type Order } from "../_data/orders";
 import { OrdersFilter } from "./_components/OrdersFilter";
-import { AdminTable, type Column } from "../_components/primitives/AdminTable";
 import { Badge } from "~/components/ui/badge";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "~/components/ui/table";
 
 export default function OrdersPage() {
 	const [filters, setFilters] = useState<{ email?: string; discountCode?: string }>({});
 	const [currentPage, setCurrentPage] = useState(1);
+	const [showFilters, setShowFilters] = useState(false);
 
 	// Filter orders
 	const filteredOrders = useMemo(() => {
@@ -74,86 +84,6 @@ export default function OrdersPage() {
 		return variants[status];
 	};
 
-	const columns: Column<Order>[] = [
-		{
-			header: "Order ID",
-			accessorKey: "orderNumber",
-			cell: (row) => (
-				<div className="space-y-1">
-					<p className="font-display font-normal text-primary text-sm">
-						{row.orderNumber}
-					</p>
-					<p className="font-display font-light text-xs text-muted-foreground font-mono">
-						{row.id.split("-")[0]}...
-					</p>
-				</div>
-			),
-		},
-		{
-			header: "Email",
-			accessorKey: "email",
-			cell: (row) => (
-				<span className="font-display font-light text-sm">
-					{row.email}
-				</span>
-			),
-		},
-		{
-			header: "Date",
-			accessorKey: "createdAt",
-			cell: (row) => (
-				<span className="font-display font-light text-sm whitespace-nowrap">
-					{formatDate(row.createdAt)}
-				</span>
-			),
-		},
-		{
-			header: "Price",
-			accessorKey: "total",
-			cell: (row) => (
-				<span className="font-display font-normal">
-					{formatPrice(row.total, row.currency)}
-				</span>
-			),
-		},
-		{
-			header: "Status",
-			accessorKey: "status",
-			cell: (row) => {
-				const statusInfo = getStatusBadge(row.status);
-				return (
-					<Badge variant={statusInfo.variant} className="font-display font-light">
-						{statusInfo.label}
-					</Badge>
-				);
-			},
-		},
-		{
-			header: "Payment",
-			accessorKey: "paymentStatus",
-			cell: (row) => {
-				const paymentInfo = getPaymentBadge(row.paymentStatus);
-				return (
-					<Badge
-						variant={paymentInfo.variant}
-						className={`font-display font-light ${paymentInfo.color || ""}`}
-					>
-						{paymentInfo.label}
-					</Badge>
-				);
-			},
-		},
-		{
-			header: "Discount Code",
-			accessorKey: "discountCode",
-			cell: (row) => (
-				<span className="font-display font-light text-sm">
-					{row.discountCode || "—"}
-				</span>
-			),
-		},
-	];
-
 	return (
 		<div className="space-y-8">
 			{/* Header */}
@@ -178,20 +108,125 @@ export default function OrdersPage() {
 			</div>
 
 			{/* Content Grid */}
-			<div className="grid lg:grid-cols-[280px_1fr] gap-6">
-				{/* Filter Sidebar */}
-				<div>
-					<OrdersFilter onFilterChange={setFilters} />
-				</div>
+			<div className="flex gap-6">
+				{/* Filter Sidebar - Collapsible */}
+				<AnimatePresence>
+					{showFilters && (
+						<motion.div
+							initial={{ width: 0, opacity: 0 }}
+							animate={{ width: 280, opacity: 1 }}
+							exit={{ width: 0, opacity: 0 }}
+							transition={{ duration: 0.3, ease: "easeInOut" }}
+							className="overflow-hidden"
+						>
+							<OrdersFilter onFilterChange={setFilters} />
+						</motion.div>
+					)}
+				</AnimatePresence>
 
 				{/* Orders Table */}
-				<div>
-					<AdminTable
-						columns={columns}
-						data={filteredOrders}
-						onRowClick={(row) => `/admin/orders/${row.id}`}
-						searchable={false}
-					/>
+				<div className="flex-1 overflow-hidden">
+					<div className="rounded-xl border-2 border-border overflow-hidden">
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-muted/50 hover:bg-muted/50">
+									<TableHead className="w-12">
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={() => setShowFilters(!showFilters)}
+											className="h-8 w-8 rounded-full"
+										>
+											<Filter className="h-4 w-4" />
+										</Button>
+									</TableHead>
+									<TableHead className="font-display font-normal text-primary">
+										Order ID
+									</TableHead>
+									<TableHead className="font-display font-normal">Email</TableHead>
+									<TableHead className="font-display font-normal">Date</TableHead>
+									<TableHead className="font-display font-normal">Price</TableHead>
+									<TableHead className="font-display font-normal">Status</TableHead>
+									<TableHead className="font-display font-normal">Payment</TableHead>
+									<TableHead className="font-display font-normal">Discount Code</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{filteredOrders.length === 0 ? (
+									<TableRow>
+										<TableCell colSpan={8} className="h-32 text-center">
+											<p className="text-muted-foreground font-display font-light">
+												No orders found
+											</p>
+										</TableCell>
+									</TableRow>
+								) : (
+									filteredOrders.map((order, index) => {
+										const statusInfo = getStatusBadge(order.status);
+										const paymentInfo = getPaymentBadge(order.paymentStatus);
+
+										return (
+											<TableRow
+												key={order.id}
+												className="cursor-pointer hover:bg-muted/30"
+												onClick={() => {
+													// TODO: Navigate to order detail
+													console.log("View order:", order.id);
+												}}
+											>
+												<TableCell className="font-display font-light text-muted-foreground">
+													{index + 1}
+												</TableCell>
+												<TableCell>
+													<div className="space-y-1">
+														<p className="font-display font-normal text-primary text-sm">
+															{order.orderNumber}
+														</p>
+														<p className="font-display font-light text-xs text-muted-foreground font-mono">
+															{order.id.split("-")[0]}...
+														</p>
+													</div>
+												</TableCell>
+												<TableCell>
+													<span className="font-display font-light text-sm">
+														{order.email}
+													</span>
+												</TableCell>
+												<TableCell>
+													<span className="font-display font-light text-sm whitespace-nowrap">
+														{formatDate(order.createdAt)}
+													</span>
+												</TableCell>
+												<TableCell>
+													<span className="font-display font-normal">
+														{formatPrice(order.total, order.currency)}
+													</span>
+												</TableCell>
+												<TableCell>
+													<Badge variant={statusInfo.variant} className="font-display font-light">
+														{statusInfo.label}
+													</Badge>
+												</TableCell>
+												<TableCell>
+													<Badge
+														variant={paymentInfo.variant}
+														className={`font-display font-light ${paymentInfo.color || ""}`}
+													>
+														{paymentInfo.label}
+													</Badge>
+												</TableCell>
+												<TableCell>
+													<span className="font-display font-light text-sm">
+														{order.discountCode || "—"}
+													</span>
+												</TableCell>
+											</TableRow>
+										);
+									})
+								)}
+							</TableBody>
+						</Table>
+					</div>
 				</div>
 			</div>
 		</div>

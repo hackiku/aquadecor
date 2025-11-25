@@ -148,4 +148,100 @@ export const adminCategoryRouter = createTRPCRouter({
 				byProductLine,
 			};
 		}),
+
+	// Create new category
+	create: publicProcedure
+		.input(z.object({
+			slug: z.string(),
+			productLine: z.enum(["3d-backgrounds", "aquarium-decorations"]),
+			sortOrder: z.number().default(0),
+			isActive: z.boolean().default(true),
+			// Translation (English required)
+			name: z.string(),
+			description: z.string().optional(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			// Insert category
+			const [category] = await ctx.db
+				.insert(categories)
+				.values({
+					slug: input.slug,
+					productLine: input.productLine,
+					sortOrder: input.sortOrder,
+					isActive: input.isActive,
+				})
+				.returning();
+
+			// Insert English translation
+			await ctx.db.insert(categoryTranslations).values({
+				categoryId: category!.id,
+				locale: "en",
+				name: input.name,
+				description: input.description,
+			});
+
+			return category;
+		}),
+
+	// Update category
+	update: publicProcedure
+		.input(z.object({
+			id: z.string(),
+			slug: z.string().optional(),
+			productLine: z.enum(["3d-backgrounds", "aquarium-decorations"]).optional(),
+			sortOrder: z.number().optional(),
+			isActive: z.boolean().optional(),
+			// Translation update
+			name: z.string().optional(),
+			description: z.string().optional().nullable(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			const { id, name, description, ...categoryData } = input;
+
+			// Update category
+			const [updated] = await ctx.db
+				.update(categories)
+				.set(categoryData)
+				.where(eq(categories.id, id))
+				.returning();
+
+			// Update English translation if provided
+			if (name || description !== undefined) {
+				const translationData: any = {};
+				if (name) translationData.name = name;
+				if (description !== undefined) translationData.description = description;
+
+				await ctx.db
+					.update(categoryTranslations)
+					.set(translationData)
+					.where(
+						and(
+							eq(categoryTranslations.categoryId, id),
+							eq(categoryTranslations.locale, "en")
+						)
+					);
+			}
+
+			return updated;
+		}),
+
+	// Delete category
+	delete: publicProcedure
+		.input(z.object({
+			id: z.string(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			// Check if category has products
+			const productCount = await ctx.db
+				.select({ count: sql<number>`COUNT(*)::int` })
+				.from(products)
+				.where(eq(products.categoryId, input.id));
+
+			if (productCount[0]?.count && productCount[0].count > 0) {
+				throw new Error("Cannot delete category with products");
+			}
+
+			await ctx.db.delete(categories).where(eq(categories.id, input.id));
+			return { success: true };
+		}),
 });
