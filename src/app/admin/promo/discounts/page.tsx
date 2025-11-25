@@ -1,6 +1,6 @@
 // src/app/admin/discounts/page.tsx
 
-import { AdminCard } from "../_components/primitives/AdminCard";
+import { AdminCard } from "../../_components/primitives/AdminCard";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";

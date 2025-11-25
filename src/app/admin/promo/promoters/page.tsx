@@ -3,7 +3,7 @@
 "use client";
 
 import { useState } from "react";
-import { mockPromoters, type Promoter } from "../_data/promoters";
+import { mockPromoters, type Promoter } from "../../_data/promoters";
 import { InvitePromoterModal } from "./_components/InvitePromoterModal";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
