@@ -79,19 +79,22 @@ export function AdminTable<T extends Record<string, any>>({
 								setSearchQuery(e.target.value);
 								setCurrentPage(1); // Reset to first page on search
 							}}
-							className="pl-9"
+							className="pl-9 font-display font-light"
 						/>
 					</div>
 				</div>
 			)}
 
 			{/* Table */}
-			<div className="rounded-md border">
+			<div className="rounded-xl border-2 border-border overflow-hidden">
 				<Table>
 					<TableHeader>
-						<TableRow>
+						<TableRow className="bg-muted/50 hover:bg-muted/50">
 							{columns.map((column) => (
-								<TableHead key={String(column.accessorKey)}>
+								<TableHead
+									key={String(column.accessorKey)}
+									className="font-display font-normal"
+								>
 									{column.header}
 								</TableHead>
 							))}
@@ -102,20 +105,25 @@ export function AdminTable<T extends Record<string, any>>({
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
-									className="h-24 text-center"
+									className="h-32 text-center"
 								>
-									No results found.
+									<p className="text-muted-foreground font-display font-light">
+										No results found
+									</p>
 								</TableCell>
 							</TableRow>
 						) : (
 							currentData.map((row, rowIndex) => (
 								<TableRow
 									key={rowIndex}
-									className={onRowClick ? "cursor-pointer" : ""}
+									className={onRowClick ? "cursor-pointer hover:bg-muted/30" : ""}
 									onClick={() => handleRowClick(row)}
 								>
 									{columns.map((column) => (
-										<TableCell key={String(column.accessorKey)}>
+										<TableCell
+											key={String(column.accessorKey)}
+											className="font-display font-light"
+										>
 											{column.cell
 												? column.cell(row)
 												: row[column.accessorKey]}
@@ -131,7 +139,7 @@ export function AdminTable<T extends Record<string, any>>({
 			{/* Pagination */}
 			{totalPages > 1 && (
 				<div className="flex items-center justify-between">
-					<p className="text-sm text-muted-foreground">
+					<p className="text-sm text-muted-foreground font-display font-light">
 						Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)}{" "}
 						of {filteredData.length} results
 					</p>
@@ -141,8 +149,9 @@ export function AdminTable<T extends Record<string, any>>({
 							size="sm"
 							onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
 							disabled={currentPage === 1}
+							className="rounded-full font-display font-light"
 						>
-							<ChevronLeft className="h-4 w-4" />
+							<ChevronLeft className="h-4 w-4 mr-1" />
 							Previous
 						</Button>
 						<div className="flex items-center gap-1">
@@ -154,24 +163,21 @@ export function AdminTable<T extends Record<string, any>>({
 										Math.abs(page - currentPage) <= 1
 								)
 								.map((page, index, array) => (
-									<>
+									<div key={page} className="contents">
 										{index > 0 && array[index - 1]! < page - 1 && (
-											<span
-												key={`ellipsis-${page}`}
-												className="px-2 text-muted-foreground"
-											>
+											<span className="px-2 text-muted-foreground font-display font-light">
 												...
 											</span>
 										)}
 										<Button
-											key={page}
 											variant={currentPage === page ? "default" : "outline"}
 											size="sm"
 											onClick={() => setCurrentPage(page)}
+											className="rounded-full font-display font-light min-w-[36px]"
 										>
 											{page}
 										</Button>
-									</>
+									</div>
 								))}
 						</div>
 						<Button
@@ -179,9 +185,10 @@ export function AdminTable<T extends Record<string, any>>({
 							size="sm"
 							onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
 							disabled={currentPage === totalPages}
+							className="rounded-full font-display font-light"
 						>
 							Next
-							<ChevronRight className="h-4 w-4" />
+							<ChevronRight className="h-4 w-4 ml-1" />
 						</Button>
 					</div>
 				</div>
