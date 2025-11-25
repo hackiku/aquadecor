@@ -1,84 +1,122 @@
-// src/components/shop/ProductSlider.tsx
-
+// src/components/shop/product/ProductSlider.tsx
 "use client";
 
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import { api } from "~/trpc/react";
+import { Skeleton } from "~/components/ui/skeleton";
 
-// Mock data - replace with tRPC call later
-const FEATURED_PRODUCTS = [
-	{
-		id: "1",
-		name: "Rocky Cave Background",
-		slug: "rocky-cave-background",
-		price: "From €199",
-		category: "3d-backgrounds",
-		image: "/images/products/rocky-cave.jpg",
-		description: "Natural rock formations with cave structures"
-	},
-	{
-		id: "2",
-		name: "Amazonian Roots",
-		slug: "amazonian-roots",
-		price: "From €249",
-		category: "3d-backgrounds",
-		image: "/images/products/amazonian.jpg",
-		description: "Authentic Amazon riverbed aesthetic"
-	},
-	{
-		id: "3",
-		name: "Slim Model - Stone",
-		slug: "slim-model-stone",
-		price: "From €149",
-		category: "slim-models",
-		image: "/images/products/slim-stone.jpg",
-		description: "Space-saving thin design"
-	},
-	{
-		id: "4",
-		name: "Coral Reef Decoration",
-		slug: "coral-reef-decoration",
-		price: "From €89",
-		category: "additional-items",
-		image: "/images/products/coral.jpg",
-		description: "Realistic coral structures"
-	},
-	{
-		id: "5",
-		name: "Driftwood Decoration",
-		slug: "driftwood-decoration",
-		price: "From €69",
-		category: "additional-items",
-		image: "/images/products/driftwood.jpg",
-		description: "Natural aged wood appearance"
-	},
-];
+type ProductLineFilter = "3d-backgrounds" | "aquarium-decorations";
 
 export function ProductSlider() {
+	const [filter, setFilter] = useState<ProductLineFilter>("3d-backgrounds");
+
+	// Auto-switch between product lines every 5 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setFilter((prev) =>
+				prev === "3d-backgrounds" ? "aquarium-decorations" : "3d-backgrounds"
+			);
+		}, 5000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	// Fetch featured products
+	const { data: products, isLoading } = api.product.getFeatured.useQuery({
+		locale: "en",
+		limit: 8,
+	});
+
+	// Filter by current selection
+	const filteredProducts = products?.filter(
+		(p) => p.productLineSlug === filter
+	).slice(0, 4) || [];
+
 	return (
-		<div className="relative">
+		<div className="relative w-full">
 			{/* Desktop: Horizontal scroll */}
 			<div className="hidden md:flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-				{FEATURED_PRODUCTS.map((product) => (
-					<ProductCard key={product.id} product={product} />
-				))}
+				{isLoading ? (
+					<>
+						{[...Array(4)].map((_, i) => (
+							<ProductCardSkeleton key={i} />
+						))}
+					</>
+				) : (
+					filteredProducts.map((product) => (
+						<ProductCard key={product.id} product={product} />
+					))
+				)}
 			</div>
 
 			{/* Mobile: Grid */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-				{FEATURED_PRODUCTS.slice(0, 4).map((product) => (
-					<ProductCard key={product.id} product={product} />
-				))}
+				{isLoading ? (
+					<>
+						{[...Array(4)].map((_, i) => (
+							<ProductCardSkeleton key={i} />
+						))}
+					</>
+				) : (
+					filteredProducts.map((product) => (
+						<ProductCard key={product.id} product={product} />
+					))
+				)}
 			</div>
 
-			{/* View All Button */}
-			<div className="text-center mt-8">
+			{/* Bottom Row: Toggle + CTA */}
+			<div className="flex items-center justify-between mt-8">
+				{/* Category Toggle */}
+				<div className="flex items-center gap-2">
+					<button
+						onClick={() => setFilter("3d-backgrounds")}
+						className={`group relative px-4 py-2 text-sm font-display font-medium transition-colors ${filter === "3d-backgrounds"
+								? "text-primary"
+								: "text-muted-foreground hover:text-foreground"
+							}`}
+						title="3D Aquarium Backgrounds"
+					>
+						Backgrounds
+						{filter === "3d-backgrounds" && (
+							<motion.div
+								layoutId="activeFilter"
+								className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+								transition={{ type: "spring", stiffness: 380, damping: 30 }}
+							/>
+						)}
+					</button>
+
+					<span className="text-muted-foreground/50">|</span>
+
+					<button
+						onClick={() => setFilter("aquarium-decorations")}
+						className={`group relative px-4 py-2 text-sm font-display font-medium transition-colors ${filter === "aquarium-decorations"
+								? "text-primary"
+								: "text-muted-foreground hover:text-foreground"
+							}`}
+						title="Aquarium Decorations"
+					>
+						Decorations
+						{filter === "aquarium-decorations" && (
+							<motion.div
+								layoutId="activeFilter"
+								className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+								transition={{ type: "spring", stiffness: 380, damping: 30 }}
+							/>
+						)}
+					</button>
+				</div>
+
+				{/* View All Button */}
 				<Button
 					asChild
 					variant="outline"
-					size="lg"
+					size="default"
 					className="rounded-full"
 				>
 					<Link href="/shop">Shop all products</Link>
@@ -88,45 +126,76 @@ export function ProductSlider() {
 	);
 }
 
-function ProductCard({ product }: { product: typeof FEATURED_PRODUCTS[0] }) {
+function ProductCard({ product }: { product: any }) {
+	const hasPrice = product.basePriceEurCents !== null;
+
 	return (
 		<Link
-			href={`/store/${product.category}/${product.slug}`}
+			href={`/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`}
 			className="group block snap-start shrink-0 w-[280px] md:w-[320px]"
 		>
 			<Card className="h-full overflow-hidden border-2 hover:border-primary transition-all hover:shadow-lg">
 				<CardHeader className="p-0">
 					<div className="relative aspect-[4/3] bg-muted overflow-hidden">
-						{/* Placeholder - replace with actual images */}
-						<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
-						<div className="absolute inset-0 flex items-center justify-center text-muted-foreground font-display">
-							{product.name}
-						</div>
-						{/* 
-						<Image
-							src={product.image}
-							alt={product.name}
-							fill
-							className="object-cover group-hover:scale-105 transition-transform duration-300"
-							sizes="320px"
-						/>
-						*/}
+						{product.featuredImageUrl ? (
+							<Image
+								src={product.featuredImageUrl}
+								alt={product.name || "Product"}
+								fill
+								className="object-cover group-hover:scale-105 transition-transform duration-300"
+								sizes="320px"
+							/>
+						) : (
+							<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+								<span className="text-muted-foreground font-display text-sm">
+									{product.sku}
+								</span>
+							</div>
+						)}
 					</div>
 				</CardHeader>
 				<CardContent className="p-4 space-y-2">
 					<h3 className="font-display font-normal text-lg line-clamp-1">
-						{product.name}
+						{product.name || product.slug}
 					</h3>
-					<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
-						{product.description}
-					</p>
+					{product.shortDescription && (
+						<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
+							{product.shortDescription}
+						</p>
+					)}
 				</CardContent>
 				<CardFooter className="p-4 pt-0">
-					<p className="text-lg font-display font-medium text-primary">
-						{product.price}
-					</p>
+					{hasPrice ? (
+						<p className="text-lg font-display font-medium text-primary">
+							€{(product.basePriceEurCents / 100).toFixed(0)}
+						</p>
+					) : (
+						<p className="text-sm font-display font-medium text-muted-foreground">
+							Custom Quote
+						</p>
+					)}
 				</CardFooter>
 			</Card>
 		</Link>
+	);
+}
+
+function ProductCardSkeleton() {
+	return (
+		<div className="snap-start shrink-0 w-[280px] md:w-[320px]">
+			<Card className="h-full overflow-hidden">
+				<CardHeader className="p-0">
+					<Skeleton className="aspect-[4/3] w-full" />
+				</CardHeader>
+				<CardContent className="p-4 space-y-2">
+					<Skeleton className="h-6 w-3/4" />
+					<Skeleton className="h-4 w-full" />
+					<Skeleton className="h-4 w-2/3" />
+				</CardContent>
+				<CardFooter className="p-4 pt-0">
+					<Skeleton className="h-6 w-20" />
+				</CardFooter>
+			</Card>
+		</div>
 	);
 }

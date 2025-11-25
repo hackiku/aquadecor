@@ -1,9 +1,8 @@
 // src/server/api/root.ts
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
-
-// import { productRouter } from "~/server/api/routers/product";
-// import { orderRouter } from "~/server/api/routers/order";
+import { adminProductRouter } from "~/server/api/routers/admin/product";
+import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -14,7 +13,10 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
 	product: productRouter,
 	reviews: reviewsRouter,
-	// order: orderRouter,
+	admin: createTRPCRouter({
+		product: adminProductRouter,
+		category: adminCategoryRouter,
+	}),
 });
 
 // export type definition of API

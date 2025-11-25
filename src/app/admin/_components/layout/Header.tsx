@@ -35,15 +35,17 @@ export function Header() {
 			<div className="flex h-16 items-center justify-between px-6">
 				{/* Breadcrumbs */}
 				<Breadcrumb>
-					<BreadcrumbList>
+					<BreadcrumbList className="font-display font-light">
 						{breadcrumbs.map((crumb, index) => (
 							<div key={crumb.href} className="contents">
 								{index > 0 && <BreadcrumbSeparator />}
 								<BreadcrumbItem>
 									{index === breadcrumbs.length - 1 ? (
-										<BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+										<BreadcrumbPage className="font-display font-normal">
+											{crumb.label}
+										</BreadcrumbPage>
 									) : (
-										<BreadcrumbLink href={crumb.href}>
+										<BreadcrumbLink href={crumb.href} className="font-display font-light">
 											{crumb.label}
 										</BreadcrumbLink>
 									)}
@@ -55,10 +57,10 @@ export function Header() {
 
 				{/* Actions */}
 				<div className="flex items-center gap-2">
-					<Button variant="ghost" size="icon">
+					<Button variant="ghost" size="icon" className="rounded-full">
 						<Bell className="h-4 w-4" />
 					</Button>
-					<Button variant="ghost" size="icon">
+					<Button variant="ghost" size="icon" className="rounded-full">
 						<Settings className="h-4 w-4" />
 					</Button>
 				</div>
