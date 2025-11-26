@@ -1,6 +1,7 @@
 // src/server/api/root.ts
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
+import { faqRouter } from "~/server/api/routers/faq";
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { adminOrderRouter } from "./routers/admin/order";
@@ -17,6 +18,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
 	product: productRouter,
 	reviews: reviewsRouter,
+	faq: faqRouter,
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
