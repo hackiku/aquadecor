@@ -11,6 +11,12 @@ import {
 	productTranslations,
 	productImages,
 	reviews,
+	orders,
+	orderItems,
+	promoters,
+	promoterCodes,
+	faqs,
+	faqTranslations,
 } from "../schema";
 
 // Import seed data
@@ -19,7 +25,10 @@ import { categoryTranslations as catTranslations } from "./data/translations/see
 import { productStructure } from "./data/seed-products";
 import { productTranslations as prodTranslations } from "./data/translations/seed-translations-products";
 import { productImages as imageData } from "./data/seed-images";
-import { reviewData } from "./data/seed-reviews"; // ✅ Updated import
+import { reviewData } from "./data/seed-reviews";
+import { ordersSeedData } from "./data/seed-orders";
+import { promotersSeedData } from "./data/seed-promoters";
+import { faqsSeedData } from "./data/seed-faqs";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -32,7 +41,6 @@ const db = drizzle(client);
 async function seedCategories() {
 	console.log("🌱 Seeding categories...");
 
-	// Step 1: Insert category records
 	const categoryIdMap = new Map<string, string>();
 
 	for (const cat of categoryStructure) {
@@ -49,7 +57,6 @@ async function seedCategories() {
 		}
 	}
 
-	// Step 2: Insert translations
 	for (const [slug, translations] of Object.entries(catTranslations)) {
 		const categoryId = categoryIdMap.get(slug);
 		if (!categoryId) {
@@ -74,7 +81,6 @@ async function seedCategories() {
 async function seedProducts(categoryIdMap: Map<string, string>) {
 	console.log("🌱 Seeding products...");
 
-	// Step 1: Insert product records
 	const productIdMap = new Map<string, string>();
 
 	for (const prod of productStructure) {
@@ -104,7 +110,6 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 		}
 	}
 
-	// Step 2: Insert translations
 	for (const [slug, translations] of Object.entries(prodTranslations)) {
 		const productId = productIdMap.get(slug);
 		if (!productId) {
@@ -140,10 +145,10 @@ async function seedImages(productIdMap: Map<string, string>) {
 		await db.insert(productImages).values({
 			productId,
 			storageUrl: img.storageUrl,
-			storagePath: null, // Future: Supabase Storage path
+			storagePath: null,
 			altText: img.altText,
 			sortOrder: img.sortOrder,
-			width: null, // Can add later if needed
+			width: null,
 			height: null,
 			fileSize: null,
 			mimeType: null,
@@ -159,14 +164,84 @@ async function seedReviews() {
 	console.log("🌱 Seeding reviews...");
 
 	for (const review of reviewData) {
-		// Remove the 'id' field - let DB generate UUID
 		const { id, ...reviewWithoutId } = review;
-
 		await db.insert(reviews).values(reviewWithoutId);
 		console.log(`  ✓ ${review.authorName} (${review.rating}⭐)`);
 	}
 
 	console.log(`✅ Seeded ${reviewData.length} reviews\n`);
+}
+
+async function seedOrders() {
+	console.log("🌱 Seeding orders...");
+
+	for (const order of ordersSeedData) {
+		await db.insert(orders).values(order);
+		console.log(`  ✓ ${order.orderNumber} - ${order.email} (${order.status})`);
+	}
+
+	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
+}
+
+async function seedPromoters() {
+	console.log("🌱 Seeding promoters...");
+
+	for (const promoter of promotersSeedData) {
+		const { codes, ...promoterData } = promoter;
+
+		const [inserted] = await db.insert(promoters).values(promoterData).returning();
+
+		if (inserted && codes.length > 0) {
+			for (const code of codes) {
+				await db.insert(promoterCodes).values({
+					promoterId: inserted.id,
+					code: code.code,
+					discountPercent: code.discountPercent,
+					commissionPercent: code.commissionPercent,
+					isActive: code.isActive,
+					usageCount: code.usageCount,
+					createdAt: code.createdAt,
+				});
+			}
+		}
+
+		const codeCount = codes.length;
+		console.log(`  ✓ ${promoter.firstName} ${promoter.lastName} (${codeCount} codes)`);
+	}
+
+	console.log(`✅ Seeded ${promotersSeedData.length} promoters\n`);
+}
+
+async function seedFAQs() {
+	console.log("🌱 Seeding FAQs...");
+
+	let totalFaqs = 0;
+
+	for (const [region, faqList] of Object.entries(faqsSeedData)) {
+		console.log(`  Seeding ${region} FAQs...`);
+
+		for (const faqItem of faqList) {
+			const [inserted] = await db.insert(faqs).values({
+				region,
+				sortOrder: faqItem.sortOrder,
+				isActive: true,
+			}).returning();
+
+			if (inserted) {
+				await db.insert(faqTranslations).values({
+					faqId: inserted.id,
+					locale: "en",
+					question: faqItem.question,
+					answer: faqItem.answer,
+				});
+
+				totalFaqs++;
+				console.log(`    ✓ ${faqItem.question.substring(0, 50)}...`);
+			}
+		}
+	}
+
+	console.log(`✅ Seeded ${totalFaqs} FAQs\n`);
 }
 
 async function main() {
@@ -176,7 +251,10 @@ async function main() {
 		const categoryIdMap = await seedCategories();
 		const productIdMap = await seedProducts(categoryIdMap);
 		await seedImages(productIdMap);
-		await seedReviews(); // ✅ Now enabled
+		await seedReviews();
+		await seedOrders();
+		await seedPromoters();
+		await seedFAQs();
 
 		console.log("✨ Seed complete!");
 		process.exit(0);

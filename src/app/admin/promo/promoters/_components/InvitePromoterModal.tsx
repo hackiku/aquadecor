@@ -1,8 +1,9 @@
-// src/app/admin/promoters/_components/InvitePromoterModal.tsx
+// src/app/admin/promo/promoters/_components/InvitePromoterModal.tsx
 
 "use client";
 
 import { useState } from "react";
+import { api } from "~/trpc/react";
 import {
 	Dialog,
 	DialogContent,
@@ -13,6 +14,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { toast } from "sonner";
 
 interface InvitePromoterModalProps {
 	open: boolean;
@@ -23,18 +25,28 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 	const [email, setEmail] = useState("");
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
-	const [birthDate, setBirthDate] = useState("");
+
+	const createPromoter = api.admin.promoter.create.useMutation({
+		onSuccess: () => {
+			toast.success("Promoter invited successfully!");
+			onOpenChange(false);
+			// Reset form
+			setEmail("");
+			setFirstName("");
+			setLastName("");
+		},
+		onError: (error) => {
+			toast.error(error.message || "Failed to invite promoter");
+		},
+	});
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		// TODO: Handle invite submission
-		console.log({ email, firstName, lastName, birthDate });
-		onOpenChange(false);
-		// Reset form
-		setEmail("");
-		setFirstName("");
-		setLastName("");
-		setBirthDate("");
+		createPromoter.mutate({
+			email,
+			firstName,
+			lastName,
+		});
 	};
 
 	return (
@@ -42,17 +54,17 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
 					<DialogTitle className="font-display font-normal text-2xl">
-						Invite new promoter
+						Invite New Promoter
 					</DialogTitle>
 					<DialogDescription className="font-display font-light">
-						Fill out the promoter information below and invite.
+						Fill out the promoter information below to send an invitation.
 					</DialogDescription>
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-6 pt-4">
 					<div className="space-y-2">
 						<Label htmlFor="email" className="font-display font-normal">
-							Email
+							Email <span className="text-destructive">*</span>
 						</Label>
 						<Input
 							id="email"
@@ -64,13 +76,13 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 							className="font-display font-light"
 						/>
 						<p className="text-xs text-muted-foreground font-display font-light">
-							Invite will be sent to this email address.
+							Invitation will be sent to this email address.
 						</p>
 					</div>
 
 					<div className="space-y-2">
 						<Label htmlFor="firstName" className="font-display font-normal">
-							First name
+							First Name <span className="text-destructive">*</span>
 						</Label>
 						<Input
 							id="firstName"
@@ -84,7 +96,7 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 
 					<div className="space-y-2">
 						<Label htmlFor="lastName" className="font-display font-normal">
-							Last name
+							Last Name <span className="text-destructive">*</span>
 						</Label>
 						<Input
 							id="lastName"
@@ -96,33 +108,22 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 						/>
 					</div>
 
-					<div className="space-y-2">
-						<Label htmlFor="birthDate" className="font-display font-normal">
-							Birth date
-						</Label>
-						<Input
-							id="birthDate"
-							type="date"
-							value={birthDate}
-							onChange={(e) => setBirthDate(e.target.value)}
-							className="font-display font-light"
-						/>
-					</div>
-
 					<div className="flex justify-end gap-3 pt-4">
 						<Button
 							type="button"
 							variant="outline"
 							onClick={() => onOpenChange(false)}
+							disabled={createPromoter.isPending}
 							className="rounded-full font-display font-light"
 						>
 							Cancel
 						</Button>
 						<Button
 							type="submit"
+							disabled={createPromoter.isPending}
 							className="rounded-full font-display font-light"
 						>
-							Send invite
+							{createPromoter.isPending ? "Sending..." : "Send Invite"}
 						</Button>
 					</div>
 				</form>

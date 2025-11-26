@@ -2,46 +2,25 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
-import { mockOrders, type Order } from "../_data/orders";
-import { OrdersFilter } from "./_components/OrdersFilter";
+import { useState } from "react";
+import { api } from "~/trpc/react";
+import { AdminTable, type Column } from "../_components/primitives/AdminTable";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "~/components/ui/table";
+import { OrdersFilter } from "./_components/OrdersFilter";
+
+type Order = NonNullable<ReturnType<typeof api.admin.order.getAll.useQuery>['data']>[0];
 
 export default function OrdersPage() {
 	const [filters, setFilters] = useState<{ email?: string; discountCode?: string }>({});
-	const [currentPage, setCurrentPage] = useState(1);
 	const [showFilters, setShowFilters] = useState(false);
 
-	// Filter orders
-	const filteredOrders = useMemo(() => {
-		let result = mockOrders;
-
-		if (filters.email) {
-			result = result.filter((order) =>
-				order.email.toLowerCase().includes(filters.email!.toLowerCase()) ||
-				order.orderNumber.toLowerCase().includes(filters.email!.toLowerCase())
-			);
-		}
-
-		if (filters.discountCode) {
-			result = result.filter((order) =>
-				order.discountCode?.toLowerCase().includes(filters.discountCode!.toLowerCase())
-			);
-		}
-
-		return result;
-	}, [filters]);
+	const { data: orders, isLoading } = api.admin.order.getAll.useQuery({
+		email: filters.email,
+		discountCode: filters.discountCode,
+	});
 
 	const formatPrice = (cents: number, currency: string = "EUR") => {
 		const symbol = currency === "EUR" ? "€" : "$";
@@ -56,7 +35,7 @@ export default function OrdersPage() {
 			hour: "2-digit",
 			minute: "2-digit",
 			hour12: false,
-		}).format(date);
+		}).format(new Date(date));
 	};
 
 	const getStatusBadge = (status: Order["status"]) => {
@@ -77,34 +56,119 @@ export default function OrdersPage() {
 	const getPaymentBadge = (status: Order["paymentStatus"]) => {
 		const variants = {
 			pending: { variant: "secondary" as const, label: "Pending" },
-			paid: { variant: "default" as const, label: "Paid", color: "bg-blue-500" },
+			paid: { variant: "default" as const, label: "Paid" },
 			failed: { variant: "destructive" as const, label: "Failed" },
 			refunded: { variant: "destructive" as const, label: "Refunded" },
 		};
 		return variants[status];
 	};
 
+	const columns: Column<Order>[] = [
+		{
+			header: "Order",
+			accessorKey: "orderNumber",
+			cell: (order) => (
+				<div className="space-y-1">
+					<p className="font-display font-normal text-primary text-sm">
+						{order.orderNumber}
+					</p>
+					<p className="font-display font-light text-xs text-muted-foreground font-mono">
+						{order.id.split("-")[0]}...
+					</p>
+				</div>
+			),
+		},
+		{
+			header: "Email",
+			accessorKey: "email",
+			cell: (order) => (
+				<span className="font-display font-light text-sm">
+					{order.email}
+				</span>
+			),
+		},
+		{
+			header: "Date",
+			accessorKey: "createdAt",
+			cell: (order) => (
+				<span className="font-display font-light text-sm whitespace-nowrap">
+					{formatDate(order.createdAt)}
+				</span>
+			),
+		},
+		{
+			header: "Total",
+			accessorKey: "total",
+			cell: (order) => (
+				<span className="font-display font-normal">
+					{formatPrice(order.total, order.currency)}
+				</span>
+			),
+		},
+		{
+			header: "Status",
+			accessorKey: "status",
+			cell: (order) => {
+				const statusInfo = getStatusBadge(order.status);
+				return (
+					<Badge variant={statusInfo.variant} className="font-display font-light">
+						{statusInfo.label}
+					</Badge>
+				);
+			},
+		},
+		{
+			header: "Payment",
+			accessorKey: "paymentStatus",
+			cell: (order) => {
+				const paymentInfo = getPaymentBadge(order.paymentStatus);
+				return (
+					<Badge variant={paymentInfo.variant} className="font-display font-light">
+						{paymentInfo.label}
+					</Badge>
+				);
+			},
+		},
+		{
+			header: "Discount",
+			accessorKey: "discountCode",
+			cell: (order) => (
+				<span className="font-display font-light text-sm">
+					{order.discountCode || "—"}
+				</span>
+			),
+		},
+	];
+
+	if (isLoading) {
+		return (
+			<div className="space-y-8">
+				<h1 className="text-4xl font-display font-extralight">Orders</h1>
+				<p className="text-muted-foreground font-display font-light">Loading orders...</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="space-y-8">
 			{/* Header */}
-			<div className="space-y-2">
-				<div className="flex items-center justify-between">
+			<div className="flex items-start justify-between">
+				<div className="space-y-2">
 					<h1 className="text-4xl font-display font-extralight tracking-tight">
-						Orders overview
+						Orders
 					</h1>
-					<div className="flex items-center gap-2">
-						<button className="p-2 hover:bg-muted rounded-full transition-colors">
-							<ChevronLeft className="h-5 w-5 text-muted-foreground" />
-						</button>
-						<span className="font-display font-light text-primary">1</span>
-						<button className="p-2 hover:bg-muted rounded-full transition-colors">
-							<ChevronRight className="h-5 w-5 text-muted-foreground" />
-						</button>
-					</div>
+					<p className="text-muted-foreground font-display font-light text-lg">
+						Manage customer orders and fulfillment
+					</p>
 				</div>
-				<p className="text-muted-foreground font-display font-light">
-					Click on single order to see details.
-				</p>
+				<Button
+					variant="outline"
+					onClick={() => setShowFilters(!showFilters)}
+					className="rounded-full"
+				>
+					<Filter className="mr-2 h-4 w-4" />
+					{showFilters ? "Hide Filters" : "Show Filters"}
+				</Button>
 			</div>
 
 			{/* Content Grid */}
@@ -125,108 +189,13 @@ export default function OrdersPage() {
 				</AnimatePresence>
 
 				{/* Orders Table */}
-				<div className="flex-1 overflow-hidden">
-					<div className="rounded-xl border-2 border-border overflow-hidden">
-						<Table>
-							<TableHeader>
-								<TableRow className="bg-muted/50 hover:bg-muted/50">
-									<TableHead className="w-12">
-										<Button
-											variant="ghost"
-											size="icon"
-											onClick={() => setShowFilters(!showFilters)}
-											className="h-8 w-8 rounded-full"
-										>
-											<Filter className="h-4 w-4" />
-										</Button>
-									</TableHead>
-									<TableHead className="font-display font-normal text-primary">
-										Order ID
-									</TableHead>
-									<TableHead className="font-display font-normal">Email</TableHead>
-									<TableHead className="font-display font-normal">Date</TableHead>
-									<TableHead className="font-display font-normal">Price</TableHead>
-									<TableHead className="font-display font-normal">Status</TableHead>
-									<TableHead className="font-display font-normal">Payment</TableHead>
-									<TableHead className="font-display font-normal">Discount Code</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{filteredOrders.length === 0 ? (
-									<TableRow>
-										<TableCell colSpan={8} className="h-32 text-center">
-											<p className="text-muted-foreground font-display font-light">
-												No orders found
-											</p>
-										</TableCell>
-									</TableRow>
-								) : (
-									filteredOrders.map((order, index) => {
-										const statusInfo = getStatusBadge(order.status);
-										const paymentInfo = getPaymentBadge(order.paymentStatus);
-
-										return (
-											<TableRow
-												key={order.id}
-												className="cursor-pointer hover:bg-muted/30"
-												onClick={() => {
-													// TODO: Navigate to order detail
-													console.log("View order:", order.id);
-												}}
-											>
-												<TableCell className="font-display font-light text-muted-foreground">
-													{index + 1}
-												</TableCell>
-												<TableCell>
-													<div className="space-y-1">
-														<p className="font-display font-normal text-primary text-sm">
-															{order.orderNumber}
-														</p>
-														<p className="font-display font-light text-xs text-muted-foreground font-mono">
-															{order.id.split("-")[0]}...
-														</p>
-													</div>
-												</TableCell>
-												<TableCell>
-													<span className="font-display font-light text-sm">
-														{order.email}
-													</span>
-												</TableCell>
-												<TableCell>
-													<span className="font-display font-light text-sm whitespace-nowrap">
-														{formatDate(order.createdAt)}
-													</span>
-												</TableCell>
-												<TableCell>
-													<span className="font-display font-normal">
-														{formatPrice(order.total, order.currency)}
-													</span>
-												</TableCell>
-												<TableCell>
-													<Badge variant={statusInfo.variant} className="font-display font-light">
-														{statusInfo.label}
-													</Badge>
-												</TableCell>
-												<TableCell>
-													<Badge
-														variant={paymentInfo.variant}
-														className={`font-display font-light ${paymentInfo.color || ""}`}
-													>
-														{paymentInfo.label}
-													</Badge>
-												</TableCell>
-												<TableCell>
-													<span className="font-display font-light text-sm">
-														{order.discountCode || "—"}
-													</span>
-												</TableCell>
-											</TableRow>
-										);
-									})
-								)}
-							</TableBody>
-						</Table>
-					</div>
+				<div className="flex-1">
+					<AdminTable
+						columns={columns}
+						data={orders || []}
+						onRowClick={(order) => `/admin/orders/${order.id}`}
+						searchPlaceholder="Search orders by email or order number..."
+					/>
 				</div>
 			</div>
 		</div>

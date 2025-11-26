@@ -5,6 +5,7 @@
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Bell, Settings } from "lucide-react";
+import { ModeToggle } from "~/components/ui/mode-toggle";
 import { getAdminPage } from "~/app/admin/_data/admin-pages";
 import {
 	Breadcrumb,
@@ -57,6 +58,7 @@ export function Header() {
 
 				{/* Actions */}
 				<div className="flex items-center gap-2">
+					<ModeToggle />
 					<Button variant="ghost" size="icon" className="rounded-full">
 						<Bell className="h-4 w-4" />
 					</Button>
