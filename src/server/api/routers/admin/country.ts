@@ -249,6 +249,36 @@ export const countryRouter = createTRPCRouter({
 		return await ctx.db.select().from(shippingZones).orderBy(shippingZones.code);
 	}),
 
+	// Create new country
+	create: publicProcedure
+		.input(
+			z.object({
+				iso2: z.string().length(2),
+				iso3: z.string().length(3),
+				name: z.string().min(1),
+				localName: z.string().optional(),
+				flagEmoji: z.string().optional(),
+				shippingZoneId: z.string().optional(),
+				postOperatorCode: z.string().optional(),
+				postZone: z.number().min(0).max(5).optional(),
+				requiresCustoms: z.boolean().default(false),
+				requiresPhoneNumber: z.boolean().default(false),
+				isShippingEnabled: z.boolean().default(true),
+				notes: z.string().optional(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const [created] = await ctx.db
+				.insert(countries)
+				.values({
+					...input,
+					isActive: true,
+				})
+				.returning();
+
+			return created;
+		}),
+
 	// Get shipping attempts (demand analysis)
 	getShippingAttempts: publicProcedure
 		.input(

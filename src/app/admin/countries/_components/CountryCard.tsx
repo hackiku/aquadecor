@@ -1,6 +1,7 @@
 // src/app/admin/_components/CountryCard.tsx
 "use client";
 
+import Link from "next/link";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -22,10 +23,9 @@ interface CountryCardProps {
 			code: string;
 		} | null;
 	};
-	onClick?: () => void;
 }
 
-export function CountryCard({ country, onClick }: CountryCardProps) {
+export function CountryCard({ country }: CountryCardProps) {
 	const getStatusBadge = () => {
 		if (country.isSuspended) {
 			return <Badge variant="destructive">Suspended</Badge>;
@@ -45,51 +45,52 @@ export function CountryCard({ country, onClick }: CountryCardProps) {
 	};
 
 	return (
-		<Card
-			className="flex cursor-pointer items-center justify-between p-4 transition-colors hover:bg-muted/50"
-			onClick={onClick}
-		>
-			<div className="flex items-center gap-4">
-				<div className="text-4xl">{country.flagEmoji || "🏴"}</div>
-				<div>
-					<div className="flex items-center gap-2">
-						<h3 className="font-semibold">{country.name}</h3>
-						<span className="text-xs text-muted-foreground">{country.iso2}</span>
-						{getStatusBadge()}
-					</div>
-					<div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
-						{country.zone && (
-							<span className="rounded bg-muted px-2 py-0.5 text-xs">
-								{country.zone.name}
-							</span>
+		<Link href={`/admin/countries/${country.id}`}>
+			<Card className="flex cursor-pointer items-center justify-between p-4 transition-colors hover:bg-muted/50">
+				<div className="flex items-center gap-4">
+					<div className="text-4xl">{country.flagEmoji || "🏴"}</div>
+					<div>
+						<div className="flex items-center gap-2">
+							<h3 className="font-semibold">{country.name}</h3>
+							<span className="text-xs text-muted-foreground">{country.iso2}</span>
+							{getStatusBadge()}
+						</div>
+						<div className="mt-1 flex items-center gap-3 text-sm text-muted-foreground">
+							{country.zone && (
+								<span className="rounded bg-muted px-2 py-0.5 text-xs">
+									{country.zone.name}
+								</span>
+							)}
+							{country.requiresCustoms && (
+								<Badge variant="outline" className="text-xs">
+									Customs
+								</Badge>
+							)}
+						</div>
+						{country.suspensionReason && (
+							<p className="mt-1 text-xs text-destructive">
+								{country.suspensionReason}
+							</p>
 						)}
-						{country.requiresCustoms && (
-							<Badge variant="outline" className="text-xs">
-								Customs
-							</Badge>
-						)}
 					</div>
-					{country.suspensionReason && (
-						<p className="mt-1 text-xs text-destructive">{country.suspensionReason}</p>
-					)}
 				</div>
-			</div>
 
-			<div className="flex items-center gap-6 text-sm">
-				<div className="text-right">
-					<div className="font-semibold">{country.totalOrders || 0}</div>
-					<div className="text-xs text-muted-foreground">Orders</div>
-				</div>
-				<div className="text-right">
-					<div className="font-semibold">
-						{formatCurrency(country.totalRevenueCents || 0)}
+				<div className="flex items-center gap-6 text-sm">
+					<div className="text-right">
+						<div className="font-semibold">{country.totalOrders || 0}</div>
+						<div className="text-xs text-muted-foreground">Orders</div>
 					</div>
-					<div className="text-xs text-muted-foreground">Revenue</div>
+					<div className="text-right">
+						<div className="font-semibold">
+							{formatCurrency(country.totalRevenueCents || 0)}
+						</div>
+						<div className="text-xs text-muted-foreground">Revenue</div>
+					</div>
+					<Button variant="ghost" size="sm">
+						View →
+					</Button>
 				</div>
-				<Button variant="ghost" size="sm">
-					View →
-				</Button>
-			</div>
-		</Card>
+			</Card>
+		</Link>
 	);
 }
