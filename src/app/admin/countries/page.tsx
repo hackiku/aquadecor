@@ -143,7 +143,7 @@ export default function CountriesPage() {
 											<Badge variant="outline">{item.attemptCount} attempts</Badge>
 										</div>
 										<div className="text-muted-foreground">
-											€{(Math.abs(item.totalValueCents || 0) / 100).toFixed(0)} potential
+											€{(Math.abs(Number(item.totalValueCents || 0)) / 100).toFixed(0)} potential
 										</div>
 										<Button size="sm" variant="outline">
 											Enable

@@ -22,10 +22,10 @@ export default async function CatalogOverviewPage() {
 	// Count products per product line
 	const allProducts = await api.admin.product.getAll();
 	const backgroundsProducts = allProducts.filter(
-		(p) => p.productLineSlug === "3d-backgrounds"
+		(p) => p.productLine === "3d-backgrounds"
 	);
 	const decorationsProducts = allProducts.filter(
-		(p) => p.productLineSlug === "aquarium-decorations"
+		(p) => p.productLine === "aquarium-decorations"
 	);
 
 	const productLines = [

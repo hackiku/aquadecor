@@ -1,5 +1,4 @@
 // src/app/admin/_components/primitives/AdminChart.tsx
-
 "use client";
 
 import {
@@ -20,14 +19,14 @@ import {
 
 export interface ChartDataPoint {
 	name: string;
-	value: number;
+	value?: number; // Made optional for multi-series charts
 	[key: string]: any;
 }
 
 interface AdminChartProps {
 	type: "line" | "bar" | "pie";
 	data: ChartDataPoint[];
-	dataKeys?: string[]; // For line/bar charts with multiple series
+	dataKeys?: string[];
 	colors?: string[];
 	height?: number;
 }
@@ -129,7 +128,7 @@ export function AdminChart({
 						cy="50%"
 						labelLine={false}
 						label={({ name, percent }) =>
-							`${name}: ${(percent * 100).toFixed(0)}%`
+							`${name}: ${((percent || 0) * 100).toFixed(0)}%`
 						}
 						outerRadius={80}
 						fill="hsl(var(--primary))"

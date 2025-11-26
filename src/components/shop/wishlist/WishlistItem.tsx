@@ -71,7 +71,8 @@ export function WishlistItem({ item, onRemove }: WishlistItemProps) {
 				<div className="flex items-center justify-between">
 					{hasPrice ? (
 						<p className="text-sm font-display font-medium">
-							€{(item.priceEurCents / 100).toFixed(2)}
+							{/* Fix: Safely handle null/undefined during division */}
+							€{((item.priceEurCents ?? 0) / 100).toFixed(2)}
 						</p>
 					) : (
 						<p className="text-xs text-muted-foreground font-display font-medium">

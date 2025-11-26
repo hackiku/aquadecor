@@ -14,12 +14,12 @@ interface ProductCardProps {
 		id: string;
 		slug: string;
 		name: string;
-		sku?: string;
-		shortDescription?: string;
+		sku?: string | null;
+		shortDescription?: string | null;
 		basePriceEurCents?: number | null;
-		priceNote?: string;
+		priceNote?: string | null;
 		stockStatus: string;
-		featuredImageUrl?: string;
+		featuredImageUrl?: string | null;
 		categorySlug: string;
 		productLineSlug: string;
 	};
@@ -34,8 +34,10 @@ export function ProductCard({
 }: ProductCardProps) {
 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
 	const hasPrice = product.basePriceEurCents !== null && product.basePriceEurCents !== undefined;
+
+	// Fix: Safely handle the division with fallback
 	const formattedPrice = hasPrice
-		? `€${(product.basePriceEurCents / 100).toFixed(2)}`
+		? `€${((product.basePriceEurCents ?? 0) / 100).toFixed(2)}`
 		: null;
 
 	// Stock badge

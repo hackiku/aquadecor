@@ -111,7 +111,18 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 								{products?.map((product) => (
 									<WishlistItem
 										key={product.id}
-										item={product}
+										item={{
+											...product,
+											// Fix: Handle null name
+											name: product.name ?? "Unknown Product",
+											// Fix: Map basePrice to priceEurCents
+											priceEurCents: product.basePriceEurCents,
+											// Fix: Handle null image
+											imageUrl: product.featuredImageUrl ?? undefined,
+											priceNote: product.priceNote ?? undefined,
+											categorySlug: product.categorySlug ?? "",
+											productLineSlug: product.productLineSlug ?? ""
+										}}
 										onRemove={() => removeItem(product.id)}
 									/>
 								))}

@@ -1,9 +1,9 @@
 // src/app/admin/orders/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
+import { type RouterOutputs } from "~/trpc/react";
 import { AdminTable, type Column } from "../_components/primitives/AdminTable";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -11,7 +11,10 @@ import { Filter } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { OrdersFilter } from "./_components/OrdersFilter";
 
-type Order = NonNullable<ReturnType<typeof api.admin.order.getAll.useQuery>['data']>[0];
+
+// Fix: Access array element type safely
+// type Order = NonNullable<ReturnType<typeof api.admin.order.getAll.useQuery>['data']>[number];
+type Order = RouterOutputs["admin"]["order"]["getAll"][number];
 
 export default function OrdersPage() {
 	const [filters, setFilters] = useState<{ email?: string; discountCode?: string }>({});
@@ -39,28 +42,28 @@ export default function OrdersPage() {
 	};
 
 	const getStatusBadge = (status: Order["status"]) => {
-		const variants = {
-			pending: { variant: "secondary" as const, label: "Pending" },
-			confirmed: { variant: "default" as const, label: "Confirmed" },
-			in_production: { variant: "default" as const, label: "In Production" },
-			ready_to_ship: { variant: "default" as const, label: "Ready to Ship" },
-			shipped: { variant: "default" as const, label: "Shipped" },
-			delivered: { variant: "default" as const, label: "Delivered" },
-			cancelled: { variant: "destructive" as const, label: "Cancelled" },
-			refunded: { variant: "destructive" as const, label: "Refunded" },
-			abandoned: { variant: "destructive" as const, label: "Abandoned" },
+		const variants: Record<string, { variant: "secondary" | "default" | "destructive"; label: string }> = {
+			pending: { variant: "secondary", label: "Pending" },
+			confirmed: { variant: "default", label: "Confirmed" },
+			in_production: { variant: "default", label: "In Production" },
+			ready_to_ship: { variant: "default", label: "Ready to Ship" },
+			shipped: { variant: "default", label: "Shipped" },
+			delivered: { variant: "default", label: "Delivered" },
+			cancelled: { variant: "destructive", label: "Cancelled" },
+			refunded: { variant: "destructive", label: "Refunded" },
+			abandoned: { variant: "destructive", label: "Abandoned" },
 		};
-		return variants[status];
+		return variants[status] || { variant: "secondary", label: status };
 	};
 
 	const getPaymentBadge = (status: Order["paymentStatus"]) => {
-		const variants = {
-			pending: { variant: "secondary" as const, label: "Pending" },
-			paid: { variant: "default" as const, label: "Paid" },
-			failed: { variant: "destructive" as const, label: "Failed" },
-			refunded: { variant: "destructive" as const, label: "Refunded" },
+		const variants: Record<string, { variant: "secondary" | "default" | "destructive"; label: string }> = {
+			pending: { variant: "secondary", label: "Pending" },
+			paid: { variant: "default", label: "Paid" },
+			failed: { variant: "destructive", label: "Failed" },
+			refunded: { variant: "destructive", label: "Refunded" },
 		};
-		return variants[status];
+		return variants[status] || { variant: "secondary", label: status };
 	};
 
 	const columns: Column<Order>[] = [

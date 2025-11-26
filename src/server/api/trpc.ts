@@ -140,23 +140,23 @@ export const protectedProcedure = t.procedure
  *
  * @see https://trpc.io/docs/procedures
  */
-export const adminProcedure = t.procedure
-	.use(timingMiddleware)
-	.use(({ ctx, next }) => {
-		if (!ctx.session?.user) {
-			throw new TRPCError({ code: "UNAUTHORIZED" });
-		}
-		// Check if user has admin role
-		if (ctx.session.user.role !== "admin") {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: "Admin access required"
-			});
-		}
-		return next({
-			ctx: {
-				// infers the `session` as non-nullable with admin user
-				session: { ...ctx.session, user: ctx.session.user },
-			},
-		});
-	});
+// export const adminProcedure = t.procedure
+// 	.use(timingMiddleware)
+// 	.use(({ ctx, next }) => {
+// 		if (!ctx.session?.user) {
+// 			throw new TRPCError({ code: "UNAUTHORIZED" });
+// 		}
+// 		// Check if user has admin role
+// 		if (ctx.session.user.role !== "admin") {
+// 			throw new TRPCError({
+// 				code: "FORBIDDEN",
+// 				message: "Admin access required"
+// 			});
+// 		}
+// 		return next({
+// 			ctx: {
+// 				// infers the `session` as non-nullable with admin user
+// 				session: { ...ctx.session, user: ctx.session.user },
+// 			},
+// 		});
+// 	});

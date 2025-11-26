@@ -14,20 +14,21 @@ interface PageProps {
 export default async function CategoryProductsPage({ params }: PageProps) {
 	const { category, slug } = await params;
 
-	// Load products for this category
 	const result = await api.product.getByCategory({
 		categorySlug: slug,
 		locale: "en",
 	});
 
-	// ✅ NEW: API returns { products, categorySlug, productLineSlug }
+	if (!result || !("products" in result)) {
+		notFound();
+	}
+
 	const { products, categorySlug, productLineSlug } = result;
 
 	if (!products || products.length === 0) {
 		notFound();
 	}
 
-	// Category name mapping (temporary until proper i18n)
 	const categoryNames: Record<string, string> = {
 		"a-models": "A Models - Classic Rocky Backgrounds",
 		"slim-models": "A Slim Models - Thin Rocky Backgrounds",
@@ -51,17 +52,24 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 	const categoryName = categoryNames[slug] || slug;
 	const productLineName = productLineNames[category] || category;
 
-	// ✅ Add routing slugs to products (API already provides them, but add for consistency)
+	// Transform data to match ProductGrid interface strictly
 	const productsWithSlugs = products.map(product => ({
-		...product,
+		id: product.id,
+		slug: product.slug,
+		name: product.name ?? "Untitled Product",
+		sku: product.sku ?? null,
+		shortDescription: product.shortDescription ?? null,
+		basePriceEurCents: product.basePriceEurCents ?? null,
+		priceNote: product.priceNote ?? null,
+		stockStatus: product.stockStatus,
+		featuredImageUrl: product.featuredImageUrl ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLineSlug,
 	}));
 
 	return (
 		<main className="min-h-screen">
-			{/* Header */}
-			<section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-transparent">
+			<section className="py-16 md:py-20 bg-linear-to-b from-muted/30 to-transparent">
 				<div className="px-4 max-w-7xl mx-auto">
 					<div className="max-w-4xl mx-auto text-center space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
@@ -79,7 +87,6 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 				</div>
 			</section>
 
-			{/* Product Grid */}
 			<section className="py-12 md:py-16">
 				<div className="px-4 max-w-7xl mx-auto">
 					<ProductGrid
@@ -89,7 +96,6 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 				</div>
 			</section>
 
-			{/* Trust Bar */}
 			<section className="py-12 md:py-16 border-t bg-accent/5">
 				<div className="px-4 max-w-7xl mx-auto">
 					<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">

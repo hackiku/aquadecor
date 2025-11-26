@@ -1,5 +1,4 @@
 // src/app/admin/catalog/categories/page.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -40,7 +39,8 @@ export default function CategoriesListPage() {
 		if (!acc[cat.productLine]) {
 			acc[cat.productLine] = [];
 		}
-		acc[cat.productLine].push(cat);
+		// Fix: Use non-null assertion or optional chaining if TS complains about index signature
+		acc[cat.productLine]!.push(cat);
 		return acc;
 	}, {} as Record<string, typeof categories>) || {};
 

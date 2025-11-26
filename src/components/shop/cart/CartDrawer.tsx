@@ -63,7 +63,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 			name: product?.name || "Unknown Product",
 			slug: product?.slug || "",
 			priceEurCents: product?.basePriceEurCents || 0,
-			imageUrl: product?.featuredImageUrl,
+			// Fix: Convert null to undefined
+			imageUrl: product?.featuredImageUrl ?? undefined,
 			categorySlug: product?.categorySlug || "",
 			productLineSlug: product?.productLineSlug || "",
 		};

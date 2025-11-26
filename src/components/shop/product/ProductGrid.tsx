@@ -7,12 +7,12 @@ interface Product {
 	id: string;
 	slug: string;
 	name: string;
-	sku?: string;
-	shortDescription?: string;
+	sku?: string | null;
+	shortDescription?: string | null;
 	basePriceEurCents?: number | null;
-	priceNote?: string;
+	priceNote?: string | null;
 	stockStatus: string;
-	featuredImageUrl?: string;
+	featuredImageUrl?: string | null;
 	categorySlug: string;
 	productLineSlug: string;
 }
