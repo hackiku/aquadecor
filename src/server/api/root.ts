@@ -6,6 +6,7 @@ import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminFaqRouter } from "./routers/admin/faq";
+import { countryRouter } from "./routers/admin/country";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
 		faq: adminFaqRouter,
+		country: countryRouter,
 	}),
 });
 

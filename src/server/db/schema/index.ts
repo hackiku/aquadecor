@@ -9,6 +9,7 @@
 // - promoters.ts: Affiliate/promoter system
 // - faq.ts: FAQ system with i18n
 // - reviews.ts: Product reviews
+// - countries.ts: Shipping countries
 //
 
 export * from "./auth";
@@ -17,3 +18,4 @@ export * from "./orders";
 export * from "./promoters";
 export * from "./faq";
 export * from "./reviews";
+export * from "./countries";

@@ -5,18 +5,13 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq } from "drizzle-orm";
 import {
-	categories,
-	categoryTranslations,
-	products,
-	productTranslations,
-	productImages,
+	categories, categoryTranslations,
+	products, productTranslations, productImages,
 	reviews,
-	orders,
-	orderItems,
-	promoters,
-	promoterCodes,
-	faqs,
-	faqTranslations,
+	orders, orderItems,
+	promoters,promoterCodes,
+	faqs,faqTranslations,
+	shippingZones, countries
 } from "../schema";
 
 // Import seed data
@@ -29,6 +24,8 @@ import { reviewData } from "./data/seed-reviews";
 import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
 import { faqsSeedData } from "./data/seed-faqs";
+import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
+
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -244,6 +241,51 @@ async function seedFAQs() {
 	console.log(`✅ Seeded ${totalFaqs} FAQs\n`);
 }
 
+export async function seedCountries() {
+	console.log("🌱 Seeding shipping zones and countries...");
+
+	// First, seed shipping zones
+	const zoneMap = new Map<string, string>(); // code -> id
+
+	for (const zoneData of shippingZonesSeedData) {
+		const [zone] = await db.insert(shippingZones).values(zoneData).returning();
+		if (zone) {
+			zoneMap.set(zoneData.code, zone.id);
+			console.log(`  ✓ Zone: ${zoneData.name}`);
+		}
+	}
+
+	console.log(`✅ Seeded ${shippingZonesSeedData.length} shipping zones\n`);
+
+	// Then seed countries with proper zone references
+	let countryCount = 0;
+	for (const countryData of countriesSeedData) {
+		const shippingZoneId = zoneMap.get(countryData.zone);
+
+		await db.insert(countries).values({
+			iso2: countryData.iso2,
+			iso3: countryData.iso3,
+			name: countryData.name,
+			localName: countryData.localName,
+			flagEmoji: countryData.flagEmoji,
+			shippingZoneId,
+			postOperatorCode: countryData.postOperatorCode,
+			postZone: countryData.postZone,
+			isShippingEnabled: countryData.isShippingEnabled ?? true,
+			isSuspended: countryData.isSuspended ?? false,
+			suspensionReason: countryData.suspensionReason,
+			requiresCustoms: countryData.requiresCustoms ?? false,
+			requiresPhoneNumber: countryData.requiresPhoneNumber ?? false,
+			notes: countryData.notes,
+		});
+
+		countryCount++;
+		console.log(`  ✓ ${countryData.flagEmoji} ${countryData.name}`);
+	}
+
+	console.log(`✅ Seeded ${countryCount} countries\n`);
+}
+
 async function main() {
 	try {
 		console.log("🚀 Starting seed...\n");
@@ -255,6 +297,7 @@ async function main() {
 		await seedOrders();
 		await seedPromoters();
 		await seedFAQs();
+		await seedCountries();
 
 		console.log("✨ Seed complete!");
 		process.exit(0);
