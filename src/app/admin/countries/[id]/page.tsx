@@ -1,378 +1,189 @@
 // src/app/admin/countries/[id]/page.tsx
-"use client";
 
-import { use, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { notFound } from "next/navigation";
+import { api } from "~/trpc/server";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Switch } from "~/components/ui/switch";
 import { Textarea } from "~/components/ui/textarea";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { Badge } from "~/components/ui/badge";
-import { api } from "~/trpc/react";
-import { toast } from "sonner";
+import { ArrowLeft, Save } from "lucide-react";
+import Link from "next/link";
 
-export default function CountryDetailPage({ params }: { params: Promise<{ id: string }> }) {
-	const router = useRouter();
-	const utils = api.useUtils();
-	const { id } = use(params);
+interface PageProps {
+	params: Promise<{
+		id: string;
+	}>;
+}
 
-	// Fetch country data
-	const { data: country, isLoading } = api.admin.country.getById.useQuery({
-		id,
-	});
-
-	// Fetch zones for dropdown
-	const { data: zones = [] } = api.admin.country.getZones.useQuery();
-
-	// Local form state
-	const [formData, setFormData] = useState({
-		shippingZoneId: country?.shippingZoneId || "",
-		isShippingEnabled: country?.isShippingEnabled ?? true,
-		isSuspended: country?.isSuspended ?? false,
-		suspensionReason: country?.suspensionReason || "",
-		requiresCustoms: country?.requiresCustoms ?? false,
-		requiresPhoneNumber: country?.requiresPhoneNumber ?? false,
-		maxWeightKg: country?.maxWeightKg?.toString() || "",
-		maxValueCents: country?.maxValueCents?.toString() || "",
-		notes: country?.notes || "",
-	});
-
-	// Update form when country loads
-	useState(() => {
-		if (country) {
-			setFormData({
-				shippingZoneId: country.shippingZoneId || "",
-				isShippingEnabled: country.isShippingEnabled,
-				isSuspended: country.isSuspended,
-				suspensionReason: country.suspensionReason || "",
-				requiresCustoms: country.requiresCustoms ?? false,
-				requiresPhoneNumber: country.requiresPhoneNumber ?? false,
-				maxWeightKg: country.maxWeightKg?.toString() || "",
-				maxValueCents: country.maxValueCents?.toString() || "",
-				notes: country.notes || "",
-			});
-		}
-	});
-
-	// Update mutation
-	const updateMutation = api.admin.country.update.useMutation({
-		onSuccess: () => {
-			toast.success("Country updated successfully!");
-			utils.admin.country.getById.invalidate({ id: params.id });
-			utils.admin.country.getAll.invalidate();
-			utils.admin.country.getStats.invalidate();
-		},
-		onError: (error) => {
-			toast.error(`Failed to update: ${error.message}`);
-		},
-	});
-
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		updateMutation.mutate({
-			id: params.id,
-			shippingZoneId: formData.shippingZoneId || undefined,
-			isShippingEnabled: formData.isShippingEnabled,
-			isSuspended: formData.isSuspended,
-			suspensionReason: formData.isSuspended ? formData.suspensionReason : null,
-			requiresCustoms: formData.requiresCustoms,
-			requiresPhoneNumber: formData.requiresPhoneNumber,
-			maxWeightKg: formData.maxWeightKg ? parseInt(formData.maxWeightKg) : null,
-			maxValueCents: formData.maxValueCents ? parseInt(formData.maxValueCents) : null,
-			notes: formData.notes || null,
-		});
-	};
-
-	if (isLoading) {
-		return (
-			<div className="flex h-96 items-center justify-center">
-				<div className="text-muted-foreground">Loading country...</div>
-			</div>
-		);
-	}
+export default async function CountryDetailPage({ params }: PageProps) {
+	const { id } = await params;
+	const country = await api.admin.country.getById({ id });
 
 	if (!country) {
-		return (
-			<div className="flex h-96 flex-col items-center justify-center gap-4">
-				<div className="text-muted-foreground">Country not found</div>
-				<Button asChild>
-					<Link href="/admin/countries">Back to Countries</Link>
-				</Button>
-			</div>
-		);
+		notFound();
 	}
 
+	// Note: Form submission would need to be in a client component
+	// This is the display-only version
+
 	return (
-		<div className="space-y-6">
+		<div className="space-y-8">
 			{/* Header */}
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-4">
-					<Button variant="ghost" size="icon" asChild>
+			<div className="flex items-start justify-between">
+				<div className="space-y-4">
+					<Button variant="ghost" asChild className="font-display font-light -ml-4">
 						<Link href="/admin/countries">
-							<ArrowLeft className="h-4 w-4" />
+							<ArrowLeft className="mr-2 h-4 w-4" />
+							Back to Countries
 						</Link>
 					</Button>
-					<div>
+					<div className="space-y-2">
 						<div className="flex items-center gap-3">
-							<span className="text-4xl">{country.flagEmoji || "🏴"}</span>
-							<div>
-								<h1 className="text-3xl font-bold">{country.name}</h1>
-								<p className="text-muted-foreground">
-									{country.iso2} • {country.iso3}
-									{country.localName && ` • ${country.localName}`}
-								</p>
-							</div>
+							<h1 className="text-4xl font-display font-extralight tracking-tight">
+								{country.flagEmoji} {country.name}
+							</h1>
+							<Badge
+								variant={country.isShippingEnabled && !country.isSuspended ? "default" : "secondary"}
+								className="font-display font-light"
+							>
+								{country.isShippingEnabled && !country.isSuspended ? "Enabled" : "Disabled"}
+							</Badge>
 						</div>
+						<p className="text-muted-foreground font-display font-light text-lg">
+							{country.iso2} • {country.iso3}
+						</p>
 					</div>
 				</div>
-				<div className="flex gap-2">
-					<Button variant="outline" size="sm">
-						<Trash2 className="mr-2 h-4 w-4" />
-						Delete
-					</Button>
-					<Button onClick={handleSubmit} disabled={updateMutation.isPending}>
-						<Save className="mr-2 h-4 w-4" />
-						{updateMutation.isPending ? "Saving..." : "Save Changes"}
-					</Button>
-				</div>
 			</div>
 
-			{/* Stats Overview */}
-			<div className="grid gap-4 md:grid-cols-4">
-				<Card>
-					<CardHeader className="pb-3">
-						<CardDescription>Total Orders</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{country.totalOrders || 0}</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="pb-3">
-						<CardDescription>Total Revenue</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">
-							€{((country.totalRevenueCents || 0) / 100).toFixed(2)}
-						</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="pb-3">
-						<CardDescription>Last Order</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-sm">
-							{country.lastOrderAt
-								? new Date(country.lastOrderAt).toLocaleDateString()
-								: "Never"}
-						</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="pb-3">
-						<CardDescription>Status</CardDescription>
-					</CardHeader>
-					<CardContent>
-						{country.isSuspended ? (
-							<Badge variant="destructive">Suspended</Badge>
-						) : country.isShippingEnabled ? (
-							<Badge>Active</Badge>
-						) : (
-							<Badge variant="secondary">Disabled</Badge>
-						)}
-					</CardContent>
-				</Card>
-			</div>
-
-			{/* Edit Form */}
-			<form onSubmit={handleSubmit} className="space-y-6">
-				<Card>
-					<CardHeader>
-						<CardTitle>Shipping Configuration</CardTitle>
-						<CardDescription>
-							Configure shipping settings for this country
-						</CardDescription>
-					</CardHeader>
-					<CardContent className="space-y-4">
-						<div className="space-y-2">
-							<Label htmlFor="shippingZone">Shipping Zone</Label>
-							<Select
-								value={formData.shippingZoneId}
-								onValueChange={(value) =>
-									setFormData({ ...formData, shippingZoneId: value })
-								}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="Select zone..." />
-								</SelectTrigger>
-								<SelectContent>
-									{zones.map((zone) => (
-										<SelectItem key={zone.id} value={zone.id}>
-											{zone.name} ({zone.code})
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="grid gap-4 md:grid-cols-2">
-							<div className="space-y-2">
-								<Label htmlFor="maxWeight">Max Weight (kg)</Label>
-								<Input
-									id="maxWeight"
-									type="number"
-									placeholder="30"
-									value={formData.maxWeightKg}
-									onChange={(e) =>
-										setFormData({ ...formData, maxWeightKg: e.target.value })
-									}
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="maxValue">Max Value (cents)</Label>
-								<Input
-									id="maxValue"
-									type="number"
-									placeholder="400000"
-									value={formData.maxValueCents}
-									onChange={(e) =>
-										setFormData({ ...formData, maxValueCents: e.target.value })
-									}
-								/>
-							</div>
-						</div>
-
-						<div className="space-y-3">
-							<div className="flex items-center space-x-2">
-								<Checkbox
-									id="requiresCustoms"
-									checked={formData.requiresCustoms}
-									onCheckedChange={(checked) =>
-										setFormData({
-											...formData,
-											requiresCustoms: checked === true,
-										})
-									}
-								/>
-								<Label htmlFor="requiresCustoms" className="cursor-pointer">
-									Requires customs declaration
-								</Label>
-							</div>
-
-							<div className="flex items-center space-x-2">
-								<Checkbox
-									id="requiresPhoneNumber"
-									checked={formData.requiresPhoneNumber}
-									onCheckedChange={(checked) =>
-										setFormData({
-											...formData,
-											requiresPhoneNumber: checked === true,
-										})
-									}
-								/>
-								<Label htmlFor="requiresPhoneNumber" className="cursor-pointer">
-									Requires phone number for delivery
-								</Label>
-							</div>
-
-							<div className="flex items-center space-x-2">
-								<Checkbox
-									id="isShippingEnabled"
-									checked={formData.isShippingEnabled}
-									onCheckedChange={(checked) =>
-										setFormData({
-											...formData,
-											isShippingEnabled: checked === true,
-										})
-									}
-								/>
-								<Label htmlFor="isShippingEnabled" className="cursor-pointer">
-									Enable shipping to this country
-								</Label>
-							</div>
-
-							<div className="flex items-center space-x-2">
-								<Checkbox
-									id="isSuspended"
-									checked={formData.isSuspended}
-									onCheckedChange={(checked) =>
-										setFormData({
-											...formData,
-											isSuspended: checked === true,
-										})
-									}
-								/>
-								<Label htmlFor="isSuspended" className="cursor-pointer">
-									Suspend shipping (temporary)
-								</Label>
-							</div>
-						</div>
-
-						{formData.isSuspended && (
-							<div className="space-y-2">
-								<Label htmlFor="suspensionReason">Suspension Reason</Label>
-								<Input
-									id="suspensionReason"
-									placeholder="e.g., Conflict zone, carrier issues..."
-									value={formData.suspensionReason}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											suspensionReason: e.target.value,
-										})
-									}
-								/>
-							</div>
-						)}
-
-						<div className="space-y-2">
-							<Label htmlFor="notes">Notes</Label>
-							<Textarea
-								id="notes"
-								placeholder="Any special notes or restrictions..."
-								value={formData.notes}
-								onChange={(e) =>
-									setFormData({ ...formData, notes: e.target.value })
-								}
-								rows={3}
-							/>
-						</div>
-					</CardContent>
-				</Card>
-
-				{/* Serbia Post Info (Read-only) */}
-				{(country.postOperatorCode || country.postZone) && (
-					<Card>
+			<div className="grid gap-8 lg:grid-cols-2">
+				{/* Left Column */}
+				<div className="space-y-6">
+					<Card className="border-2">
 						<CardHeader>
-							<CardTitle>Serbia Post Information</CardTitle>
-							<CardDescription>Original data from Serbia Post CSV</CardDescription>
+							<CardTitle className="font-display font-normal">Basic Information</CardTitle>
 						</CardHeader>
-						<CardContent className="grid gap-4 md:grid-cols-2">
-							<div>
-								<Label className="text-muted-foreground">Operator Code</Label>
-								<div className="text-lg">{country.postOperatorCode || "—"}</div>
+						<CardContent className="space-y-4">
+							<div className="grid grid-cols-2 gap-4">
+								<div>
+									<Label className="font-display font-light">ISO 2</Label>
+									<Input value={country.iso2} disabled className="font-display" />
+								</div>
+								<div>
+									<Label className="font-display font-light">ISO 3</Label>
+									<Input value={country.iso3} disabled className="font-display" />
+								</div>
 							</div>
 							<div>
-								<Label className="text-muted-foreground">Post Zone</Label>
-								<div className="text-lg">{country.postZone || "—"}</div>
+								<Label className="font-display font-light">Name</Label>
+								<Input value={country.name} disabled className="font-display" />
 							</div>
+							{country.localName && (
+								<div>
+									<Label className="font-display font-light">Local Name</Label>
+									<Input value={country.localName} disabled className="font-display" />
+								</div>
+							)}
 						</CardContent>
 					</Card>
-				)}
-			</form>
+
+					<Card className="border-2">
+						<CardHeader>
+							<CardTitle className="font-display font-normal">Shipping Configuration</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<div className="flex items-center justify-between">
+								<Label className="font-display font-light">Shipping Enabled</Label>
+								<Switch checked={country.isShippingEnabled ?? false} disabled />
+							</div>
+							<div className="flex items-center justify-between">
+								<Label className="font-display font-light">Suspended</Label>
+								<Switch checked={country.isSuspended ?? false} disabled />
+							</div>
+							{country.suspensionReason && (
+								<div>
+									<Label className="font-display font-light">Suspension Reason</Label>
+									<Textarea value={country.suspensionReason} disabled className="font-display" />
+								</div>
+							)}
+							{country.zone && (
+								<div>
+									<Label className="font-display font-light">Shipping Zone</Label>
+									<Input value={`${country.zone.name} (${country.zone.code})`} disabled className="font-display" />
+								</div>
+							)}
+						</CardContent>
+					</Card>
+				</div>
+
+				{/* Right Column */}
+				<div className="space-y-6">
+					<Card className="border-2">
+						<CardHeader>
+							<CardTitle className="font-display font-normal">Statistics</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<div className="grid grid-cols-2 gap-4">
+								<div>
+									<p className="text-sm text-muted-foreground font-display font-light mb-1">
+										Total Orders
+									</p>
+									<p className="text-2xl font-display font-normal">
+										{country.totalOrders || 0}
+									</p>
+								</div>
+								<div>
+									<p className="text-sm text-muted-foreground font-display font-light mb-1">
+										Total Revenue
+									</p>
+									<p className="text-2xl font-display font-normal">
+										€{((country.totalRevenueCents || 0) / 100).toFixed(2)}
+									</p>
+								</div>
+							</div>
+							{country.lastOrderAt && (
+								<div>
+									<p className="text-sm text-muted-foreground font-display font-light mb-1">
+										Last Order
+									</p>
+									<p className="font-display font-normal">
+										{new Date(country.lastOrderAt).toLocaleDateString()}
+									</p>
+								</div>
+							)}
+						</CardContent>
+					</Card>
+
+					<Card className="border-2">
+						<CardHeader>
+							<CardTitle className="font-display font-normal">Metadata</CardTitle>
+						</CardHeader>
+						<CardContent className="space-y-3 text-sm">
+							<div className="flex justify-between">
+								<span className="text-muted-foreground font-display font-light">Country ID</span>
+								<span className="font-display font-light font-mono text-xs">{country.id}</span>
+							</div>
+							<div className="flex justify-between">
+								<span className="text-muted-foreground font-display font-light">Created</span>
+								<span className="font-display font-light">
+									{new Date(country.createdAt).toLocaleDateString()}
+								</span>
+							</div>
+							{country.updatedAt && (
+								<div className="flex justify-between">
+									<span className="text-muted-foreground font-display font-light">Updated</span>
+									<span className="font-display font-light">
+										{new Date(country.updatedAt).toLocaleDateString()}
+									</span>
+								</div>
+							)}
+						</CardContent>
+					</Card>
+				</div>
+			</div>
 		</div>
 	);
 }

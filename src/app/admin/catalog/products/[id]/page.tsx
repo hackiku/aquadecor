@@ -28,11 +28,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 		return `€${(cents / 100).toFixed(2)}`;
 	};
 
-	const stockBadge = {
+	const stockBadge = product.stockStatus ? {
 		in_stock: { label: "In Stock", variant: "default" as const },
 		made_to_order: { label: "Made to Order", variant: "secondary" as const },
 		out_of_stock: { label: "Out of Stock", variant: "destructive" as const },
-	}[product.stockStatus];
+	}[product.stockStatus] : undefined;
 
 	return (
 		<div className="space-y-8">
@@ -154,9 +154,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 									<p className="text-sm text-muted-foreground font-display font-light mb-1">
 										Stock Status
 									</p>
-									<Badge variant={stockBadge.variant} className="font-display font-light">
-										{stockBadge.label}
-									</Badge>
+									{stockBadge && (
+										<Badge variant={stockBadge.variant} className="font-display font-light">
+											{stockBadge.label}
+										</Badge>
+									)}
 								</div>
 							</div>
 

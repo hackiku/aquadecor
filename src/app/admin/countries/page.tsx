@@ -93,7 +93,6 @@ export default function CountriesPage() {
 					value={stats?.suspendedCountries?.toString() || "0"}
 					icon={AlertTriangle}
 					description="Temporarily disabled"
-					variant="destructive"
 				/>
 			</div>
 
@@ -144,7 +143,7 @@ export default function CountriesPage() {
 											<Badge variant="outline">{item.attemptCount} attempts</Badge>
 										</div>
 										<div className="text-muted-foreground">
-											€{((item.totalValueCents || 0) / 100).toFixed(0)} potential
+											€{(Math.abs(item.totalValueCents || 0) / 100).toFixed(0)} potential
 										</div>
 										<Button size="sm" variant="outline">
 											Enable
@@ -170,7 +169,11 @@ export default function CountriesPage() {
 
 			{/* Countries Grid with Zone Selector */}
 			<CountriesGrid
-				countries={countries}
+				countries={countries.map(c => ({
+					...c,
+					isShippingEnabled: c.isShippingEnabled ?? false,
+					isSuspended: c.isSuspended ?? false
+				}))}
 				zones={zones}
 				searchQuery={searchQuery}
 			/>
