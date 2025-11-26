@@ -4,9 +4,16 @@
 // 
 // Structure:
 // - auth.ts: NextAuth tables (T3 stack, do not modify)
-// - store.ts: Product catalog (categories, products, images, translations)
+// - shop.ts: Product catalog (categories, products, images, translations)
+// - orders.ts: Order management and fulfillment
+// - promoters.ts: Affiliate/promoter system
+// - faq.ts: FAQ system with i18n
+// - reviews.ts: Product reviews
 //
 
 export * from "./auth";
 export * from "./shop";
+export * from "./orders";
+export * from "./promoters";
+export * from "./faq";
 export * from "./reviews";

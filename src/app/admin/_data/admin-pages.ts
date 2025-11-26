@@ -14,7 +14,10 @@ import {
 	Settings,
 	Package,
 	Layers,
+	Tag,
+	FileText,
 	type LucideIcon,
+	Home,
 } from "lucide-react";
 
 export interface AdminPage {
@@ -32,30 +35,26 @@ export const adminPages: AdminPage[] = [
 		title: "Dashboard",
 		href: "/admin",
 		icon: LayoutDashboard,
-		description: "Overview and analytics",
 	},
 	{
 		title: "Orders",
 		href: "/admin/orders",
-		icon: ShoppingCart,
-		description: "Customer orders",
-		badge: "12", // TODO: Fetch from tRPC
+		icon: Package,
 	},
 	{
 		title: "Catalog",
 		href: "/admin/catalog",
-		icon: ShoppingBag,
-		description: "Products and categories",
+		icon: Package,
 		children: [
 			{
-				title: "Start",
-				href: "/admin/catalog",
-				icon: Layers,
+				title: "Catalog",
+				href: "/admin/catalog/",
+				icon: Home,
 			},
 			{
 				title: "Products",
 				href: "/admin/catalog/products",
-				icon: Package,
+				icon: ShoppingBag,
 			},
 			{
 				title: "Categories",
@@ -65,25 +64,46 @@ export const adminPages: AdminPage[] = [
 		],
 	},
 	{
-		title: "Promo",
-		href: "/admin/promo",
-		icon: Percent,
-		description: "Discounts and promoters",
+		title: "Content",
+		href: "/admin/content",
+		icon: FileText,
 		children: [
 			{
-				title: "Start",
-				href: "/admin/promo",
-				icon: Percent,
+				title: "Content",
+				href: "/admin/content",
+				icon: Home,
 			},
 			{
-				title: "Discounts",
-				href: "/admin/promo/discounts",
-				icon: Percent,
+				title: "Gallery",
+				href: "/admin/content/gallery",
+				icon: Image,
+			},
+			{
+				title: "FAQ",
+				href: "/admin/content/faq",
+				icon: FileText,
+			},
+		],
+	},
+	{
+		title: "Promo",
+		href: "/admin/promo",
+		icon: Tag,
+		children: [
+			{
+				title: "Promo",
+				href: "/admin/promo",
+				icon: Home,
 			},
 			{
 				title: "Promoters",
 				href: "/admin/promo/promoters",
 				icon: Users,
+			},
+			{
+				title: "Discounts",
+				href: "/admin/promo/discounts",
+				icon: Tag,
 			},
 		],
 	},
@@ -95,24 +115,10 @@ export const adminPages: AdminPage[] = [
 		inactive: true,
 	},
 	{
-		title: "Gallery",
-		href: "/admin/gallery",
-		icon: Image,
-		description: "Image management",
-		inactive: true,
-	},
-	{
 		title: "Wishlist",
 		href: "/admin/wishlist",
 		icon: Heart,
 		description: "Popular products",
-		inactive: true,
-	},
-	{
-		title: "FAQs",
-		href: "/admin/faqs",
-		icon: HelpCircle,
-		description: "Customer questions",
 		inactive: true,
 	},
 	{
