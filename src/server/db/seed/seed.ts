@@ -3,18 +3,16 @@
 
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq } from "drizzle-orm";
 import {
 	categories, categoryTranslations,
 	products, productTranslations, productImages,
 	reviews,
 	orders, orderItems,
-	promoters,promoterCodes,
-	faqs,faqTranslations,
+	promoters, promoterCodes,
+	faqs, faqTranslations,
 	shippingZones, countries
 } from "../schema";
 
-// Import seed data
 import { categoryStructure } from "./data/seed-categories";
 import { categoryTranslations as catTranslations } from "./data/translations/seed-translations-categories";
 import { productStructure } from "./data/seed-products";
@@ -25,7 +23,6 @@ import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
 import { faqsSeedData } from "./data/seed-faqs";
 import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
-
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -93,7 +90,8 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 			sku: prod.sku,
 			basePriceEurCents: prod.basePriceEurCents,
 			priceNote: prod.priceNote,
-			specifications: prod.specifications,
+			// Fix: Cast to any to bypass Drizzle strict JSON validation
+			specifications: prod.specifications as any,
 			stockStatus: prod.stockStatus,
 			isActive: prod.isActive,
 			isFeatured: prod.isFeatured,
