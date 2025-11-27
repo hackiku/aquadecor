@@ -1,180 +1,160 @@
 // src/components/shop/product/ProductSlider.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
-
-type ProductLineFilter = "3d-backgrounds" | "aquarium-decorations";
+import { ArrowRight } from "lucide-react";
+import type { ProductCardData } from "~/lib/types/schema";
 
 export function ProductSlider() {
-	const [filter, setFilter] = useState<ProductLineFilter>("3d-backgrounds");
-
-	// Auto-switch between product lines every 5 seconds
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setFilter((prev) =>
-				prev === "3d-backgrounds" ? "aquarium-decorations" : "3d-backgrounds"
-			);
-		}, 5000);
-
-		return () => clearInterval(interval);
-	}, []);
-
 	// Fetch featured products
 	const { data: products, isLoading } = api.product.getFeatured.useQuery({
 		locale: "en",
-		limit: 8,
+		limit: 12,
 	});
 
-	// Filter by current selection
-	const filteredProducts = products?.filter(
-		(p) => p.productLineSlug === filter
-	).slice(0, 4) || [];
+	// Split by product line
+	const backgroundProducts = products?.filter(
+		(p) => p.productLineSlug === "3d-backgrounds"
+	).slice(0, 6) || [];
+
+	const decorationProducts = products?.filter(
+		(p) => p.productLineSlug === "aquarium-decorations"
+	).slice(0, 6) || [];
 
 	return (
-		<div className="relative w-full">
-			{/* Desktop: Horizontal scroll */}
-			<div className="hidden md:flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-				{isLoading ? (
-					<>
-						{[...Array(4)].map((_, i) => (
-							<ProductCardSkeleton key={i} />
-						))}
-					</>
-				) : (
-					filteredProducts.map((product) => (
-						<ProductCard key={product.id} product={product} />
-					))
-				)}
-			</div>
+		<div className="space-y-12">
+			{/* 3D Backgrounds Row */}
+			<ProductRow
+				title="3D Backgrounds"
+				subtitle="Custom-made realistic rock formations"
+				products={backgroundProducts}
+				isLoading={isLoading}
+				href="/shop/3d-backgrounds"
+			/>
 
-			{/* Mobile: Grid */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:hidden">
-				{isLoading ? (
-					<>
-						{[...Array(4)].map((_, i) => (
-							<ProductCardSkeleton key={i} />
-						))}
-					</>
-				) : (
-					filteredProducts.map((product) => (
-						<ProductCard key={product.id} product={product} />
-					))
-				)}
-			</div>
-
-			{/* Bottom Row: Toggle + CTA */}
-			<div className="flex items-center justify-between mt-8">
-				{/* Category Toggle */}
-				<div className="flex items-center gap-2">
-					<button
-						onClick={() => setFilter("3d-backgrounds")}
-						className={`group relative px-4 py-2 text-sm font-display font-medium transition-colors ${filter === "3d-backgrounds"
-								? "text-primary"
-								: "text-muted-foreground hover:text-foreground"
-							}`}
-						title="3D Aquarium Backgrounds"
-					>
-						Backgrounds
-						{filter === "3d-backgrounds" && (
-							<motion.div
-								layoutId="activeFilter"
-								className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-								transition={{ type: "spring", stiffness: 380, damping: 30 }}
-							/>
-						)}
-					</button>
-
-					<span className="text-muted-foreground/50">|</span>
-
-					<button
-						onClick={() => setFilter("aquarium-decorations")}
-						className={`group relative px-4 py-2 text-sm font-display font-medium transition-colors ${filter === "aquarium-decorations"
-								? "text-primary"
-								: "text-muted-foreground hover:text-foreground"
-							}`}
-						title="Aquarium Decorations"
-					>
-						Decorations
-						{filter === "aquarium-decorations" && (
-							<motion.div
-								layoutId="activeFilter"
-								className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-								transition={{ type: "spring", stiffness: 380, damping: 30 }}
-							/>
-						)}
-					</button>
-				</div>
-
-				{/* View All Button */}
-				<Button
-					asChild
-					variant="outline"
-					size="default"
-					className="rounded-full"
-				>
-					<Link href="/shop">Shop all products</Link>
-				</Button>
-			</div>
+			{/* Aquarium Decorations Row */}
+			<ProductRow
+				title="Aquarium Decorations"
+				subtitle="Plants, rocks, and driftwood that last forever"
+				products={decorationProducts}
+				isLoading={isLoading}
+				href="/shop/aquarium-decorations"
+			/>
 		</div>
 	);
 }
 
-function ProductCard({ product }: { product: any }) {
+interface ProductRowProps {
+	title: string;
+	subtitle: string;
+	products: ProductCardData[];
+	isLoading: boolean;
+	href: string;
+}
+
+function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowProps) {
+	return (
+		<div className="space-y-6">
+			{/* Header */}
+			<div className="flex items-end justify-between">
+				<div>
+					<h3 className="text-2xl md:text-3xl font-display font-light mb-1">
+						{title}
+					</h3>
+					<p className="text-muted-foreground font-display font-light text-sm">
+						{subtitle}
+					</p>
+				</div>
+				<Link
+					href={href}
+					className="hidden md:flex items-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
+				>
+					View all
+					<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+				</Link>
+			</div>
+
+			{/* Products Grid/Scroll */}
+			<div className="relative -mx-4 px-4">
+				<div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+					{isLoading ? (
+						<>
+							{[...Array(6)].map((_, i) => (
+								<ProductCardSkeleton key={i} />
+							))}
+						</>
+					) : (
+						products.map((product) => (
+							<ProductCard key={product.id} product={product} />
+						))
+					)}
+				</div>
+			</div>
+
+			{/* Mobile View All Button */}
+			<Link
+				href={href}
+				className="md:hidden flex items-center justify-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
+			>
+				View all {title}
+				<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+			</Link>
+		</div>
+	);
+}
+
+function ProductCard({ product }: { product: ProductCardData }) {
 	const hasPrice = product.basePriceEurCents !== null;
 
 	return (
 		<Link
 			href={`/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`}
-			className="group block snap-start shrink-0 w-[280px] md:w-[320px]"
+			className="group block snap-start shrink-0 w-[260px] md:w-[300px]"
 		>
-			<Card className="h-full overflow-hidden border-2 hover:border-primary transition-all hover:shadow-lg">
-				<CardHeader className="p-0">
-					<div className="relative aspect-[4/3] bg-muted overflow-hidden">
-						{product.featuredImageUrl ? (
-							<Image
-								src={product.featuredImageUrl}
-								alt={product.name || "Product"}
-								fill
-								className="object-cover group-hover:scale-105 transition-transform duration-300"
-								sizes="320px"
-							/>
+			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-gradient-to-b from-transparent to-black/80">
+				{/* Image */}
+				<div className="relative aspect-4/3 bg-muted overflow-hidden">
+					{product.featuredImageUrl ? (
+						<Image
+							src={product.featuredImageUrl}
+							alt={product.name || "Product"}
+							fill
+							className="object-cover group-hover:scale-105 transition-transform duration-500"
+							sizes="300px"
+						/>
+					) : (
+						<div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+							<span className="text-muted-foreground font-display text-sm">
+								{product.sku}
+							</span>
+						</div>
+					)}
+
+					{/* Gradient overlay for text readability */}
+					<div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/90" />
+
+					{/* Content overlay at bottom */}
+					<div className="absolute -bottom-5 left-0 right-0 p-4 space-y-2">
+						<h4 className="font-display font-normal text-base line-clamp-2 text-white">
+							{product.name || product.slug}
+						</h4>
+
+						{hasPrice ? (
+							<p className="text-lg font-display font-medium text-white">
+								€{(product.basePriceEurCents / 100).toFixed(0)}
+							</p>
 						) : (
-							<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-								<span className="text-muted-foreground font-display text-sm">
-									{product.sku}
-								</span>
-							</div>
+							<p className="text-sm font-display font-medium text-white/80">
+								Custom Quote
+							</p>
 						)}
 					</div>
-				</CardHeader>
-				<CardContent className="p-4 space-y-2">
-					<h3 className="font-display font-normal text-lg line-clamp-1">
-						{product.name || product.slug}
-					</h3>
-					{product.shortDescription && (
-						<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
-							{product.shortDescription}
-						</p>
-					)}
-				</CardContent>
-				<CardFooter className="p-4 pt-0">
-					{hasPrice ? (
-						<p className="text-lg font-display font-medium text-primary">
-							€{(product.basePriceEurCents / 100).toFixed(0)}
-						</p>
-					) : (
-						<p className="text-sm font-display font-medium text-muted-foreground">
-							Custom Quote
-						</p>
-					)}
-				</CardFooter>
+				</div>
 			</Card>
 		</Link>
 	);
@@ -182,19 +162,9 @@ function ProductCard({ product }: { product: any }) {
 
 function ProductCardSkeleton() {
 	return (
-		<div className="snap-start shrink-0 w-[280px] md:w-[320px]">
+		<div className="snap-start shrink-0 w-[260px] md:w-[300px]">
 			<Card className="h-full overflow-hidden">
-				<CardHeader className="p-0">
-					<Skeleton className="aspect-[4/3] w-full" />
-				</CardHeader>
-				<CardContent className="p-4 space-y-2">
-					<Skeleton className="h-6 w-3/4" />
-					<Skeleton className="h-4 w-full" />
-					<Skeleton className="h-4 w-2/3" />
-				</CardContent>
-				<CardFooter className="p-4 pt-0">
-					<Skeleton className="h-6 w-20" />
-				</CardFooter>
+				<Skeleton className="aspect-4/3 w-full" />
 			</Card>
 		</div>
 	);

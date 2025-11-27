@@ -46,15 +46,7 @@ export function FeaturesSection() {
 	return (
 		<section ref={ref} className="py-24 md:py-32 relative overflow-hidden">
 			<div className="px-4 max-w-7xl mx-auto">
-				{/* Headline */}
-				<div className="text-center mb-16">
-					<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
-						Built to Last Forever
-					</h2>
-					<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-						Obsessive about hyper-realistic replicas made from polyurethane/resin blends. Non-toxic, temperature-resistant, and come with 20-year or lifetime warranties.
-					</p>
-				</div>
+
 
 				{/* Editorial Layout - Image + Annotations */}
 				<div className="relative max-w-5xl mx-auto">

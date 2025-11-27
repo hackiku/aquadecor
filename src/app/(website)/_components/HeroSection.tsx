@@ -91,8 +91,8 @@ export function HeroSection() {
 				</svg>
 
 				{/* Gradient overlays */}
-				<div className="absolute inset-0 bg-gradient-to-b from-zinc-950/60 via-zinc-950/40 to-zinc-950/90" />
-				<div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
+				<div className="absolute inset-0 bg-linear-to-b from-zinc-950/60 via-zinc-950/40 to-zinc-950/90" />
+				<div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-transparent to-transparent" />
 			</div>
 
 			{/* Hero Content */}
@@ -105,20 +105,38 @@ export function HeroSection() {
 							World's{" "}
 							<span className="relative inline-block">
 								<span className="relative z-10">most realistic</span>
-								<motion.span
-									className="absolute bottom-0 left-0 right-0 h-1 bg-primary"
-									initial={{ scaleX: 0 }}
-									animate={{ scaleX: isUnderlineVisible ? 1 : 0 }}
-									transition={{ duration: 0.4, ease: "easeInOut" }}
-									style={{ transformOrigin: "left" }}
-								/>
+								{/* Hand-drawn swoosh underline */}
+								<motion.svg
+									className="absolute -bottom-2 left-0 w-full h-4"
+									viewBox="0 0 200 10"
+									preserveAspectRatio="none"
+									initial={{ pathLength: 0, opacity: 0 }}
+									animate={{
+										pathLength: isUnderlineVisible ? 1 : 0,
+										opacity: isUnderlineVisible ? 1 : 0
+									}}
+									transition={{ duration: 0.6, ease: "easeInOut" }}
+								>
+									<motion.path
+										d="M 0 5 Q 50 0, 100 5 T 200 5"
+										stroke="currentColor"
+										strokeWidth="3"
+										fill="none"
+										className="text-primary"
+										strokeLinecap="round"
+									/>
+								</motion.svg>
 							</span>
 							{" "}3D Aquarium Backgrounds & Decorations
 						</h1>
 
 						{/* Subheadline */}
 						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl leading-relaxed">
-							A simple and effective way to create a natural habitat in your fish tank.
+							The aquarium community's {' '}
+							<span className="text-white italic font-medium">
+								least-kept secret 
+							</span> {' '}
+							for creating gorgeously-looking natural habitat in your fish tank.
 						</p>
 
 						{/* CTAs */}
