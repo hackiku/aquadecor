@@ -7,11 +7,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ProductSlider } from "~/components/shop/product/ProductSlider";
 import { HeroSection } from "./landing/_sections/HeroSection";
 import { FeaturesSection } from "./landing/_sections/FeaturesSection";
-import { ComparisonSection } from "./landing/_sections/ComparisonSection";
+import { ComparisonTable } from "./_components/ComparisonTable";
 import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
 import { SocialLinks } from "~/components/social/SocialLinks";
 import { SocialGrid } from "~/components/proof/SocialGrid";
-import { WaveDivider } from "~/components/ui/wave-divider";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
+import { WaveContainer } from "~/components/ui/water/wave-container";
+import { NegativeWave } from "~/components/ui/water/negative-wave";
 import { CompaniesLogos } from "~/components/proof/CompaniesLogos";
 
 export default function LandingPage() {
@@ -60,16 +62,11 @@ export default function LandingPage() {
 			<FeaturesSection />
 
 			{/* Companies Logos */}
-			<section className="py-16 md:py-24 border-t border-b">
+			{/* <section className="py-16 md:py-24"> */}
 				<div className="px-4 max-w-7xl mx-auto">
-					<div className="text-center mb-12">
-						<h2 className="text-2xl md:text-3xl font-display font-light tracking-normal">
-							Trusted by Leading Aquarium Brands
-						</h2>
-					</div>
 					<CompaniesLogos />
 				</div>
-			</section>
+			{/* </section> */}
 
 			{/* Social Proof - Customer Content */}
 			<section className="relative py-24 md:py-36 bg-gradient-to-b from-card/80 to-transparent overflow-hidden">
@@ -98,7 +95,10 @@ export default function LandingPage() {
 			</section>
 
 			{/* Stats - Social Proof */}
-			<section className="py-16 md:py-24">
+			<section className="relative py-16 md:py-24 bg-gradient-to-b from-card to-background">
+				{/* Top wave matching background color */}
+				{/* <NegativeWave position="top" bgColor="bg-background" /> */}
+
 				<div className="px-4 max-w-7xl mx-auto">
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
 						<div className="text-center space-y-2">
@@ -121,8 +121,23 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-			{/* Comparison - Standard vs Custom */}
-			<ComparisonSection />
+
+			<section className="py-8 md:py-12">
+				<WaveContainer>
+					<div className="max-w-7xl mx-auto px-4 py-72">
+						<div className="text-center mb-12 md:mb-16">
+							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4 text-white">
+								Whatever you choose, you won't regret it!
+							</h2>
+							<p className="text-lg text-cyan-100/80 font-display font-light max-w-2xl mx-auto">
+								Standard dimensions for quick setup, or custom-made to fit your exact vision.
+							</p>
+						</div>
+						<ComparisonTable />
+					</div>
+				</WaveContainer>
+			</section>
+
 
 			{/* Newsletter CTA */}
 			<NewsletterSection />

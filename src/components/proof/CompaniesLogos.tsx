@@ -22,7 +22,7 @@ export function CompaniesLogos({ grayscale = false, className = "" }: CompaniesL
 	return (
 		<div className={`py-12 md:py-16 ${className}`}>
 			<div className="text-center mb-8">
-				<p className="text-sm md:text-base text-muted-foreground font-display font-light">
+				<p className="uppercase tracking-widest text-sm md:text-base text-muted-foreground/60 font-display font-light">
 					Compatible with leading aquarium brands
 				</p>
 			</div>

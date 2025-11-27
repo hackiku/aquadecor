@@ -1,4 +1,4 @@
-// src/components/ui/wave-divider.tsx
+// src/components/ui/water/wave-divider.tsx
 
 interface WaveDividerProps {
 	position?: "top" | "bottom";
