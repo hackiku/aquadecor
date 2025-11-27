@@ -1,7 +1,7 @@
 // src/app/(website)/setup/page.tsx
 
 import Image from "next/image";
-import { WaveDivider } from "~/components/ui/wave-divider";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 const SETUP_EXAMPLES = [
 	{

@@ -67,7 +67,7 @@ export function ComparisonTable() {
 					title="Custom dimensions"
 					description="Customize dimensions and sizes based on your needs."
 					features={CUSTOM_FEATURES}
-					ctaHref="/store/configurator"
+					ctaHref="/calculator"
 					ctaText="Order custom"
 					variant="default"
 					highlighted

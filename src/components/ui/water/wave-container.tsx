@@ -95,7 +95,7 @@ export function WaveContainer({ children, className }: WaveContainerProps) {
 			</svg>
 
 			{/* Content positioned over the SVG */}
-			<div className="relative z-10 py-8 md:py-12">
+			<div className="relative z-10">
 				{children}
 			</div>
 		</div>

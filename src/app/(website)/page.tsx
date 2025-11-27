@@ -8,7 +8,8 @@ import { ProductSlider } from "~/components/shop/product/ProductSlider";
 import { HeroSection } from "./landing/_sections/HeroSection";
 import { FeaturesSection } from "./landing/_sections/FeaturesSection";
 import { ComparisonTable } from "./_components/ComparisonTable";
-import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
+// import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
+import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
 import { SocialLinks } from "~/components/social/SocialLinks";
 import { SocialGrid } from "~/components/proof/SocialGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
@@ -122,10 +123,10 @@ export default function LandingPage() {
 			</section>
 
 
-			<section className="py-8 md:py-12">
+			<section className=" border border-red-500/20">
 				<WaveContainer>
-					<div className="max-w-7xl mx-auto px-4 py-72">
-						<div className="text-center mb-12 md:mb-16">
+					<div className="max-w-7xl mx-auto px-4 pt-32">
+						<div className="text-center md:mb-16 ">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4 text-white">
 								Whatever you choose, you won't regret it!
 							</h2>
@@ -134,13 +135,19 @@ export default function LandingPage() {
 							</p>
 						</div>
 						<ComparisonTable />
+
+						{/* Newsletter positioned to overlap bottom wave */}
+						<div className="relative mt-24 pb-12">
+							<NewsletterForm />
+						</div>
 					</div>
 				</WaveContainer>
 			</section>
 
 
+
 			{/* Newsletter CTA */}
-			<NewsletterSection />
+			{/* <NewsletterSection /> */}
 		</main>
 	);
 }

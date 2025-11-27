@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ArrowRight, Package, Wrench, Shield, Zap } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategorySlider } from "~/components/shop/category/CategorySlider";
-import { WaveDivider } from "~/components/ui/wave-divider";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 export default async function ThreeDBackgroundsPage() {
 	// Load categories for 3D backgrounds
