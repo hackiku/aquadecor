@@ -4,18 +4,19 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+// ecom
 import { ProductSlider } from "~/components/shop/product/ProductSlider";
-import { HeroSection } from "./landing/_sections/HeroSection";
-import { FeaturesSection } from "./landing/_sections/FeaturesSection";
-import { ComparisonTable } from "./_components/ComparisonTable";
-// import { NewsletterSection } from "~/components/cta/email/NewsletterSection";
+// components
 import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
-import { SocialLinks } from "~/components/social/SocialLinks";
 import { SocialGrid } from "~/components/proof/SocialGrid";
+import { SocialLinks } from "~/components/social/SocialLinks";
+import { CompaniesLogos } from "~/components/proof/CompaniesLogos";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
-import { NegativeWave } from "~/components/ui/water/negative-wave";
-import { CompaniesLogos } from "~/components/proof/CompaniesLogos";
+// content
+import { HeroSection } from "./_components/HeroSection";
+import { FeaturesSection } from "./_components/FeaturesSection";
+import { ComparisonTable } from "./_components/ComparisonTable";
 
 export default function LandingPage() {
 	const sliderRef = useRef<HTMLElement>(null);
@@ -70,7 +71,7 @@ export default function LandingPage() {
 			{/* </section> */}
 
 			{/* Social Proof - Customer Content */}
-			<section className="relative py-24 md:py-36 bg-gradient-to-b from-card/80 to-transparent overflow-hidden">
+			<section className="relative py-24 md:py-36 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
 				{/* Top Wave Divider */}
 				<WaveDivider position="top" color="currentColor" className="text-background" />
 
@@ -96,7 +97,7 @@ export default function LandingPage() {
 			</section>
 
 			{/* Stats - Social Proof */}
-			<section className="relative py-16 md:py-24 bg-gradient-to-b from-card to-background">
+			<section className="relative py-16 md:py-24 bg-linear-to-b from-card to-background">
 				{/* Top wave matching background color */}
 				{/* <NegativeWave position="top" bgColor="bg-background" /> */}
 
@@ -144,10 +145,6 @@ export default function LandingPage() {
 				</WaveContainer>
 			</section>
 
-
-
-			{/* Newsletter CTA */}
-			{/* <NewsletterSection /> */}
 		</main>
 	);
 }

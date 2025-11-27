@@ -1,4 +1,4 @@
-// src/app/(website)/landing/_sections/HeroSection.tsx
+// src/app/(website)/_components/HeroSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";

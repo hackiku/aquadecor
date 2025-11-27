@@ -1,4 +1,4 @@
-// src/app/(website)/landing/_sections/FeaturesSection.tsx
+// src/app/(website)/_components/FeaturesSection.tsx
 "use client";
 
 import { useRef } from "react";

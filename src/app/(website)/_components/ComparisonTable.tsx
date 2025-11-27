@@ -1,4 +1,4 @@
-// src/app/(website)/landing/_components/ComparisonTable.tsx
+// src/app/(website)/_components/ComparisonTable.tsx
 
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
