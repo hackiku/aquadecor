@@ -1,5 +1,6 @@
 // src/server/db/schema/shop.ts
 import { relations } from "drizzle-orm";
+import type { InferSelectModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 
@@ -260,3 +261,40 @@ export const productImagesRelations = relations(productImages, ({ one }) => ({
 export const quotesRelations = relations(quotes, ({ one }) => ({
 	// Could link to users table if auth is added
 }));
+
+export type Category = InferSelectModel<typeof categories>;
+export type Product = InferSelectModel<typeof products>;
+export type ProductTranslation = InferSelectModel<typeof productTranslations>;
+export type ProductImage = InferSelectModel<typeof productImages>;
+export type Quote = InferSelectModel<typeof quotes>;
+
+
+// Commonly used joined types for components
+export type ProductWithDetails = Product & {
+	name: string;
+	shortDescription: string | null;
+	fullDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string;
+	productLineSlug: string;
+};
+
+// Type for product cards/sliders - exactly what components need
+export type ProductCardData = Pick<Product,
+	| 'id'
+	| 'slug'
+	| 'sku'
+	| 'basePriceEurCents'
+	| 'priceNote'
+	| 'stockStatus'
+	| 'isFeatured'
+> & {
+	name: string;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string;
+	productLineSlug: string;
+};
+
+// Product line type (for type safety)
+export type ProductLine = "3d-backgrounds" | "aquarium-decorations";

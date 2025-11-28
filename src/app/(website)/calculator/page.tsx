@@ -60,12 +60,16 @@ export default function CalculatorPage() {
 			{/* Hero Section */}
 			<section className="pt-32 md:pt-44 bg-linear-to-b from-muted/50 via-muted/30 to-transparent">
 				<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
-					<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
+					
+					<span className="bg-primary/20 px-4 py-2 rounded-full text-primary/90">
+						How much For the Fish
+					</span>
+					<h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 						Custom Aquarium Background Calculator
 					</h1>
 					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto leading-relaxed">
 						Configure your perfect 3D background in real-time. Adjust dimensions, choose materials,
-						and get an instant price estimate.
+						get an instant price estimate. We'll reach out for more details.
 					</p>
 
 					{/* Progress bar */}

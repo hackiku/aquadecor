@@ -17,7 +17,6 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 // content
 import { HeroSection } from "./_components/HeroSection";
-import { FeaturesSection } from "./_components/FeaturesSection";
 import { ComparisonTable } from "./_components/ComparisonTable";
 import { FeaturesLayout } from "./_components/FeaturesLayout";
 

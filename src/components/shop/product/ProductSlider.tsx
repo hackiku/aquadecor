@@ -8,7 +8,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { ArrowRight } from "lucide-react";
-import type { ProductCardData } from "~/lib/types/schema";
+import type { Product, ProductCardData } from "~/server/db/schema/shop";
 
 export function ProductSlider() {
 	// Fetch featured products

@@ -30,7 +30,7 @@ export function NewsletterForm() {
 			<div className="rounded-2xl border bg-card p-8 md:p-12 text-center space-y-6">
 				<div className="space-y-3">
 					<h2 className="text-3xl md:text-4xl font-display font-light tracking-tight">
-						Ready to transform your aquarium?
+						Experience Nature First
 					</h2>
 					<p className="text-lg text-muted-foreground font-display font-light">
 						Get exclusive updates, custom design previews, and special offers delivered to your inbox.

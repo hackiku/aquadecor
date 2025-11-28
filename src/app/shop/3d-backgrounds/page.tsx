@@ -179,7 +179,7 @@ export default async function ThreeDBackgroundsPage() {
 									</div>
 								</div>
 								<Link
-									href="/blog/material-testing"
+									href="/blog/high-quality-aquarium-backgrounds-with-a-lifetime-warranty"
 									className="inline-flex items-center gap-2 text-primary hover:underline font-display font-medium"
 								>
 									Read our material testing blog post
