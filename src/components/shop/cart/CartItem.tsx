@@ -5,35 +5,47 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, X, Package } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import type { Product } from "~/server/db/schema/shop";
+
+// Type must match what CartDrawer passes (ProductForCart from getByIds)
+type ProductForCart = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+	categoryId: string;
+	name: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string | null;
+	productLineSlug: string | null;
+};
 
 interface CartItemProps {
 	item: {
 		id: string;
 		productId: string;
-		name: string;
-		slug: string;
-		priceEurCents: number;
 		quantity: number;
-		imageUrl?: string;
-		categorySlug: string;
-		productLineSlug: string;
+		addedAt: Date;
+		product: ProductForCart;
 	};
 	onUpdateQuantity: (quantity: number) => void;
 	onRemove: () => void;
 }
 
 export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
-	const productUrl = `/shop/${item.productLineSlug}/${item.categorySlug}/${item.slug}`;
-	const itemTotal = (item.priceEurCents * item.quantity) / 100;
+	const { product, quantity } = item;
+
+	// Safe handling of nullable fields
+	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
+	const displayName = product.name ?? "Unknown Product";
+	const pricePerUnit = product.basePriceEurCents ?? 0;
+	const itemTotal = (pricePerUnit * quantity) / 100;
 
 	return (
 		<div className="flex gap-4 group">
 			{/* Image */}
 			<Link href={productUrl} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-				{item.imageUrl ? (
+				{product.featuredImageUrl ? (
 					<Image
-						src={item.imageUrl}
-						alt={item.name}
+						src={product.featuredImageUrl}
+						alt={displayName}
 						fill
 						className="object-cover"
 						sizes="80px"
@@ -47,12 +59,9 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 
 			{/* Details */}
 			<div className="flex-1 min-w-0 space-y-2">
-				<Link
-					href={productUrl}
-					className="block"
-				>
+				<Link href={productUrl} className="block">
 					<h3 className="font-display font-normal text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-						{item.name}
+						{displayName}
 					</h3>
 				</Link>
 
@@ -63,18 +72,19 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 							variant="outline"
 							size="icon"
 							className="h-7 w-7 rounded-full"
-							onClick={() => onUpdateQuantity(Math.max(0, item.quantity - 1))}
+							onClick={() => onUpdateQuantity(Math.max(0, quantity - 1))}
+							disabled={quantity <= 1}
 						>
 							<Minus className="h-3 w-3" />
 						</Button>
 						<span className="text-sm font-display font-medium w-8 text-center">
-							{item.quantity}
+							{quantity}
 						</span>
 						<Button
 							variant="outline"
 							size="icon"
 							className="h-7 w-7 rounded-full"
-							onClick={() => onUpdateQuantity(item.quantity + 1)}
+							onClick={() => onUpdateQuantity(quantity + 1)}
 						>
 							<Plus className="h-3 w-3" />
 						</Button>
@@ -85,6 +95,13 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 						€{itemTotal.toFixed(2)}
 					</p>
 				</div>
+
+				{/* Unit Price (if quantity > 1) */}
+				{quantity > 1 && (
+					<p className="text-xs text-muted-foreground font-display font-light">
+						€{(pricePerUnit / 100).toFixed(2)} each
+					</p>
+				)}
 			</div>
 
 			{/* Remove Button */}

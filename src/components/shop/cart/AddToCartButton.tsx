@@ -5,13 +5,13 @@ import { useState } from "react";
 import { ShoppingCart, Calculator } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import type { Product } from "~/server/db/schema/shop";
+
+// Minimal product info needed to add to cart
+type ProductForAddToCart = Pick<Product, 'id' | 'basePriceEurCents'>;
 
 interface AddToCartButtonProps {
-	product: {
-		id: string;
-		basePriceEurCents?: number | null;
-		stockStatus: string;
-	};
+	product: ProductForAddToCart;
 	variant?: "default" | "outline" | "ghost";
 	size?: "default" | "sm" | "lg";
 	className?: string;
@@ -25,7 +25,7 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
 	const [isLoading, setIsLoading] = useState(false);
 
-	const hasPrice = product.basePriceEurCents !== null && product.basePriceEurCents !== undefined;
+	const hasPrice = product.basePriceEurCents !== null;
 	const isQuoteProduct = !hasPrice;
 
 	const handleClick = async (e: React.MouseEvent) => {
@@ -39,7 +39,7 @@ export function AddToCartButton({
 			console.log("Open quote modal for:", product.id);
 			// TODO: Implement quote modal
 		} else {
-			// Add to cart with full product data
+			// Add to cart
 			const cart = localStorage.getItem("cart");
 			const items = cart ? JSON.parse(cart) : [];
 
@@ -50,16 +50,20 @@ export function AddToCartButton({
 				// Increment quantity
 				items[existingIndex].quantity += 1;
 			} else {
-				// Add new item with full data
+				// Add new item
 				items.push({
-					id: `cart-${Date.now()}`,
+					id: crypto.randomUUID(),
 					productId: product.id,
 					quantity: 1,
+					addedAt: new Date().toISOString(), // Store as string for localStorage
 				});
 			}
 
 			localStorage.setItem("cart", JSON.stringify(items));
 			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items } }));
+
+			// TODO: Show toast notification
+			console.log("Added to cart:", product.id);
 		}
 
 		setTimeout(() => setIsLoading(false), 500);

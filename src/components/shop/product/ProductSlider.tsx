@@ -1,14 +1,13 @@
 // src/components/shop/product/ProductSlider.tsx
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
-import { ArrowRight } from "lucide-react";
-import type { Product, ProductCardData } from "~/server/db/schema/shop";
+import { ArrowRight, Package } from "lucide-react";
+import type { Product } from "~/server/db/schema/shop";
 
 export function ProductSlider() {
 	// Fetch featured products
@@ -49,10 +48,20 @@ export function ProductSlider() {
 	);
 }
 
+// Type for products returned by getFeatured tRPC endpoint
+// Pick from Product schema + joined fields from query
+type FeaturedProduct = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote'> & {
+	name: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string | null;
+	productLineSlug: string | null;
+};
+
 interface ProductRowProps {
 	title: string;
 	subtitle: string;
-	products: ProductCardData[];
+	products: FeaturedProduct[];
 	isLoading: boolean;
 	href: string;
 }
@@ -108,12 +117,16 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 	);
 }
 
-function ProductCard({ product }: { product: ProductCardData }) {
+function ProductCard({ product }: { product: FeaturedProduct }) {
 	const hasPrice = product.basePriceEurCents !== null;
+
+	// Handle nullable fields from join
+	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
+	const displayName = product.name ?? product.slug;
 
 	return (
 		<Link
-			href={`/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`}
+			href={productUrl}
 			className="group block snap-start shrink-0 w-[260px] md:w-[300px]"
 		>
 			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-gradient-to-b from-transparent to-black/80">
@@ -122,16 +135,14 @@ function ProductCard({ product }: { product: ProductCardData }) {
 					{product.featuredImageUrl ? (
 						<Image
 							src={product.featuredImageUrl}
-							alt={product.name || "Product"}
+							alt={displayName}
 							fill
 							className="object-cover group-hover:scale-105 transition-transform duration-500"
 							sizes="300px"
 						/>
 					) : (
 						<div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-							<span className="text-muted-foreground font-display text-sm">
-								{product.sku}
-							</span>
+							<Package className="h-16 w-16 text-muted-foreground/20" />
 						</div>
 					)}
 
@@ -139,18 +150,18 @@ function ProductCard({ product }: { product: ProductCardData }) {
 					<div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/90" />
 
 					{/* Content overlay at bottom */}
-					<div className="absolute -bottom-5 left-0 right-0 p-4 space-y-2">
+					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
 						<h4 className="font-display font-normal text-base line-clamp-2 text-white">
-							{product.name || product.slug}
+							{displayName}
 						</h4>
 
 						{hasPrice ? (
 							<p className="text-lg font-display font-medium text-white">
-								€{(product.basePriceEurCents / 100).toFixed(0)}
+								€{((product.basePriceEurCents ?? 0) / 100).toFixed(0)}
 							</p>
 						) : (
 							<p className="text-sm font-display font-medium text-white/80">
-								Custom Quote
+								{product.priceNote ?? "Custom Quote"}
 							</p>
 						)}
 					</div>

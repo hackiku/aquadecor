@@ -148,8 +148,6 @@ export function FeaturesLayout() {
 					</div>
 				))}
 			</div>
-
-			
 		</>
 	);
 }
@@ -207,12 +205,12 @@ function FeatureAnnotation({ feature, index, scrollProgress }: FeatureAnnotation
 		>
 			{/* Image with parallax */}
 			<motion.div
-				style={{ y: imageY }}
-				className="relative rounded-2xl overflow-hidden border-2 border-border shadow-2xl"
 				style={{
+					y: imageY,
 					width: `${feature.image.width}px`,
 					height: `${feature.image.height}px`,
 				}}
+				className="relative rounded-2xl overflow-hidden border-2 border-border shadow-2xl"
 			>
 				<Image
 					src={feature.image.src}

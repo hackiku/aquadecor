@@ -7,6 +7,30 @@ import { Button } from "~/components/ui/button";
 import { WishlistItem } from "./WishlistItem";
 import { SignupIncentive } from "~/components/cta/SignupIncentive";
 import { api } from "~/trpc/react";
+import type { Product } from "~/server/db/schema/shop";
+
+// ============================================================================
+// CLIENT-ONLY TYPES (localStorage wishlist state)
+// ============================================================================
+
+// Raw wishlist item stored in localStorage
+interface WishlistItemData {
+	productId: string;
+	addedAt: Date;
+}
+
+// Product data from tRPC getByIds endpoint
+type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
+	name: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string | null;
+	productLineSlug: string | null;
+};
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
 
 interface WishlistDrawerProps {
 	isOpen: boolean;
@@ -16,12 +40,22 @@ interface WishlistDrawerProps {
 export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 	const [wishlistIds, setWishlistIds] = useState<string[]>([]);
 
-	// Load wishlist from localStorage
+	// Load wishlist from localStorage on mount
 	useEffect(() => {
 		const loadWishlist = () => {
 			const wishlist = localStorage.getItem("wishlist");
 			if (wishlist) {
-				setWishlistIds(JSON.parse(wishlist));
+				try {
+					const parsed = JSON.parse(wishlist);
+					// Extract just the product IDs
+					const ids = Array.isArray(parsed)
+						? parsed.map((item: any) => typeof item === 'string' ? item : item.productId)
+						: [];
+					setWishlistIds(ids);
+				} catch (error) {
+					console.error("Failed to parse wishlist:", error);
+					localStorage.removeItem("wishlist");
+				}
 			}
 		};
 
@@ -30,9 +64,9 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 		}
 	}, [isOpen]);
 
-	// Listen for wishlist updates
+	// Listen for wishlist updates from other components
 	useEffect(() => {
-		const handleWishlistUpdate = (e: CustomEvent) => {
+		const handleWishlistUpdate = (e: CustomEvent<{ items: string[] }>) => {
 			setWishlistIds(e.detail.items);
 		};
 
@@ -40,17 +74,25 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 		return () => window.removeEventListener("wishlist-updated", handleWishlistUpdate as EventListener);
 	}, []);
 
-	// Fetch product details
+	// Fetch product details for all wishlist items
 	const { data: products, isLoading } = api.product.getByIds.useQuery(
-		{ ids: wishlistIds },
+		{ ids: wishlistIds, locale: "en" },
 		{ enabled: wishlistIds.length > 0 && isOpen }
 	);
 
+	// Remove item from wishlist
 	const removeItem = (productId: string) => {
 		const updated = wishlistIds.filter(id => id !== productId);
 		setWishlistIds(updated);
 		localStorage.setItem("wishlist", JSON.stringify(updated));
 		window.dispatchEvent(new CustomEvent("wishlist-updated", { detail: { items: updated } }));
+	};
+
+	// Clear entire wishlist
+	const clearWishlist = () => {
+		setWishlistIds([]);
+		localStorage.removeItem("wishlist");
+		window.dispatchEvent(new CustomEvent("wishlist-updated", { detail: { items: [] } }));
 	};
 
 	const isEmpty = wishlistIds.length === 0;
@@ -97,7 +139,7 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 									Your wishlist is empty
 								</p>
 								<p className="text-sm text-muted-foreground/70 font-display font-light">
-									Start adding products you love
+									Start saving products you love
 								</p>
 							</div>
 							<Button onClick={onClose} variant="outline" className="rounded-full">
@@ -111,18 +153,7 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 								{products?.map((product) => (
 									<WishlistItem
 										key={product.id}
-										item={{
-											...product,
-											// Fix: Handle null name
-											name: product.name ?? "Unknown Product",
-											// Fix: Map basePrice to priceEurCents
-											priceEurCents: product.basePriceEurCents,
-											// Fix: Handle null image
-											imageUrl: product.featuredImageUrl ?? undefined,
-											priceNote: product.priceNote ?? undefined,
-											categorySlug: product.categorySlug ?? "",
-											productLineSlug: product.productLineSlug ?? ""
-										}}
+										product={product as ProductForWishlist}
 										onRemove={() => removeItem(product.id)}
 									/>
 								))}
@@ -130,6 +161,18 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 
 							{/* Signup Incentive */}
 							<SignupIncentive trigger="wishlist" />
+
+							{/* Clear All Button */}
+							{wishlistIds.length > 1 && (
+								<Button
+									variant="outline"
+									size="sm"
+									className="w-full rounded-full"
+									onClick={clearWishlist}
+								>
+									Clear All ({wishlistIds.length})
+								</Button>
+							)}
 						</>
 					)}
 				</div>

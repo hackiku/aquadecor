@@ -8,32 +8,50 @@ import { Badge } from "~/components/ui/badge";
 import { Package } from "lucide-react";
 import { AddToCartButton } from "../cart/AddToCartButton";
 import { WishlistButton } from "../wishlist/WishlistButton";
+import type { Product } from "~/server/db/schema/shop";
 
 interface ProductCardProps {
-	product: {
-		id: string;
-		slug: string;
+	product: Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 		name: string;
-		sku?: string | null;
-		shortDescription?: string | null;
-		basePriceEurCents?: number | null;
-		priceNote?: string | null;
-		stockStatus: string;
-		featuredImageUrl?: string | null;
+		shortDescription: string | null;
+		featuredImageUrl: string | null;
 		categorySlug: string;
 		productLineSlug: string;
 	};
-	variant?: "default" | "compact" | "featured";
+	variant?: "default" | "compact";
 	showQuickAdd?: boolean;
 }
 
-export function ProductCard({
-	product,
-	variant = "default",
-	showQuickAdd = true
-}: ProductCardProps) {
+
+// interface ProductCardProps {
+// 	product: {
+// 		id: string;
+// 		slug: string;
+// 		name: string;
+// 		sku?: string | null;
+// 		shortDescription?: string | null;
+// 		basePriceEurCents?: number | null;
+// 		priceNote?: string | null;
+// 		stockStatus: string;
+// 		featuredImageUrl?: string | null;
+// 		categorySlug: string;
+// 		productLineSlug: string;
+// 	};
+// 	variant?: "default" | "compact" | "featured";
+// 	showQuickAdd?: boolean;
+// }
+
+export function ProductCard({ product, variant = "default", showQuickAdd = true }: ProductCardProps) {
 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
-	const hasPrice = product.basePriceEurCents !== null && product.basePriceEurCents !== undefined;
+	const hasPrice = product.basePriceEurCents !== null;
+
+// export function ProductCard({
+// 	product,
+// 	variant = "default",
+// 	showQuickAdd = true
+// }: ProductCardProps) {
+// 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
+// 	const hasPrice = product.basePriceEurCents !== null && product.basePriceEurCents !== undefined;
 
 	// Fix: Safely handle the division with fallback
 	const formattedPrice = hasPrice

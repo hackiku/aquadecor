@@ -5,35 +5,66 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, ShoppingCart, Package } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import type { Product } from "~/server/db/schema/shop";
+
+// Type for wishlist product (matches what WishlistDrawer passes)
+type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
+	name: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string | null;
+	productLineSlug: string | null;
+};
 
 interface WishlistItemProps {
-	item: {
-		id: string;
-		name: string;
-		slug: string;
-		priceEurCents?: number | null;
-		priceNote?: string;
-		imageUrl?: string;
-		categorySlug: string;
-		productLineSlug: string;
-	};
+	product: ProductForWishlist;
 	onRemove: () => void;
 }
 
-export function WishlistItem({ item, onRemove }: WishlistItemProps) {
-	const productUrl = `/shop/${item.productLineSlug}/${item.categorySlug}/${item.slug}`;
-	const hasPrice = item.priceEurCents !== null && item.priceEurCents !== undefined;
+export function WishlistItem({ product, onRemove }: WishlistItemProps) {
+	// Safe handling of nullable fields
+	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
+	const displayName = product.name ?? "Unknown Product";
+	const hasPrice = product.basePriceEurCents !== null;
 
 	const handleAddToCart = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
 
 		if (hasPrice) {
-			// TODO: Add to cart logic
-			console.log("Add to cart:", item.id);
+			// Add to cart
+			const cartItem = {
+				id: crypto.randomUUID(),
+				productId: product.id,
+				quantity: 1,
+				addedAt: new Date(),
+			};
+
+			// Get existing cart
+			const existingCart = localStorage.getItem("cart");
+			const cart = existingCart ? JSON.parse(existingCart) : [];
+
+			// Check if product already in cart
+			const existingItemIndex = cart.findIndex((item: any) => item.productId === product.id);
+
+			if (existingItemIndex >= 0) {
+				// Increment quantity
+				cart[existingItemIndex].quantity += 1;
+			} else {
+				// Add new item
+				cart.push(cartItem);
+			}
+
+			// Save and notify
+			localStorage.setItem("cart", JSON.stringify(cart));
+			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: cart } }));
+
+			// TODO: Show toast notification
+			console.log("Added to cart:", product.id);
 		} else {
-			// TODO: Open quote modal
-			console.log("Request quote:", item.id);
+			// Open quote modal for custom products
+			// TODO: Implement quote modal
+			console.log("Request quote:", product.id);
 		}
 	};
 
@@ -41,10 +72,10 @@ export function WishlistItem({ item, onRemove }: WishlistItemProps) {
 		<div className="flex gap-4 group">
 			{/* Image */}
 			<Link href={productUrl} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-				{item.imageUrl ? (
+				{product.featuredImageUrl ? (
 					<Image
-						src={item.imageUrl}
-						alt={item.name}
+						src={product.featuredImageUrl}
+						alt={displayName}
 						fill
 						className="object-cover"
 						sizes="80px"
@@ -58,25 +89,28 @@ export function WishlistItem({ item, onRemove }: WishlistItemProps) {
 
 			{/* Details */}
 			<div className="flex-1 min-w-0 space-y-2">
-				<Link
-					href={productUrl}
-					className="block"
-				>
+				<Link href={productUrl} className="block">
 					<h3 className="font-display font-normal text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-						{item.name}
+						{displayName}
 					</h3>
 				</Link>
+
+				{/* Description */}
+				{product.shortDescription && (
+					<p className="text-xs text-muted-foreground font-display font-light line-clamp-1">
+						{product.shortDescription}
+					</p>
+				)}
 
 				{/* Price */}
 				<div className="flex items-center justify-between">
 					{hasPrice ? (
 						<p className="text-sm font-display font-medium">
-							{/* Fix: Safely handle null/undefined during division */}
-							€{((item.priceEurCents ?? 0) / 100).toFixed(2)}
+							€{((product.basePriceEurCents ?? 0) / 100).toFixed(2)}
 						</p>
 					) : (
 						<p className="text-xs text-muted-foreground font-display font-medium">
-							{item.priceNote || "Custom Quote"}
+							{product.priceNote ?? "Custom Quote"}
 						</p>
 					)}
 				</div>

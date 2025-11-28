@@ -2,24 +2,20 @@
 "use client";
 
 import { ProductCard } from "./ProductCard";
+import type { Product } from "~/server/db/schema/shop";
 
-interface Product {
-	id: string;
-	slug: string;
+// Type for products in grid - matches what ProductCard expects
+type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 	name: string;
-	sku?: string | null;
-	shortDescription?: string | null;
-	basePriceEurCents?: number | null;
-	priceNote?: string | null;
-	stockStatus: string;
-	featuredImageUrl?: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
 	categorySlug: string;
 	productLineSlug: string;
-}
+};
 
 interface ProductGridProps {
-	products: Product[];
-	variant?: "default" | "compact" | "featured";
+	products: ProductForGrid[];
+	variant?: "default" | "compact";
 	columns?: "2" | "3" | "4";
 	showQuickAdd?: boolean;
 }

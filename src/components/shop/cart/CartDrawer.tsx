@@ -8,28 +8,66 @@ import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
 import { SignupIncentive } from "~/components/cta/SignupIncentive";
 import { api } from "~/trpc/react";
+import type { Product } from "~/server/db/schema/shop";
+
+// ============================================================================
+// CLIENT-ONLY TYPES (localStorage cart state)
+// ============================================================================
+
+// Raw cart item stored in localStorage
+interface CartItemData {
+	id: string;           // Unique cart item ID (generated client-side)
+	productId: string;    // Reference to Product.id
+	quantity: number;
+	addedAt: Date;
+}
+
+// Product data from tRPC getByIds endpoint
+// Must match exactly what the tRPC query returns
+type ProductForCart = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+	categoryId: string;
+	name: string | null;
+	shortDescription: string | null;
+	featuredImageUrl: string | null;
+	categorySlug: string | null;
+	productLineSlug: string | null;
+};
+
+// Enriched cart item (after fetching product data)
+interface EnrichedCartItem extends CartItemData {
+	product: ProductForCart;
+}
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
 
 interface CartDrawerProps {
 	isOpen: boolean;
 	onClose: () => void;
 }
 
-interface CartItemData {
-	id: string;
-	productId: string;
-	quantity: number;
-}
-
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 	const [cartItems, setCartItems] = useState<CartItemData[]>([]);
 	const [showSignup, setShowSignup] = useState(false);
 
-	// Load cart from localStorage
+	// Load cart from localStorage on mount
 	useEffect(() => {
 		const loadCart = () => {
 			const cart = localStorage.getItem("cart");
 			if (cart) {
-				setCartItems(JSON.parse(cart));
+				try {
+					const parsed = JSON.parse(cart);
+					// Convert date strings back to Date objects
+					const items = parsed.map((item: any) => ({
+						...item,
+						addedAt: new Date(item.addedAt),
+					}));
+					setCartItems(items);
+				} catch (error) {
+					console.error("Failed to parse cart:", error);
+					localStorage.removeItem("cart");
+				}
 			}
 		};
 
@@ -38,9 +76,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 		}
 	}, [isOpen]);
 
-	// Listen for cart updates
+	// Listen for cart updates from other components
 	useEffect(() => {
-		const handleCartUpdate = (e: CustomEvent) => {
+		const handleCartUpdate = (e: CustomEvent<{ items: CartItemData[] }>) => {
 			setCartItems(e.detail.items);
 		};
 
@@ -48,28 +86,28 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 		return () => window.removeEventListener("cart-updated", handleCartUpdate as EventListener);
 	}, []);
 
-	// Fetch product details for cart items
+	// Fetch product details for all cart items
 	const productIds = cartItems.map(item => item.productId);
-	const { data: products } = api.product.getByIds.useQuery(
-		{ ids: productIds },
+	const { data: products, isLoading } = api.product.getByIds.useQuery(
+		{ ids: productIds, locale: "en" },
 		{ enabled: productIds.length > 0 && isOpen }
 	);
 
 	// Merge cart items with product data
-	const enrichedItems = cartItems.map(cartItem => {
-		const product = products?.find(p => p.id === cartItem.productId);
-		return {
-			...cartItem,
-			name: product?.name || "Unknown Product",
-			slug: product?.slug || "",
-			priceEurCents: product?.basePriceEurCents || 0,
-			// Fix: Convert null to undefined
-			imageUrl: product?.featuredImageUrl ?? undefined,
-			categorySlug: product?.categorySlug || "",
-			productLineSlug: product?.productLineSlug || "",
-		};
-	});
+	const enrichedItems: EnrichedCartItem[] = cartItems
+		.map(cartItem => {
+			const product = products?.find(p => p.id === cartItem.productId);
+			if (!product) return null;
 
+			// Type assertion: we know product matches ProductForCart because it comes from tRPC
+			return {
+				...cartItem,
+				product: product as ProductForCart
+			};
+		})
+		.filter((item): item is EnrichedCartItem => item !== null);
+
+	// Cart actions
 	const updateQuantity = (itemId: string, newQuantity: number) => {
 		const updatedItems = cartItems
 			.map(item => (item.id === itemId ? { ...item, quantity: newQuantity } : item))
@@ -84,7 +122,18 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 		updateQuantity(itemId, 0);
 	};
 
-	const subtotal = enrichedItems.reduce((sum, item) => sum + (item.priceEurCents * item.quantity), 0);
+	const clearCart = () => {
+		setCartItems([]);
+		localStorage.removeItem("cart");
+		window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: [] } }));
+	};
+
+	// Calculate totals (prices in cents)
+	const subtotal = enrichedItems.reduce(
+		(sum, item) => sum + ((item.product.basePriceEurCents ?? 0) * item.quantity),
+		0
+	);
+
 	const isEmpty = cartItems.length === 0;
 
 	return (
@@ -117,14 +166,23 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
 				{/* Items */}
 				<div className="flex-1 overflow-y-auto p-6 space-y-6">
-					{isEmpty ? (
+					{isLoading ? (
+						<div className="flex items-center justify-center h-full">
+							<p className="text-muted-foreground font-display font-light">Loading...</p>
+						</div>
+					) : isEmpty ? (
 						<div className="flex flex-col items-center justify-center h-full text-center space-y-4">
 							<ShoppingCart className="h-16 w-16 text-muted-foreground/20" />
-							<p className="text-lg text-muted-foreground font-display font-light">
-								Your cart is empty
-							</p>
+							<div className="space-y-2">
+								<p className="text-lg text-muted-foreground font-display font-light">
+									Your cart is empty
+								</p>
+								<p className="text-sm text-muted-foreground/70 font-display font-light">
+									Add some aquarium magic
+								</p>
+							</div>
 							<Button onClick={onClose} variant="outline" className="rounded-full">
-								Continue Shopping
+								Browse Products
 							</Button>
 						</div>
 					) : (
