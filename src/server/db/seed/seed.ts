@@ -8,19 +8,23 @@ import {
 	products, productTranslations, productImages,
 	reviews,
 	orders, orderItems,
-	promoters, promoterCodes,
+	promoters, promoterCodes, sales,
 	faqs, faqTranslations,
 	shippingZones, countries
 } from "../schema";
 
+// inventory
 import { categoryStructure } from "./data/seed-categories";
 import { categoryTranslations as catTranslations } from "./data/translations/seed-translations-categories";
 import { productStructure } from "./data/seed-products";
 import { productTranslations as prodTranslations } from "./data/translations/seed-translations-products";
 import { productImages as imageData } from "./data/seed-images";
-import { reviewData } from "./data/seed-reviews";
+// selling
 import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
+import { salesSeedData } from "./data/seed-sales";
+// other
+import { reviewData } from "./data/seed-reviews";
 import { faqsSeedData } from "./data/seed-faqs";
 import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
 
@@ -178,6 +182,16 @@ async function seedOrders() {
 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
 }
 
+
+async function seedSales() {
+	console.log("🌱 Seeding sales...");
+	for (const sale of salesSeedData) {
+		await db.insert(sales).values(sale);
+		console.log(`  ✓ ${sale.name}`);
+	}
+	console.log(`✅ Seeded ${salesSeedData.length} sales\n`);
+}
+
 async function seedPromoters() {
 	console.log("🌱 Seeding promoters...");
 
@@ -293,6 +307,7 @@ async function main() {
 		await seedImages(productIdMap);
 		await seedReviews();
 		await seedOrders();
+		await seedSales();
 		await seedPromoters();
 		await seedFAQs();
 		await seedCountries();
