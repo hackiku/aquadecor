@@ -4,7 +4,8 @@ import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 import { sales } from "~/server/db/schema";
 import { eq, desc, asc, and, gte, lte, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache"; // when team adds/updates sale banner
+import { revalidateTag } from "next/cache"; // when team adds/updates sale banner
+// import { revalidatePath } from "next/cache"; 
 
 
 // Validation schemas
@@ -221,6 +222,9 @@ export const adminSaleRouter = createTRPCRouter({
 				})
 				.returning();
 
+			// Revalidate banner cache
+			revalidateTag("active-sale");
+
 			return created;
 		}),
 
@@ -230,7 +234,6 @@ export const adminSaleRouter = createTRPCRouter({
 		.mutation(async ({ ctx, input }) => {
 			const { id, ...updateData } = input;
 
-			// Uppercase discount code if provided
 			if (updateData.discountCode) {
 				updateData.discountCode = updateData.discountCode.toUpperCase();
 			}
@@ -244,6 +247,9 @@ export const adminSaleRouter = createTRPCRouter({
 				})
 				.where(eq(sales.id, id))
 				.returning();
+
+			// Revalidate banner cache
+			revalidateTag("active-sale");
 
 			return updated;
 		}),
@@ -264,8 +270,12 @@ export const adminSaleRouter = createTRPCRouter({
 				.where(eq(sales.id, input.id))
 				.returning();
 
+			// Revalidate banner cache
+			revalidateTag("active-sale");
+
 			return updated;
 		}),
+
 
 	// Delete sale
 	delete: adminProcedure
@@ -274,6 +284,10 @@ export const adminSaleRouter = createTRPCRouter({
 		}))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db.delete(sales).where(eq(sales.id, input.id));
+
+			// Revalidate banner cache
+			revalidateTag("active-sale");
+
 			return { success: true };
 		}),
 
