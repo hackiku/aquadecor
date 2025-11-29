@@ -1,7 +1,7 @@
 // src/app/admin/promo/sales/_components/SaleForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -16,16 +16,18 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 import { Switch } from "~/components/ui/switch";
+import { HexColorPicker } from "react-colorful";
 import { api } from "~/trpc/react";
 import { SaleBanner } from "~/components/cta/sale/SaleBanner";
 import { CountdownBanner } from "~/components/cta/sale/CountdownBanner";
 import { FlashSaleBanner } from "~/components/cta/sale/FlashSaleBanner";
 import { MinimalBanner } from "~/components/cta/sale/MinimalBanner";
+import { TimeSelector } from "./TimeSelector";
 
 type BannerType = "SaleBanner" | "CountdownBanner" | "FlashSaleBanner" | "MinimalBanner";
 
 interface SaleFormProps {
-	sale?: any; // Existing sale for edit mode
+	sale?: any;
 }
 
 export function SaleForm({ sale }: SaleFormProps) {
@@ -46,12 +48,17 @@ export function SaleForm({ sale }: SaleFormProps) {
 	const [bannerType, setBannerType] = useState<BannerType>(
 		sale?.bannerType ?? "CountdownBanner"
 	);
+
+	// Color states - default to simple values, hydrate from CSS after mount
 	const [backgroundColor, setBackgroundColor] = useState(
 		sale?.bannerConfig?.backgroundColor ?? "#000000"
 	);
 	const [textColor, setTextColor] = useState(
 		sale?.bannerConfig?.textColor ?? "#ffffff"
 	);
+	const [showBgPicker, setShowBgPicker] = useState(false);
+	const [showTextPicker, setShowTextPicker] = useState(false);
+
 	const [customMessage, setCustomMessage] = useState(
 		sale?.bannerConfig?.customMessage ?? ""
 	);
@@ -59,6 +66,19 @@ export function SaleForm({ sale }: SaleFormProps) {
 		sale?.visibleOn?.join(", ") ?? "/, /shop, /shop/*"
 	);
 	const [isActive, setIsActive] = useState(sale?.isActive ?? true);
+
+	// Hydrate primary color from CSS after mount (no SSR/CSR mismatch)
+	useEffect(() => {
+		if (!sale?.bannerConfig?.backgroundColor) {
+			const primary = getComputedStyle(document.documentElement)
+				.getPropertyValue('--primary')
+				.trim();
+			if (primary) {
+				// Convert hsl to hex if needed, or just use the hsl value
+				setBackgroundColor(primary.startsWith('#') ? primary : '#3b82f6'); // fallback blue
+			}
+		}
+	}, [sale]);
 
 	const createSale = api.admin.sale.create.useMutation({
 		onSuccess: () => {
@@ -134,6 +154,14 @@ export function SaleForm({ sale }: SaleFormProps) {
 		}
 	};
 
+	// Quick preset colors
+	const presetColors = [
+		{ name: "Brand Blue", color: "#3b82f6" },
+		{ name: "Black", color: "#000000" },
+		{ name: "Red", color: "#ef4444" },
+		{ name: "Purple", color: "#8b5cf6" },
+	];
+
 	return (
 		<form onSubmit={handleSubmit} className="space-y-8">
 			{/* Banner Preview */}
@@ -206,27 +234,21 @@ export function SaleForm({ sale }: SaleFormProps) {
 						</div>
 
 						<div className="grid grid-cols-2 gap-4">
-							<div className="space-y-2">
-								<Label htmlFor="startsAt">Starts At *</Label>
-								<Input
-									id="startsAt"
-									type="datetime-local"
-									value={startsAt}
-									onChange={(e) => setStartsAt(e.target.value)}
-									required
-								/>
-							</div>
+							<TimeSelector
+								id="startsAt"
+								label="Starts At *"
+								value={startsAt}
+								onChange={setStartsAt}
+								required
+							/>
 
-							<div className="space-y-2">
-								<Label htmlFor="endsAt">Ends At *</Label>
-								<Input
-									id="endsAt"
-									type="datetime-local"
-									value={endsAt}
-									onChange={(e) => setEndsAt(e.target.value)}
-									required
-								/>
-							</div>
+							<TimeSelector
+								id="endsAt"
+								label="Ends At *"
+								value={endsAt}
+								onChange={setEndsAt}
+								required
+							/>
 						</div>
 
 						<div className="flex items-center justify-between">
@@ -262,39 +284,91 @@ export function SaleForm({ sale }: SaleFormProps) {
 						</div>
 
 						<div className="grid grid-cols-2 gap-4">
+							{/* Background Color */}
 							<div className="space-y-2">
-								<Label htmlFor="backgroundColor">Background Color</Label>
-								<div className="flex gap-2">
+								<Label>Background Color</Label>
+
+								{/* Preset colors */}
+								<div className="flex gap-2 mb-2">
+									{presetColors.map((preset) => (
+										<button
+											key={preset.color}
+											type="button"
+											onClick={() => setBackgroundColor(preset.color)}
+											className="w-8 h-8 rounded border-2 border-border hover:scale-110 transition-transform"
+											style={{ backgroundColor: preset.color }}
+											title={preset.name}
+										/>
+									))}
+								</div>
+
+								{/* Color picker toggle */}
+								<div className="relative">
 									<Input
-										id="backgroundColor"
-										type="color"
 										value={backgroundColor}
 										onChange={(e) => setBackgroundColor(e.target.value)}
-										className="w-16 h-10 p-1"
+										onClick={() => setShowBgPicker(!showBgPicker)}
+										readOnly
+										className="cursor-pointer"
 									/>
-									<Input
-										value={backgroundColor}
-										onChange={(e) => setBackgroundColor(e.target.value)}
-										placeholder="#000000"
-									/>
+									{showBgPicker && (
+										<div className="absolute z-10 mt-2">
+											<div
+												className="fixed inset-0"
+												onClick={() => setShowBgPicker(false)}
+											/>
+											<HexColorPicker
+												color={backgroundColor}
+												onChange={setBackgroundColor}
+											/>
+										</div>
+									)}
 								</div>
 							</div>
 
+							{/* Text Color */}
 							<div className="space-y-2">
-								<Label htmlFor="textColor">Text Color</Label>
-								<div className="flex gap-2">
+								<Label>Text Color</Label>
+
+								{/* Preset colors */}
+								<div className="flex gap-2 mb-2">
+									<button
+										type="button"
+										onClick={() => setTextColor("#ffffff")}
+										className="w-8 h-8 rounded border-2 border-border hover:scale-110 transition-transform"
+										style={{ backgroundColor: "#ffffff" }}
+										title="White"
+									/>
+									<button
+										type="button"
+										onClick={() => setTextColor("#000000")}
+										className="w-8 h-8 rounded border-2 border-border hover:scale-110 transition-transform"
+										style={{ backgroundColor: "#000000" }}
+										title="Black"
+									/>
+								</div>
+
+								{/* Color picker toggle */}
+								<div className="relative">
 									<Input
-										id="textColor"
-										type="color"
 										value={textColor}
 										onChange={(e) => setTextColor(e.target.value)}
-										className="w-16 h-10 p-1"
+										onClick={() => setShowTextPicker(!showTextPicker)}
+										readOnly
+										className="cursor-pointer"
 									/>
-									<Input
-										value={textColor}
-										onChange={(e) => setTextColor(e.target.value)}
-										placeholder="#ffffff"
-									/>
+									{showTextPicker && (
+										<div className="absolute z-10 mt-2">
+											<div
+												className="fixed inset-0"
+												onClick={() => setShowTextPicker(false)}
+											/>
+											<HexColorPicker
+												color={textColor}
+												onChange={setTextColor}
+											/>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>

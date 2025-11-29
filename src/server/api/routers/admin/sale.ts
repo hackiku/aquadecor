@@ -4,6 +4,8 @@ import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 import { sales } from "~/server/db/schema";
 import { eq, desc, asc, and, gte, lte, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache"; // when team adds/updates sale banner
+
 
 // Validation schemas
 const bannerConfigSchema = z.object({
