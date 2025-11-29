@@ -1,0 +1,6 @@
+ffmpeg -i media/social/tiktok/tiktok-six-foot-background-review.mp4 \
+  -ss 00:00:02 \
+  -vframes 1 \
+  -q:v 2 \
+  media/social/tiktok/tiktok-six-foot-background-review-thumb.jpg
+

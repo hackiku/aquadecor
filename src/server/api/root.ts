@@ -2,10 +2,12 @@
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
 import { faqRouter } from "~/server/api/routers/faq";
+// admin
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
+import { adminSaleRouter } from "./routers/admin/sale";
 import { adminFaqRouter } from "./routers/admin/faq";
 import { countryRouter } from "./routers/admin/country";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
@@ -24,6 +26,7 @@ export const appRouter = createTRPCRouter({
 		product: adminProductRouter,
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
+		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
 	}),

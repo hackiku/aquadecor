@@ -16,6 +16,7 @@ export * from "./auth";
 export * from "./shop";
 export * from "./orders";
 export * from "./promoters";
+export * from "./sales";
 export * from "./faq";
 export * from "./reviews";
 export * from "./countries";

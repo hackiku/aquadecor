@@ -1,5 +1,4 @@
 // src/components/social/SocialGrid.tsx
-
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -8,6 +7,7 @@ import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import { ExternalLink, Play } from "lucide-react";
 import { socialMentions, type SocialPlatform, type SocialMention } from "~/data/social-mentions";
+// import { SocialVideoEmbed } from "./SocialVideoEmbed";
 
 interface SocialGridProps {
 	initialLimit?: number;
@@ -25,7 +25,6 @@ export function SocialGrid({
 }: SocialGridProps) {
 	const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform | "all">("all");
 	const [displayLimit, setDisplayLimit] = useState(initialLimit);
-	const [loadedEmbeds, setLoadedEmbeds] = useState<Set<string>>(new Set());
 
 	// Filter mentions by platform
 	const filteredMentions = selectedPlatform === "all"
@@ -38,29 +37,26 @@ export function SocialGrid({
 	// Get unique platforms for tabs
 	const platforms = Array.from(new Set(socialMentions.map((m) => m.platform)));
 
-	// Platform counts
-	const platformCounts = platforms.reduce(
-		(acc, platform) => {
-			acc[platform] = socialMentions.filter((m) => m.platform === platform).length;
-			return acc;
-		},
-		{} as Record<SocialPlatform, number>,
-	);
-
 	const handleLoadMore = () => {
 		setDisplayLimit((prev) => prev + 6);
 	};
 
 	return (
 		<div className={className}>
+
+			{/* <SocialVideoEmbed
+				url="https://www.tiktok.com/@aquadecorbackgrounds/video/7530031215806631174"
+				className="aspect-video"
+			/> */}
+
 			{/* Platform Tabs */}
 			{showTabs && (
 				<div className="flex flex-wrap items-center gap-2 mb-8 justify-center">
 					<button
 						onClick={() => setSelectedPlatform("all")}
 						className={`px-4 py-2 rounded-full font-display font-medium text-sm transition-all ${selectedPlatform === "all"
-							? "bg-primary text-primary-foreground"
-							: "bg-muted text-muted-foreground hover:bg-muted/80"
+								? "bg-primary text-primary-foreground"
+								: "bg-muted text-muted-foreground hover:bg-muted/80"
 							}`}
 					>
 						All
@@ -70,8 +66,8 @@ export function SocialGrid({
 							key={platform}
 							onClick={() => setSelectedPlatform(platform)}
 							className={`px-4 py-2 rounded-full font-display font-medium text-sm transition-all capitalize ${selectedPlatform === platform
-								? "bg-primary text-primary-foreground"
-								: "bg-muted text-muted-foreground hover:bg-muted/80"
+									? "bg-primary text-primary-foreground"
+									: "bg-muted text-muted-foreground hover:bg-muted/80"
 								}`}
 						>
 							{platform}
@@ -88,8 +84,6 @@ export function SocialGrid({
 						mention={mention}
 						// Cycle through predefined aspect ratios
 						forceAspectRatio={ASPECT_RATIOS[idx % ASPECT_RATIOS.length]}
-						isLoaded={loadedEmbeds.has(mention.id)}
-						onLoad={() => setLoadedEmbeds((prev) => new Set(prev).add(mention.id))}
 					/>
 				))}
 			</div>
@@ -114,13 +108,13 @@ export function SocialGrid({
 interface SocialCardProps {
 	mention: SocialMention;
 	forceAspectRatio?: 'square' | 'portrait' | 'landscape';
-	isLoaded: boolean;
-	onLoad: () => void;
 }
 
-function SocialCard({ mention, forceAspectRatio, isLoaded, onLoad }: SocialCardProps) {
+function SocialCard({ mention, forceAspectRatio }: SocialCardProps) {
 	const [isInView, setIsInView] = useState(false);
+	const [isPlaying, setIsPlaying] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
+	const videoRef = useRef<HTMLVideoElement>(null);
 
 	// Intersection observer for lazy loading
 	useEffect(() => {
@@ -158,6 +152,21 @@ function SocialCard({ mention, forceAspectRatio, isLoaded, onLoad }: SocialCardP
 		reddit: "bg-orange-500",
 	}[mention.platform];
 
+	const hasVideo = !!mention.videoFile;
+
+	const handleVideoClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		if (videoRef.current) {
+			if (isPlaying) {
+				videoRef.current.pause();
+				setIsPlaying(false);
+			} else {
+				videoRef.current.play();
+				setIsPlaying(true);
+			}
+		}
+	};
+
 	return (
 		<div ref={cardRef} className="group break-inside-avoid mb-4">
 			<Link
@@ -165,22 +174,49 @@ function SocialCard({ mention, forceAspectRatio, isLoaded, onLoad }: SocialCardP
 				target="_blank"
 				rel="noopener noreferrer"
 				className={`block relative ${aspectRatioClass} rounded-2xl overflow-hidden border-2 border-border hover:border-primary/50 transition-all duration-300 hover:scale-[1.02] bg-muted`}
+				onClick={hasVideo ? handleVideoClick : undefined}
 			>
-				{/* Thumbnail */}
-				{isInView && mention.thumbnail ? (
+				{/* Content */}
+				{isInView && (
 					<>
-						<Image
-							src={mention.thumbnail}
-							alt={mention.caption || "Social media post"}
-							fill
-							className="object-cover"
-							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-						/>
+						{/* Video or Image */}
+						{hasVideo ? (
+							<>
+								<video
+									ref={videoRef}
+									src={mention.videoFile}
+									poster={mention.thumbnail}
+									className="absolute inset-0 w-full h-full object-cover"
+									loop
+									playsInline
+									muted
+									onPlay={() => setIsPlaying(true)}
+									onPause={() => setIsPlaying(false)}
+								/>
+
+								{/* Play/Pause Button Overlay */}
+								{!isPlaying && (
+									<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+										<div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
+											<Play className="h-8 w-8 text-primary fill-primary ml-1" />
+										</div>
+									</div>
+								)}
+							</>
+						) : mention.thumbnail ? (
+							<Image
+								src={mention.thumbnail}
+								alt={mention.caption || "Social media post"}
+								fill
+								className="object-cover"
+								sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+							/>
+						) : null}
 
 						{/* Gradient Overlay */}
-						<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
+						<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 pointer-events-none" />
 
-						{/* Platform Badge - Minimal */}
+						{/* Platform Badge */}
 						<div className="absolute top-3 right-3 z-10">
 							<div className={`w-8 h-8 ${platformColor} rounded-full flex items-center justify-center shadow-lg`}>
 								<span className="text-white text-xs font-bold uppercase">
@@ -189,33 +225,25 @@ function SocialCard({ mention, forceAspectRatio, isLoaded, onLoad }: SocialCardP
 							</div>
 						</div>
 
-						{/* Play Icon for Videos */}
-						{(mention.platform === "tiktok" || mention.platform === "youtube") && (
-							<div className="absolute inset-0 flex items-center justify-center">
-								<div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-									<Play className="h-6 w-6 text-primary fill-primary ml-0.5" />
-								</div>
-							</div>
-						)}
-
-						{/* Minimal Content Overlay - Only author */}
-						{mention.author && (
-							<div className="absolute bottom-3 left-3 right-3 z-10">
+						{/* Content Overlay */}
+						<div className="absolute bottom-3 left-3 right-3 z-10 space-y-1">
+							{mention.author && (
 								<p className="text-white font-display font-medium text-sm">
 									@{mention.author}
 								</p>
-							</div>
-						)}
+							)}
+							{mention.caption && (
+								<p className="text-white/80 font-display font-light text-xs line-clamp-2">
+									{mention.caption}
+								</p>
+							)}
+						</div>
 
 						{/* External Link Icon on Hover */}
 						<div className="absolute top-3 left-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
 							<ExternalLink className="h-4 w-4 text-white drop-shadow-lg" />
 						</div>
 					</>
-				) : (
-					<div className="absolute inset-0 flex items-center justify-center bg-muted">
-						<div className="text-muted-foreground text-sm">Loading...</div>
-					</div>
 				)}
 			</Link>
 		</div>

@@ -140,6 +140,8 @@ export const protectedProcedure = t.procedure
  *
  * @see https://trpc.io/docs/procedures
  */
+export const adminProcedure = publicProcedure
+
 // export const adminProcedure = t.procedure
 // 	.use(timingMiddleware)
 // 	.use(({ ctx, next }) => {

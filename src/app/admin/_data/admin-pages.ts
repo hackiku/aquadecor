@@ -16,8 +16,9 @@ import {
 	Layers,
 	Tag,
 	FileText,
-	type LucideIcon,
 	Home,
+	CircleDollarSign,
+	type LucideIcon,
 } from "lucide-react";
 
 export interface AdminPage {
@@ -94,6 +95,11 @@ export const adminPages: AdminPage[] = [
 				title: "Promo",
 				href: "/admin/promo",
 				icon: Home,
+			},
+			{
+				title: "Sales",
+				href: "/admin/promo/sales",
+				icon: CircleDollarSign,
 			},
 			{
 				title: "Promoters",
