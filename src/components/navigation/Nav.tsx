@@ -16,33 +16,39 @@ import { MobileNav } from "./MobileNav";
 import { enabledNavLinks } from "~/data/navigation";
 import { Button } from "../ui/button";
 
-export function Nav() {
+interface NavProps {
+	disableScroll?: boolean;
+}
+
+
+export function Nav({ disableScroll = false }: NavProps) {
 	const router = useRouter();
 	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
 	const [cartCount, setCartCount] = useState(0);
 	const [wishlistCount, setWishlistCount] = useState(0);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [isVisible, setIsVisible] = useState(true);
 	const [lastScrollY, setLastScrollY] = useState(0);
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 	// Scroll handler for hide/show nav
-	useEffect(() => {
-		const handleScroll = () => {
-			const currentScrollY = window.scrollY;
+	// useEffect(() => {
+	// 	if (disableScroll) return; // Skip scroll logic, handled by parent
+	// 	const handleScroll = () => {
+	// 		const currentScrollY = window.scrollY;
 
-			if (currentScrollY < lastScrollY || currentScrollY < 50) {
-				setIsVisible(true);
-			} else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-				setIsVisible(false);
-			}
+	// 		if (currentScrollY < lastScrollY || currentScrollY < 50) {
+	// 			setIsVisible(true);
+	// 		} else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+	// 			setIsVisible(false);
+	// 		}
 
-			setLastScrollY(currentScrollY);
-		};
+	// 		setLastScrollY(currentScrollY);
+	// 	};
 
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, [lastScrollY]);
+	// 	window.addEventListener("scroll", handleScroll, { passive: true });
+	// 	return () => window.removeEventListener("scroll", handleScroll);
+	// }, [lastScrollY]);
 
 	// Listen for cart updates
 	useEffect(() => {
