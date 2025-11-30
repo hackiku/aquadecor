@@ -1,10 +1,28 @@
 // src/app/(account)/account/addresses/page.tsx
+"use client";
+
+import { useState } from "react";
 import { MobileAccountNav } from "../../_components/MobileAccountNav";
 import { Button } from "~/components/ui/button";
 import { Plus, MapPin, Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { EditAddress } from "../../_components/EditAddress";
+
 export default function AddressesPage() {
+	const [isEditOpen, setIsEditOpen] = useState(false);
+	const [editMode, setEditMode] = useState<"create" | "edit">("create");
+
+	const handleCreate = () => {
+		setEditMode("create");
+		setIsEditOpen(true);
+	};
+
+	const handleEdit = () => {
+		setEditMode("edit");
+		setIsEditOpen(true);
+	};
+
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
@@ -16,17 +34,10 @@ export default function AddressesPage() {
 				</div>
 				<MobileAccountNav />
 			</div>
-			<div className="grid md:grid-cols-2 gap-6">
-				{/* Add New Card */}
-				<button className="flex flex-col items-center justify-center h-full min-h-[200px] border-2 border-dashed rounded-xl hover:border-primary/50 hover:bg-muted/30 transition-all group">
-					<div className="w-12 h-12 rounded-full bg-muted group-hover:bg-primary/10 flex items-center justify-center mb-3 transition-colors">
-						<Plus className="h-6 w-6 text-muted-foreground group-hover:text-primary" />
-					</div>
-					<span className="font-display font-medium">Add New Address</span>
-				</button>
 
+			<div className="grid md:grid-cols-2 gap-6">
 				{/* Existing Address Card */}
-				<Card className="relative group">
+				<Card className="relative group border-2 hover:border-primary/20 transition-all">
 					<CardHeader className="pb-3">
 						<div className="flex items-start justify-between">
 							<div className="flex items-center gap-2">
@@ -46,7 +57,12 @@ export default function AddressesPage() {
 						</div>
 
 						<div className="flex gap-2 pt-2">
-							<Button variant="outline" size="sm" className="h-8 rounded-full">
+							<Button
+								variant="outline"
+								size="sm"
+								className="h-8 rounded-full"
+								onClick={handleEdit}
+							>
 								<Pencil className="h-3 w-3 mr-2" />
 								Edit
 							</Button>
@@ -56,7 +72,24 @@ export default function AddressesPage() {
 						</div>
 					</CardContent>
 				</Card>
+
+				{/* Add New Button - MOVED TO END/RIGHT */}
+				<button
+					onClick={handleCreate}
+					className="flex flex-col items-center justify-center h-full min-h-[200px] border-2 border-dashed rounded-xl hover:border-primary/50 hover:bg-muted/30 transition-all group"
+				>
+					<div className="w-12 h-12 rounded-full bg-muted group-hover:bg-primary/10 flex items-center justify-center mb-3 transition-colors">
+						<Plus className="h-6 w-6 text-muted-foreground group-hover:text-primary" />
+					</div>
+					<span className="font-display font-medium">Add New Address</span>
+				</button>
 			</div>
+
+			<EditAddress
+				open={isEditOpen}
+				onOpenChange={setIsEditOpen}
+				mode={editMode}
+			/>
 		</div>
 	);
 }

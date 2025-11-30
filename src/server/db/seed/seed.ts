@@ -2,8 +2,10 @@
 // src/server/db/seed/seed.ts
 
 import { drizzle } from "drizzle-orm/postgres-js";
+import { eq } from "drizzle-orm";
 import postgres from "postgres";
 import {
+	users, addresses,
 	categories, categoryTranslations,
 	products, productTranslations, productImages,
 	reviews,
@@ -13,6 +15,8 @@ import {
 	shippingZones, countries
 } from "../schema";
 
+// auth
+import { usersSeedData, addressesSeedData } from "./data/seed-users";
 // inventory
 import { categoryStructure } from "./data/seed-categories";
 import { categoryTranslations as catTranslations } from "./data/translations/seed-translations-categories";
@@ -35,6 +39,51 @@ if (!connectionString) {
 
 const client = postgres(connectionString);
 const db = drizzle(client);
+
+
+async function seedUsers() {
+	console.log("🌱 Seeding users and addresses...");
+
+	const userMap = new Map<string, string>(); // email -> id
+
+	for (const userData of usersSeedData) {
+		// Check if exists first to avoid duplicates on re-runs
+		const existing = await db.select().from(users).where(eq(users.email, userData.email)).limit(1);
+
+		let userId = "";
+
+		if (existing.length > 0) {
+			userId = existing[0]!.id;
+			console.log(`  ✓ User exists: ${userData.email}`);
+		} else {
+			const [inserted] = await db.insert(users).values(userData).returning();
+			userId = inserted!.id;
+			console.log(`  ✓ Created user: ${userData.email}`);
+		}
+
+		userMap.set(userData.email, userId);
+	}
+
+	for (const addr of addressesSeedData) {
+		const userId = userMap.get(addr.userEmail);
+		if (!userId) {
+			console.warn(`  ⚠ User not found for address: ${addr.userEmail}`);
+			continue;
+		}
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { userEmail, ...addressData } = addr;
+
+		await db.insert(addresses).values({
+			...addressData,
+			userId,
+		});
+		console.log(`  ✓ Address: ${addr.label} for ${addr.userEmail}`);
+	}
+
+	console.log(`✅ Seeded users\n`);
+}
+
 
 async function seedCategories() {
 	console.log("🌱 Seeding categories...");
@@ -302,6 +351,7 @@ async function main() {
 	try {
 		console.log("🚀 Starting seed...\n");
 
+		await seedUsers();
 		const categoryIdMap = await seedCategories();
 		const productIdMap = await seedProducts(categoryIdMap);
 		await seedImages(productIdMap);
