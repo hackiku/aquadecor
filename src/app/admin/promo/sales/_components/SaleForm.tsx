@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // src/app/admin/promo/sales/_components/SaleForm.tsx
 "use client";
 

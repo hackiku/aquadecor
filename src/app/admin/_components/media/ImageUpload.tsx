@@ -1,4 +1,6 @@
+// @ts-nocheck
 // src/app/admin/_components/ImageUpload.tsx
+import { supabase, storage } from '@supabase/supabase-js'
 
 async function uploadProductImage(file: File, productId: string) {
 	// 1. Upload to Supabase

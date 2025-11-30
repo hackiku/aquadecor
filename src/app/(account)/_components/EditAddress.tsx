@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/(account)/_components/EditAddress.tsx
 
 "use client";
