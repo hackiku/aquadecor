@@ -27,7 +27,7 @@ export const getActiveSale = unstable_cache(
 	getActiveSaleQuery,
 	["active-sale"],
 	{
-		revalidate: 300, // 5 minutes fallback
-		tags: ["active-sale"], // For manual revalidation
+		revalidate: process.env.NODE_ENV === "development" ? 10 : 300, // 10s dev, 5min prod
+		tags: ["active-sale"],
 	}
 );

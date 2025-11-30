@@ -1,5 +1,5 @@
 // @ts-nocheck
-export type Locale = "us" | "de" | "nl"
+export type Locale = "us" | "de" | "nl" | "it"
 
 export const dictionaries = {
   us: {
@@ -64,6 +64,16 @@ export const dictionaries = {
     footer: {
       copyright: "© 2025 AquaDecor Backgrounds. All rights reserved.",
     },
+		legal: {
+			title: "Legal Center",
+			updated: "Last updated",
+			nav: {
+				terms: "Terms of Conditions",
+				privacy: "Privacy Policy",
+				shipping: "Shipping Policy",
+				refund: "Refund Policy",
+			}
+		}
   },
   de: {
     meta: {
@@ -127,6 +137,16 @@ export const dictionaries = {
     footer: {
       copyright: "© 2025 AquaDecor Backgrounds. Alle Rechte vorbehalten.",
     },
+		legal: {
+			title: "Rechtliches",
+			updated: "Zuletzt aktualisiert",
+			nav: {
+				terms: "Allgemeine Geschäftsbedingungen",
+				privacy: "Datenschutzerklärung",
+				shipping: "Versandbedingungen",
+				refund: "Widerrufsrecht",
+			}
+		}
   },
   nl: {
     meta: {
@@ -190,5 +210,76 @@ export const dictionaries = {
     footer: {
       copyright: "© 2025 AquaDecor Backgrounds. Alle rechten voorbehouden.",
     },
+		legal: {
+			title: "Juridisch Centrum",
+			updated: "Laatst bijgewerkt",
+			nav: {
+				terms: "Algemene Voorwaarden",
+				privacy: "Privacybeleid",
+				shipping: "Verzendbeleid",
+				refund: "Restitutiebeleid",
+			}
+		}
   },
+	it: {
+		meta: {
+			title: "Sfondi 3D per Acquari Artigianali | AquaDecor",
+			description: "Sfondi 3D per acquari fatti a mano ultra realistici.",
+			keywords: "sfondi acquario 3d, decorazioni, acquario su misura",
+		},
+		hero: {
+			tagline: "Sfondi 3D Premium",
+			headline: "Trasforma il tuo Acquario",
+			subheadline: "Sfondi 3D realizzati a mano per l'esperienza acquatica definitiva",
+			shopNow: "Acquista Ora",
+			orderCustom: "Ordina Su Misura",
+		},
+		products: {
+			title: "Le Nostre Collezioni",
+			subtitle: "Esplora la nostra selezione curata",
+			from: "Da",
+			viewAll: "Vedi Tutti i Prodotti",
+		},
+		about: {
+			title: "Chi Siamo",
+			description: "Creiamo sfondi 3D di alta qualità con dettagli eccezionali.",
+		},
+		stats: {
+			years: "Anni di Esperienza",
+			products: "Prodotti Venduti",
+			designs: "Design Unici",
+			countries: "Paesi Serviti",
+		},
+		comparison: {
+			title: "Standard vs Su Misura",
+			standard: { title: "Standard", description: "Scegli dai design popolari", cta: "Sfoglia Standard" },
+			custom: { title: "Su Misura", description: "Crea il tuo sfondo perfetto", cta: "Inizia Design" },
+			features: {
+				handmade: "Qualità Artigianale",
+				handmadeDesc: "Fatto a mano con cura",
+				easySelection: "Scelta Facile",
+				easySelectionDesc: "Acquisto semplice e intuitivo",
+				personalization: "Personalizzazione",
+				personalizationDesc: "Scegli colori e dimensioni",
+			},
+		},
+		newsletter: {
+			title: "Resta Aggiornato",
+			description: "Ricevi offerte esclusive",
+			placeholder: "La tua email",
+			subscribe: "Iscriviti",
+			disclaimer: "Rispettiamo la tua privacy.",
+		},
+		footer: { copyright: "© 2025 AquaDecor Backgrounds. Tutti i diritti riservati." },
+		legal: {
+			title: "Area Legale",
+			updated: "Ultimo aggiornamento",
+			nav: {
+				terms: "Termini e Condizioni",
+				privacy: "Privacy Policy",
+				shipping: "Spedizione e Consegna",
+				refund: "Politica di Rimborso",
+			}
+		}
+	},
 } as const

@@ -1,5 +1,8 @@
 // src/data/social-mentions.ts
 
+// dl tiktok vids
+// https://snaptik.app/
+
 export type SocialPlatform = "tiktok" | "youtube" | "instagram" | "facebook" | "reddit";
 
 export interface SocialMention {
