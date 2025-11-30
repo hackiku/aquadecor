@@ -3,7 +3,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
@@ -20,13 +20,11 @@ import {
 	DialogTitle,
 } from "~/components/ui/dialog";
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "~/components/ui/form";
+	Field,
+	FieldGroup,
+	FieldLabel,
+	FieldError,
+} from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
@@ -37,6 +35,7 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 
+// Validation schema
 const addressSchema = z.object({
 	label: z.string().min(1, "Label is required"),
 	firstName: z.string().min(1, "First name is required"),
@@ -57,7 +56,7 @@ type AddressFormValues = z.infer<typeof addressSchema>;
 interface EditAddressProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	initialData?: any; // The raw address object from DB
+	initialData?: any;
 	mode?: "create" | "edit";
 }
 
@@ -69,8 +68,8 @@ export function EditAddress({
 }: EditAddressProps) {
 	const utils = api.useUtils();
 
-	// Fetch countries from your admin router (we'll make it public)
-	const { data: countries, isLoading: countriesLoading } = api.publicCountry.getAllForShipping.useQuery() ?? { data: undefined, isLoading: false };
+	// Fetch countries
+	const { data: countries, isLoading: countriesLoading } = api.publicCountry.getAllForShipping.useQuery();
 
 	const form = useForm<AddressFormValues>({
 		resolver: zodResolver(addressSchema),
@@ -78,6 +77,14 @@ export function EditAddress({
 			label: "Home",
 			firstName: "",
 			lastName: "",
+			company: "",
+			streetAddress1: "",
+			streetAddress2: "",
+			city: "",
+			state: "",
+			postalCode: "",
+			countryCode: "",
+			phone: "",
 			isDefault: false,
 		},
 	});
@@ -87,18 +94,18 @@ export function EditAddress({
 		if (open) {
 			if (mode === "edit" && initialData) {
 				form.reset({
-					label: initialData.label,
-					firstName: initialData.firstName,
-					lastName: initialData.lastName,
+					label: initialData.label || "",
+					firstName: initialData.firstName || "",
+					lastName: initialData.lastName || "",
 					company: initialData.company || "",
-					streetAddress1: initialData.streetAddress1,
+					streetAddress1: initialData.streetAddress1 || "",
 					streetAddress2: initialData.streetAddress2 || "",
-					city: initialData.city,
+					city: initialData.city || "",
 					state: initialData.state || "",
-					postalCode: initialData.postalCode,
-					countryCode: initialData.countryCode,
+					postalCode: initialData.postalCode || "",
+					countryCode: initialData.countryCode || "",
 					phone: initialData.phone || "",
-					isDefault: initialData.isDefault,
+					isDefault: initialData.isDefault || false,
 				});
 			} else {
 				form.reset({
@@ -163,188 +170,164 @@ export function EditAddress({
 					</DialogDescription>
 				</DialogHeader>
 
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
-
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+					<FieldGroup>
 						{/* Label & Default */}
 						<div className="flex gap-4 items-end">
-							<FormField
-								control={form.control}
+							<Controller
 								name="label"
-								render={({ field }) => (
-									<FormItem className="flex-1">
-										<FormLabel>Label</FormLabel>
-										<FormControl>
-											<Input placeholder="e.g. Home, Office" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid} className="flex-1">
+										<FieldLabel>Label</FieldLabel>
+										<Input {...field} placeholder="e.g. Home, Office" />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
-							<FormField
-								control={form.control}
+							<Controller
 								name="isDefault"
+								control={form.control}
 								render={({ field }) => (
-									<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 mb-2">
-										<FormControl>
-											<Checkbox
-												checked={field.value}
-												onCheckedChange={field.onChange}
-											/>
-										</FormControl>
-										<div className="space-y-1 leading-none">
-											<FormLabel className="cursor-pointer">
-												Set as default
-											</FormLabel>
-										</div>
-									</FormItem>
+									<Field orientation="horizontal" className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 mb-2">
+										<Checkbox
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+										<FieldLabel className="cursor-pointer">
+											Set as default
+										</FieldLabel>
+									</Field>
 								)}
 							/>
 						</div>
 
 						{/* Name */}
 						<div className="grid grid-cols-2 gap-4">
-							<FormField
-								control={form.control}
+							<Controller
 								name="firstName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>First Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>First Name</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
-							<FormField
-								control={form.control}
+							<Controller
 								name="lastName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Last Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Last Name</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
 						</div>
 
 						{/* Company & Phone */}
 						<div className="grid grid-cols-2 gap-4">
-							<FormField
-								control={form.control}
+							<Controller
 								name="company"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Company (Optional)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Company (Optional)</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
-							<FormField
-								control={form.control}
+							<Controller
 								name="phone"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Phone</FormLabel>
-										<FormControl>
-											<Input type="tel" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Phone</FieldLabel>
+										<Input type="tel" {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
 						</div>
 
 						{/* Street */}
-						<FormField
-							control={form.control}
+						<Controller
 							name="streetAddress1"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Address</FormLabel>
-									<FormControl>
-										<Input placeholder="Street address" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
+							control={form.control}
+							render={({ field, fieldState }) => (
+								<Field data-invalid={fieldState.invalid}>
+									<FieldLabel>Address</FieldLabel>
+									<Input {...field} placeholder="Street address" />
+									{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+								</Field>
 							)}
 						/>
-						<FormField
-							control={form.control}
+						<Controller
 							name="streetAddress2"
-							render={({ field }) => (
-								<FormItem>
-									<FormControl>
-										<Input placeholder="Apartment, suite, etc. (optional)" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
+							control={form.control}
+							render={({ field, fieldState }) => (
+								<Field data-invalid={fieldState.invalid}>
+									<Input {...field} placeholder="Apartment, suite, etc. (optional)" />
+									{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+								</Field>
 							)}
 						/>
 
 						{/* City/State/Zip */}
 						<div className="grid grid-cols-3 gap-4">
-							<FormField
-								control={form.control}
+							<Controller
 								name="city"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>City</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>City</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
-							<FormField
-								control={form.control}
+							<Controller
 								name="state"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>State/Province</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>State/Province</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
-							<FormField
-								control={form.control}
+							<Controller
 								name="postalCode"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Postal Code</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+								control={form.control}
+								render={({ field, fieldState }) => (
+									<Field data-invalid={fieldState.invalid}>
+										<FieldLabel>Postal Code</FieldLabel>
+										<Input {...field} />
+										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+									</Field>
 								)}
 							/>
 						</div>
 
 						{/* Country */}
-						<FormField
-							control={form.control}
+						<Controller
 							name="countryCode"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Country</FormLabel>
-									<Select onValueChange={field.onChange} value={field.value || ""}>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder="Select country" />
-											</SelectTrigger>
-										</FormControl>
+							control={form.control}
+							render={({ field, fieldState }) => (
+								<Field data-invalid={fieldState.invalid}>
+									<FieldLabel>Country</FieldLabel>
+									<Select
+										value={field.value}
+										onValueChange={field.onChange}
+									>
+										<SelectTrigger aria-invalid={fieldState.invalid}>
+											<SelectValue placeholder="Select country" />
+										</SelectTrigger>
 										<SelectContent className="max-h-[300px]">
 											{countriesLoading ? (
 												<div className="flex items-center justify-center py-4">
@@ -364,22 +347,22 @@ export function EditAddress({
 											)}
 										</SelectContent>
 									</Select>
-									<FormMessage />
-								</FormItem>
+									{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+								</Field>
 							)}
 						/>
+					</FieldGroup>
 
-						<DialogFooter className="pt-4">
-							<Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
-								Cancel
-							</Button>
-							<Button type="submit" disabled={isSubmitting} className="rounded-full px-8">
-								{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-								{mode === "create" ? "Save Address" : "Update Address"}
-							</Button>
-						</DialogFooter>
-					</form>
-				</Form>
+					<DialogFooter className="pt-4">
+						<Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
+							Cancel
+						</Button>
+						<Button type="submit" disabled={isSubmitting} className="rounded-full px-8">
+							{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+							{mode === "create" ? "Save Address" : "Update Address"}
+						</Button>
+					</DialogFooter>
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
