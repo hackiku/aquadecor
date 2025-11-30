@@ -9,9 +9,13 @@ export default async function LegalLayout({
 	params,
 }: {
 	children: React.ReactNode;
-	params: Promise<{ locale: Locale }>;
+	// Fix: Change 'Locale' to 'string' here to match Next.js types
+	params: Promise<{ locale: string }>;
 }) {
-	const { locale } = await params;
+	const { locale: rawLocale } = await params;
+	// Fix: Cast string to Locale for internal use
+	const locale = rawLocale as Locale;
+
 	const t = dictionaries[locale] || dictionaries.us;
 
 	const navItems = [
