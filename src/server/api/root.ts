@@ -1,8 +1,11 @@
 // src/server/api/root.ts
 import { accountRouter } from "./routers/account";
+// shop
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
+// content
 import { faqRouter } from "~/server/api/routers/faq";
+import { countryRouter, publicCountryRouter } from "./routers/admin/country";
 // admin
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
@@ -10,7 +13,6 @@ import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
 import { adminFaqRouter } from "./routers/admin/faq";
-import { countryRouter } from "./routers/admin/country";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -31,6 +33,7 @@ export const appRouter = createTRPCRouter({
 		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
+		publicCountry: publicCountryRouter,
 	}),
 });
 
