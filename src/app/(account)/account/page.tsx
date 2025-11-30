@@ -1,109 +1,198 @@
 // src/app/(account)/account/page.tsx
+"use client";
+
 import { MobileAccountNav } from "../_components/MobileAccountNav";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { Package, MapPin, CreditCard, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Package, Heart, MapPin, Settings, Loader2 } from "lucide-react";
 import Link from "next/link";
-export default function AccountOverview() {
+import { api } from "~/trpc/react";
+
+export default function AccountOverviewPage() {
+	const { data: profile, isLoading } = api.account.getProfile.useQuery();
+	const { data: addresses } = api.account.address.getAll.useQuery();
+
+	if (isLoading) {
+		return (
+			<div className="flex items-center justify-center py-12">
+				<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+			</div>
+		);
+	}
+
+	const firstName = profile?.name?.split(" ")[0] || "there";
+	const defaultAddress = addresses?.find(a => a.isDefault);
+
 	return (
-		<div className="space-y-6">
+		<div className="space-y-8">
+			{/* Header */}
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl md:text-3xl font-display font-light">Overview</h1>
+					<h1 className="text-2xl md:text-3xl font-display font-light">
+						Hello, {firstName} 👋
+					</h1>
 					<p className="text-muted-foreground font-display font-light">
-						Track your shipments and manage your details.
+						Welcome back to your account
 					</p>
 				</div>
 				<MobileAccountNav />
 			</div>
-			{/* Recent Order Card - "The Hero" of the dashboard */}
-			<Card className="border-2 border-primary/20 bg-primary/5">
-				<CardHeader className="flex flex-row items-center justify-between pb-2">
-					<CardTitle className="text-lg font-display font-medium">
-						Latest Order #ORD-2024-882
-					</CardTitle>
-					<div className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
-						In Production
-					</div>
-				</CardHeader>
-				<CardContent>
-					<div className="grid md:grid-cols-3 gap-6">
-						<div className="space-y-1">
-							<p className="text-sm text-muted-foreground font-display">Estimated Delivery</p>
-							<p className="font-medium font-display">Jan 24 - Jan 28</p>
-						</div>
-						<div className="space-y-1">
-							<p className="text-sm text-muted-foreground font-display">Items</p>
-							<p className="font-medium font-display">F1 Background (Custom), Z1 Plant</p>
-						</div>
-						<div className="flex items-center md:justify-end">
-							<Button asChild size="sm" className="rounded-full">
-								<Link href="/account/orders/123">
-									Track Order
-								</Link>
-							</Button>
-						</div>
-					</div>
-
-					{/* Simple Progress Bar */}
-					<div className="mt-6 relative">
-						<div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-primary/20">
-							<div style={{ width: "40%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary"></div>
-						</div>
-						<div className="flex justify-between text-xs text-muted-foreground font-display">
-							<span className="text-primary font-medium">Confirmed</span>
-							<span className="text-primary font-medium">Production</span>
-							<span>Shipped</span>
-							<span>Delivered</span>
-						</div>
-					</div>
-				</CardContent>
-			</Card>
 
 			{/* Quick Stats Grid */}
-			<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				<Card>
-					<CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-						<CardTitle className="text-sm font-medium font-display">Total Orders</CardTitle>
-						<Package className="h-4 w-4 text-muted-foreground" />
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold font-display">12</div>
-						<p className="text-xs text-muted-foreground font-display mt-1">
-							Lifetime value: €1,240
-						</p>
-					</CardContent>
-				</Card>
+			<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+				<Link href="/account/orders">
+					<Card className="hover:border-primary/50 transition-colors cursor-pointer">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-display font-medium text-muted-foreground">
+									Orders
+								</CardTitle>
+								<Package className="h-4 w-4 text-muted-foreground" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-2xl font-display font-light">0</div>
+							<p className="text-xs text-muted-foreground mt-1">Total orders</p>
+						</CardContent>
+					</Card>
+				</Link>
 
+				<Link href="/account/wishlist">
+					<Card className="hover:border-primary/50 transition-colors cursor-pointer">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-display font-medium text-muted-foreground">
+									Wishlist
+								</CardTitle>
+								<Heart className="h-4 w-4 text-muted-foreground" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-2xl font-display font-light">0</div>
+							<p className="text-xs text-muted-foreground mt-1">Saved items</p>
+						</CardContent>
+					</Card>
+				</Link>
+
+				<Link href="/account/addresses">
+					<Card className="hover:border-primary/50 transition-colors cursor-pointer">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-display font-medium text-muted-foreground">
+									Addresses
+								</CardTitle>
+								<MapPin className="h-4 w-4 text-muted-foreground" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-2xl font-display font-light">{addresses?.length || 0}</div>
+							<p className="text-xs text-muted-foreground mt-1">Saved addresses</p>
+						</CardContent>
+					</Card>
+				</Link>
+
+				<Link href="/account/settings">
+					<Card className="hover:border-primary/50 transition-colors cursor-pointer">
+						<CardHeader className="pb-3">
+							<div className="flex items-center justify-between">
+								<CardTitle className="text-sm font-display font-medium text-muted-foreground">
+									Settings
+								</CardTitle>
+								<Settings className="h-4 w-4 text-muted-foreground" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<div className="text-2xl font-display font-light">•</div>
+							<p className="text-xs text-muted-foreground mt-1">Account settings</p>
+						</CardContent>
+					</Card>
+				</Link>
+			</div>
+
+			{/* Account Info Cards */}
+			<div className="grid lg:grid-cols-2 gap-6">
+				{/* Profile Card */}
 				<Card>
-					<CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-						<CardTitle className="text-sm font-medium font-display">Default Address</CardTitle>
-						<MapPin className="h-4 w-4 text-muted-foreground" />
+					<CardHeader>
+						<CardTitle className="font-display font-medium">Profile Information</CardTitle>
 					</CardHeader>
-					<CardContent>
-						<div className="text-sm font-display truncate">
-							Branka Nemet<br />
-							Example Street 123...
+					<CardContent className="space-y-4">
+						<div className="space-y-2">
+							<div className="text-sm text-muted-foreground">Name</div>
+							<div className="font-display font-light">{profile?.name || "Not set"}</div>
 						</div>
-						<Link href="/account/addresses" className="text-xs text-primary hover:underline font-display mt-2 block">
-							Manage addresses
-						</Link>
+						<div className="space-y-2">
+							<div className="text-sm text-muted-foreground">Email</div>
+							<div className="font-display font-light">{profile?.email}</div>
+						</div>
+						{profile?.phone && (
+							<div className="space-y-2">
+								<div className="text-sm text-muted-foreground">Phone</div>
+								<div className="font-display font-light">{profile.phone}</div>
+							</div>
+						)}
+						<Button variant="outline" size="sm" className="rounded-full" asChild>
+							<Link href="/account/settings">Edit Profile</Link>
+						</Button>
 					</CardContent>
 				</Card>
 
+				{/* Default Address Card */}
 				<Card>
-					<CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-						<CardTitle className="text-sm font-medium font-display">Wishlist</CardTitle>
-						<CreditCard className="h-4 w-4 text-muted-foreground" />
+					<CardHeader>
+						<CardTitle className="font-display font-medium">Default Address</CardTitle>
 					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold font-display">4 items</div>
-						<Link href="/account/wishlist" className="text-xs text-primary hover:underline font-display mt-1 block">
-							View saved items
-						</Link>
+					<CardContent className="space-y-4">
+						{defaultAddress ? (
+							<>
+								<div className="text-sm font-display font-light space-y-1">
+									<p className="font-medium text-foreground">
+										{defaultAddress.firstName} {defaultAddress.lastName}
+									</p>
+									{defaultAddress.company && <p className="text-muted-foreground">{defaultAddress.company}</p>}
+									<p className="text-muted-foreground">{defaultAddress.streetAddress1}</p>
+									{defaultAddress.streetAddress2 && (
+										<p className="text-muted-foreground">{defaultAddress.streetAddress2}</p>
+									)}
+									<p className="text-muted-foreground">
+										{defaultAddress.postalCode} {defaultAddress.city}
+									</p>
+									<p className="text-muted-foreground">{defaultAddress.countryCode}</p>
+								</div>
+								<Button variant="outline" size="sm" className="rounded-full" asChild>
+									<Link href="/account/addresses">Manage Addresses</Link>
+								</Button>
+							</>
+						) : (
+							<>
+								<p className="text-sm text-muted-foreground">
+									No default address set. Add one to speed up checkout.
+								</p>
+								<Button variant="outline" size="sm" className="rounded-full" asChild>
+									<Link href="/account/addresses">Add Address</Link>
+								</Button>
+							</>
+						)}
 					</CardContent>
 				</Card>
 			</div>
+
+			{/* Recent Orders Placeholder */}
+			<Card>
+				<CardHeader>
+					<CardTitle className="font-display font-medium">Recent Orders</CardTitle>
+				</CardHeader>
+				<CardContent>
+					<div className="text-center py-8 text-muted-foreground">
+						<Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
+						<p className="font-display font-light">No orders yet</p>
+						<p className="text-sm mt-1">Your order history will appear here</p>
+						<Button variant="outline" size="sm" className="rounded-full mt-4" asChild>
+							<Link href="/shop">Start Shopping</Link>
+						</Button>
+					</div>
+				</CardContent>
+			</Card>
 		</div>
 	);
 }

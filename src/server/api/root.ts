@@ -1,4 +1,5 @@
 // src/server/api/root.ts
+import { accountRouter } from "./routers/account";
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
 import { faqRouter } from "~/server/api/routers/faq";
@@ -18,6 +19,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+	account: accountRouter,
 	product: productRouter,
 	reviews: reviewsRouter,
 	faq: faqRouter,

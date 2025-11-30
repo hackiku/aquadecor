@@ -4,6 +4,46 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { countries, shippingZones, countryShippingAttempts } from "~/server/db/schema";
 import { eq, desc, sql, and, or, like, count, sum } from "drizzle-orm";
 
+// public router for dropdowns in account pgs and more
+
+export const publicCountryRouter = createTRPCRouter({
+	// Get all countries for shipping (public endpoint)
+	getAllForShipping: publicProcedure.query(async ({ ctx }) => {
+		return await ctx.db
+			.select({
+				id: countries.id,
+				iso2: countries.iso2,
+				iso3: countries.iso3,
+				name: countries.name,
+				flagEmoji: countries.flagEmoji,
+				requiresPhoneNumber: countries.requiresPhoneNumber,
+			})
+			.from(countries)
+			.where(
+				and(
+					eq(countries.isShippingEnabled, true),
+					eq(countries.isSuspended, false)
+				)
+			)
+			.orderBy(countries.name);
+	}),
+
+	// Get country by ISO2 code
+	getByIso2: publicProcedure
+		.input(z.object({ iso2: z.string().length(2) }))
+		.query(async ({ ctx, input }) => {
+			const [country] = await ctx.db
+				.select()
+				.from(countries)
+				.where(eq(countries.iso2, input.iso2))
+				.limit(1);
+
+			return country ?? null;
+		}),
+});
+
+
+
 export const countryRouter = createTRPCRouter({
 	// Get all countries with optional filtering
 	getAll: publicProcedure

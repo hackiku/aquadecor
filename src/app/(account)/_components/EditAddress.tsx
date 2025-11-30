@@ -1,11 +1,14 @@
 // src/app/(account)/_components/EditAddress.tsx
+
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
+import { api } from "~/trpc/react";
+import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -34,16 +37,8 @@ import {
 	SelectValue,
 } from "~/components/ui/select";
 
-// TODO: Replace with real countries from tRPC
-const MOCK_COUNTRIES = [
-	{ code: "US", name: "United States" },
-	{ code: "DE", name: "Germany" },
-	{ code: "RS", name: "Serbia" },
-	{ code: "GB", name: "United Kingdom" },
-];
-
 const addressSchema = z.object({
-	label: z.string().min(1, "Label is required (e.g. Home)"),
+	label: z.string().min(1, "Label is required"),
 	firstName: z.string().min(1, "First name is required"),
 	lastName: z.string().min(1, "Last name is required"),
 	company: z.string().optional(),
@@ -62,7 +57,7 @@ type AddressFormValues = z.infer<typeof addressSchema>;
 interface EditAddressProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	initialData?: AddressFormValues; // Pass this if editing
+	initialData?: any; // The raw address object from DB
 	mode?: "create" | "edit";
 }
 
@@ -72,39 +67,87 @@ export function EditAddress({
 	initialData,
 	mode = "create"
 }: EditAddressProps) {
-	const [isLoading, setIsLoading] = useState(false);
+	const utils = api.useUtils();
+
+	// Fetch countries from your admin router (we'll make it public)
+	const { data: countries, isLoading: countriesLoading } = api.admin.country.getAllForShipping?.useQuery() ?? { data: undefined, isLoading: false };
 
 	const form = useForm<AddressFormValues>({
 		resolver: zodResolver(addressSchema),
-		defaultValues: initialData || {
+		defaultValues: {
 			label: "Home",
 			firstName: "",
 			lastName: "",
-			company: "",
-			streetAddress1: "",
-			streetAddress2: "",
-			city: "",
-			state: "",
-			postalCode: "",
-			countryCode: "",
-			phone: "",
 			isDefault: false,
 		},
 	});
 
-	async function onSubmit(data: AddressFormValues) {
-		setIsLoading(true);
-		console.log("Submitting:", data);
+	// Reset/Populate form when opening
+	useEffect(() => {
+		if (open) {
+			if (mode === "edit" && initialData) {
+				form.reset({
+					label: initialData.label,
+					firstName: initialData.firstName,
+					lastName: initialData.lastName,
+					company: initialData.company || "",
+					streetAddress1: initialData.streetAddress1,
+					streetAddress2: initialData.streetAddress2 || "",
+					city: initialData.city,
+					state: initialData.state || "",
+					postalCode: initialData.postalCode,
+					countryCode: initialData.countryCode,
+					phone: initialData.phone || "",
+					isDefault: initialData.isDefault,
+				});
+			} else {
+				form.reset({
+					label: "Home",
+					firstName: "",
+					lastName: "",
+					company: "",
+					streetAddress1: "",
+					streetAddress2: "",
+					city: "",
+					state: "",
+					postalCode: "",
+					countryCode: "",
+					phone: "",
+					isDefault: false,
+				});
+			}
+		}
+	}, [open, mode, initialData, form]);
 
-		// TODO: Call tRPC mutation here
-		// await api.account.address.create.mutate(data);
-
-		setTimeout(() => {
-			setIsLoading(false);
+	// Mutations
+	const createMutation = api.account.address.create.useMutation({
+		onSuccess: () => {
+			toast.success("Address created");
+			utils.account.address.getAll.invalidate();
 			onOpenChange(false);
-			form.reset();
-		}, 1000);
+		},
+		onError: (err) => toast.error(err.message)
+	});
+
+	const updateMutation = api.account.address.update.useMutation({
+		onSuccess: () => {
+			toast.success("Address updated");
+			utils.account.address.getAll.invalidate();
+			onOpenChange(false);
+		},
+		onError: (err) => toast.error(err.message)
+	});
+
+	async function onSubmit(data: AddressFormValues) {
+		if (mode === "create") {
+			createMutation.mutate(data);
+		} else {
+			if (!initialData?.id) return;
+			updateMutation.mutate({ ...data, id: initialData.id });
+		}
 	}
+
+	const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
@@ -150,7 +193,7 @@ export function EditAddress({
 											/>
 										</FormControl>
 										<div className="space-y-1 leading-none">
-											<FormLabel>
+											<FormLabel className="cursor-pointer">
 												Set as default
 											</FormLabel>
 										</div>
@@ -296,18 +339,29 @@ export function EditAddress({
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Country</FormLabel>
-									<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<Select onValueChange={field.onChange} value={field.value || ""}>
 										<FormControl>
 											<SelectTrigger>
 												<SelectValue placeholder="Select country" />
 											</SelectTrigger>
 										</FormControl>
-										<SelectContent>
-											{MOCK_COUNTRIES.map((c) => (
-												<SelectItem key={c.code} value={c.code}>
-													{c.name}
-												</SelectItem>
-											))}
+										<SelectContent className="max-h-[300px]">
+											{countriesLoading ? (
+												<div className="flex items-center justify-center py-4">
+													<Loader2 className="h-4 w-4 animate-spin" />
+												</div>
+											) : countries && countries.length > 0 ? (
+												countries.map((country) => (
+													<SelectItem key={country.iso2} value={country.iso2}>
+														{country.flagEmoji && `${country.flagEmoji} `}
+														{country.name}
+													</SelectItem>
+												))
+											) : (
+												<div className="py-4 text-center text-sm text-muted-foreground">
+													No countries available
+												</div>
+											)}
 										</SelectContent>
 									</Select>
 									<FormMessage />
@@ -319,8 +373,8 @@ export function EditAddress({
 							<Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
 								Cancel
 							</Button>
-							<Button type="submit" disabled={isLoading} className="rounded-full px-8">
-								{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+							<Button type="submit" disabled={isSubmitting} className="rounded-full px-8">
+								{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 								{mode === "create" ? "Save Address" : "Update Address"}
 							</Button>
 						</DialogFooter>
