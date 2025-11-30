@@ -4,7 +4,7 @@ import { index, primaryKey, boolean, text, timestamp } from "drizzle-orm/pg-core
 import type { InferSelectModel } from "drizzle-orm";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createTable } from "./_utils";
-import { countries } from "./countries"; // Ensure this import works from your existing countries schema
+import { countries } from "./countries"; 
 
 // ============================================================================
 // USERS (Extended T3 Model)
@@ -146,3 +146,40 @@ export const verificationTokens = createTable(
 
 export type User = InferSelectModel<typeof users>;
 export type Address = InferSelectModel<typeof addresses>;
+export type Account = InferSelectModel<typeof accounts>;
+export type Session = InferSelectModel<typeof sessions>;
+
+// Commonly used joined types for components
+export type UserProfile = Pick<User,
+	| 'id'
+	| 'name'
+	| 'email'
+	| 'image'
+	| 'phone'
+	| 'role'
+>;
+
+// For address forms/cards - exactly what EditAddress needs
+export type AddressFormData = Pick<Address,
+	| 'label'
+	| 'firstName'
+	| 'lastName'
+	| 'company'
+	| 'streetAddress1'
+	| 'streetAddress2'
+	| 'city'
+	| 'state'
+	| 'postalCode'
+	| 'countryCode'
+	| 'phone'
+	| 'isDefault'
+>;
+
+// For address display - includes ID for editing
+export type AddressWithId = AddressFormData & Pick<Address, 'id'>;
+
+// For account overview - user with address count
+export type UserWithStats = UserProfile & {
+	addressCount?: number;
+	defaultAddress?: Address | null;
+};

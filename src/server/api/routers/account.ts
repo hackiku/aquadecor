@@ -1,7 +1,7 @@
 // src/server/api/routers/account.ts
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "~/server/api/trpc";
-import { users, addresses, type User, type Address } from "~/server/db/schema";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { users, addresses, type User, type Address, type UserProfile } from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -9,7 +9,6 @@ import bcrypt from "bcryptjs";
 // ---------------------------------------------------------
 // Helper: Get Current User ID
 // ---------------------------------------------------------
-// Toggle between mock and real auth by changing this function
 const getCurrentUserId = async (ctx: any): Promise<string> => {
 	// PRODUCTION VERSION (uncomment when auth is ready):
 	/*
@@ -24,7 +23,7 @@ const getCurrentUserId = async (ctx: any): Promise<string> => {
 
 	// DEV VERSION (using seed data):
 	const user = await ctx.db.query.users.findFirst({
-		where: (u, { eq }) => eq(u.email, "brankanemet15@gmail.com")
+		where: eq(users.email, "brankanemet15@gmail.com")
 	});
 
 	if (!user) {
@@ -80,7 +79,7 @@ export const accountRouter = createTRPCRouter({
 		.mutation(async ({ ctx, input }): Promise<{ success: boolean; userId: string }> => {
 			// Check if user already exists
 			const existingUser = await ctx.db.query.users.findFirst({
-				where: (u, { eq }) => eq(u.email, input.email.toLowerCase())
+				where: eq(users.email, input.email.toLowerCase())
 			});
 
 			if (existingUser) {
@@ -90,7 +89,7 @@ export const accountRouter = createTRPCRouter({
 				});
 			}
 
-			// Hash password
+			// Hash password (for future Credentials provider)
 			const hashedPassword = await bcrypt.hash(input.password, 10);
 
 			// Create user
@@ -100,9 +99,7 @@ export const accountRouter = createTRPCRouter({
 					name: input.name,
 					email: input.email.toLowerCase(),
 					role: "customer",
-					// Note: We're not storing password here since NextAuth handles it
-					// This is just for the database record
-					// You'll need to handle password storage based on your auth provider
+					// TODO: Add hashedPassword field to schema for Credentials provider
 				})
 				.returning();
 
@@ -112,9 +109,6 @@ export const accountRouter = createTRPCRouter({
 					message: "Failed to create account"
 				});
 			}
-
-			// TODO: Send verification email
-			// TODO: Create session or return token for auto-login
 
 			return {
 				success: true,
@@ -126,11 +120,11 @@ export const accountRouter = createTRPCRouter({
 	// PROFILE MANAGEMENT
 	// ========================================================================
 
-	getProfile: publicProcedure.query(async ({ ctx }): Promise<User | null> => {
+	getProfile: publicProcedure.query(async ({ ctx }): Promise<UserProfile | null> => {
 		const userId = await getCurrentUserId(ctx);
 
 		const user = await ctx.db.query.users.findFirst({
-			where: (u, { eq }) => eq(u.id, userId),
+			where: eq(users.id, userId),
 			columns: {
 				id: true,
 				name: true,
@@ -146,7 +140,7 @@ export const accountRouter = createTRPCRouter({
 
 	updateProfile: publicProcedure
 		.input(profileSchema)
-		.mutation(async ({ ctx, input }) => {
+		.mutation(async ({ ctx, input }): Promise<UserProfile> => {
 			const userId = await getCurrentUserId(ctx);
 
 			const [updated] = await ctx.db
@@ -156,7 +150,21 @@ export const accountRouter = createTRPCRouter({
 					phone: input.phone,
 				})
 				.where(eq(users.id, userId))
-				.returning();
+				.returning({
+					id: users.id,
+					name: users.name,
+					email: users.email,
+					image: users.image,
+					phone: users.phone,
+					role: users.role,
+				});
+
+			if (!updated) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Failed to update profile"
+				});
+			}
 
 			return updated;
 		}),
@@ -171,7 +179,7 @@ export const accountRouter = createTRPCRouter({
 			const userId = await getCurrentUserId(ctx);
 
 			return await ctx.db.query.addresses.findMany({
-				where: (a, { eq }) => eq(a.userId, userId),
+				where: eq(addresses.userId, userId),
 				orderBy: (a, { desc }) => [desc(a.isDefault), desc(a.createdAt)],
 			});
 		}),
@@ -182,9 +190,9 @@ export const accountRouter = createTRPCRouter({
 				const userId = await getCurrentUserId(ctx);
 
 				const address = await ctx.db.query.addresses.findFirst({
-					where: (a, { eq, and }) => and(
-						eq(a.id, input.id),
-						eq(a.userId, userId)
+					where: and(
+						eq(addresses.id, input.id),
+						eq(addresses.userId, userId)
 					)
 				});
 
@@ -206,7 +214,7 @@ export const accountRouter = createTRPCRouter({
 
 					// Check if this is the FIRST address, make it default automatically
 					const existingCount = await tx.query.addresses.findMany({
-						where: (a, { eq }) => eq(a.userId, userId),
+						where: eq(addresses.userId, userId),
 					});
 
 					const shouldBeDefault = input.isDefault || existingCount.length === 0;
@@ -236,7 +244,7 @@ export const accountRouter = createTRPCRouter({
 
 				// Ensure user owns this address
 				const existing = await ctx.db.query.addresses.findFirst({
-					where: (a, { eq, and }) => and(eq(a.id, id), eq(a.userId, userId))
+					where: and(eq(addresses.id, id), eq(addresses.userId, userId))
 				});
 
 				if (!existing) {
@@ -276,7 +284,7 @@ export const accountRouter = createTRPCRouter({
 
 				// Check ownership
 				const existing = await ctx.db.query.addresses.findFirst({
-					where: (a, { eq, and }) => and(eq(a.id, input.id), eq(a.userId, userId))
+					where: and(eq(addresses.id, input.id), eq(addresses.userId, userId))
 				});
 
 				if (!existing) {
@@ -292,12 +300,12 @@ export const accountRouter = createTRPCRouter({
 
 		setDefault: publicProcedure
 			.input(z.object({ id: z.string() }))
-			.mutation(async ({ ctx, input }) => {
+			.mutation(async ({ ctx, input }): Promise<Address> => {
 				const userId = await getCurrentUserId(ctx);
 
 				// Verify ownership
 				const existing = await ctx.db.query.addresses.findFirst({
-					where: (a, { eq, and }) => and(eq(a.id, input.id), eq(a.userId, userId))
+					where: and(eq(addresses.id, input.id), eq(addresses.userId, userId))
 				});
 
 				if (!existing) {
@@ -318,6 +326,13 @@ export const accountRouter = createTRPCRouter({
 						.set({ isDefault: true })
 						.where(eq(addresses.id, input.id))
 						.returning();
+
+					if (!updated) {
+						throw new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: "Failed to set default address"
+						});
+					}
 
 					return updated;
 				});

@@ -25,6 +25,7 @@ export const appRouter = createTRPCRouter({
 	product: productRouter,
 	reviews: reviewsRouter,
 	faq: faqRouter,
+	publicCountry: publicCountryRouter,
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
@@ -33,7 +34,6 @@ export const appRouter = createTRPCRouter({
 		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
-		publicCountry: publicCountryRouter,
 	}),
 });
 

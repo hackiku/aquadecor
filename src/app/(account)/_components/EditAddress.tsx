@@ -70,7 +70,7 @@ export function EditAddress({
 	const utils = api.useUtils();
 
 	// Fetch countries from your admin router (we'll make it public)
-	const { data: countries, isLoading: countriesLoading } = api.admin.publicCountry.getAllForShipping?.useQuery() ?? { data: undefined, isLoading: false };
+	const { data: countries, isLoading: countriesLoading } = api.publicCountry.getAllForShipping.useQuery() ?? { data: undefined, isLoading: false };
 
 	const form = useForm<AddressFormValues>({
 		resolver: zodResolver(addressSchema),
