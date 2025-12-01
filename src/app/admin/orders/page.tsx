@@ -196,6 +196,7 @@ export default function OrdersPage() {
 					<AdminTable
 						columns={columns}
 						data={orders || []}
+						pageSize={50} // Pass it here!
 						onRowClick={(order) => `/admin/orders/${order.id}`}
 						searchPlaceholder="Search orders by email or order number..."
 					/>

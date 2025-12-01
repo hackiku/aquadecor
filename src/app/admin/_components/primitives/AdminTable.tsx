@@ -28,6 +28,7 @@ interface AdminTableProps<T = any> {
 	onRowClick?: (row: T) => string | void;
 	searchable?: boolean;
 	searchPlaceholder?: string;
+	pageSize?: number; // <--- New prop
 }
 
 export function AdminTable<T extends Record<string, any>>({
@@ -36,11 +37,13 @@ export function AdminTable<T extends Record<string, any>>({
 	onRowClick,
 	searchable = true,
 	searchPlaceholder = "Search...",
+	pageSize = 10, // <--- Default to 10
 }: AdminTableProps<T>) {
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 10;
+
+	const itemsPerPage = pageSize; // <--- Use the prop
 
 	// Filter data based on search
 	const filteredData = searchQuery
