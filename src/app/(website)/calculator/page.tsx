@@ -3,7 +3,9 @@
 "use client";
 
 import { useState } from "react";
-import { StickyPanel } from "./_components/sticky/StickyPanel";
+import { UnitProvider } from "./_context/UnitContext";
+import { ProgressBar } from "./_components/sticky/ProgressBar";
+import { StickyCalculator } from "./_components/sticky/StickyCalculator";
 import { ModelCategoryGrid } from "./_components/product/ModelCategoryGrid";
 import { SubcategorySelector } from "./_components/product/SubcategorySelector";
 import { DimensionControls } from "./_components/dimensions/DimensionControls";
@@ -33,39 +35,29 @@ const DEFAULT_CONFIG: QuoteConfig = {
 	country: "",
 };
 
-export default function CalculatorPage() {
+function CalculatorContent() {
 	const [config, setConfig] = useState<QuoteConfig>(DEFAULT_CONFIG);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const estimate = useQuoteEstimate(config);
 
 	// Calculate completion percentage for progress indicator
 	const completionSteps = [
-		config.modelCategory !== null, // Model selected
-		// If category has subcategories, require subcategory selection (unless skipped)
+		config.modelCategory !== null,
 		!config.modelCategory || !hasSubcategories(config.modelCategory) || config.subcategory !== null,
-		config.country !== "",          // Country selected
+		config.country !== "",
 	];
 	const completionPercent = (completionSteps.filter(Boolean).length / completionSteps.length) * 100;
 
 	const handleQuoteSubmit = async (data: { name: string; email: string; notes?: string }) => {
 		console.log("Quote submission:", { config, estimate, ...data });
-
-		// TODO: Call tRPC mutation here
-		// await api.calculator.createQuote.mutate({ ...config, ...data });
-
-		// For now, just close modal
+		// TODO: await api.calculator.createQuote.mutate({ ...config, ...data });
 		setIsModalOpen(false);
-
-		// Show success message (you can add toast notification here)
 		alert("Quote request submitted! We'll email you within 24 hours.");
 	};
 
 	const canRequestQuote = config.modelCategory !== null && config.country !== "";
-
-	// Get selected category metadata for texture URLs
 	const selectedCategory = MODEL_CATEGORIES.find(c => c.id === config.modelCategory);
 
-	// Get subcategory texture URL if subcategory is selected
 	const getSubcategoryTexture = (): string | undefined => {
 		if (!config.subcategory || config.subcategory === "skip") return undefined;
 		const subcategory = MODEL_SUBCATEGORIES.find(s => s.id === config.subcategory);
@@ -73,49 +65,27 @@ export default function CalculatorPage() {
 	};
 
 	return (
-		<main className="min-h-screen">
-			{/* Hero Section */}
-			<section className="pt-32 md:pt-44 bg-linear-to-b from-muted/50 via-muted/30 to-transparent">
-				<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
+		<>
+			<main className="min-h-screen pb-24">
+				{/* Hero Section */}
+				<section className="pt-32 md:pt-44 bg-linear-to-b from-muted/50 via-muted/30 to-transparent">
+					<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
+						<span className="bg-primary/20 px-4 py-2 rounded-full text-primary/90">
+							How much For the Fish
+						</span>
+						<h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
+							Custom Aquarium Background Calculator
+						</h1>
+						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto leading-relaxed">
+							Configure your perfect 3D background in real-time. Adjust dimensions, choose materials,
+							get an instant price estimate.
+						</p>
+					</div>
+				</section>
 
-					<span className="bg-primary/20 px-4 py-2 rounded-full text-primary/90">
-						How much for the Fish?
-					</span>
-					<h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
-						Custom Aquarium Background Calculator
-					</h1>
-					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto leading-relaxed">
-						Configure your perfect 3D background in real-time. Adjust dimensions, choose materials,
-						get an instant price estimate. We'll reach out for more details.
-					</p>
-
-					{/* Progress bar */}
-					{completionPercent > 0 && completionPercent < 100 && (
-						<div className="max-w-md mx-auto pt-4">
-							<div className="flex items-center justify-between text-sm mb-2">
-								<span className="text-muted-foreground font-display font-light">
-									Configuration Progress
-								</span>
-								<span className="text-primary font-display font-medium">
-									{Math.round(completionPercent)}%
-								</span>
-							</div>
-							<div className="h-2 bg-muted rounded-full overflow-hidden">
-								<div
-									className="h-full bg-primary transition-all duration-500"
-									style={{ width: `${completionPercent}%` }}
-								/>
-							</div>
-						</div>
-					)}
-				</div>
-			</section>
-
-			{/* Main Content - 2 Column Layout */}
-			<section className="py-12">
-				<div className="container px-4 max-w-7xl mx-auto">
-					<div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
-						{/* Left Column - Configuration Steps */}
+				{/* Main Content - Full width, layout handles margin */}
+				<section className="py-12">
+					<div className="container px-4 max-w-6xl mx-auto">
 						<div className="space-y-0">
 							{/* Step 1: Model Selection */}
 							<ModelCategoryGrid
@@ -123,11 +93,10 @@ export default function CalculatorPage() {
 								onSelect={(category) => setConfig({
 									...config,
 									modelCategory: category,
-									subcategory: null, // Reset subcategory when category changes
+									subcategory: null,
 								})}
 							/>
 
-							{/* Only show remaining steps if model is selected */}
 							{config.modelCategory && (
 								<>
 									{/* Step 1.5: Subcategory Selection (if applicable) */}
@@ -180,14 +149,13 @@ export default function CalculatorPage() {
 
 									{/* CTA Section */}
 									<section className="py-12">
-										<div className="max-w-2xl p-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border-2 border-primary/20">
+										<div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border-2 border-primary/20">
 											<div className="space-y-6 text-center">
 												<h2 className="text-3xl font-display font-light">
 													Ready to Get Your Custom Quote?
 												</h2>
 												<p className="text-muted-foreground font-display font-light text-lg">
 													Submit your configuration and receive a detailed quote within 24 hours.
-													No obligation to purchase.
 												</p>
 
 												<Button
@@ -212,42 +180,44 @@ export default function CalculatorPage() {
 								</>
 							)}
 						</div>
-
-						{/* Right Column - Sticky Sidebar */}
-						{config.modelCategory && (
-							<StickyPanel
-								dimensions={config.dimensions}
-								unit={config.unit}
-								estimate={estimate}
-								onUnitToggle={(unit) => setConfig({ ...config, unit })}
-								onDimensionsChange={(dimensions) => setConfig({ ...config, dimensions })}
-								backgroundTexture={selectedCategory?.textureUrl}
-								subcategoryTexture={getSubcategoryTexture()}
-							/>
-						)}
 					</div>
-				</div>
-			</section>
+				</section>
 
-			{/* Trust Signals */}
-			<section className="py-16 bg-accent/5 border-y">
-				<div className="container px-4 max-w-5xl mx-auto">
-					<div className="grid md:grid-cols-3 gap-8 text-center">
-						<div className="space-y-2">
-							<div className="text-4xl font-display font-light text-primary">24h</div>
-							<p className="text-sm text-muted-foreground font-display">Quote Response Time</p>
-						</div>
-						<div className="space-y-2">
-							<div className="text-4xl font-display font-light text-primary">20+</div>
-							<p className="text-sm text-muted-foreground font-display">Years Experience</p>
-						</div>
-						<div className="space-y-2">
-							<div className="text-4xl font-display font-light text-primary">100%</div>
-							<p className="text-sm text-muted-foreground font-display">Handcrafted</p>
+				{/* Trust Signals */}
+				<section className="py-16 bg-accent/5 border-y">
+					<div className="container px-4 max-w-5xl mx-auto">
+						<div className="grid md:grid-cols-3 gap-8 text-center">
+							<div className="space-y-2">
+								<div className="text-4xl font-display font-light text-primary">24h</div>
+								<p className="text-sm text-muted-foreground font-display">Quote Response Time</p>
+							</div>
+							<div className="space-y-2">
+								<div className="text-4xl font-display font-light text-primary">20+</div>
+								<p className="text-sm text-muted-foreground font-display">Years Experience</p>
+							</div>
+							<div className="space-y-2">
+								<div className="text-4xl font-display font-light text-primary">100%</div>
+								<p className="text-sm text-muted-foreground font-display">Handcrafted</p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</section>
+				</section>
+			</main>
+
+			{/* Progress Bar - thin bar at bottom */}
+			{config.modelCategory && (
+				<ProgressBar completionPercent={completionPercent} />
+			)}
+
+			{/* Sticky Calculator - sits ON TOP of progress bar */}
+			{config.modelCategory && (
+				<StickyCalculator
+					dimensions={config.dimensions}
+					estimate={estimate}
+					backgroundTexture={selectedCategory?.textureUrl}
+					subcategoryTexture={getSubcategoryTexture()}
+				/>
+			)}
 
 			{/* Quote Modal */}
 			<QuoteModal
@@ -257,6 +227,14 @@ export default function CalculatorPage() {
 				onClose={() => setIsModalOpen(false)}
 				onSubmit={handleQuoteSubmit}
 			/>
-		</main>
+		</>
+	);
+}
+
+export default function CalculatorPage() {
+	return (
+		<UnitProvider>
+			<CalculatorContent />
+		</UnitProvider>
 	);
 }

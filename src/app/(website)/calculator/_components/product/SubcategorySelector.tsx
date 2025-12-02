@@ -1,8 +1,8 @@
 // src/app/(website)/calculator/_components/product/SubcategorySelector.tsx
 "use client";
 
-import Image from "next/image";
-import { getSubcategories } from "../../_data/model-categories";
+import { getSubcategories, MODEL_CATEGORIES } from "../../_data/model-categories";
+import { ModelCard } from "./ModelCard";
 import type { ModelCategory } from "../../calculator-types";
 
 interface SubcategorySelectorProps {
@@ -13,6 +13,7 @@ interface SubcategorySelectorProps {
 
 export function SubcategorySelector({ categoryId, selected, onSelect }: SubcategorySelectorProps) {
 	const subcategories = getSubcategories(categoryId);
+	const category = MODEL_CATEGORIES.find(c => c.id === categoryId);
 
 	if (subcategories.length === 0) {
 		return null;
@@ -31,66 +32,44 @@ export function SubcategorySelector({ categoryId, selected, onSelect }: Subcateg
 
 			<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
 				{subcategories.map((sub) => (
-					<button
+					<ModelCard
 						key={sub.id}
+						id={sub.id}
+						name={sub.name}
+						description="Slim Amazonian design with tree trunk motifs" // Generic desc for subcategories
+						categoryName={category?.name.split(" - ")[0]} // e.g., "E Models"
+						image={sub.imageUrl}
+						baseRatePerM2={category?.baseRatePerM2 ?? 260}
+						isSelected={selected === sub.id}
 						onClick={() => onSelect(sub.id)}
-						className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 ${selected === sub.id
-								? "border-primary bg-primary/5 scale-[1.02]"
-								: "border-border hover:border-primary/50 hover:shadow-lg"
-							}`}
-					>
-						{/* Image */}
-						<div className="relative aspect-square bg-muted overflow-hidden">
-							<Image
-								src={sub.imageUrl}
-								alt={sub.name}
-								fill
-								className="object-cover transition-transform duration-500 group-hover:scale-110"
-								sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-							/>
-
-							{/* Selected badge */}
-							{selected === sub.id && (
-								<div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center z-10">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="14"
-										height="14"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="3"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path d="M20 6 9 17l-5-5" />
-									</svg>
-								</div>
-							)}
-						</div>
-
-						{/* Label */}
-						<div className="p-3 text-center">
-							<h3 className={`text-sm font-display font-medium transition-colors ${selected === sub.id ? "text-primary" : "group-hover:text-primary"
-								}`}>
-								{sub.name}
-							</h3>
-						</div>
-					</button>
+					/>
 				))}
 			</div>
 
 			{/* Skip button - allow users to skip subcategory selection */}
 			{!selected && (
-				<div className="p-4 bg-accent/5 rounded-xl border text-center">
+				<div className="p-6 bg-accent/5 rounded-xl border text-center space-y-3">
 					<p className="text-sm text-muted-foreground font-display font-light">
 						💡 Not sure which design? Skip this step and we'll help you choose during the quote process.
 					</p>
 					<button
 						onClick={() => onSelect("skip")}
-						className="mt-3 text-sm font-display font-medium text-primary hover:underline"
+						className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full hover:bg-primary/90 font-display font-medium transition-colors"
 					>
-						Skip Design Selection →
+						Skip Design Selection
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						>
+							<path d="M5 12h14M12 5l7 7-7 7" />
+						</svg>
 					</button>
 				</div>
 			)}

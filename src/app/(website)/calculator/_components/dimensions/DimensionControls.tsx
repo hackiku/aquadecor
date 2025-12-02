@@ -1,27 +1,19 @@
 // src/app/(website)/calculator/_components/dimensions/DimensionControls.tsx
 
-// Dimension controls - Width × Height × Depth inputs
-
 "use client";
 
 import { Slider } from "~/components/ui/slider";
-import type { Dimensions, Unit } from "../../calculator-types";
-import { cmToInch } from "../../_hooks/useQuoteEstimate";
+import { useUnitConverter } from "../../_context/UnitContext";
+import type { Dimensions } from "../../calculator-types";
 
 interface DimensionControlsProps {
 	dimensions: Dimensions;
-	unit: Unit;
+	unit: "cm" | "inch"; // Keep for compatibility but will use context
 	onChange: (dimensions: Dimensions) => void;
 }
 
-export function DimensionControls({ dimensions, unit, onChange }: DimensionControlsProps) {
-	// Display value in selected unit
-	const displayValue = (cm: number) => {
-		if (unit === "inch") {
-			return `${cmToInch(cm)}"`;
-		}
-		return `${cm}cm`;
-	};
+export function DimensionControls({ dimensions, onChange }: DimensionControlsProps) {
+	const { format } = useUnitConverter();
 
 	return (
 		<section className="py-12 space-y-8">
@@ -48,7 +40,7 @@ export function DimensionControls({ dimensions, unit, onChange }: DimensionContr
 							</p>
 						</div>
 						<span className="text-lg font-mono font-semibold">
-							{displayValue(dimensions.width)}
+							{format(dimensions.width)}
 						</span>
 					</div>
 					<Slider
@@ -76,7 +68,7 @@ export function DimensionControls({ dimensions, unit, onChange }: DimensionContr
 							</p>
 						</div>
 						<span className="text-lg font-mono font-semibold">
-							{displayValue(dimensions.height)}
+							{format(dimensions.height)}
 						</span>
 					</div>
 					<Slider
@@ -104,7 +96,7 @@ export function DimensionControls({ dimensions, unit, onChange }: DimensionContr
 							</p>
 						</div>
 						<span className="text-lg font-mono font-semibold">
-							{displayValue(dimensions.depth)}
+							{format(dimensions.depth)}
 						</span>
 					</div>
 					<Slider

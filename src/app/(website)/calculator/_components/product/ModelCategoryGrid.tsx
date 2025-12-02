@@ -2,10 +2,9 @@
 
 "use client";
 
-import Image from "next/image";
 import { MODEL_CATEGORIES } from "../../_data/model-categories";
+import { ModelCard } from "./ModelCard";
 import type { ModelCategory } from "../../calculator-types";
-import { formatEUR } from "../../_hooks/useQuoteEstimate";
 
 interface ModelCategoryGridProps {
 	selected: ModelCategory | null;
@@ -26,88 +25,16 @@ export function ModelCategoryGrid({ selected, onSelect }: ModelCategoryGridProps
 
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{MODEL_CATEGORIES.map((model) => (
-					<button
+					<ModelCard
 						key={model.id}
+						id={model.id}
+						name={model.name}
+						description={model.description}
+						image={model.image}
+						baseRatePerM2={model.baseRatePerM2}
+						isSelected={selected === model.id}
 						onClick={() => onSelect(model.id)}
-						className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 text-left ${selected === model.id
-								? "border-primary bg-primary/5 scale-[1.02]"
-								: "border-border hover:border-primary/50 hover:shadow-lg"
-							}`}
-					>
-						{/* Image */}
-						<div className="relative h-48 bg-muted overflow-hidden">
-							<Image
-								src={model.image}
-								alt={model.name}
-								fill
-								className="object-cover transition-transform duration-500 group-hover:scale-110"
-								onError={(e) => {
-									// Fallback to placeholder if CDN image fails
-									const target = e.target as HTMLImageElement;
-									target.src = "/media/images/3d-backgrounds_500px.webp";
-								}}
-							/>
-
-							{/* Selected badge */}
-							{selected === model.id && (
-								<div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="3"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									>
-										<path d="M20 6 9 17l-5-5" />
-									</svg>
-								</div>
-							)}
-
-							{/* Price tag - always visible */}
-							<div className="absolute bottom-3 left-3 px-3 py-1.5 bg-black/70 backdrop-blur-sm rounded-lg">
-								<p className="text-xs text-white font-display font-light">
-									From {formatEUR(model.baseRatePerM2)}/m²
-								</p>
-							</div>
-						</div>
-
-						{/* Content - Compact by default, detailed on hover */}
-						<div className="p-5 space-y-2">
-							<h3 className={`text-lg font-display font-medium transition-colors ${selected === model.id ? "text-primary" : "group-hover:text-primary"
-								}`}>
-								{model.name}
-							</h3>
-
-							{/* Description - Only show on hover */}
-							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-								{model.description}
-							</p>
-
-							{/* Min dimensions - Only show on hover */}
-							<div className="pt-2 flex items-center gap-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="14"
-									height="14"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<rect width="18" height="18" x="3" y="3" rx="2" />
-								</svg>
-								<span className="font-display font-light">
-									Min: {model.minDimensions.widthCm}×{model.minDimensions.heightCm}cm
-								</span>
-							</div>
-						</div>
-					</button>
+					/>
 				))}
 			</div>
 
