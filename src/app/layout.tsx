@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "~/components/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
+import { ConditionalNav } from "~/components/navigation/ConditionalNav";
 import { NavWithBanner } from "~/components/navigation/NavWithBanner";
 
 export const metadata: Metadata = {
@@ -35,13 +36,10 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						{/* Nav with dynamic banner */}
-						<NavWithBanner />
-
-						{/* Content respects nav height via CSS variable */}
-						<div style={{ paddingTop: 'var(--nav-height)' }}>
+						{/* Conditionally render nav based on route (client detects, server renders nav) */}
+						<ConditionalNav navContent={<NavWithBanner />}>
 							{children}
-						</div>
+						</ConditionalNav>
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>

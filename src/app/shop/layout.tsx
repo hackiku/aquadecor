@@ -9,10 +9,10 @@ export default function ShopLayout({
 }) {
 	return (
 		<>
-			{/* Sticky breadcrumbs - positioned below nav using CSS variable */}
+			{/* Sticky breadcrumbs container - no gap, positioned right below nav */}
 			<div
-				className="sticky z-40 bg-background border-b"
-				style={{ top: 'var(--nav-height)' }}
+				className="sticky z-30 bg-background/95 backdrop-blur-sm border-b"
+				style={{ top: 'calc(var(--nav-height) - 64px)' }}
 			>
 				<div className="px-4 max-w-7xl mx-auto py-3">
 					{/* TODO: Add Breadcrumbs component here when needed */}

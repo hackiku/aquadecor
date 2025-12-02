@@ -25,14 +25,14 @@ export function MinimalBanner({
 	return (
 		<div
 			style={{ backgroundColor, color: textColor }}
-			className="relative w-full"
+			className="relative w-full h-12"
 		>
-			<div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
-				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-center w-full gap-2 text-center">
-					<p className="font-display font-light text-sm">
+			<div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center">
+				<div className="flex items-center justify-center w-full gap-2 text-sm">
+					<p className="font-display font-light">
 						{customMessage || `${name} - ${discountPercent}% off with code`}
 					</p>
-					<code className="font-mono font-bold text-sm bg-white/20 px-3 py-0.5 rounded">
+					<code className="font-mono font-bold bg-white/20 px-2 py-0.5 rounded text-xs">
 						{discountCode}
 					</code>
 				</div>

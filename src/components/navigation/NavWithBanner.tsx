@@ -5,24 +5,9 @@ import { NavWithBannerClient } from "./NavWithBannerClient";
 export async function NavWithBanner() {
 	const activeSale = await getActiveSale();
 
-	// Calculate heights based on banner type
-	const getBannerHeight = () => {
-		if (!activeSale) return 0;
-
-		switch (activeSale.bannerType) {
-			case "FlashSaleBanner":
-				return 56; // h-14 - taller for urgency
-			case "MinimalBanner":
-				return 40; // h-10 - shorter for subtlety
-			case "CountdownBanner":
-				return 52; // h-13 - countdown needs space
-			default:
-				return 48; // h-12 - standard
-		}
-	};
-
+	// All banners are roughly same height - keep it simple
 	const navHeight = 64; // h-16
-	const bannerHeight = getBannerHeight();
+	const bannerHeight = activeSale ? 48 : 0; // h-12 or nothing
 	const totalHeight = navHeight + bannerHeight;
 
 	return (

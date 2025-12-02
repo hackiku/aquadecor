@@ -59,9 +59,9 @@ export function CountdownBanner({
 	return (
 		<div
 			style={{ backgroundColor, color: textColor }}
-			className="relative w-full"
+			className="relative w-full h-12"
 		>
-			<div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center gap-y-2 md:flex-row transition-all duration-150">
+			<div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-y-2 md:flex-row">
 				<div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-y-2">
 
 					{/* Message */}
@@ -70,14 +70,14 @@ export function CountdownBanner({
 					</p>
 
 					{/* Code */}
-					<p className="text-center md:text-left">
+					<p className="text-center md:text-left text-sm">
 						Use code <strong>{discountCode}</strong> for {discountPercent}% off
 					</p>
 
 					{/* Countdown */}
 					<div className="flex gap-x-2 items-center justify-center md:justify-end">
-						<div className="text-sm lg:w-[200px] text-center font-medium bg-white/20 px-3 py-1 rounded-full">
-							Ends in: {formatTime(timeLeft.days)}d {formatTime(timeLeft.hours)}h{" "}
+						<div className="text-xs font-medium bg-white/20 px-3 py-1 rounded-full">
+							{formatTime(timeLeft.days)}d {formatTime(timeLeft.hours)}h{" "}
 							{formatTime(timeLeft.minutes)}m {formatTime(timeLeft.seconds)}s
 						</div>
 
@@ -88,7 +88,7 @@ export function CountdownBanner({
 								className="hidden md:inline-block hover:opacity-70 transition-opacity"
 								aria-label="Dismiss banner"
 							>
-								<X className="w-5 h-5" />
+								<X className="w-4 h-4" />
 							</button>
 						)}
 					</div>
@@ -101,7 +101,7 @@ export function CountdownBanner({
 						className="md:hidden hover:opacity-70 transition-opacity"
 						aria-label="Dismiss banner"
 					>
-						<X className="w-5 h-5" />
+						<X className="w-4 h-4" />
 					</button>
 				)}
 			</div>

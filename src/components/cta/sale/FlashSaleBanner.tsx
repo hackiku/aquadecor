@@ -69,63 +69,47 @@ export function FlashSaleBanner({
 	return (
 		<div
 			style={{ backgroundColor, color: textColor }}
-			className="relative w-full"
+			className="relative w-full h-12"
 		>
-			<div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-y-2 md:flex-row">
-				<div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-y-2 gap-x-4">
+			<div className="max-w-7xl mx-auto px-4 h-full flex justify-between items-center gap-x-4">
+				<div className="flex flex-row items-center justify-between w-full gap-x-4">
 
 					{/* Flash icon + Message */}
-					<div className="flex items-center gap-2 justify-center md:justify-start">
+					<div className="flex items-center gap-2">
 						<Zap
-							className={`w-5 h-5 fill-current transition-transform ${pulse ? "scale-125" : "scale-100"
+							className={`w-4 h-4 fill-current transition-transform ${pulse ? "scale-125" : "scale-100"
 								}`}
 						/>
-						<p className="font-display font-medium">
-							{customMessage || `⚡ ${name} - ${discountPercent}% OFF`}
+						<p className="font-display font-medium text-sm hidden md:block">
+							{customMessage || `${name}`}
 						</p>
 					</div>
 
 					{/* Code */}
-					<p className="text-center md:text-left font-medium">
-						Code: <strong className="text-lg">{discountCode}</strong>
+					<p className="text-sm font-medium">
+						Code: <strong>{discountCode}</strong>
 					</p>
 
-					{/* Urgent countdown */}
-					<div className="flex gap-x-2 items-center justify-center md:justify-end">
-						<div className="flex gap-1 items-center bg-white/20 px-4 py-1.5 rounded-full font-bold">
-							<span className="text-lg">{formatTime(timeLeft.hours)}</span>
-							<span className="text-xs">h</span>
-							<span className="mx-0.5">:</span>
-							<span className="text-lg">{formatTime(timeLeft.minutes)}</span>
-							<span className="text-xs">m</span>
-							<span className="mx-0.5">:</span>
-							<span className="text-lg">{formatTime(timeLeft.seconds)}</span>
-							<span className="text-xs">s</span>
+					{/* Countdown */}
+					<div className="flex gap-x-2 items-center">
+						<div className="flex gap-1 items-center bg-white/20 px-3 py-1 rounded-full text-xs font-bold">
+							<span>{formatTime(timeLeft.hours)}</span>:
+							<span>{formatTime(timeLeft.minutes)}</span>:
+							<span>{formatTime(timeLeft.seconds)}</span>
 						</div>
 
-						{/* Desktop close */}
+						{/* Close */}
 						{onDismiss && (
 							<button
 								onClick={onDismiss}
-								className="hidden md:inline-block hover:opacity-70 transition-opacity"
+								className="hover:opacity-70 transition-opacity"
 								aria-label="Dismiss banner"
 							>
-								<X className="w-5 h-5" />
+								<X className="w-4 h-4" />
 							</button>
 						)}
 					</div>
 				</div>
-
-				{/* Mobile close */}
-				{onDismiss && (
-					<button
-						onClick={onDismiss}
-						className="md:hidden hover:opacity-70 transition-opacity"
-						aria-label="Dismiss banner"
-					>
-						<X className="w-5 h-5" />
-					</button>
-				)}
 			</div>
 		</div>
 	);

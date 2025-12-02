@@ -103,7 +103,7 @@ export function NavWithBannerClient({ activeSale, bannerHeight }: NavWithBannerC
 
 	return (
 		<>
-			{/* Banner - Always visible at top */}
+			{/* Banner - Always visible at top - z-50 */}
 			{activeSale && (
 				<div className="fixed top-0 left-0 right-0 z-50">
 					<AnimatePresence>
@@ -122,12 +122,12 @@ export function NavWithBannerClient({ activeSale, bannerHeight }: NavWithBannerC
 				</div>
 			)}
 
-			{/* Nav - Slides up on scroll, positioned below banner */}
+			{/* Nav - Slides up ABOVE viewport, positioned below banner - z-40 */}
 			<motion.div
-				className="fixed left-0 right-0 z-50"
+				className="fixed left-0 right-0 z-40"
 				style={{ top: bannerHeight }}
 				animate={{
-					y: isNavVisible ? 0 : -64,
+					y: isNavVisible ? 0 : -80, // Slide completely off-screen (64px + 16px buffer)
 				}}
 				transition={{
 					type: "spring",
