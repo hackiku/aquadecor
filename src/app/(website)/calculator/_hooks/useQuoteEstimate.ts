@@ -3,7 +3,7 @@
 // Price calculation hook - pure client-side for instant updates
 
 import { useMemo } from "react";
-import type { QuoteConfig, PriceEstimate, ModelCategory } from "../calculator-types.ts";
+import type { QuoteConfig, PriceEstimate, ModelCategory } from "../calculator-types";
 
 // Pricing tiers per model category (EUR per m²)
 const MODEL_PRICING: Record<ModelCategory, number> = {
@@ -57,8 +57,8 @@ export function useQuoteEstimate(config: QuoteConfig): PriceEstimate {
 			sidePanelsCost = sidePanelArea * baseRate * 2;
 		}
 
-		// Filtration cutout (fixed fee)
-		const filtrationCost = config.filtrationCutout ? 50 : 0;
+		// Filtration cutout (fixed fee - €50 per cutout)
+		const filtrationCost = config.filtrationType !== "none" ? 50 : 0;
 
 		// Subtotal
 		const subtotal = basePrice + flexibilityUpcharge + sidePanelsCost + filtrationCost;

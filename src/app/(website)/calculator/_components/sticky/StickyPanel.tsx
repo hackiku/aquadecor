@@ -13,6 +13,8 @@ interface StickyPanelProps {
 	estimate: PriceEstimate;
 	onUnitToggle: (unit: Unit) => void;
 	onDimensionsChange: (dimensions: Dimensions) => void;
+	backgroundTexture?: string; // CDN URL for category texture
+	subcategoryTexture?: string; // CDN URL for subcategory texture
 }
 
 export function StickyPanel({
@@ -20,6 +22,8 @@ export function StickyPanel({
 	unit,
 	estimate,
 	onUnitToggle,
+	backgroundTexture,
+	subcategoryTexture,
 }: StickyPanelProps) {
 	const [isMinimized, setIsMinimized] = useState(false);
 
@@ -34,7 +38,11 @@ export function StickyPanel({
 				<div className="relative w-32 h-32 rounded-2xl overflow-hidden border-2 border-primary/50 shadow-2xl transition-all duration-300 hover:scale-110 hover:border-primary">
 					{/* Tiny 3D scene */}
 					<div className="w-full h-full">
-						<AquariumScene {...dimensions} />
+						<AquariumScene
+							{...dimensions}
+							backgroundTexture={backgroundTexture}
+							subcategoryTexture={subcategoryTexture}
+						/>
 					</div>
 
 					{/* Overlay with expand hint */}
@@ -79,8 +87,8 @@ export function StickyPanel({
 						<button
 							onClick={() => onUnitToggle("cm")}
 							className={`px-2 py-1 rounded text-xs font-display font-medium transition-all ${unit === "cm"
-									? "bg-primary text-white"
-									: "bg-muted/50 text-muted-foreground hover:bg-muted"
+								? "bg-primary text-white"
+								: "bg-muted/50 text-muted-foreground hover:bg-muted"
 								}`}
 						>
 							cm
@@ -88,8 +96,8 @@ export function StickyPanel({
 						<button
 							onClick={() => onUnitToggle("inch")}
 							className={`px-2 py-1 rounded text-xs font-display font-medium transition-all ${unit === "inch"
-									? "bg-primary text-white"
-									: "bg-muted/50 text-muted-foreground hover:bg-muted"
+								? "bg-primary text-white"
+								: "bg-muted/50 text-muted-foreground hover:bg-muted"
 								}`}
 						>
 							in
@@ -104,6 +112,8 @@ export function StickyPanel({
 							width={dimensions.width}
 							height={dimensions.height}
 							depth={dimensions.depth}
+							backgroundTexture={backgroundTexture}
+							subcategoryTexture={subcategoryTexture}
 						/>
 					</div>
 

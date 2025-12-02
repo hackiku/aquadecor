@@ -18,6 +18,16 @@ export type FlexibilityType = "solid" | "flexible";
 export type SidePanelsType = "none" | "single" | "both";
 export type Unit = "cm" | "inch";
 
+// Filtration types - expanded from boolean to specific filter models
+export type FiltrationType =
+	| "none"
+	| "eheim-classic"
+	| "jbl-cristalprofi"
+	| "juwel-bioflow"
+	| "fluval"
+	| "tetra-ex"
+	| "custom"; // For "other" with custom dimensions
+
 export interface Dimensions {
 	width: number;   // cm
 	height: number;  // cm
@@ -27,6 +37,7 @@ export interface Dimensions {
 export interface QuoteConfig {
 	// Product selection
 	modelCategory: ModelCategory | null;
+	subcategory?: string | null; // e.g., "e-3", "e-4" for E-models
 	flexibility: FlexibilityType;
 
 	// Dimensions
@@ -37,8 +48,9 @@ export interface QuoteConfig {
 	sidePanels: SidePanelsType;
 	sidePanelWidth?: number; // cm (if single or both selected)
 
-	// Future: filtration cutout
-	filtrationCutout?: boolean;
+	// Filtration
+	filtrationType: FiltrationType;
+	filtrationCustomNotes?: string; // If type is "custom"
 
 	// Shipping
 	country: string; // Country code or name
@@ -66,9 +78,11 @@ export interface ModelCategoryMeta {
 	name: string;
 	description: string;
 	baseRatePerM2: number;     // EUR per m²
-	image: string;             // CDN URL
+	image: string;             // CDN URL for card display
+	textureUrl?: string;       // CDN URL for R3F texture (optional, smaller res)
 	minDimensions: {
 		widthCm: number;
 		heightCm: number;
 	};
+	hasSubcategories?: boolean; // Flag for progressive disclosure
 }

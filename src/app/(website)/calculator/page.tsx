@@ -5,18 +5,22 @@
 import { useState } from "react";
 import { StickyPanel } from "./_components/sticky/StickyPanel";
 import { ModelCategoryGrid } from "./_components/product/ModelCategoryGrid";
+import { SubcategorySelector } from "./_components/product/SubcategorySelector";
 import { DimensionControls } from "./_components/dimensions/DimensionControls";
 import { FlexibilityToggle } from "./_components/options/FlexibilityToggle";
 import { SidePanelsSelector } from "./_components/options/SidePanelsSelector";
+import { FiltrationSelector } from "./_components/options/FiltrationSelector";
 import { CountrySelect } from "./_components/shipping/CountrySelect";
 import { QuoteModal } from "./_components/quote/QuoteModal";
 import { useQuoteEstimate } from "./_hooks/useQuoteEstimate";
+import { hasSubcategories, MODEL_CATEGORIES, MODEL_SUBCATEGORIES } from "./_data/model-categories";
 import type { QuoteConfig } from "./calculator-types";
 import { Button } from "~/components/ui/button";
 
 // Default configuration
 const DEFAULT_CONFIG: QuoteConfig = {
 	modelCategory: null,
+	subcategory: null,
 	flexibility: "solid",
 	dimensions: {
 		width: 100,
@@ -25,6 +29,7 @@ const DEFAULT_CONFIG: QuoteConfig = {
 	},
 	unit: "cm",
 	sidePanels: "none",
+	filtrationType: "none",
 	country: "",
 };
 
@@ -36,6 +41,8 @@ export default function CalculatorPage() {
 	// Calculate completion percentage for progress indicator
 	const completionSteps = [
 		config.modelCategory !== null, // Model selected
+		// If category has subcategories, require subcategory selection (unless skipped)
+		!config.modelCategory || !hasSubcategories(config.modelCategory) || config.subcategory !== null,
 		config.country !== "",          // Country selected
 	];
 	const completionPercent = (completionSteps.filter(Boolean).length / completionSteps.length) * 100;
@@ -55,14 +62,24 @@ export default function CalculatorPage() {
 
 	const canRequestQuote = config.modelCategory !== null && config.country !== "";
 
+	// Get selected category metadata for texture URLs
+	const selectedCategory = MODEL_CATEGORIES.find(c => c.id === config.modelCategory);
+
+	// Get subcategory texture URL if subcategory is selected
+	const getSubcategoryTexture = (): string | undefined => {
+		if (!config.subcategory || config.subcategory === "skip") return undefined;
+		const subcategory = MODEL_SUBCATEGORIES.find(s => s.id === config.subcategory);
+		return subcategory?.textureUrl;
+	};
+
 	return (
 		<main className="min-h-screen">
 			{/* Hero Section */}
 			<section className="pt-32 md:pt-44 bg-linear-to-b from-muted/50 via-muted/30 to-transparent">
 				<div className="container px-4 max-w-7xl mx-auto text-center space-y-6">
-					
+
 					<span className="bg-primary/20 px-4 py-2 rounded-full text-primary/90">
-						How much For the Fish
+						How much for the Fish?
 					</span>
 					<h1 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 						Custom Aquarium Background Calculator
@@ -103,12 +120,27 @@ export default function CalculatorPage() {
 							{/* Step 1: Model Selection */}
 							<ModelCategoryGrid
 								selected={config.modelCategory}
-								onSelect={(category) => setConfig({ ...config, modelCategory: category })}
+								onSelect={(category) => setConfig({
+									...config,
+									modelCategory: category,
+									subcategory: null, // Reset subcategory when category changes
+								})}
 							/>
 
 							{/* Only show remaining steps if model is selected */}
 							{config.modelCategory && (
 								<>
+									{/* Step 1.5: Subcategory Selection (if applicable) */}
+									{hasSubcategories(config.modelCategory) && (
+										<SubcategorySelector
+											categoryId={config.modelCategory}
+											selected={config.subcategory}
+											onSelect={(subcategoryId) =>
+												setConfig({ ...config, subcategory: subcategoryId })
+											}
+										/>
+									)}
+
 									{/* Step 2: Dimensions */}
 									<DimensionControls
 										dimensions={config.dimensions}
@@ -131,7 +163,16 @@ export default function CalculatorPage() {
 										}
 									/>
 
-									{/* Step 5: Shipping Country */}
+									{/* Step 5: Filtration Cutout */}
+									<FiltrationSelector
+										selected={config.filtrationType}
+										customNotes={config.filtrationCustomNotes}
+										onChange={(filtrationType, customNotes) =>
+											setConfig({ ...config, filtrationType, filtrationCustomNotes: customNotes })
+										}
+									/>
+
+									{/* Step 6: Shipping Country */}
 									<CountrySelect
 										selected={config.country}
 										onChange={(country) => setConfig({ ...config, country })}
@@ -180,6 +221,8 @@ export default function CalculatorPage() {
 								estimate={estimate}
 								onUnitToggle={(unit) => setConfig({ ...config, unit })}
 								onDimensionsChange={(dimensions) => setConfig({ ...config, dimensions })}
+								backgroundTexture={selectedCategory?.textureUrl}
+								subcategoryTexture={getSubcategoryTexture()}
 							/>
 						)}
 					</div>

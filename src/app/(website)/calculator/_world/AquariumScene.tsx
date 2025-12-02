@@ -2,25 +2,95 @@
 
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import * as THREE from "three";
 
 interface AquariumSceneProps {
 	width: number;
 	height: number;
 	depth: number;
+	backgroundTexture?: string; // CDN URL for background texture
+	subcategoryTexture?: string; // CDN URL for subcategory texture (higher priority)
 }
 
-function AquariumTank({ width = 100, height = 50, depth = 40 }: AquariumSceneProps) {
+function BackgroundPlane({ width, height, depth, textureUrl }: {
+	width: number;
+	height: number;
+	depth: number;
+	textureUrl?: string;
+}) {
+	// Convert cm to three.js units
+	const w = width / 10;
+	const h = height / 10;
+	const d = depth / 10;
+
+	// Try to load texture, fallback to solid color if fails
+	let texture: THREE.Texture | null = null;
+
+	try {
+		if (textureUrl) {
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			texture = useLoader(THREE.TextureLoader, textureUrl);
+			// Configure texture
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			// Adjust repeat based on aspect ratio to prevent stretching
+			const aspectRatio = w / h;
+			texture.repeat.set(aspectRatio * 0.5, 0.5);
+		}
+	} catch (error) {
+		console.warn("Failed to load background texture:", error);
+		texture = null;
+	}
+
+	return (
+		<mesh position={[0, 0, -d / 2 + 0.02]} rotation={[0, 0, 0]}>
+			<planeGeometry args={[w * 0.95, h * 0.9]} />
+			{texture ? (
+				<meshStandardMaterial
+					map={texture}
+					roughness={0.8}
+					metalness={0.1}
+				/>
+			) : (
+				<meshStandardMaterial
+					color="#6B5B4A"
+					roughness={0.9}
+					metalness={0.05}
+				/>
+			)}
+		</mesh>
+	);
+}
+
+function AquariumTank({
+	width = 100,
+	height = 50,
+	depth = 40,
+	backgroundTexture,
+	subcategoryTexture,
+}: AquariumSceneProps) {
 	// Convert cm to three.js units (divide by 10 for scale)
 	const w = width / 10;
 	const h = height / 10;
 	const d = depth / 10;
 
+	// Use subcategory texture if available, otherwise category texture
+	const activeTexture = subcategoryTexture || backgroundTexture;
+
 	return (
 		<group>
+			{/* Background texture plane - BEHIND water */}
+			<Suspense fallback={null}>
+				<BackgroundPlane
+					width={width}
+					height={height}
+					depth={depth}
+					textureUrl={activeTexture}
+				/>
+			</Suspense>
+
 			{/* Water inside tank - fills ~90% */}
 			<mesh position={[0, -h * 0.05, 0]}>
 				<boxGeometry args={[w * 0.95, h * 0.9, d * 0.95]} />
@@ -69,7 +139,13 @@ function AquariumTank({ width = 100, height = 50, depth = 40 }: AquariumScenePro
 	);
 }
 
-export function AquariumScene({ width, height, depth }: AquariumSceneProps) {
+export function AquariumScene({
+	width,
+	height,
+	depth,
+	backgroundTexture,
+	subcategoryTexture,
+}: AquariumSceneProps) {
 	const [autoRotate, setAutoRotate] = useState(true);
 
 	// Calculate volume and surface area for debug
@@ -96,7 +172,15 @@ export function AquariumScene({ width, height, depth }: AquariumSceneProps) {
 				<directionalLight position={[10, 10, 5]} intensity={0.8} />
 				<pointLight position={[-10, 5, -5]} intensity={0.3} color="#3781C2" />
 
-				<AquariumTank width={width} height={height} depth={depth} />
+				<Suspense fallback={null}>
+					<AquariumTank
+						width={width}
+						height={height}
+						depth={depth}
+						backgroundTexture={backgroundTexture}
+						subcategoryTexture={subcategoryTexture}
+					/>
+				</Suspense>
 
 				<Environment preset="apartment" />
 				<OrbitControls
@@ -146,6 +230,13 @@ export function AquariumScene({ width, height, depth }: AquariumSceneProps) {
 					</div>
 				</div>
 			</div>
+
+			{/* Texture indicator */}
+			{(backgroundTexture || subcategoryTexture) && (
+				<div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light">
+					{subcategoryTexture ? "📐 Design Preview" : "🎨 Category Preview"}
+				</div>
+			)}
 		</div>
 	);
 }

@@ -1,0 +1,1082 @@
+<section class="max-w-7xl mx-auto px-4 py-44 lg:py-48">
+	<div class="pb-20"><span
+			class="mb-4 inline-block text-sm uppercase font-semibold text-center sm:text-left text-sky-500">Price
+			calculator</span>
+		<h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold">Welcome to price calculator!</h1>
+		<p class="mt-2 text-muted-foreground">To calculate and send a request for your custom background, follow the steps
+			below. Ensure that all required measurements are accurate.</p>
+		<div role="alert"
+			class="relative w-full rounded-lg border p-4 [&amp;&gt;svg~*]:pl-7 [&amp;&gt;svg+div]:translate-y-[-3px] [&amp;&gt;svg]:absolute [&amp;&gt;svg]:left-4 [&amp;&gt;svg]:top-4 [&amp;&gt;svg]:text-foreground bg-background text-foreground mt-4 hidden lg:block">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+				stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+				class="lucide lucide-info w-4 h-4 relative">
+				<circle cx="12" cy="12" r="10"></circle>
+				<path d="M12 16v-4"></path>
+				<path d="M12 8h.01"></path>
+			</svg>
+			<h5 class="font-medium leading-none tracking-tight">Important notice</h5>
+			<div class="text-sm [&amp;_p]:leading-relaxed">If your country is not on the list, feel free to email us at <a
+					href="mailto:office@aquadecorbackgrounds.com"
+					class="underline block break-all underline-offset-1">office@aquadecorbackgrounds.com</a></div>
+		</div>
+	</div>
+	<div id="header-select" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:r6:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" class="lucide lucide-check w-6 h-6">
+							<path d="M20 6 9 17l-5-5"></path>
+						</svg></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 1 - Select measurement unit and shipping country</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:r6:" class="lg:ml-14 mt-8"
+				style="transition-duration: 0s; animation-name: none; --radix-collapsible-content-height: 316.5px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<header class="flex flex-col gap-y-6 w-full">
+						<div class="flex flex-col gap-y-2"><label
+								class="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-5">Please
+								choose between inches and centimeters</label><span class="text-muted-foreground text-sm">Dimensions and
+								all other required measurements will be calculated using the selected unit.</span><button type="button"
+								role="combobox" aria-controls="radix-:re:" aria-expanded="false" aria-autocomplete="none" dir="ltr"
+								data-state="closed"
+								class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 lg:w-[180px]"
+								aria-label="Select number"><span style="pointer-events: none;">inch</span><svg
+									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+									<path d="m6 9 6 6 6-6"></path>
+								</svg></button></div>
+						<div class="space-y-2"><label
+								class="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-display font-light text-base"
+								for="currency">Please select desired currency</label><button type="button" role="combobox"
+								aria-controls="radix-:rf:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed"
+								class="flex h-10 w-full items-center justify-between border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 rounded-2xl py-6 px-4 max-w-[200px]"
+								id="currency" aria-label="Select number"><span style="pointer-events: none;">USD</span><svg
+									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+									<path d="m6 9 6 6 6-6"></path>
+								</svg></button></div>
+						<div class="flex flex-col gap-y-2"><label
+								class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Please
+								select shipping country</label><span class="text-muted-foreground text-sm">Select the exact country
+								where you want your product shipped to ensure accurate calculation of your product cost, including
+								shipping.</span><button type="button" role="combobox" aria-controls="radix-:rg:" aria-expanded="false"
+								aria-autocomplete="none" dir="ltr" data-state="closed"
+								class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 lg:w-[280px] relative"
+								aria-label="Select number"><span style="pointer-events: none;">Armenia</span><svg
+									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+									class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+									<path d="m6 9 6 6 6-6"></path>
+								</svg></button></div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</header>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="model-select" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:r8:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" class="lucide lucide-check w-6 h-6">
+							<path d="M20 6 9 17l-5-5"></path>
+						</svg></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 2 - Select product you want to calculate</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:r8:" class="lg:ml-14 mt-8"
+				style="--radix-collapsible-content-height: 360px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<section class="">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-10 items-center mb-4">
+							<div class="pt-4 space-y-6">
+								<div class="flex flex-col space-y-2"><label
+										class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Select
+										calculable category</label><span class="text-sm text-muted-foreground">Please select calculable
+										category that you want product from.</span><button type="button" role="combobox"
+										aria-controls="radix-:rdk:" aria-expanded="false" aria-autocomplete="none" dir="ltr"
+										data-state="closed"
+										class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
+										aria-label="Select number"><span style="pointer-events: none;">K Models - Saltwater/Marine
+											Backgrounds</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+											<path d="m6 9 6 6 6-6"></path>
+										</svg></button></div>
+								<div class="flex flex-col gap-y-6">
+									<div class="flex flex-col space-y-2"><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Select
+											calculatable product</label><span class="text-sm text-muted-foreground">Please select calculable
+											product that you want to customize.</span><button type="button" role="combobox"
+											aria-controls="radix-:rek:" aria-expanded="false" aria-autocomplete="none" dir="ltr"
+											data-state="closed"
+											class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
+											aria-label="Select number"><span style="pointer-events: none;">K 3 - Marine Background</span><svg
+												xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+												class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+												<path d="m6 9 6 6 6-6"></path>
+											</svg></button></div>
+								</div>
+							</div>
+							<div
+								class="relative h-[200px] lg:h-[300px] self-end justify-items-end md:mt-6 flex items-center justify-center">
+								<img alt="Model placeholder image" loading="lazy" decoding="async" data-nimg="fill"
+									class="object-cover aspect-video" sizes="100vw"
+									srcset="/_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=640&amp;q=100 640w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=750&amp;q=100 750w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=828&amp;q=100 828w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=1080&amp;q=100 1080w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=1200&amp;q=100 1200w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=1920&amp;q=100 1920w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=2048&amp;q=100 2048w, /_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=3840&amp;q=100 3840w"
+									src="/_next/image?url=https%3A%2F%2Fcdn.aquadecorbackgrounds.com%2Faquadecor-blob%2Fk-3-marine-background.webp&amp;w=3840&amp;q=100"
+									style="position: absolute; height: 100%; width: 100%; inset: 0px; color: transparent;"></div>
+						</div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="internal-dimensions" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:r9:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" class="lucide lucide-check w-6 h-6">
+							<path d="M20 6 9 17l-5-5"></path>
+						</svg></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 3 - Internal dimensions</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:r9:" class="lg:ml-14 mt-8"
+				style="--radix-collapsible-content-height: 222px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<section class="lg:pt-10">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 mb-8">
+							<form class="pt-6 space-y-6">
+								<div class="space-y-2 flex flex-col">
+									<div class="flex gap-x-2 items-center">
+										<div class="w-4 h-4 rounded-full bg-red-500"></div><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											for=":rfa:-form-item">Enter internal length</label>
+									</div>
+									<div class="flex flex-col gap-y-2 lg:flex-row justify-between"><span
+											class="text-sm text-muted-foreground">Please enter the exact internal length of your fish
+											tank.</span><span class="text-sm font-semibold">Min. 31inch</span></div><input
+										class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-base"
+										id=":rfa:-form-item" aria-describedby=":rfa:-form-item-description" aria-invalid="false"
+										type="number" name="length" value="40">
+								</div>
+								<div class="space-y-2 flex flex-col">
+									<div class="flex gap-x-2 items-center">
+										<div class="w-4 h-4 rounded-full bg-green-500"></div><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											for=":rfb:-form-item">Enter internal height</label>
+									</div>
+									<div class="flex flex-col gap-y-2 lg:flex-row justify-between"><span
+											class="text-sm text-muted-foreground">Please enter the exact internal height of your fish
+											tank.</span><span class="text-sm font-semibold">Min. 15inch</span></div><input
+										class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-base"
+										id=":rfb:-form-item" aria-describedby=":rfb:-form-item-description" aria-invalid="false"
+										type="number" name="height" value="30">
+								</div>
+								<div class="text-muted-foreground">
+									<div class="flex flex-col sm:flex-row gap-y-4 items-start  lg:items-center gap-x-6 pb-4">
+										<div class="flex gap-x-2 items-center">
+											<div class="w-4 h-4 rounded-full bg-green-500"></div><label
+												class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Internal
+												height</label>
+										</div>
+										<div class="flex gap-x-2 items-center">
+											<div class="w-4 h-4 rounded-full bg-red-500"></div><label
+												class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Internal
+												length</label>
+										</div>
+									</div>
+								</div>
+							</form><img alt="Dimensions placeholder image" loading="lazy" width="300" height="150" decoding="async"
+								data-nimg="1" class="self-center justify-items-center mx-auto mt-8"
+								srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdimensions-placeholder.9965e286.webp&amp;w=384&amp;q=100 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdimensions-placeholder.9965e286.webp&amp;w=640&amp;q=100 2x"
+								src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdimensions-placeholder.9965e286.webp&amp;w=640&amp;q=100"
+								style="color: transparent;">
+						</div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="side-panels" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:ra:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" class="lucide lucide-check w-6 h-6">
+							<path d="M20 6 9 17l-5-5"></path>
+						</svg></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 4 - Backgrounds with side panels</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:ra:" class="lg:ml-14 mt-8"
+				style="--radix-collapsible-content-height: 234px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<section class="lg:pt-10">
+						<div class="grid grid-cols-1 gap-y-8 md:grid-cols-2 gap-x-8 items-center mb-8">
+							<div>
+								<form class="space-y-4">
+									<div class="space-y-2 flex flex-col mt-4"><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											for=":rfd:-form-item">Choose side panel</label><span class="text-sm text-muted-foreground">Please
+											select a side panel if desired. You may also complete the rest of the form, or skip if not needed.
+										</span><button type="button" role="combobox" aria-controls="radix-:rfe:" aria-expanded="false"
+											aria-autocomplete="none" dir="ltr" data-state="closed"
+											class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
+											aria-label="Select number"><span style="pointer-events: none;">Single-sided</span><svg
+												xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+												class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+												<path d="m6 9 6 6 6-6"></path>
+											</svg></button><select aria-hidden="true" tabindex="-1"
+											style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+											<option value="0" selected="">None</option>
+											<option value="1">Single-sided</option>
+											<option value="2">Both sides</option>
+										</select></div>
+									<div class="flex flex-col space-y-2 mt-4"><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Select
+											side orientation</label><span class="text-sm text-muted-foreground">Please select side orientation
+											of your side panel. This only matters for single-sided panels</span><button type="button"
+											role="combobox" aria-controls="radix-:rfo:" aria-expanded="false" aria-autocomplete="none"
+											dir="ltr" data-state="closed"
+											class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
+											aria-label="Select number"><span style="pointer-events: none;">Left</span><svg
+												xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+												stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+												class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
+												<path d="m6 9 6 6 6-6"></path>
+											</svg></button><select aria-hidden="true" tabindex="-1"
+											style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+											<option value="left" selected="">Left</option>
+											<option value="right">Right</option>
+										</select></div>
+									<div class="space-y-2 flex flex-col mt-4"><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-x-2"
+											for=":rfp:-form-item">
+											<div class="w-4 h-4 rounded-full bg-blue-500"></div>Enter internal width
+										</label>
+										<div class="flex flex-col lg:flex-row gap-y-2 justify-between"><span
+												class="text-sm text-muted-foreground">Please enter exact internal width of your fish
+												tank.</span><span class="text-sm font-semibold">Min. 1inch</span></div><input
+											class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 text-base"
+											id=":rfp:-form-item" aria-describedby=":rfp:-form-item-description" aria-invalid="false"
+											type="number" name="width" value="3">
+									</div>
+									<div>
+										<p id="undefined-form-item-description" class="text-sm text-muted-foreground">Make sure that you
+											save entered values.</p>
+										<div class="flex items-center gap-x-6 pt-4">
+											<div class="flex gap-x-2 items-center">
+												<div class="w-4 h-4 rounded-full bg-blue-500"></div><label
+													class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Internal
+													width</label>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div><img alt="Left side panel" loading="lazy" width="300" height="125" decoding="async" data-nimg="1"
+								class="mx-auto"
+								srcset="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fleft-panel.75548885.webp&amp;w=384&amp;q=75 1x, /_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fleft-panel.75548885.webp&amp;w=640&amp;q=75 2x"
+								src="/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fleft-panel.75548885.webp&amp;w=640&amp;q=75"
+								style="color: transparent;">
+						</div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="filtration-type" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:rb:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round" class="lucide lucide-check w-6 h-6">
+							<path d="M20 6 9 17l-5-5"></path>
+						</svg></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 5 - Filtration type</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:rb:" class="lg:ml-14 mt-8"
+				style="--radix-collapsible-content-height: 166px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<section class="lg:pt-10">
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-8 mb-8 items-center">
+							<div>
+								<form>
+									<div class="space-y-2 flex flex-col mt-4"><label
+											class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											for=":rft:-form-item">Choose filtration type</label><span
+											class="text-sm text-muted-foreground">Please choose the filtration type that best describes your
+											fish tank's filtration system. If your filtration type is not listed below, select 'Other' and
+											provide a detailed description.</span><button type="button" role="combobox"
+											aria-controls="radix-:rfu:" aria-expanded="false" aria-autocomplete="none" dir="ltr"
+											data-state="closed"
+											class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
+											id=":rft:-form-item" aria-describedby=":rft:-form-item-description" aria-invalid="false"
+											aria-label="Select number"><span style="pointer-events: none;">External Filter
+												(Canister)</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+												viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+												stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50"
+												aria-hidden="true">
+												<path d="m6 9 6 6 6-6"></path>
+											</svg></button><select aria-hidden="true" tabindex="-1"
+											style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">
+											<option value="0">External Filter (Canister)</option>
+											<option value="1">Overflow box</option>
+											<option value="2">Other (please specify)</option>
+										</select></div>
+								</form>
+							</div>
+						</div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="additional-items" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="open"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:rc:" aria-expanded="true" data-state="open">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-primary text-primary-foreground"
+						style="will-change: transform; transform: scale(1.2);"><span class="text-white font-bold">6</span></div>
+					<h2
+						class="text-primary text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 6 - Add some additional items?</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down rotate-0 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="open" id="radix-:rc:" class="lg:ml-14 mt-8"
+				style="--radix-collapsible-content-height: 60px; --radix-collapsible-content-width: 1192px;">
+				<div style="opacity: 1; will-change: transform; transform: none;">
+					<section class="lg:pt-6">
+						<div class="flex flex-col md:flex-row gap-y-4 justify-between"><button
+								class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-stone-400 text-zinc-950 dark:hover:text-zinc-950 dark:text-white bg-transparent hover:bg-stone-100 hover:text-zinc-950 px-8 py-3 md:w-56 lg:w-auto"
+								aria-label="Skip this step">Skip this step</button></div>
+						<p class="text-base text-muted-foreground mt-4">We recommend adding some of our hand-made additional items
+							along with the backgrounds to enhance the beauty of your fish tank.</p>
+						<div class="grid grid-cols-1 md:grid-cols-2 mt-4 mb-8 gap-6">
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 7 - Bamboo Standing logs</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:ri6:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 9 - Catappa leaves</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:ri9:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">Set 9</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:ric:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">P 3 - Rocky Bottom Mat</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rif:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 3 - Standing logs</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rii:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 4 - Logs</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:ril:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 8 - Thin roots</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rio:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 25 - Corals</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rir:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 5 - Rocks</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:riu:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 10 - Standing logs</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rj1:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 1 - Standing roots</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rj4:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 6 - Rocks(floating)</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rj7:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">D 38 - Driftwood</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rja:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+							<div class="rounded-lg border bg-card text-card-foreground shadow-sm h-min">
+								<div
+									class="space-y-1.5 p-6 flex flex-col lg:flex-row justify-between items-start gap-y-5 lg:items-center">
+									<h3 class="font-semibold tracking-tight text-xl">Set 5</h3><button type="button"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rjd:" data-state="closed"
+										class="text-sm underline underline-offset-2">See photo</button>
+								</div>
+								<div class="p-6 pt-0">
+									<div class="flex flex-col gap-y-4 lg:flex-row items-center justify-between">
+										<div class="flex items-center gap-x-4"><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Minus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-minus w-4 h-4">
+													<path d="M5 12h14"></path>
+												</svg></button><span>0</span><button
+												class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+												aria-label="Plus"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+													stroke-linejoin="round" class="lucide lucide-plus w-4 h-4">
+													<path d="M5 12h14"></path>
+													<path d="M12 5v14"></path>
+												</svg></button><span>piece(s)</span></div><button
+											class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 w-full lg:w-auto"
+											aria-label="Add item" disabled="">Add item</button>
+									</div>
+									<div class="mt-4"></div>
+								</div>
+							</div>
+						</div>
+						<div class="w-full"><button
+								class="font-display font-normal whitespace-nowrap text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:hover:text-zinc-950 bg-transparent h-9 rounded-full px-3 inline-flex text-primary group border-sky-400 border w-full hover:bg-transparent dark:font-bold dark:text-sky-400 hover:text-primary transition-all duration-200 justify-center items-center gap-x-2"><svg
+									xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+									stroke="currentColor" aria-hidden="true" data-slot="icon"
+									class="w-4 h-4 group-hover:translate-y-1 translate-y-0 transition-all duration-200">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"></path>
+								</svg>Next step</button></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="calculate" class="mb-8" style="opacity: 1; will-change: transform; transform: none;">
+		<div data-state="closed"><button
+				class="font-display rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-accent-foreground hover:bg-transparent group p-0 h-auto font-semibold text-lg flex lg:flex-row whitespace-normal lg:whitespace-nowrap text-left items-center justify-between lg:w-full"
+				type="button" aria-controls="radix-:rd:" aria-expanded="false" data-state="closed">
+				<div class="flex lg:flex-row gap-y-4 lg:gap-y-0 flex-col lg:items-center lg:ml-[-1px] w-full">
+					<div
+						class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center mr-4 bg-background border-2 border-primary"
+						style="will-change: transform; transform: none;"><span class="font-bold">7</span></div>
+					<h2
+						class="text-lg sm:text-lg lg:text-2xl font-bold group-hover:text-primary break-normal transition-all duration-150">
+						Step 7 - Calculate request</h2>
+				</div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+					stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+					class="lucide lucide-chevron-down -rotate-90 w-4 h-4 hidden lg:block ml-2 transition-all duration-150">
+					<path d="m6 9 6 6 6-6"></path>
+				</svg>
+			</button>
+			<div data-state="closed" id="radix-:rd:" hidden="" class="lg:ml-14 mt-8" style=""></div>
+		</div>
+	</div>
+	<section class="pt-10">
+		<h1 class="text-2xl font-bold flex items-center gap-x-4">Request summary</h1>
+		<div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-x-10">
+			<div class="pt-5">
+				<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+					<div class="flex flex-col space-y-1.5 p-6">
+						<h3 class="font-semibold tracking-tight text-xl">Calculated backgrounds</h3>
+						<p class="text-sm text-muted-foreground">Below are listed all your calculations. These calculations will be
+							forwarded to us once you send the request.</p>
+					</div>
+					<div class="p-6 pt-0 space-y-6">
+						<div class="border p-6">
+							<div class="flex flex-col items-start gap-y-4 lg:flex-row lg:items-center justify-between"><span
+									class="text-sm lg:text-xl font-semibold">C 4 - Massive Rocky Background</span><span
+									class="text-2xl font-semibold">$769.25</span></div>
+							<div class="mt-4 flex flex-col gap-x-4 items-center md:flex-row gap-y-2"><button
+									class="font-display font-normal justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-stone-400 text-zinc-950 dark:hover:text-zinc-950 dark:text-white bg-transparent hover:bg-stone-100 hover:text-zinc-950 px-8 py-3 lg:pl-6 w-full flex items-center gap-x-2 pl-0 md:pl-4"
+									aria-label="More info" type="button" aria-haspopup="dialog" aria-expanded="false"
+									aria-controls="radix-:rh:" data-state="closed">More info<svg xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+										stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info w-4 h-4">
+										<circle cx="12" cy="12" r="10"></circle>
+										<path d="M12 16v-4"></path>
+										<path d="M12 8h.01"></path>
+									</svg></button><button
+									class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-8 py-3 w-full lg:w-auto"
+									aria-label="Remove"><span class="lg:hidden">Remove</span><svg xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+										stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash w-4 h-4 hidden lg:block">
+										<path d="M3 6h18"></path>
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+									</svg></button></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pt-5">
+				<div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+					<div class="flex flex-col space-y-1.5 p-6">
+						<h3 class="font-semibold tracking-tight text-lg lg:text-xl">Calculated additional items</h3>
+						<p class="text-sm text-muted-foreground">Below are listed all your calculations. These calculations will be
+							forwarded to us once you send the request.</p>
+					</div>
+					<div class="p-6 pt-0 space-y-6">
+						<div class="border p-6">
+							<div class="flex flex-col xl:flex-row gap-y-2 xl:items-center justify-between">
+								<div><span class="text-lg lg:text-xl font-semibold">D 9 - Catappa leaves</span><span
+										class="text-base text-muted-foreground ml-1">x3</span></div><span
+									class="text-2xl font-semibold">$128.76</span>
+							</div>
+							<div class="mt-4 flex flex-col gap-y-4 md:flex-row gap-x-4 lg:items-center"><button
+									class="font-display font-normal justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-stone-400 text-zinc-950 dark:hover:text-zinc-950 dark:text-white bg-transparent hover:bg-stone-100 hover:text-zinc-950 px-8 py-3 lg:pl-6 md:w-full flex items-center gap-x-2 pl-0 md:pl-4"
+									aria-label="More info" type="button" aria-haspopup="dialog" aria-expanded="false"
+									aria-controls="radix-:rk:" data-state="closed">More info<svg xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+										stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info w-4 h-4">
+										<circle cx="12" cy="12" r="10"></circle>
+										<path d="M12 16v-4"></path>
+										<path d="M12 8h.01"></path>
+									</svg></button><button
+									class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-8 py-3 w-full lg:w-auto"
+									aria-label="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+										class="lucide lucide-trash w-4 h-4 hidden lg:block">
+										<path d="M3 6h18"></path>
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+									</svg><span class="lg:hidden">Remove</span></button></div>
+						</div>
+						<div class="border p-6">
+							<div class="flex flex-col xl:flex-row gap-y-2 xl:items-center justify-between">
+								<div><span class="text-lg lg:text-xl font-semibold">D 7 - Bamboo Standing logs</span><span
+										class="text-base text-muted-foreground ml-1">x5</span></div><span
+									class="text-2xl font-semibold">$180.96</span>
+							</div>
+							<div class="mt-4 flex flex-col gap-y-4 md:flex-row gap-x-4 lg:items-center"><button
+									class="font-display font-normal justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-stone-400 text-zinc-950 dark:hover:text-zinc-950 dark:text-white bg-transparent hover:bg-stone-100 hover:text-zinc-950 px-8 py-3 lg:pl-6 md:w-full flex items-center gap-x-2 pl-0 md:pl-4"
+									aria-label="More info" type="button" aria-haspopup="dialog" aria-expanded="false"
+									aria-controls="radix-:rn:" data-state="closed">More info<svg xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+										stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info w-4 h-4">
+										<circle cx="12" cy="12" r="10"></circle>
+										<path d="M12 16v-4"></path>
+										<path d="M12 8h.01"></path>
+									</svg></button><button
+									class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-8 py-3 w-full lg:w-auto"
+									aria-label="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+										class="lucide lucide-trash w-4 h-4 hidden lg:block">
+										<path d="M3 6h18"></path>
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+									</svg><span class="lg:hidden">Remove</span></button></div>
+						</div>
+						<div class="border p-6">
+							<div class="flex flex-col xl:flex-row gap-y-2 xl:items-center justify-between">
+								<div><span class="text-lg lg:text-xl font-semibold">D 1 - Standing roots</span><span
+										class="text-base text-muted-foreground ml-1">x3</span></div><span
+									class="text-2xl font-semibold">$201.84</span>
+							</div>
+							<div class="mt-4 flex flex-col gap-y-4 md:flex-row gap-x-4 lg:items-center"><button
+									class="font-display font-normal justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-stone-400 text-zinc-950 dark:hover:text-zinc-950 dark:text-white bg-transparent hover:bg-stone-100 hover:text-zinc-950 px-8 py-3 lg:pl-6 md:w-full flex items-center gap-x-2 pl-0 md:pl-4"
+									aria-label="More info" type="button" aria-haspopup="dialog" aria-expanded="false"
+									aria-controls="radix-:rq:" data-state="closed">More info<svg xmlns="http://www.w3.org/2000/svg"
+										width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+										stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info w-4 h-4">
+										<circle cx="12" cy="12" r="10"></circle>
+										<path d="M12 16v-4"></path>
+										<path d="M12 8h.01"></path>
+									</svg></button><button
+									class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 px-8 py-3 w-full lg:w-auto"
+									aria-label="Remove"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+										fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+										class="lucide lucide-trash w-4 h-4 hidden lg:block">
+										<path d="M3 6h18"></path>
+										<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+										<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+									</svg><span class="lg:hidden">Remove</span></button></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="flex justify-between md:justify-end items-start lg:items-baseline gap-x-5 py-10">
+			<p class="text-xl font-medium text-slate-600 dark:text-slate-400">Total:</p>
+			<div class="flex gap-y-2 flex-col items-center">
+				<p class="text-3xl font-semibold">$1280.81</p>
+				<div
+					class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80">
+					shipping included</div>
+			</div>
+		</div>
+		<section class="pt-10">
+			<h1 class="text-2xl lg:text-2xl font-bold flex items-center gap-x-4">Send request and reach out to us</h1>
+			<p class="mt-4 text-base text-muted-foreground">If you would like to proceed to the next step and place the order,
+				please complete the form below and click on the “Send Request” button. We will respond within 24 hours. <span
+					class="font-semibold dark:text-slate-200">By sending the request, you are not obliged to make a
+					purchase.</span></p>
+			<form class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-5 mt-4">
+				<div class="space-y-2"><label
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						for=":rt:-form-item">Name</label><input
+						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						placeholder="Enter your full name..." id=":rt:-form-item" aria-describedby=":rt:-form-item-description"
+						aria-invalid="false" value="" name="name"></div>
+				<div class="space-y-2"><label
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						for=":ru:-form-item">Email</label><input
+						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						placeholder="Enter your email address..." id=":ru:-form-item" aria-describedby=":ru:-form-item-description"
+						aria-invalid="false" value="" name="email"></div>
+				<div class="space-y-2"><label
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						for=":rv:-form-item">Address</label><input
+						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						placeholder="Enter your address..." id=":rv:-form-item" aria-describedby=":rv:-form-item-description"
+						aria-invalid="false" value="" name="address"></div>
+				<div class="space-y-2"><label
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						for=":r10:-form-item">City</label><input
+						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						placeholder="Enter your city..." id=":r10:-form-item" aria-describedby=":r10:-form-item-description"
+						aria-invalid="false" value="" name="city"></div>
+				<div class="space-y-2"><label
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+						for=":r11:-form-item">ZIP code</label><input
+						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						placeholder="Enter your ZIP code..." id=":r11:-form-item" aria-describedby=":r11:-form-item-description"
+						aria-invalid="false" value="" name="postalCode"></div>
+				<div class="flex items-end lg:items-start gap-x-5">
+					<div class="space-y-2 w-full"><label
+							class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+							for=":r12:-form-item">Phone number</label><input
+							class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+							placeholder="Enter phone number..." id=":r12:-form-item" aria-describedby=":r12:-form-item-description"
+							aria-invalid="false" value="" name="phoneNumber"></div>
+				</div><button
+					class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md text-sm ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-white hover:bg-primary/80 px-8 py-3 mt-4"
+					aria-label="Send request" type="submit">Send request</button>
+				<p id="undefined-form-item-description"
+					class="text-muted-foreground text-xs flex flex-col items-center md:text-sm lg:flex-row lg:gap-x-2 self-center">
+					By clicking "send request" you agree to our <a
+						class="inline-flex font-display font-normal items-center justify-center whitespace-nowrap rounded-md ring-offset-background transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline text-xs p-0 underline text-slate-500"
+						href="/terms-and-conditions">terms and conditions</a></p>
+			</form>
+		</section>
+	</section>
+</section>
