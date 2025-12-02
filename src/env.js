@@ -8,7 +8,6 @@ export const env = createEnv({
 	 */
 	server: {
 		AUTH_SECRET:
-			// process.env.NODE_ENV === "production"
 			process.env.NODE_ENV === "development"
 				? z.string()
 				: z.string().optional(),
@@ -20,6 +19,9 @@ export const env = createEnv({
 			.default("development"),
 		STRAPI_URL: z.string().url(),
 		STRAPI_API_TOKEN: z.string(),
+		
+		// Supabase Storage (server-side)
+		SUPABASE_SECRET_API_KEY: z.string(),
 	},
 
 	/**
@@ -28,7 +30,9 @@ export const env = createEnv({
 	 * `NEXT_PUBLIC_`.
 	 */
 	client: {
-		// NEXT_PUBLIC_CLIENTVAR: z.string(),
+		// Supabase Storage (client-side)
+		NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+		NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string(),
 	},
 
 	/**
@@ -43,6 +47,11 @@ export const env = createEnv({
 		NODE_ENV: process.env.NODE_ENV,
 		STRAPI_URL: process.env.STRAPI_URL,
 		STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
+		
+		// Supabase
+		SUPABASE_SECRET_API_KEY: process.env.SUPABASE_SECRET_API_KEY,
+		NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+		NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
