@@ -51,11 +51,11 @@ export function NavWithBannerClient({ activeSale, bannerHeight }: NavWithBannerC
 			const currentScrollY = window.scrollY;
 
 			// Show nav when scrolling up or near top
-			if (currentScrollY < lastScrollY || currentScrollY < 100) {
+			if (currentScrollY < lastScrollY || currentScrollY < 50) {
 				setIsNavVisible(true);
 			}
 			// Hide nav when scrolling down past threshold
-			else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+			else if (currentScrollY > lastScrollY && currentScrollY > 50) {
 				setIsNavVisible(false);
 			}
 
