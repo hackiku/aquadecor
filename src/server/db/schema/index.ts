@@ -20,3 +20,4 @@ export * from "./sales";
 export * from "./faq";
 export * from "./reviews";
 export * from "./countries";
+export * from "./gallery";

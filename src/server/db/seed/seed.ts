@@ -12,8 +12,10 @@ import {
 	orders, orderItems,
 	promoters, promoterCodes, sales,
 	faqs, faqTranslations,
-	shippingZones, countries
+	shippingZones, countries,
+	galleryCategories, galleryImageCategories
 } from "../schema";
+
 
 // auth
 import { usersSeedData, addressesSeedData } from "./data/seed-users";
@@ -27,10 +29,12 @@ import { productImages as imageData } from "./data/seed-images";
 import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
 import { salesSeedData } from "./data/seed-sales";
-// other
+// content
 import { reviewData } from "./data/seed-reviews";
 import { faqsSeedData } from "./data/seed-faqs";
 import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
+import { galleryCategoriesSeedData } from "./data/seed-gallery-categories";
+
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {

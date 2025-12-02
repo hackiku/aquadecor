@@ -116,10 +116,10 @@ export default function FAQPage() {
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="ROW" className="font-display font-light">
-							Rest of World
+							🌍 Rest of World
 						</SelectItem>
 						<SelectItem value="US" className="font-display font-light">
-							United States
+							🇺🇸 United States
 						</SelectItem>
 					</SelectContent>
 				</Select>

@@ -11,6 +11,7 @@ import { ChevronDown, ChevronLeft, Menu } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import Image from "next/image";
 
 export function Sidebar() {
 	const pathname = usePathname();
@@ -49,9 +50,14 @@ export function Sidebar() {
 								transition={{ duration: 0.2 }}
 								className="flex items-center gap-2"
 							>
-								<div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-									<span className="text-primary font-bold text-lg">A</span>
-								</div>
+								{/* <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"> */}
+									<Image 
+										src={"/logos/logo-sm.svg"}
+										alt="Aquadecor square logo"
+										width={24}
+										height={24}
+									/>
+								{/* </div> */}
 								<span className="font-display font-normal text-lg">Aquadecor</span>
 							</motion.div>
 						)}
