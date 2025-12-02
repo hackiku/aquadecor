@@ -32,7 +32,7 @@ export function StickyCalculator({
 		<>
 			{/* Mini state - small preview in bottom-right corner */}
 			{!isCalculatorExpanded && (
-				<div className="fixed bottom-12 right-4 lg:right-8 z-40 pointer-events-auto mt-12">
+				<div className="fixed bottom-12 right-4 lg:right-8 z-40 pointer-events-auto">
 					<button
 						onClick={() => setIsCalculatorExpanded(true)}
 						className="group relative"
@@ -47,6 +47,7 @@ export function StickyCalculator({
 									depth={dimensions.depth}
 									backgroundTexture={backgroundTexture}
 									subcategoryTexture={subcategoryTexture}
+									isCollapsed={true}
 								/>
 							</div>
 
@@ -88,37 +89,8 @@ export function StickyCalculator({
 
 			{/* Full state - takes right side */}
 			{isCalculatorExpanded && (
-				<aside className="fixed top-0 right-0 bottom-0 z-40 w-[28rem] pointer-events-auto">
+				<aside className="fixed top-16 right-0 bottom-0 z-40 w-[28rem] pointer-events-auto">
 					<div className="h-full bg-card shadow-2xl border-l-2 border-primary/20 overflow-hidden flex flex-col">
-						{/* Header with controls */}
-						<div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-accent/5 shrink-0">
-							<div className="flex items-center gap-3">
-								<h3 className="text-sm font-display font-medium">Live Preview</h3>
-								<UnitToggle />
-							</div>
-
-							<button
-								onClick={() => setIsCalculatorExpanded(false)}
-								className="p-2 rounded-lg hover:bg-accent transition-colors"
-								aria-label="Minimize calculator"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="16"
-									height="16"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								>
-									<path d="M3 15h7.5M3 15v7.5M3 15L9 21" />
-									<path d="M21 9h-7.5M21 9V1.5M21 9l-6-6" />
-								</svg>
-							</button>
-						</div>
-
 						{/* Content - fully scrollable */}
 						<div className="flex-1 overflow-y-auto">
 							{/* 3D Scene */}
@@ -130,8 +102,36 @@ export function StickyCalculator({
 										depth={dimensions.depth}
 										backgroundTexture={backgroundTexture}
 										subcategoryTexture={subcategoryTexture}
+										isCollapsed={false}
 									/>
 								</div>
+
+								{/* Unit toggle - overlays top-right corner with negative margin */}
+								<div className="absolute top-0 right-0 -mt-2 mr-4 z-10">
+									<UnitToggle />
+								</div>
+
+								{/* Collapse button - overlays bottom-right corner */}
+								<button
+									onClick={() => setIsCalculatorExpanded(false)}
+									className="absolute bottom-3 right-3 p-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 hover:bg-black/80 transition-colors z-10"
+									aria-label="Minimize calculator"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="white"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<path d="M3 15h7.5M3 15v7.5M3 15L9 21" />
+										<path d="M21 9h-7.5M21 9V1.5M21 9l-6-6" />
+									</svg>
+								</button>
 							</div>
 
 							{/* Price Breakdown */}

@@ -6,6 +6,7 @@ import { Canvas, useLoader } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import { useState, Suspense } from "react";
 import * as THREE from "three";
+import { Pause, RefreshCwIcon } from "lucide-react";
 
 interface AquariumSceneProps {
 	width: number;
@@ -195,24 +196,35 @@ export function AquariumScene({
 				/>
 			</Canvas>
 
+
+			<div
+				onClick={() => setAutoRotate(!autoRotate)}
+				className="absolute bottom-2 left-2 px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light hover:bg-black/80 transition-colors cursor-pointer"
+				title={autoRotate ? "Disable auto-rotate" : "Enable auto-rotate"}
+				role="button"
+				tabIndex={0}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						setAutoRotate(!autoRotate);
+					}
+				}}
+			>
+				{ autoRotate ? (
+					<div className="flex gap-1">
+						<RefreshCwIcon className="w-4 h-4"/> Auto
+					</div>
+					
+				) : (
+					<div className="flex gap-1">
+							<Pause className="w-4 h-4" /> Paused
+					</div>
+				)}
+			</div>
 			{/* Debug overlay - bottom right */}
 			<div className="absolute bottom-3 right-3 space-y-2 pointer-events-auto">
 				{/* AutoRotate toggle */}
-				<div
-					onClick={() => setAutoRotate(!autoRotate)}
-					className="px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light hover:bg-black/80 transition-colors cursor-pointer"
-					title={autoRotate ? "Disable auto-rotate" : "Enable auto-rotate"}
-					role="button"
-					tabIndex={0}
-					onKeyDown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							e.preventDefault();
-							setAutoRotate(!autoRotate);
-						}
-					}}
-				>
-					{autoRotate ? "🔄 Auto" : "⏸️ Paused"}
-				</div>
+
 
 				{/* Dimensions debug */}
 				<div className="px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
@@ -232,11 +244,11 @@ export function AquariumScene({
 			</div>
 
 			{/* Texture indicator */}
-			{(backgroundTexture || subcategoryTexture) && (
+			{/* {(backgroundTexture || subcategoryTexture) && (
 				<div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light">
 					{subcategoryTexture ? "📐 Design Preview" : "🎨 Category Preview"}
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 }
