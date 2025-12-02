@@ -141,6 +141,13 @@ export const adminPages: AdminPage[] = [
 		description: "Site configuration",
 		inactive: true,
 	},
+	{
+		title: "Test Storage",
+		href: "/admin/test-storage",
+		icon: Settings,
+		description: "Supabase storage test",
+		inactive: true,
+	},
 ];
 
 // Helper to get current page data
