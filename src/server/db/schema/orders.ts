@@ -3,6 +3,7 @@ import { relations } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 import { promoters } from "./promoters";
+import { sales } from "./sales";
 
 // ============================================================================
 // ORDERS
@@ -37,6 +38,7 @@ export const orders = createTable(
 		// Promo tracking
 		discountCode: d.text(), // Code used (e.g., "JOEY15")
 		promoterId: d.text().references(() => promoters.id),
+		saleId: d.text().references(() => sales.id),
 
 		// Shipping
 		shippingAddress: jsonb().$type<{
@@ -120,6 +122,10 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
 		fields: [orders.promoterId],
 		references: [promoters.id]
 	}),
+	sale: one(sales, {
+		fields: [orders.saleId],
+		references: [sales.id]
+	}),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
@@ -128,3 +134,16 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
 		references: [orders.id],
 	}),
 }));
+
+
+// export const ordersRelations = relations(orders, ({ many, one }) => ({
+// 	items: many(orderItems),
+// 	promoter: one(promoters, {
+// 		fields: [orders.promoterId],
+// 		references: [promoters.id]
+// 	}),
+// 	sale: one(sales, {
+// 		fields: [orders.saleId],
+// 		references: [sales.id]
+// 	}),
+// }));
