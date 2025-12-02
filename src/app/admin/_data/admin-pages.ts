@@ -144,9 +144,9 @@ export const adminPages: AdminPage[] = [
 	{
 		title: "Test Storage",
 		href: "/admin/test-storage",
-		icon: Settings,
+		icon: HelpCircle,
 		description: "Supabase storage test",
-		inactive: true,
+		inactive: false,
 	},
 ];
 
