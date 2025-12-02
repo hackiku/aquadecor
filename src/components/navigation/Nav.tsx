@@ -16,39 +16,13 @@ import { MobileNav } from "./MobileNav";
 import { enabledNavLinks } from "~/data/navigation";
 import { Button } from "../ui/button";
 
-interface NavProps {
-	disableScroll?: boolean;
-}
-
-
-export function Nav({ disableScroll = false }: NavProps) {
+export function Nav() {
 	const router = useRouter();
 	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
 	const [cartCount, setCartCount] = useState(0);
 	const [wishlistCount, setWishlistCount] = useState(0);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const [isVisible, setIsVisible] = useState(true);
-	const [lastScrollY, setLastScrollY] = useState(0);
-
-	// Scroll handler for hide/show nav
-	// useEffect(() => {
-	// 	if (disableScroll) return; // Skip scroll logic, handled by parent
-	// 	const handleScroll = () => {
-	// 		const currentScrollY = window.scrollY;
-
-	// 		if (currentScrollY < lastScrollY || currentScrollY < 50) {
-	// 			setIsVisible(true);
-	// 		} else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-	// 			setIsVisible(false);
-	// 		}
-
-	// 		setLastScrollY(currentScrollY);
-	// 	};
-
-	// 	window.addEventListener("scroll", handleScroll, { passive: true });
-	// 	return () => window.removeEventListener("scroll", handleScroll);
-	// }, [lastScrollY]);
 
 	// Listen for cart updates
 	useEffect(() => {
@@ -89,10 +63,7 @@ export function Nav({ disableScroll = false }: NavProps) {
 
 	return (
 		<>
-			<header
-				className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"
-					}`}
-			>
+			<header className="border-b border-white/10 bg-black h-16">
 				<div className="px-4 max-w-7xl mx-auto">
 					<div className="flex h-16 items-center justify-between">
 						{/* Logo */}

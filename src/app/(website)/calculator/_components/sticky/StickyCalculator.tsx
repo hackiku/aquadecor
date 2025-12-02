@@ -32,7 +32,7 @@ export function StickyCalculator({
 		<>
 			{/* Mini state - small preview in bottom-right corner */}
 			{!isCalculatorExpanded && (
-				<div className="fixed bottom-12 right-4 lg:right-8 z-40 pointer-events-auto">
+				<div className="fixed bottom-0 right-4 lg:right-8 z-40 pointer-events-auto">
 					<button
 						onClick={() => setIsCalculatorExpanded(true)}
 						className="group relative"
@@ -47,7 +47,6 @@ export function StickyCalculator({
 									depth={dimensions.depth}
 									backgroundTexture={backgroundTexture}
 									subcategoryTexture={subcategoryTexture}
-									isCollapsed={true}
 								/>
 							</div>
 
@@ -89,12 +88,13 @@ export function StickyCalculator({
 
 			{/* Full state - takes right side */}
 			{isCalculatorExpanded && (
-				<aside className="fixed top-16 right-0 bottom-0 z-40 w-[28rem] pointer-events-auto">
+				// clear navbar & bottom sticky bar
+				<aside className="fixed top-16 right-0 bottom-2 z-40 w-[28rem] pointer-events-auto">
 					<div className="h-full bg-card shadow-2xl border-l-2 border-primary/20 overflow-hidden flex flex-col">
 						{/* Content - fully scrollable */}
 						<div className="flex-1 overflow-y-auto">
 							{/* 3D Scene */}
-							<div className="relative border-b bg-gradient-to-b from-background to-accent/5">
+							<div className="relative border-b bg-linear-to-b from-background to-accent/5">
 								<div className="h-[320px]">
 									<AquariumScene
 										width={dimensions.width}
@@ -102,7 +102,6 @@ export function StickyCalculator({
 										depth={dimensions.depth}
 										backgroundTexture={backgroundTexture}
 										subcategoryTexture={subcategoryTexture}
-										isCollapsed={false}
 									/>
 								</div>
 

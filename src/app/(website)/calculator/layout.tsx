@@ -102,7 +102,7 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 						dimensions={config.dimensions}
 						estimate={estimate}
 						backgroundTexture={config.modelCategory} // Pass category for texture lookup
-						subcategoryTexture={config.subcategory} // Pass subcategory for texture lookup
+						subcategoryTexture={config.subcategory ?? undefined} // Convert null to undefined
 					/>
 				)}
 

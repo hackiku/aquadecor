@@ -1,11 +1,11 @@
+// src/app/layout.tsx
 import "~/styles/globals.css";
 
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "~/components/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
-// import { Nav } from "~/components/navigation/Nav";
-// import { Footer } from "~/components/navigation/Footer";
+import { NavWithBanner } from "~/components/navigation/NavWithBanner";
 
 export const metadata: Metadata = {
 	title: "Aquadecor Backgrounds",
@@ -25,7 +25,7 @@ export default function RootLayout({
 		<html
 			className={`${geist.variable}`}
 			lang="en"
-			suppressHydrationWarning // Fixes next-themes hydration
+			suppressHydrationWarning
 		>
 			<body>
 				<TRPCReactProvider>
@@ -35,7 +35,13 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
-						{children}
+						{/* Nav with dynamic banner */}
+						<NavWithBanner />
+
+						{/* Content respects nav height via CSS variable */}
+						<div style={{ paddingTop: 'var(--nav-height)' }}>
+							{children}
+						</div>
 					</ThemeProvider>
 				</TRPCReactProvider>
 			</body>

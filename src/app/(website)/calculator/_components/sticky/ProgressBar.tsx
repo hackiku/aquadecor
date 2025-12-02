@@ -21,7 +21,7 @@ export function ProgressBar({ completionPercent }: ProgressBarProps) {
 			</div>
 
 			{/* Thin progress bar */}
-			<div className="h-1.5 bg-primary/20 relative overflow-hidden">
+			<div className="h-1.5 bg-neutral-400 dark:bg-neutral-700 relative overflow-hidden">
 				<div
 					className="absolute inset-y-0 left-0 bg-primary transition-all duration-500"
 					style={{ width: `${completionPercent}%` }}
