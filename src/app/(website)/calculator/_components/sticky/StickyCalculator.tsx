@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { AquariumScene } from "../../_world/AquariumScene";
 import { PriceBreakdown } from "./PriceBreakdown";
 import { UnitToggle } from "../dimensions/UnitToggle";
-import { useCalculatorLayout } from "../../layout";
+import { useCalculatorLayout } from "../../_context/CalculatorLayoutContext";
 import type { Dimensions, PriceEstimate } from "../../calculator-types";
 
 interface StickyCalculatorProps {

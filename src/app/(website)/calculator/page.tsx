@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useCalculatorLayout } from "./layout";
+import { useCalculatorLayout } from "./_context/CalculatorLayoutContext";
 import { ModelCategoryGrid } from "./_components/product/ModelCategoryGrid";
 import { SubcategorySelector } from "./_components/product/SubcategorySelector";
 import { DimensionControls } from "./_components/dimensions/DimensionControls";

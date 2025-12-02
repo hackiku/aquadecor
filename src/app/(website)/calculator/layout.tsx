@@ -2,40 +2,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { UnitProvider } from "./_context/UnitContext";
+import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
 import { ProgressBar } from "./_components/sticky/ProgressBar";
 import { StickyCalculator } from "./_components/sticky/StickyCalculator";
 import { QuoteModal } from "./_components/quote/QuoteModal";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
-
-// Context to manage calculator state globally
-interface CalculatorLayoutContextType {
-	isCalculatorExpanded: boolean;
-	setIsCalculatorExpanded: (expanded: boolean) => void;
-	// Quote modal state
-	isQuoteModalOpen: boolean;
-	openQuoteModal: () => void;
-	closeQuoteModal: () => void;
-	// Calculator config for modal
-	config: QuoteConfig | null;
-	setConfig: (config: QuoteConfig) => void;
-	estimate: PriceEstimate | null;
-	setEstimate: (estimate: PriceEstimate) => void;
-	// Completion percentage
-	completionPercent: number;
-	setCompletionPercent: (percent: number) => void;
-}
-
-const CalculatorLayoutContext = createContext<CalculatorLayoutContextType | undefined>(undefined);
-
-export function useCalculatorLayout() {
-	const context = useContext(CalculatorLayoutContext);
-	if (!context) {
-		throw new Error("useCalculatorLayout must be used within CalculatorLayout");
-	}
-	return context;
-}
 
 export default function CalculatorLayout({ children }: { children: ReactNode }) {
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
