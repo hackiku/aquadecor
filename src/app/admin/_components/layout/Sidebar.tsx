@@ -16,10 +16,25 @@ import Image from "next/image";
 export function Sidebar() {
 	const pathname = usePathname();
 	const [isCollapsed, setIsCollapsed] = useState(false);
+	const [isLocked, setIsLocked] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 	const [openDropdowns, setOpenDropdowns] = useState<string[]>([]);
 
-	const isExpanded = !isCollapsed || isHovered;
+	const isExpanded = !isCollapsed || (isHovered && !isLocked);
+
+	const handleToggleCollapse = () => {
+		if (isCollapsed) {
+			// Expanding
+			setIsCollapsed(false);
+			setIsLocked(false);
+		} else {
+			// Collapsing
+			setIsCollapsed(true);
+			setIsLocked(true);
+			// Unlock after a brief moment to allow hover to work again later
+			setTimeout(() => setIsLocked(false), 300);
+		}
+	};
 
 	const toggleDropdown = (href: string) => {
 		setOpenDropdowns((prev) =>
@@ -51,12 +66,12 @@ export function Sidebar() {
 								className="flex items-center gap-2"
 							>
 								{/* <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"> */}
-									<Image 
-										src={"/logos/logo-sm.svg"}
-										alt="Aquadecor square logo"
-										width={24}
-										height={24}
-									/>
+								<Image
+									src={"/logos/logo-sm.svg"}
+									alt="Aquadecor square logo"
+									width={24}
+									height={24}
+								/>
 								{/* </div> */}
 								<span className="font-display font-normal text-lg">Aquadecor</span>
 							</motion.div>
@@ -65,7 +80,7 @@ export function Sidebar() {
 					<Button
 						variant="ghost"
 						size="icon"
-						onClick={() => setIsCollapsed(!isCollapsed)}
+						onClick={handleToggleCollapse}
 						className="rounded-full"
 					>
 						{isCollapsed ? (
@@ -78,7 +93,7 @@ export function Sidebar() {
 
 				{/* Navigation */}
 				<nav className="flex-1 overflow-y-auto py-4 px-2">
-					<div className="space-y-1">
+					<div className="space-y-2">
 						{adminPages.map((page) => (
 							<NavItem
 								key={page.href}
@@ -160,7 +175,7 @@ function NavItem({
 				href={page.href}
 				onClick={handleClick}
 				className={cn(
-					"flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group",
+					"flex items-center gap-3 px-3 py-3 rounded-lg transition-colors group",
 					isActive && !hasChildren
 						? "bg-primary/10 text-primary"
 						: "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -168,17 +183,17 @@ function NavItem({
 					isChild && "pl-12"
 				)}
 			>
-				<Icon className="h-5 w-5 flex-shrink-0" />
+				<Icon className="h-5 w-5 shrink-0" />
 				<AnimatePresence>
 					{isExpanded && (
 						<motion.div
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
-							className="flex-1 flex items-center justify-between min-w-0"
+							className="relative flex-1 flex items-center justify-between min-w-0"
 						>
-							<span className="font-display font-light truncate">{page.title}</span>
-							<div className="flex items-center gap-2">
+							<span className="absolute font-display font-light truncate">{page.title}</span>
+							<div className="flex items-center gap-2 ml-2">
 								{page.badge && (
 									<Badge variant="secondary" className="text-xs">
 										{page.badge}
@@ -187,7 +202,7 @@ function NavItem({
 								{hasChildren && (
 									<ChevronDown
 										className={cn(
-											"h-4 w-4 transition-transform",
+											"absolute right-0 h-4 w-4 transition-transform shrink-0",
 											isOpen && "rotate-180"
 										)}
 									/>

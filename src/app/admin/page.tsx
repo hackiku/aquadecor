@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
 					</div>
 				</Link>
 
-				<Link href="/admin/gallery">
+				<Link href="/admin/content/gallery">
 					<div className="group p-6 rounded-2xl border-2 border-border hover:border-primary/50 transition-all hover:shadow-lg space-y-3">
 						<div className="flex items-center gap-3">
 							<div className="p-3 rounded-full bg-primary/10">
