@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/lib/supabase/storage.ts
 // Shared storage utilities for Supabase Storage
 // Works with both client and server

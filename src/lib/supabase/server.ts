@@ -1,6 +1,7 @@
 // src/lib/supabase/server.ts
 // Server-side Supabase client using @supabase/ssr
 // Use in Server Components, API Routes, Server Actions
+"server-only"
 
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';

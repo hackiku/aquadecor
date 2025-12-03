@@ -1,11 +1,12 @@
 
 // @ts-nocheck
 // src/app/shop/page.tsx
-
+import Link from "next/link";
 import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero";
 import { ProductCard } from "~/components/shop/product/ProductCard";
 import { api, HydrateClient } from "~/trpc/server";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
+import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
 
 export default async function ShopPage() {
 	// Get all featured products
@@ -34,6 +35,25 @@ export default async function ShopPage() {
 						</h1>
 						<p className="text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto">
 							Explore our complete range of 3D backgrounds and decorations. Handcrafted in Serbia, trusted by 50,000+ aquarists worldwide.
+						</p>
+					</div>
+
+
+					<div className="bg-linear-to-br from-primary/20 via-transparent to-primary/20 rounded-2xl p-8">
+						<h2 className="text-2xl font-display font-light mb-4">
+							🇺🇸 We Haven't Forgotten About You
+						</h2>
+						<p className="text-muted-foreground mb-6">
+							Trade policies change. Our commitment to US aquarists doesn't.
+							Join 50,000+ hobbyists and be first to know when direct orders resume.
+						</p>
+						<NewsletterForm
+							placeholder="Your email..."
+							ctaText="Notify Me First"
+							variant="us-waitlist"
+						/>
+						<p className="text-xs text-muted-foreground mt-4">
+							In the meantime, check our <Link href="/us/distributors">trusted US distributors</Link>
 						</p>
 					</div>
 

@@ -33,7 +33,7 @@ export default async function LocaleLayout({
 
 	return (
 		<>
-			<Nav />
+			{/* <Nav /> */}
 			{children}
 			<Footer />
 		</>

@@ -4,69 +4,160 @@ export interface NavLink {
 	label: string;
 	href: string;
 	enabled: boolean;
-	showInNav?: boolean; // Show in main navigation
-	showInFooter?: boolean; // Show in footer
+	showInNav?: boolean;
+	showInFooter?: boolean;
 	description?: string;
-	badge?: string; // Optional badge like "New", "Beta"
+	badge?: string;
+	category?: "shop" | "custom" | "help" | "contact" | "legal";
 }
 
 export interface ResourceLink {
 	label: string;
 	href: string;
 	description: string;
-	icon?: string; // Optional icon name
+	icon?: string;
 }
 
-// Main navigation links
+// Main navigation links organized by category
 export const mainNavLinks: NavLink[] = [
+	// Shop
 	{
 		label: "Shop",
 		href: "/shop",
 		enabled: true,
 		showInNav: true,
-		showInFooter: true,
+		showInFooter: false,
 		description: "Browse our 3D backgrounds and decorations",
 	},
+	{
+		label: "3D Backgrounds",
+		href: "/shop/3d-backgrounds",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "shop",
+	},
+	{
+		label: "Aquarium Decorations",
+		href: "/shop/aquarium-decorations",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "shop",
+	},
+	{
+		label: "Reviews",
+		href: "/shop/reviews",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "shop",
+	},
+	{
+		label: "Gallery",
+		href: "/gallery",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "shop",
+	},
+
+	// Custom
 	{
 		label: "Calculator",
 		href: "/calculator",
 		enabled: true,
 		showInNav: true,
 		showInFooter: true,
-		description: "Design your custom background",
+		category: "custom",
 		badge: "Custom",
+		description: "Design your custom background",
 	},
+
+	// Help
 	{
-		label: "Reviews",
-		href: "/shop/reviews",
+		label: "FAQ",
+		href: "/faq",
 		enabled: true,
-		showInNav: false, // In footer only
+		showInNav: false,
 		showInFooter: true,
-		description: "What our customers say",
+		category: "help",
 	},
 	{
-		label: "Blog",
-		href: "/blog",
+		label: "Setting Up",
+		href: "/setup",
 		enabled: true,
-		showInNav: true,
+		showInNav: false,
 		showInFooter: true,
-		description: "Aquadecor blog",
+		category: "help",
 	},
+
+	// Contact
 	{
-		label: "About",
+		label: "About Us",
 		href: "/about",
-		enabled: false,
-		showInNav: true,
+		enabled: true,
+		showInNav: false,
 		showInFooter: true,
-		description: "20+ years of excellence",
+		category: "contact",
+	},
+	{
+		label: "Contact",
+		href: "/contact",
+		enabled: false,
+		showInNav: false,
+		showInFooter: true,
+		category: "contact",
+	},
+	{
+		label: "Distributors",
+		href: "/distributors",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "contact",
 	},
 	{
 		label: "Blog",
 		href: "/blog",
-		enabled: false,
+		enabled: true,
 		showInNav: true,
+		showInFooter: false,
+		category: "contact",
+	},
+
+	// Legal
+	{
+		label: "Terms and Conditions",
+		href: "/en/terms",
+		enabled: true,
+		showInNav: false,
 		showInFooter: true,
-		description: "Aquarium tips and news",
+		category: "legal",
+	},
+	{
+		label: "Privacy Policy",
+		href: "/en/privacy",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "legal",
+	},
+	{
+		label: "Shipping Policy",
+		href: "/en/shipping",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "legal",
+	},
+	{
+		label: "Refund Policy",
+		href: "/en/refund",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "legal",
 	},
 ];
 
@@ -98,28 +189,6 @@ export const resourceLinks: ResourceLink[] = [
 	},
 ];
 
-// Dev/admin links (never show in prod nav/footer)
-export const devLinks: NavLink[] = [
-	{
-		label: "Lang Test",
-		href: "/en/lang",
-		enabled: false,
-		description: "i18n testing",
-	},
-	{
-		label: "Admin",
-		href: "/admin",
-		enabled: false,
-		description: "Dashboard",
-	},
-	{
-		label: "Sanctions",
-		href: "/sanctions",
-		enabled: false,
-		description: "Sanctions info",
-	},
-];
-
 // Filters
 export const enabledNavLinks = mainNavLinks.filter(
 	(link) => link.enabled && link.showInNav
@@ -128,5 +197,13 @@ export const enabledNavLinks = mainNavLinks.filter(
 export const footerLinks = mainNavLinks.filter(
 	(link) => link.enabled && link.showInFooter
 );
+
+export const footerLinksByCategory = {
+	shop: footerLinks.filter((l) => l.category === "shop"),
+	custom: footerLinks.filter((l) => l.category === "custom"),
+	help: footerLinks.filter((l) => l.category === "help"),
+	contact: footerLinks.filter((l) => l.category === "contact"),
+	legal: footerLinks.filter((l) => l.category === "legal"),
+};
 
 export const allEnabledLinks = mainNavLinks.filter((link) => link.enabled);
