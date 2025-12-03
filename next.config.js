@@ -10,7 +10,11 @@ const config = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "cdn.aquadecorbackgrounds.com",
+				hostname: "soywdlfgfbvxzzxsakzh.supabase.co", // supabase
+			},
+			{
+				protocol: "https",
+				hostname: "cdn.aquadecorbackgrounds.com", // old CDN
 			},
 			{
 				protocol: "https",
@@ -22,7 +26,7 @@ const config = {
 			},
 			{
 				protocol: "https",
-				hostname: "generous-respect-339e42b270.media.strapiapp.com",
+				hostname: "generous-respect-339e42b270.media.strapiapp.com", // Strapi blog
 			},
 		],
 	},
