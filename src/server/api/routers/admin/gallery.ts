@@ -73,14 +73,15 @@ export const adminGalleryRouter = createTRPCRouter({
 				query = query.where(and(...conditions)) as any;
 			}
 
-			// Sorting
+			// Sorting - Fix TypeScript by being explicit about column access
 			const sortField = input?.sortBy ?? "createdAt";
 			const sortDirection = input?.sortOrder ?? "desc";
-			query = query.orderBy(
-				sortDirection === "desc"
-					? desc(productImages[sortField as keyof typeof productImages])
-					: asc(productImages[sortField as keyof typeof productImages])
-			) as any;
+
+			if (sortDirection === "desc") {
+				query = query.orderBy(desc(productImages[sortField])) as any;
+			} else {
+				query = query.orderBy(asc(productImages[sortField])) as any;
+			}
 
 			// Pagination
 			query = query.limit(input?.limit ?? 50).offset(input?.offset ?? 0) as any;
@@ -92,14 +93,16 @@ export const adminGalleryRouter = createTRPCRouter({
 				.select({ count: sql<number>`COUNT(*)::int` })
 				.from(productImages);
 
-			const [{ count: total }] = conditions.length > 0
+			const totalResult = conditions.length > 0
 				? await totalQuery.where(and(...conditions))
 				: await totalQuery;
 
+			const total = totalResult[0]?.count ?? 0;
+
 			return {
 				images,
-				total: total ?? 0,
-				hasMore: (input?.offset ?? 0) + images.length < (total ?? 0),
+				total,
+				hasMore: (input?.offset ?? 0) + images.length < total,
 			};
 		}),
 
@@ -189,11 +192,9 @@ export const adminGalleryRouter = createTRPCRouter({
 				return { success: true, deleted: 0 };
 			}
 
-			const result = await ctx.db
+			await ctx.db
 				.delete(productImages)
-				.where(
-					sql`${productImages.id} = ANY(${input.ids})`
-				);
+				.where(inArray(productImages.id, input.ids));
 
 			return { success: true, deleted: input.ids.length };
 		}),
@@ -223,15 +224,19 @@ export const adminGalleryRouter = createTRPCRouter({
 	// Get stats for dashboard
 	getStats: adminProcedure
 		.query(async ({ ctx }) => {
-			const [totalImages] = await ctx.db
+			const totalImagesResult = await ctx.db
 				.select({ count: sql<number>`COUNT(*)::int` })
 				.from(productImages);
 
-			const [totalSize] = await ctx.db
+			const totalImages = totalImagesResult[0]?.count ?? 0;
+
+			const totalSizeResult = await ctx.db
 				.select({
 					size: sql<number>`SUM(COALESCE(${productImages.fileSize}, 0))::bigint`
 				})
 				.from(productImages);
+
+			const totalSize = totalSizeResult[0]?.size ?? 0;
 
 			// Images by product (top 5)
 			const imagesByProduct = await ctx.db
@@ -245,9 +250,9 @@ export const adminGalleryRouter = createTRPCRouter({
 				.limit(5);
 
 			return {
-				total: totalImages?.count ?? 0,
-				totalSizeBytes: totalSize?.size ?? 0,
-				totalSizeMB: ((totalSize?.size ?? 0) / 1024 / 1024).toFixed(2),
+				total: totalImages,
+				totalSizeBytes: totalSize,
+				totalSizeMB: (totalSize / 1024 / 1024).toFixed(2),
 				byProduct: imagesByProduct,
 			};
 		}),
@@ -310,14 +315,16 @@ export const adminGalleryRouter = createTRPCRouter({
 			if (!category) return null;
 
 			// Get image count
-			const [{ count: imageCount }] = await ctx.db
+			const imageCountResult = await ctx.db
 				.select({ count: sql<number>`COUNT(*)::int` })
 				.from(galleryImageCategories)
 				.where(eq(galleryImageCategories.categoryId, input.id));
 
+			const imageCount = imageCountResult[0]?.count ?? 0;
+
 			return {
 				...category,
-				imageCount: imageCount ?? 0,
+				imageCount,
 			};
 		}),
 

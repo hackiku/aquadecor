@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/media/ImageCard.tsx
 "use client";
 

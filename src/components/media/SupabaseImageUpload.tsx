@@ -1,13 +1,15 @@
-// src/components/media/ImageUpload.tsx
+// src/components/media/SupabaseImageUpload.tsx
+// Supabase- temp name to avoid conflicts
+
 "use client";
 
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { supabase } from "~/lib/supabase";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
 import {
 	Upload,
 	X,
@@ -18,8 +20,8 @@ import {
 import { cn } from "~/lib/utils";
 import Image from "next/image";
 
-interface TestImageUploadProps {
-	onUpload: (file: File, metadata: ImageMetadata) => Promise<void>;
+interface ImageUploadProps {
+	onUpload: (file: File, metadata: ImageMetadata, uploadResult: UploadResult) => Promise<void>;
 	productId?: string;
 	maxSizeMB?: number;
 	allowedTypes?: string[];
@@ -32,13 +34,32 @@ interface ImageMetadata {
 	sortOrder: number;
 }
 
-export function TestImageUpload({
+interface UploadResult {
+	publicUrl: string;
+	storagePath: string;
+	dimensions: { width: number; height: number };
+}
+
+// Helper to get image dimensions
+const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
+	return new Promise((resolve, reject) => {
+		const img = new window.Image();
+		img.onload = () => {
+			resolve({ width: img.width, height: img.height });
+			URL.revokeObjectURL(img.src);
+		};
+		img.onerror = reject;
+		img.src = URL.createObjectURL(file);
+	});
+};
+
+export function ImageUpload({
 	onUpload,
 	productId,
 	maxSizeMB = 10,
 	allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"],
 	className,
-}: TestImageUploadProps) {
+}: ImageUploadProps) {
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [altText, setAltText] = useState("");
@@ -96,10 +117,41 @@ export function TestImageUpload({
 		setError(null);
 
 		try {
+			// 1. Get image dimensions
+			const dimensions = await getImageDimensions(file);
+
+			// 2. Generate unique filename
+			const timestamp = Date.now();
+			const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+			const filename = `${timestamp}-${cleanName}`;
+			const path = `gallery/${filename}`;
+
+			// 3. Upload to Supabase Storage
+			const { data, error: uploadError } = await supabase.storage
+				.from('aquadecor-gallery')
+				.upload(path, file, {
+					cacheControl: '3600',
+					upsert: false
+				});
+
+			if (uploadError) {
+				throw new Error(`Upload failed: ${uploadError.message}`);
+			}
+
+			// 4. Get public URL
+			const { data: { publicUrl } } = supabase.storage
+				.from('aquadecor-gallery')
+				.getPublicUrl(data.path);
+
+			// 5. Call parent's onUpload with all the info
 			await onUpload(file, {
 				altText,
 				productId,
 				sortOrder,
+			}, {
+				publicUrl,
+				storagePath: data.path,
+				dimensions,
 			});
 
 			// Reset form
@@ -237,7 +289,7 @@ export function TestImageUpload({
 								{isUploading ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-										Uploading...
+										Uploading to Supabase...
 									</>
 								) : (
 									<>

@@ -132,15 +132,15 @@ export const adminPages: AdminPage[] = [
 		href: "/admin/countries",
 		icon: Globe,
 		description: "Supported regions",
-		inactive: true,
+		inactive: false,
 	},
-	{
-		title: "Settings",
-		href: "/admin/settings",
-		icon: Settings,
-		description: "Site configuration",
-		inactive: true,
-	},
+	// {
+	// 	title: "Settings",
+	// 	href: "/admin/settings",
+	// 	icon: Settings,
+	// 	description: "Site configuration",
+	// 	inactive: true,
+	// },
 	{
 		title: "Test Storage",
 		href: "/admin/test-storage",

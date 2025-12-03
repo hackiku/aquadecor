@@ -19,9 +19,12 @@ export const env = createEnv({
 			.default("development"),
 		STRAPI_URL: z.string().url(),
 		STRAPI_API_TOKEN: z.string(),
-		
-		// Supabase Storage (server-side)
+
+		// Supabase Storage (server-side S3)
 		SUPABASE_SECRET_API_KEY: z.string(),
+		SUPABASE_S3_ACCESS_KEY_ID: z.string().optional(),
+		SUPABASE_S3_SECRET_ACCESS_KEY: z.string().optional(),
+		SUPABASE_S3_REGION: z.string().default("eu-west-1"),
 	},
 
 	/**
@@ -32,6 +35,7 @@ export const env = createEnv({
 	client: {
 		// Supabase Storage (client-side)
 		NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+		NEXT_PUBLIC_SUPABASE_STORAGE_URL: z.string().url().optional(),
 		NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string(),
 	},
 
@@ -47,10 +51,14 @@ export const env = createEnv({
 		NODE_ENV: process.env.NODE_ENV,
 		STRAPI_URL: process.env.STRAPI_URL,
 		STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
-		
+
 		// Supabase
 		SUPABASE_SECRET_API_KEY: process.env.SUPABASE_SECRET_API_KEY,
+		SUPABASE_S3_ACCESS_KEY_ID: process.env.SUPABASE_S3_ACCESS_KEY_ID,
+		SUPABASE_S3_SECRET_ACCESS_KEY: process.env.SUPABASE_S3_SECRET_ACCESS_KEY,
+		SUPABASE_S3_REGION: process.env.SUPABASE_S3_REGION,
 		NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+		NEXT_PUBLIC_SUPABASE_STORAGE_URL: process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL,
 		NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
 	},
 	/**
