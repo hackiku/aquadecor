@@ -1,40 +1,13 @@
+
 // @ts-nocheck
 // src/app/shop/page.tsx
 
-import { ProductLineCard } from "~/components/shop/category/ProductLineCard";
+import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero";
 import { ProductCard } from "~/components/shop/product/ProductCard";
 import { api, HydrateClient } from "~/trpc/server";
-
-// Static product line data
-const productLines = [
-	{
-		slug: "3d-backgrounds",
-		name: "3D Backgrounds",
-		description: "Transform your aquarium with custom-made 3D backgrounds so realistic that even experts can't tell the difference from natural rock formations.",
-		image: "/media/images/3d-backgrounds_500px.webp",
-		label: "Handcrafted Since 2004",
-	},
-	{
-		slug: "aquarium-decorations",
-		name: "Aquarium Decorations",
-		description: "Realistic plants, rocks, driftwood, and accessories crafted from neutral materials for unlimited lifespan and zero water chemistry impact.",
-		image: "/media/images/additional-items_500px.webp",
-		label: "Complete Your Aquascape",
-	},
-];
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 export default async function ShopPage() {
-	// Get category counts
-	const backgroundsCategories = await api.product.getCategoriesForProductLine({
-		productLineSlug: "3d-backgrounds",
-		locale: "en",
-	});
-
-	const decorationsCategories = await api.product.getCategoriesForProductLine({
-		productLineSlug: "aquarium-decorations",
-		locale: "en",
-	});
-
 	// Get all featured products
 	const featuredProducts = await api.product.getFeatured({
 		locale: "en",
@@ -53,62 +26,47 @@ export default async function ShopPage() {
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Hero Section */}
-				<section className="py-16 md:py-24 border-b">
-					<div className="px-4 max-w-7xl mx-auto text-center space-y-6">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
+
+				<section className="relative py-16 md:py-24 bg-black __border __border-red-600/30">
+					<div className="px-14 max-w-5xl mx-auto text-center space-y-6 __border-red-600/30">
+						<h1 className="text-4xl text-white md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 							Shop Aquarium Products
 						</h1>
 						<p className="text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto">
 							Explore our complete range of 3D backgrounds and decorations. Handcrafted in Serbia, trusted by 50,000+ aquarists worldwide.
 						</p>
 					</div>
+
 				</section>
 
+				{/* Split Hero - Full Viewport */}
+
 				{/* 3D Backgrounds Section */}
-				<section className="py-16 md:py-24">
+				<section id="3d-backgrounds" className="relative py-24 md:py-32 bg-card">
+					<WaveDivider position="top" color="black" className="text-muted/30" />
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						{/* Product Line Card */}
-						<ProductLineCard
-							slug={productLines[0]!.slug}
-							name={productLines[0]!.name}
-							description={productLines[0]!.description}
-							image={productLines[0]!.image}
-							label={productLines[0]!.label}
-							position="left"
-							categoryCount={backgroundsCategories.length}
-						/>
+						{/* Section Header */}
+						
+						<ProductLineSplitHero />
 
 						{/* Featured Products */}
 						{backgroundProducts.length > 0 && (
-							<div className="space-y-6">
-								<div className="text-center">
-									<h3 className="text-2xl md:text-3xl font-display font-light">
-										Featured 3D Backgrounds
-									</h3>
-									<p className="mt-2 text-muted-foreground font-display font-light">
-										Custom-made to fit any aquarium size
-									</p>
-								</div>
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-									{backgroundProducts.map((product) => (
-										<ProductCard
-											key={product.id}
-											product={{
-												...product,
-												// Fix: Provide fallback for nullable name to satisfy strict ProductCard type
-												name: product.name ?? "Untitled Product",
-												// Fix: Ensure stockStatus exists
-												stockStatus: (product as any).stockStatus || 'made_to_order'
-											}}
-										/>
-									))}
-								</div>
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+								{backgroundProducts.map((product) => (
+									<ProductCard
+										key={product.id}
+										product={{
+											...product,
+											name: product.name ?? "Untitled Product",
+											stockStatus: (product as any).stockStatus || 'made_to_order'
+										}}
+									/>
+								))}
 							</div>
 						)}
 
 						{/* Key Features */}
-						<div className="grid md:grid-cols-3 gap-8 mt-12 p-8 bg-muted/30 rounded-2xl">
+						<div className="grid md:grid-cols-3 gap-8 mt-16 p-8 bg-muted/30 rounded-2xl">
 							<div className="text-center space-y-3">
 								<div className="text-4xl">🎨</div>
 								<h4 className="font-display font-medium">Hand-Painted</h4>
@@ -134,49 +92,39 @@ export default async function ShopPage() {
 					</div>
 				</section>
 
+				
+
 				{/* Aquarium Decorations Section */}
-				<section className="py-16 md:py-24 bg-muted/10">
+				<section id="aquarium-decorations" className="relative py-24 md:py-32 bg-muted/10">
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						{/* Product Line Card */}
-						<ProductLineCard
-							slug={productLines[1]!.slug}
-							name={productLines[1]!.name}
-							description={productLines[1]!.description}
-							image={productLines[1]!.image}
-							label={productLines[1]!.label}
-							position="right"
-							categoryCount={decorationsCategories.length}
-						/>
+						{/* Section Header */}
+						<div className="text-center space-y-4">
+							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-extralight tracking-tight">
+								Aquarium Decorations
+							</h2>
+							<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
+								Plants, rocks, and driftwood that last forever
+							</p>
+						</div>
 
 						{/* Featured Products */}
 						{decorationProducts.length > 0 && (
-							<div className="space-y-6">
-								<div className="text-center">
-									<h3 className="text-2xl md:text-3xl font-display font-light">
-										Featured Decorations
-									</h3>
-									<p className="mt-2 text-muted-foreground font-display font-light">
-										Plants, rocks, and driftwood that last forever
-									</p>
-								</div>
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-									{decorationProducts.map((product) => (
-										<ProductCard
-											key={product.id}
-											product={{
-												...product,
-												// Fix: Provide fallback for nullable name
-												name: product.name ?? "Untitled Product",
-												stockStatus: (product as any).stockStatus || 'made_to_order'
-											}}
-										/>
-									))}
-								</div>
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+								{decorationProducts.map((product) => (
+									<ProductCard
+										key={product.id}
+										product={{
+											...product,
+											name: product.name ?? "Untitled Product",
+											stockStatus: (product as any).stockStatus || 'made_to_order'
+										}}
+									/>
+								))}
 							</div>
 						)}
 
 						{/* Key Features */}
-						<div className="grid md:grid-cols-3 gap-8 mt-12 p-8 bg-background rounded-2xl border">
+						<div className="grid md:grid-cols-3 gap-8 mt-16 p-8 bg-background rounded-2xl">
 							<div className="text-center space-y-3">
 								<div className="text-4xl">🌿</div>
 								<h4 className="font-display font-medium">100% Neutral</h4>
@@ -203,7 +151,7 @@ export default async function ShopPage() {
 				</section>
 
 				{/* Trust Bar */}
-				<section className="py-12 md:py-16 border-t">
+				<section className="py-12 md:py-16">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
 							<div className="flex items-center gap-2">
