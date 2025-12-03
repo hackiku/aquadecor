@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { X, Heart } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { WishlistItem } from "./WishlistItem";
@@ -12,6 +13,8 @@ import type { Product } from "~/server/db/schema/shop";
 // ============================================================================
 // CLIENT-ONLY TYPES (localStorage wishlist state)
 // ============================================================================
+
+// const router = useRouter();
 
 // Raw wishlist item stored in localStorage
 interface WishlistItemData {
@@ -142,7 +145,13 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 									Start saving products you love
 								</p>
 							</div>
-							<Button onClick={onClose} variant="outline" className="rounded-full">
+
+							<Button variant="outline" className="rounded-full"
+									onClick={() => {
+										onClose();
+										window.location.href = "/shop";
+									}} 
+									>
 								Browse Products
 							</Button>
 						</div>

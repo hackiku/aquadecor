@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package, Wrench, Shield, Zap } from "lucide-react";
+import { ArrowRight, Package } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
-import { CategorySlider } from "~/components/shop/category/CategorySlider";
+import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
+import { WaveContainer } from "~/components/ui/water/wave-container";
+import { Button } from "~/components/ui/button";
 
 export default async function ThreeDBackgroundsPage() {
 	// Load categories for 3D backgrounds
@@ -18,8 +20,8 @@ export default async function ThreeDBackgroundsPage() {
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Hero Section */}
-				<section className="relative overflow-hidden border-b">
-					<div className="relative h-[500px] md:h-[600px]">
+				<section className="relative overflow-hidden bg-black">
+					<div className="relative h-[500px] md:h-[500px]">
 						<Image
 							src="/media/images/3d-backgrounds_500px.webp"
 							alt="3D Aquarium Backgrounds"
@@ -65,8 +67,29 @@ export default async function ThreeDBackgroundsPage() {
 					</div>
 				</section>
 
+				{/* Categories Grid */}
+				<section id="categories" className="relative pt-16 md:py-24 bg-gradient-to-b from-muted/30 to-background">
+					<WaveDivider position="top" color="black" className="" />
+					<div className="px-4 max-w-7xl mx-auto">
+						<div className="mb-12">
+							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
+								Choose Your Style
+							</h2>
+							<p className="text-lg text-muted-foreground font-display font-light">
+								From classic rocky terrains to slim profiles for rimless tanks
+							</p>
+						</div>
+
+						<CategoryGrid
+							categories={categories}
+							productLineSlug="3d-backgrounds"
+							columns="3"
+						/>
+					</div>
+				</section>
+
 				{/* Why Choose Us */}
-				<section className="py-16 md:py-24 border-b bg-gradient-to-b from-muted/30 to-transparent">
+				<section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="text-center mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
@@ -80,7 +103,9 @@ export default async function ThreeDBackgroundsPage() {
 						<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 							<div className="text-center space-y-4">
 								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border border-primary/20">
-									<Wrench className="h-8 w-8 text-primary" />
+									<svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+									</svg>
 								</div>
 								<h3 className="text-xl font-display font-normal">Fully Custom Fit</h3>
 								<p className="text-sm text-muted-foreground font-display font-light">
@@ -90,7 +115,9 @@ export default async function ThreeDBackgroundsPage() {
 
 							<div className="text-center space-y-4">
 								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border border-primary/20">
-									<Shield className="h-8 w-8 text-primary" />
+									<svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+									</svg>
 								</div>
 								<h3 className="text-xl font-display font-normal">Lifetime Warranty</h3>
 								<p className="text-sm text-muted-foreground font-display font-light">
@@ -100,7 +127,9 @@ export default async function ThreeDBackgroundsPage() {
 
 							<div className="text-center space-y-4">
 								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border border-primary/20">
-									<Package className="h-8 w-8 text-primary" />
+									<svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+									</svg>
 								</div>
 								<h3 className="text-xl font-display font-normal">Modular Sections</h3>
 								<p className="text-sm text-muted-foreground font-display font-light">
@@ -110,7 +139,9 @@ export default async function ThreeDBackgroundsPage() {
 
 							<div className="text-center space-y-4">
 								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 border border-primary/20">
-									<Zap className="h-8 w-8 text-primary" />
+									<svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+									</svg>
 								</div>
 								<h3 className="text-xl font-display font-normal">Hidden Equipment</h3>
 								<p className="text-sm text-muted-foreground font-display font-light">
@@ -121,31 +152,20 @@ export default async function ThreeDBackgroundsPage() {
 					</div>
 				</section>
 
-				{/* Categories Slider */}
-				<section id="categories" className="py-16 md:py-24">
-					<div className="px-4 max-w-7xl mx-auto">
-						<div className="mb-12">
-							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
-								Choose Your Style
-							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light">
-								From classic rocky terrains to slim profiles for rimless tanks
-							</p>
-						</div>
+				<div className="relative -mb-16 py-12 z-20 bg-transparent">
+					<WaveDivider position="bottom" color="black" className="" />
+				</div>
 
-						<CategorySlider
-							categories={categories}
-							productLineSlug="3d-backgrounds"
-						/>
-					</div>
-				</section>
+				{/* Built to Last Forever - Enhanced with gradient background */}
+				<section className="relative py-16 md:py-20 overflow-hidden">
+					{/* Gradient orb background */}
+					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-cyan-500/5 to-transparent" />
+					<div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+					<div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
 
-				{/* Material Specs CTA */}
-				<section className="py-16 md:py-20 bg-muted/30 border-t">
-					<WaveDivider position="top" color="currentColor" className="text-background" />
-					<div className="px-4 max-w-7xl mx-auto">
+					<div className="px-4 max-w-7xl mx-auto relative z-10">
 						<div className="grid md:grid-cols-2 gap-12 items-center">
-							<div className="space-y-6">
+							<div className="space-y-6 order-2 md:order-1">
 								<h2 className="text-3xl md:text-4xl font-display font-light">
 									Built to Last Forever
 								</h2>
@@ -177,16 +197,18 @@ export default async function ThreeDBackgroundsPage() {
 											</p>
 										</div>
 									</div>
+									<div className="flex items-start gap-3">
+										<span className="text-primary text-lg">✓</span>
+										<div>
+											<p className="font-display font-medium">Fully Custom Dimensions</p>
+											<p className="text-sm text-muted-foreground font-display font-light">
+												Made to your exact specifications, including weirs and overflows
+											</p>
+										</div>
+									</div>
 								</div>
-								<Link
-									href="/blog/high-quality-aquarium-backgrounds-with-a-lifetime-warranty"
-									className="inline-flex items-center gap-2 text-primary hover:underline font-display font-medium"
-								>
-									Read our material testing blog post
-									<ArrowRight className="h-4 w-4" />
-								</Link>
 							</div>
-							<div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-border">
+							<div className="relative aspect-square rounded-2xl overflow-hidden order-1 md:order-2 shadow-2xl">
 								<Image
 									src="/media/images/3d-backgrounds_500px.webp"
 									alt="Material Testing"
@@ -198,29 +220,48 @@ export default async function ThreeDBackgroundsPage() {
 					</div>
 				</section>
 
-				{/* Trust Bar */}
-				<section className="py-12 md:py-16 border-t">
-					<div className="px-4 max-w-7xl mx-auto">
-						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
+				{/* Complete Your Setup CTA with Wave Container */}
+				<WaveContainer className="relative mt-16 py-12">
+					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
+						<div className="text-center space-y-8 mb-12">
+							<div className="max-w-2xl mx-auto space-y-4">
+								<h2 className="text-3xl md:text-4xl font-display font-light text-white">
+									Complete Your Setup with Decorations
+								</h2>
+								<p className="text-lg text-cyan-100/80 font-display font-light">
+									Add realistic plants, rocks, and driftwood to create a truly immersive aquascape that complements your custom background
+								</p>
+							</div>
+
+							<Button
+								asChild
+								size="lg"
+								className="bg-white hover:bg-white/90 text-cyan-900 rounded-full font-display font-medium text-base px-8 py-6"
+							>
+								<Link href="/shop/aquarium-decorations" className="inline-flex items-center gap-2">
+									Browse Decorations
+									<ArrowRight className="h-4 w-4" />
+								</Link>
+							</Button>
+						</div>
+
+						{/* Trust signals inside wave */}
+						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
+								<span className="text-cyan-300 text-lg">✓</span>
 								<span>Free Worldwide Shipping</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
+								<span className="text-cyan-300 text-lg">✓</span>
 								<span>10-12 Day Production</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>50,000+ Products Shipped</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>Made in Serbia</span>
+								<span className="text-cyan-300 text-lg">✓</span>
+								<span>Lifetime Warranty</span>
 							</div>
 						</div>
 					</div>
-				</section>
+				</WaveContainer>
 			</main>
 		</HydrateClient>
 	);

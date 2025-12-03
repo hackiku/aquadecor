@@ -1,8 +1,6 @@
 // src/components/shop/category/CategorySlider.tsx
 
-import Link from "next/link";
-import { Card, CardContent } from "~/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { CategoryCard } from "./CategoryCard";
 
 interface Category {
 	id: string;
@@ -14,51 +12,46 @@ interface Category {
 interface CategorySliderProps {
 	categories: Category[];
 	productLineSlug: string;
+	doubleRow?: boolean;
 }
 
-export function CategorySlider({ categories, productLineSlug }: CategorySliderProps) {
+export function CategorySlider({ categories, productLineSlug, doubleRow = false }: CategorySliderProps) {
 	if (!categories || categories.length === 0) {
 		return null;
 	}
 
+	// Split into two rows if doubleRow is true
+	if (doubleRow && categories.length > 3) {
+		const midpoint = Math.ceil(categories.length / 2);
+		const topRow = categories.slice(0, midpoint);
+		const bottomRow = categories.slice(midpoint);
+
+		return (
+			<div className="space-y-6">
+				<CategorySliderRow categories={topRow} productLineSlug={productLineSlug} />
+				<CategorySliderRow categories={bottomRow} productLineSlug={productLineSlug} />
+			</div>
+		);
+	}
+
+	return <CategorySliderRow categories={categories} productLineSlug={productLineSlug} />;
+}
+
+function CategorySliderRow({ categories, productLineSlug }: { categories: Category[]; productLineSlug: string }) {
 	return (
 		<div className="relative -mx-4 px-4">
 			{/* Horizontal Scroll Container */}
 			<div className="overflow-x-auto scrollbar-hide">
 				<div className="flex gap-6 pb-4 min-w-min">
 					{categories.map((category) => (
-						<Link
+						<CategoryCard
 							key={category.id}
-							href={`/shop/${productLineSlug}/${category.slug}`}
-							className="group flex-shrink-0 w-[320px] md:w-[380px]"
-						>
-							<Card className="h-full border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl bg-card/50 backdrop-blur-sm">
-								<CardContent className="p-6 h-full flex flex-col">
-									{/* Header */}
-									<div className="flex items-start justify-between mb-4">
-										<h4 className="text-xl font-display font-normal leading-tight group-hover:text-primary transition-colors pr-4">
-											{category.name ?? category.slug}
-										</h4>
-										<ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0 mt-1" />
-									</div>
-
-									{/* Description */}
-									{category.description && (
-										<p className="text-sm text-muted-foreground font-display font-light leading-relaxed flex-1 line-clamp-3">
-											{category.description}
-										</p>
-									)}
-
-									{/* CTA */}
-									<div className="mt-4 pt-4 border-t border-border/50">
-										<span className="text-sm text-primary font-display font-medium inline-flex items-center gap-1.5">
-											View products
-											<ArrowRight className="h-3.5 w-3.5" />
-										</span>
-									</div>
-								</CardContent>
-							</Card>
-						</Link>
+							id={category.id}
+							slug={category.slug}
+							name={category.name}
+							description={category.description}
+							productLineSlug={productLineSlug}
+						/>
 					))}
 				</div>
 			</div>

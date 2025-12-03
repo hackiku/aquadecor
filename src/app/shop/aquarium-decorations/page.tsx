@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package, Leaf, Mountain, Anchor } from "lucide-react";
+import { ArrowRight, Package } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategorySlider } from "~/components/shop/category/CategorySlider";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
+import { WaveContainer } from "~/components/ui/water/wave-container";
+import { Button } from "~/components/ui/button";
+import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 
 export default async function AquariumDecorationsPage() {
 	// Load categories for aquarium decorations
@@ -27,7 +30,7 @@ export default async function AquariumDecorationsPage() {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -65,9 +68,8 @@ export default async function AquariumDecorationsPage() {
 					</div>
 				</section>
 
-
-				{/* Categories Slider */}
-				<section id="categories" className="relative py-16 md:py-24 bg-linear-to-t from-transparent to-muted/30">
+				{/* Categories Slider - Double Row */}
+				<section id="categories" className="relative pt-16 md:py-24 bg-linear-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" className="" />
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="mb-12">
@@ -79,18 +81,36 @@ export default async function AquariumDecorationsPage() {
 							</p>
 						</div>
 
-						<CategorySlider
+
+						<CategoryGrid
+							categories={categories}
+							productLineSlug="3d-backgrounds"
+							// columns="2"
+						/>
+
+						{/* <CategorySlider
 							categories={categories}
 							productLineSlug="aquarium-decorations"
-						/>
+							doubleRow={true}
+						/> */}
 					</div>
-				</section>
 
-				{/* Why Choose These Materials */}
-				<section className="py-16 md:py-20 bg-muted/30">
-					<div className="px-4 max-w-7xl mx-auto">
+				</section>
+				
+				<div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
+					<WaveDivider position="bottom" color="black" className="" />
+				</div>
+
+				{/* Safe for All Species - Enhanced with gradient background */}
+				<section className="relative py-16 md:py-20 overflow-hidden">
+					{/* Gradient orb background */}
+					<div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
+					<div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+					<div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
+
+					<div className="px-4 max-w-7xl mx-auto relative z-10">
 						<div className="grid md:grid-cols-2 gap-12 items-center">
-							<div className="relative aspect-square rounded-2xl overflow-hidden border-2 border-border order-2 md:order-1">
+							<div className="relative aspect-square rounded-2xl overflow-hidden order-2 md:order-1 shadow-2xl">
 								<Image
 									src="/media/images/additional-items_500px.webp"
 									alt="Neutral Materials"
@@ -145,99 +165,48 @@ export default async function AquariumDecorationsPage() {
 					</div>
 				</section>
 
-
-				{/* Product Categories Overview */}
-				<section className="relative py-16 md:py-24 border-b bg-linear-to-b from-muted/30 to-transparent">
-					{/* <WaveDivider position="top" color="black" className="text-muted/30" /> */}
-					<div className="px-4 max-w-7xl mx-auto">
-						<div className="text-center mb-12">
-							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
-								Everything You Need for a Natural Look
-							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								From lush plants to weathered driftwood, create stunning aquascapes that last forever
-							</p>
-						</div>
-
-						<div className="grid md:grid-cols-3 gap-8">
-							<div className="text-center space-y-4">
-								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20">
-									<Leaf className="h-8 w-8 text-green-600" />
-								</div>
-								<h3 className="text-xl font-display font-normal">Artificial Plants</h3>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Realistic aquatic plants that never die, require zero maintenance, and won't be eaten by herbivorous fish
+				{/* Mix & Match CTA with Wave Container */}
+				<WaveContainer className="relative mt-16 py-12">
+					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
+						<div className="text-center space-y-8 mb-12">
+							<div className="max-w-2xl mx-auto space-y-4">
+								<h2 className="text-3xl md:text-4xl font-display font-light text-white">
+									Pair with our legendary 3D Backgrounds
+								</h2>
+								<p className="text-lg text-cyan-100/80 font-display font-light">
+									Create a complete ecosystem by combining decorations with our custom 3D backgrounds for a truly immersive aquascape
 								</p>
 							</div>
 
-							<div className="text-center space-y-4">
-								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-500/10 border border-slate-500/20">
-									<Mountain className="h-8 w-8 text-slate-600" />
-								</div>
-								<h3 className="text-xl font-display font-normal">Rocks & Formations</h3>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Natural-looking stones and rock formations that won't alter water parameters or leach minerals
-								</p>
-							</div>
-
-							<div className="text-center space-y-4">
-								<div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/20">
-									<Anchor className="h-8 w-8 text-amber-600" />
-								</div>
-								<h3 className="text-xl font-display font-normal">Driftwood & Roots</h3>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Weathered wood pieces and root structures that sink immediately and never rot or decay
-								</p>
-							</div>
+							<Button
+								asChild
+								size="lg"
+								className="bg-white hover:bg-white/90 text-cyan-900 rounded-full font-display font-medium text-base px-8 py-6"
+							>
+								<Link href="/shop/3d-backgrounds" className="inline-flex items-center gap-2">
+									Explore 3D Backgrounds
+									<ArrowRight className="h-4 w-4" />
+								</Link>
+							</Button>
 						</div>
-					</div>
-				</section>
 
-
-				{/* Mix & Match CTA */}
-				<section className="py-16 md:py-20 border-t">
-					<div className="px-4 max-w-7xl mx-auto text-center space-y-8">
-						<div className="max-w-2xl mx-auto space-y-4">
-							<h2 className="text-3xl md:text-4xl font-display font-light">
-								Pair with Our 3D Backgrounds
-							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light">
-								Create a complete ecosystem by combining decorations with our custom 3D backgrounds for a truly immersive aquascape
-							</p>
-						</div>
-						<Link
-							href="/shop/3d-backgrounds"
-							className="inline-flex items-center gap-2 px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all hover:scale-105"
-						>
-							Explore 3D Backgrounds
-							<ArrowRight className="h-4 w-4" />
-						</Link>
-					</div>
-				</section>
-
-				{/* Trust Bar */}
-				<section className="py-12 md:py-16 border-t">
-					<div className="px-4 max-w-7xl mx-auto">
-						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
+						{/* Trust signals inside wave */}
+						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
+								<span className="text-cyan-300 text-lg">✓</span>
 								<span>Free Worldwide Shipping</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
+								<span className="text-cyan-300 text-lg">✓</span>
 								<span>In Stock & Ready to Ship</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
+								<span className="text-cyan-300 text-lg">✓</span>
 								<span>Lifetime Warranty</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>Made in Serbia</span>
 							</div>
 						</div>
 					</div>
-				</section>
+				</WaveContainer>
 			</main>
 		</HydrateClient>
 	);
