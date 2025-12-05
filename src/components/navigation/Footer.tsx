@@ -1,5 +1,11 @@
 // src/components/navigation/Footer.tsx
 
+// subtle moving wave
+// https://codepen.io/pBun/pen/vYGOKKo
+
+
+// src/components/navigation/Footer.tsx
+
 import Link from "next/link";
 import Image from "next/image";
 import { footerLinksByCategory } from "~/data/navigation";
@@ -10,16 +16,16 @@ const isDev = process.env.NODE_ENV === "development";
 
 export function Footer() {
 	return (
-		<footer className="relative bg-black text-white">
+		<footer className="relative bg-black text-white pt-12 ">
 			{/* Subtle wave divider on top */}
 			<svg
 				width="100%"
-				height="60"
+				height="160"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 1920 60"
 				preserveAspectRatio="none"
-				className="absolute top-0 left-0 w-full"
+				className="absolute top-0 left-0 w-full "
 			>
 				<path
 					fill="currentColor"

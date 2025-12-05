@@ -1,10 +1,8 @@
 // src/app/admin/catalog/products/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
-import { AdminTable, type Column } from "~/app/admin/_components/primitives/AdminTable";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,29 +12,53 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/components/ui/select";
-import { Plus } from "lucide-react";
+import { AdminTable, type Column } from "~/app/admin/_components/primitives/AdminTable";
+import { Plus, Package, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+type ProductRow = {
+	id: string;
+	slug: string;
+	sku: string | null;
+	name: string | null;
+	categoryName: string | null;
+	categorySlug: string | null;
+	productLine: string | null;
+	basePriceEurCents: number | null;
+	stockStatus: string | null;
+	isActive: boolean;
+	isFeatured: boolean;
+	featuredImageUrl: string | null;
+};
+
 export default function ProductsListPage() {
 	const [categoryFilter, setCategoryFilter] = useState<string | undefined>();
-	const [stockFilter, setStockFilter] = useState<"in_stock" | "made_to_order" | "out_of_stock" | undefined>();
+	const [stockFilter, setStockFilter] = useState<string | undefined>();
 	const [activeFilter, setActiveFilter] = useState<boolean | undefined>();
-
-	const { data: products, isLoading } = api.admin.product.getAll.useQuery({
-		categoryId: categoryFilter,
-		stockStatus: stockFilter,
-		isActive: activeFilter,
-	});
+	const [sortBy, setSortBy] = useState<"name" | "sku" | "price" | "created">("created");
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
 	const { data: categories } = api.admin.category.getAll.useQuery();
+	const { data: products, isLoading } = api.admin.product.getAll.useQuery({
+		categoryId: categoryFilter,
+		stockStatus: stockFilter as any,
+		isActive: activeFilter,
+		sortBy,
+		sortOrder,
+	});
 
-	const columns: Column<NonNullable<typeof products>[0]>[] = [
+	const formatPrice = (cents: number | null) => {
+		if (!cents) return "Custom";
+		return `€${(cents / 100).toFixed(2)}`;
+	};
+
+	const columns: Column<ProductRow>[] = [
 		{
 			header: "Image",
 			accessorKey: "featuredImageUrl",
 			cell: (row) => (
-				<div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
+				<div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
 					{row.featuredImageUrl ? (
 						<Image
 							src={row.featuredImageUrl}
@@ -45,8 +67,8 @@ export default function ProductsListPage() {
 							className="object-cover"
 						/>
 					) : (
-						<div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs font-display">
-							No image
+						<div className="flex items-center justify-center h-full">
+							<Package className="h-6 w-6 text-muted-foreground" />
 						</div>
 					)}
 				</div>
@@ -56,19 +78,21 @@ export default function ProductsListPage() {
 			header: "SKU",
 			accessorKey: "sku",
 			cell: (row) => (
-				<span className="font-display font-normal text-sm">
-					{row.sku || "—"}
+				<span className="font-mono text-sm">
+					{row.sku || <span className="text-muted-foreground">—</span>}
 				</span>
 			),
 		},
 		{
-			header: "Name",
+			header: "Product",
 			accessorKey: "name",
 			cell: (row) => (
 				<div className="space-y-1">
-					<p className="font-display font-normal">{row.name || "Untitled"}</p>
+					<p className="font-display font-normal">
+						{row.name || "Untitled"}
+					</p>
 					<p className="text-xs text-muted-foreground font-display font-light">
-						{row.categoryName || "No category"}
+						{row.categoryName}
 					</p>
 				</div>
 			),
@@ -76,35 +100,28 @@ export default function ProductsListPage() {
 		{
 			header: "Price",
 			accessorKey: "basePriceEurCents",
-			cell: (row) => {
-				if (!row.basePriceEurCents) {
-					return (
-						<Badge variant="outline" className="font-display font-light">
-							Custom Only
-						</Badge>
-					);
-				}
-				return (
-					<span className="font-display font-normal">
-						€{(row.basePriceEurCents / 100).toFixed(2)}
-					</span>
-				);
-			},
+			cell: (row) => (
+				<span className="font-display font-normal">
+					{formatPrice(row.basePriceEurCents)}
+				</span>
+			),
 		},
 		{
 			header: "Stock",
 			accessorKey: "stockStatus",
 			cell: (row) => {
-				const variants = {
+				const statusMap = {
 					in_stock: { label: "In Stock", variant: "default" as const },
 					made_to_order: { label: "Made to Order", variant: "secondary" as const },
 					out_of_stock: { label: "Out of Stock", variant: "destructive" as const },
 				};
-				const status = variants[row.stockStatus as keyof typeof variants];
-				return (
-					<Badge variant={status.variant} className="font-display font-light">
+				const status = row.stockStatus ? statusMap[row.stockStatus as keyof typeof statusMap] : null;
+				return status ? (
+					<Badge variant={status.variant} className="font-display font-light text-xs">
 						{status.label}
 					</Badge>
+				) : (
+					<span className="text-muted-foreground">—</span>
 				);
 			},
 		},
@@ -112,12 +129,38 @@ export default function ProductsListPage() {
 			header: "Status",
 			accessorKey: "isActive",
 			cell: (row) => (
-				<Badge
-					variant={row.isActive ? "default" : "secondary"}
-					className="font-display font-light"
-				>
-					{row.isActive ? "Active" : "Inactive"}
-				</Badge>
+				<div className="flex gap-2">
+					<Badge
+						variant={row.isActive ? "default" : "secondary"}
+						className="font-display font-light text-xs"
+					>
+						{row.isActive ? "Active" : "Inactive"}
+					</Badge>
+					{row.isFeatured && (
+						<Badge variant="outline" className="font-display font-light text-xs">
+							Featured
+						</Badge>
+					)}
+				</div>
+			),
+		},
+		{
+			header: "Actions",
+			accessorKey: "id",
+			cell: (row) => (
+				<div className="flex gap-2">
+					<Button
+						size="sm"
+						variant="ghost"
+						className="h-8 rounded-full"
+						onClick={(e) => {
+							e.stopPropagation();
+							window.open(`/admin/catalog/products/${row.id}`, "_blank");
+						}}
+					>
+						<Eye className="h-4 w-4" />
+					</Button>
+				</div>
 			),
 		},
 	];
@@ -155,11 +198,13 @@ export default function ProductsListPage() {
 					value={categoryFilter}
 					onValueChange={(val) => setCategoryFilter(val === "all" ? undefined : val)}
 				>
-					<SelectTrigger className="w-[200px] font-display font-light">
+					<SelectTrigger className="w-[250px] font-display font-light">
 						<SelectValue placeholder="All Categories" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all" className="font-display font-light">All Categories</SelectItem>
+						<SelectItem value="all" className="font-display font-light">
+							All Categories
+						</SelectItem>
 						{categories?.map((cat) => (
 							<SelectItem key={cat.id} value={cat.id} className="font-display font-light">
 								{cat.name}
@@ -170,16 +215,24 @@ export default function ProductsListPage() {
 
 				<Select
 					value={stockFilter}
-					onValueChange={(val) => setStockFilter(val === "all" ? undefined : val as any)}
+					onValueChange={(val) => setStockFilter(val === "all" ? undefined : val)}
 				>
 					<SelectTrigger className="w-[200px] font-display font-light">
 						<SelectValue placeholder="All Stock Status" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all" className="font-display font-light">All Stock Status</SelectItem>
-						<SelectItem value="in_stock" className="font-display font-light">In Stock</SelectItem>
-						<SelectItem value="made_to_order" className="font-display font-light">Made to Order</SelectItem>
-						<SelectItem value="out_of_stock" className="font-display font-light">Out of Stock</SelectItem>
+						<SelectItem value="all" className="font-display font-light">
+							All Stock Status
+						</SelectItem>
+						<SelectItem value="in_stock" className="font-display font-light">
+							In Stock
+						</SelectItem>
+						<SelectItem value="made_to_order" className="font-display font-light">
+							Made to Order
+						</SelectItem>
+						<SelectItem value="out_of_stock" className="font-display font-light">
+							Out of Stock
+						</SelectItem>
 					</SelectContent>
 				</Select>
 
@@ -191,20 +244,81 @@ export default function ProductsListPage() {
 						<SelectValue placeholder="All Status" />
 					</SelectTrigger>
 					<SelectContent>
-						<SelectItem value="all" className="font-display font-light">All Status</SelectItem>
-						<SelectItem value="active" className="font-display font-light">Active</SelectItem>
-						<SelectItem value="inactive" className="font-display font-light">Inactive</SelectItem>
+						<SelectItem value="all" className="font-display font-light">
+							All Status
+						</SelectItem>
+						<SelectItem value="active" className="font-display font-light">
+							Active
+						</SelectItem>
+						<SelectItem value="inactive" className="font-display font-light">
+							Inactive
+						</SelectItem>
+					</SelectContent>
+				</Select>
+
+				<Select
+					value={sortBy}
+					onValueChange={(val) => setSortBy(val as any)}
+				>
+					<SelectTrigger className="w-[200px] font-display font-light">
+						<SelectValue placeholder="Sort By" />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="created" className="font-display font-light">
+							Created Date
+						</SelectItem>
+						<SelectItem value="name" className="font-display font-light">
+							Name
+						</SelectItem>
+						<SelectItem value="sku" className="font-display font-light">
+							SKU
+						</SelectItem>
+						<SelectItem value="price" className="font-display font-light">
+							Price
+						</SelectItem>
+					</SelectContent>
+				</Select>
+
+				<Select
+					value={sortOrder}
+					onValueChange={(val) => setSortOrder(val as any)}
+				>
+					<SelectTrigger className="w-[150px] font-display font-light">
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="desc" className="font-display font-light">
+							Descending
+						</SelectItem>
+						<SelectItem value="asc" className="font-display font-light">
+							Ascending
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
 
-			{/* Table */}
+			{/* Products Table */}
 			<AdminTable
 				columns={columns}
 				data={products || []}
 				onRowClick={(row) => `/admin/catalog/products/${row.id}`}
-				searchPlaceholder="Search products..."
+				searchPlaceholder="Search products by name, SKU, or category..."
+				pageSize={15}
 			/>
+
+			{(!products || products.length === 0) && (
+				<div className="py-16 text-center space-y-4">
+					<p className="text-lg text-muted-foreground font-display font-light">
+						No products found
+					</p>
+					<Button asChild className="rounded-full">
+						<Link href="/admin/catalog/products/new">
+							<Plus className="mr-2 h-4 w-4" />
+							Create First Product
+						</Link>
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }

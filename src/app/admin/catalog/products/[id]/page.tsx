@@ -67,9 +67,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
 						</p>
 					</div>
 				</div>
-				<Button className="rounded-full">
-					<Pencil className="mr-2 h-4 w-4" />
-					Edit Product
+				<Button asChild className="rounded-full">
+					<Link href={`/admin/catalog/products/${id}/edit`}>
+						<Pencil className="mr-2 h-4 w-4" />
+						Edit Product
+					</Link>
 				</Button>
 			</div>
 

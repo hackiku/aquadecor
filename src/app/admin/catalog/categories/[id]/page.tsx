@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Pencil, ArrowLeft, Globe } from "lucide-react";
 import Link from "next/link";
+import { CategoryProductsTable } from "./_components/CategoryProductsTable";
 
 interface PageProps {
 	params: Promise<{
@@ -55,9 +56,11 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 						</p>
 					</div>
 				</div>
-				<Button className="rounded-full">
-					<Pencil className="mr-2 h-4 w-4" />
-					Edit Category
+				<Button asChild className="rounded-full">
+					<Link href={`/admin/catalog/categories/${id}/edit`}>
+						<Pencil className="mr-2 h-4 w-4" />
+						Edit Category
+					</Link>
 				</Button>
 			</div>
 
@@ -119,30 +122,6 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 							)}
 						</CardContent>
 					</Card>
-
-					{/* Products in Category */}
-					<Card className="border-2">
-						<CardHeader>
-							<div className="flex items-center justify-between">
-								<CardTitle className="font-display font-normal">Products</CardTitle>
-								<Button
-									asChild
-									variant="outline"
-									size="sm"
-									className="rounded-full font-display font-light"
-								>
-									<Link href={`/admin/catalog/products?category=${category.id}`}>
-										View All ({category.productCount})
-									</Link>
-								</Button>
-							</div>
-						</CardHeader>
-						<CardContent>
-							<p className="text-muted-foreground font-display font-light">
-								This category contains {category.productCount} product{category.productCount !== 1 ? "s" : ""}.
-							</p>
-						</CardContent>
-					</Card>
 				</div>
 
 				{/* Right Column */}
@@ -159,9 +138,16 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 							<div className="p-4 rounded-lg bg-muted/50 border border-border space-y-3">
 								<div className="flex items-center justify-between">
 									<h4 className="font-display font-normal text-sm">SEO Settings</h4>
-									<Button variant="ghost" size="sm" className="h-7 rounded-full">
-										<Pencil className="h-3 w-3 mr-1" />
-										Edit
+									<Button
+										variant="ghost"
+										size="sm"
+										asChild
+										className="h-7 rounded-full"
+									>
+										<Link href={`/admin/catalog/categories/${id}/edit`}>
+											<Pencil className="h-3 w-3 mr-1" />
+											Edit
+										</Link>
 									</Button>
 								</div>
 								<div className="space-y-2 text-sm">
@@ -199,9 +185,16 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 													<Badge variant="outline" className="font-display font-light uppercase">
 														{trans.locale}
 													</Badge>
-													<Button variant="ghost" size="sm" className="h-7 rounded-full">
-														<Pencil className="h-3 w-3 mr-1" />
-														Edit
+													<Button
+														variant="ghost"
+														size="sm"
+														asChild
+														className="h-7 rounded-full"
+													>
+														<Link href={`/admin/catalog/categories/${id}/edit`}>
+															<Pencil className="h-3 w-3 mr-1" />
+															Edit
+														</Link>
 													</Button>
 												</div>
 												<div>
@@ -220,8 +213,14 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 										No translations available
 									</p>
 								)}
-								<Button variant="outline" className="w-full rounded-full font-display font-light">
-									Add Translation
+								<Button
+									variant="outline"
+									asChild
+									className="w-full rounded-full font-display font-light"
+								>
+									<Link href={`/admin/catalog/categories/${id}/edit`}>
+										Add Translation
+									</Link>
 								</Button>
 							</div>
 						</CardContent>
@@ -264,6 +263,13 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 					</Card>
 				</div>
 			</div>
+
+			{/* Products Table - Full Width */}
+			<CategoryProductsTable
+				categoryId={id}
+				categoryName={category.name || "this category"}
+				productCount={category.productCount}
+			/>
 		</div>
 	);
 }

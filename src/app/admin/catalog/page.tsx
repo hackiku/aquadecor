@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { api } from "~/trpc/server";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Layers, ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
 export default async function CatalogOverviewPage() {
 	// Get stats for each product line
@@ -138,7 +138,7 @@ export default async function CatalogOverviewPage() {
 			{/* Quick Actions */}
 			<div className="pt-8 border-t">
 				<h2 className="text-2xl font-display font-light mb-4">Quick Actions</h2>
-				<div className="grid gap-4 md:grid-cols-3">
+				<div className="grid gap-4 md:grid-cols-4">
 					<Link href="/admin/catalog/products">
 						<Card className="border hover:border-primary/50 transition-colors group">
 							<CardContent className="p-6 flex items-center justify-between">
@@ -155,7 +155,18 @@ export default async function CatalogOverviewPage() {
 							</CardContent>
 						</Card>
 					</Link>
-					<Link href="/admin/gallery">
+					<Link href="/admin/catalog/featured">
+						<Card className="border hover:border-primary/50 transition-colors group">
+							<CardContent className="p-6 flex items-center justify-between">
+								<div className="flex items-center gap-2">
+									<Star className="h-4 w-4 text-primary" />
+									<span className="font-display font-light">Featured Products</span>
+								</div>
+								<ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+							</CardContent>
+						</Card>
+					</Link>
+					<Link href="/admin/content/gallery">
 						<Card className="border hover:border-primary/50 transition-colors group">
 							<CardContent className="p-6 flex items-center justify-between">
 								<span className="font-display font-light">Manage Images</span>

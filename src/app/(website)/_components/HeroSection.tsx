@@ -1,6 +1,10 @@
 // src/app/(website)/_components/HeroSection.tsx
 "use client";
 
+// cat blob
+// https://codepen.io/sjoerdkoelewijn/pen/LYxrxeL
+
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
