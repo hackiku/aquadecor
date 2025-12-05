@@ -12,7 +12,7 @@ import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 
 export default async function AquariumDecorationsPage() {
 	// Load categories for aquarium decorations
-	let categories = [];
+	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];
 	let error = false;
 
 	try {

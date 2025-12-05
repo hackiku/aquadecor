@@ -11,13 +11,13 @@ import { Button } from "~/components/ui/button";
 
 export default async function ThreeDBackgroundsPage() {
 	// Load categories with error handling
-	let categories = [];
+	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];
 	let error = false;
 
 	try {
 		categories = await api.product.getCategoriesForProductLine({
 			productLineSlug: "3d-backgrounds",
-			// locale: "en",
+			locale: "en",
 		});
 	} catch (err) {
 		console.error('Failed to load categories:', err);
@@ -37,7 +37,7 @@ export default async function ThreeDBackgroundsPage() {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -76,7 +76,7 @@ export default async function ThreeDBackgroundsPage() {
 				</section>
 
 				{/* Categories Grid - Only part that needs DB */}
-				<section id="categories" className="relative pt-16 md:py-24 bg-linear-to-b from-muted/30 to-background">
+				<section id="categories" className="relative pt-16 md:py-24 bg-gradient-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" className="" />
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="mb-12">
@@ -118,7 +118,7 @@ export default async function ThreeDBackgroundsPage() {
 				</section>
 
 				{/* Why Choose Us - ALWAYS LOADS (no DB) */}
-				<section className="py-16 md:py-24 bg-linear-to-b from-background to-muted/30">
+				<section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="text-center mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
@@ -187,7 +187,7 @@ export default async function ThreeDBackgroundsPage() {
 
 				{/* Built to Last Forever - ALWAYS LOADS (no DB) */}
 				<section className="relative py-16 md:py-20 overflow-hidden">
-					<div className="absolute inset-0 bg-linear-to-br from-primary/5 via-cyan-500/5 to-transparent" />
+					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-cyan-500/5 to-transparent" />
 					<div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 					<div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
 
