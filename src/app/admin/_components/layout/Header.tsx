@@ -15,6 +15,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import Link from "next/link";
 
 export function Header() {
 	const pathname = usePathname();
@@ -59,12 +60,16 @@ export function Header() {
 				{/* Actions */}
 				<div className="flex items-center gap-2">
 					<ModeToggle />
-					<Button variant="ghost" size="icon" className="rounded-full">
+					{/* <Button variant="ghost" size="icon" className="rounded-full">
 						<Bell className="h-4 w-4" />
-					</Button>
-					<Button variant="ghost" size="icon" className="rounded-full">
-						<Settings className="h-4 w-4" />
-					</Button>
+					</Button> */}
+					<Link
+						href={"/admin/settings"}
+					>
+						<Button variant="ghost" size="icon" className="rounded-full">
+							<Settings className="h-4 w-4" />
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</header>

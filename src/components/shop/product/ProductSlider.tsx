@@ -6,15 +6,45 @@ import Image from "next/image";
 import { Card } from "~/components/ui/card";
 import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Package, AlertCircle } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import type { Product } from "~/server/db/schema/shop";
 
 export function ProductSlider() {
-	// Fetch featured products
-	const { data: products, isLoading } = api.product.getFeatured.useQuery({
-		locale: "en",
-		limit: 12,
-	});
+	// Fetch featured products with error handling
+	const { data: products, isLoading, isError, refetch } = api.product.getFeatured.useQuery(
+		{
+			locale: "en",
+			limit: 12,
+		},
+		{
+			staleTime: 5 * 60 * 1000, // 5min - serve stale data while fetching
+			retry: 2,
+			retryDelay: 1000,
+		}
+	);
+
+	// Error state - show message but don't break page
+	if (isError) {
+		return (
+			<div className="py-12 text-center space-y-4">
+				<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
+				<div className="space-y-2">
+					<p className="text-muted-foreground font-display font-light">
+						Unable to load products right now
+					</p>
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => refetch()}
+						className="rounded-full"
+					>
+						Try Again
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	// Split by product line
 	const backgroundProducts = products?.filter(
@@ -49,7 +79,6 @@ export function ProductSlider() {
 }
 
 // Type for products returned by getFeatured tRPC endpoint
-// Pick from Product schema + joined fields from query
 type FeaturedProduct = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote'> & {
 	name: string | null;
 	shortDescription: string | null;
@@ -97,6 +126,10 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 								<ProductCardSkeleton key={i} />
 							))}
 						</>
+					) : products.length === 0 ? (
+						<div className="w-full py-12 text-center text-muted-foreground font-display font-light">
+							No products available yet
+						</div>
 					) : (
 						products.map((product) => (
 							<ProductCard key={product.id} product={product} />

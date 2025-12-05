@@ -1,5 +1,3 @@
-
-// @ts-nocheck
 // src/app/shop/page.tsx
 import Link from "next/link";
 import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero";
@@ -7,13 +5,22 @@ import { ProductCard } from "~/components/shop/product/ProductCard";
 import { api, HydrateClient } from "~/trpc/server";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
+import { AlertCircle } from "lucide-react";
 
 export default async function ShopPage() {
-	// Get all featured products
-	const featuredProducts = await api.product.getFeatured({
-		locale: "en",
-		limit: 6,
-	});
+	// Fetch featured products with error handling
+	let featuredProducts:any = []; // any!
+	let error = false;
+
+	try {
+		featuredProducts = await api.product.getFeatured({
+			// locale: "en",
+			limit: 6,
+		});
+	} catch (err) {
+		console.error('Failed to load featured products:', err);
+		error = true;
+	}
 
 	// Split featured products by product line
 	const backgroundProducts = featuredProducts.filter(
@@ -28,8 +35,8 @@ export default async function ShopPage() {
 		<HydrateClient>
 			<main className="min-h-screen">
 
-				<section className="relative py-16 md:py-24 bg-black __border __border-red-600/30">
-					<div className="px-14 max-w-5xl mx-auto text-center space-y-6 __border-red-600/30">
+				<section className="relative py-16 md:py-24 bg-black">
+					<div className="px-14 max-w-5xl mx-auto text-center space-y-6">
 						<h1 className="text-4xl text-white md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 							Shop Aquarium Products
 						</h1>
@@ -37,7 +44,6 @@ export default async function ShopPage() {
 							Explore our complete range of 3D backgrounds and decorations. Handcrafted in Serbia, trusted by 50,000+ aquarists worldwide.
 						</p>
 					</div>
-
 
 					<div className="bg-linear-to-br from-primary/20 via-transparent to-primary/20 rounded-2xl p-8">
 						<h2 className="text-2xl font-display font-light mb-4">
@@ -59,18 +65,29 @@ export default async function ShopPage() {
 
 				</section>
 
-				{/* Split Hero - Full Viewport */}
-
 				{/* 3D Backgrounds Section */}
 				<section id="3d-backgrounds" className="relative py-24 md:py-32 bg-card">
 					<WaveDivider position="top" color="black" className="text-muted/30" />
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						{/* Section Header */}
-						
 						<ProductLineSplitHero />
 
+						{/* Error State */}
+						{error && (
+							<div className="py-12 text-center space-y-4">
+								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
+								<div className="space-y-2">
+									<p className="text-lg font-display font-normal">
+										Unable to load products
+									</p>
+									<p className="text-muted-foreground font-display font-light">
+										Please try refreshing the page or check back later
+									</p>
+								</div>
+							</div>
+						)}
+
 						{/* Featured Products */}
-						{backgroundProducts.length > 0 && (
+						{!error && backgroundProducts.length > 0 && (
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{backgroundProducts.map((product) => (
 									<ProductCard
@@ -82,6 +99,15 @@ export default async function ShopPage() {
 										}}
 									/>
 								))}
+							</div>
+						)}
+
+						{/* Empty State */}
+						{!error && backgroundProducts.length === 0 && (
+							<div className="py-12 text-center">
+								<p className="text-muted-foreground font-display font-light">
+									No featured backgrounds available yet
+								</p>
 							</div>
 						)}
 
@@ -112,8 +138,6 @@ export default async function ShopPage() {
 					</div>
 				</section>
 
-				
-
 				{/* Aquarium Decorations Section */}
 				<section id="aquarium-decorations" className="relative py-24 md:py-32 bg-muted/10">
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
@@ -128,7 +152,7 @@ export default async function ShopPage() {
 						</div>
 
 						{/* Featured Products */}
-						{decorationProducts.length > 0 && (
+						{!error && decorationProducts.length > 0 && (
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{decorationProducts.map((product) => (
 									<ProductCard
@@ -140,6 +164,15 @@ export default async function ShopPage() {
 										}}
 									/>
 								))}
+							</div>
+						)}
+
+						{/* Empty State */}
+						{!error && decorationProducts.length === 0 && (
+							<div className="py-12 text-center">
+								<p className="text-muted-foreground font-display font-light">
+									No featured decorations available yet
+								</p>
 							</div>
 						)}
 
