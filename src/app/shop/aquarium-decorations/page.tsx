@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategorySlider } from "~/components/shop/category/CategorySlider";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
@@ -12,10 +12,18 @@ import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 
 export default async function AquariumDecorationsPage() {
 	// Load categories for aquarium decorations
-	const categories = await api.product.getCategoriesForProductLine({
-		productLineSlug: "aquarium-decorations",
-		locale: "en",
-	});
+	let categories = [];
+	let error = false;
+
+	try {
+		categories = await api.product.getCategoriesForProductLine({
+			productLineSlug: "aquarium-decorations",
+			locale: "en",
+		});
+	} catch (err) {
+		console.error('Failed to load categories:', err);
+		error = true;
+	}
 
 	return (
 		<HydrateClient>
@@ -30,7 +38,7 @@ export default async function AquariumDecorationsPage() {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -81,22 +89,35 @@ export default async function AquariumDecorationsPage() {
 							</p>
 						</div>
 
-
-						<CategoryGrid
-							categories={categories}
-							productLineSlug="3d-backgrounds"
-							// columns="2"
-						/>
-
-						{/* <CategorySlider
-							categories={categories}
-							productLineSlug="aquarium-decorations"
-							doubleRow={true}
-						/> */}
+						{/* Error State */}
+						{error ? (
+							<div className="py-16 text-center space-y-4">
+								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
+								<div className="space-y-2">
+									<p className="text-lg font-display font-normal">
+										Unable to load categories
+									</p>
+									<p className="text-muted-foreground font-display font-light">
+										Please try refreshing the page
+									</p>
+								</div>
+							</div>
+						) : categories.length === 0 ? (
+							<div className="py-16 text-center">
+								<p className="text-muted-foreground font-display font-light">
+									No categories available yet
+								</p>
+							</div>
+						) : (
+							<CategoryGrid
+								categories={categories}
+								productLineSlug="aquarium-decorations"
+								columns="3"
+							/>
+						)}
 					</div>
-
 				</section>
-				
+
 				<div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
 					<WaveDivider position="bottom" color="black" className="" />
 				</div>

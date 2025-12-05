@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
@@ -10,16 +10,24 @@ import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
 
 export default async function ThreeDBackgroundsPage() {
-	// Load categories for 3D backgrounds
-	const categories = await api.product.getCategoriesForProductLine({
-		productLineSlug: "3d-backgrounds",
-		locale: "en",
-	});
+	// Load categories with error handling
+	let categories = [];
+	let error = false;
+
+	try {
+		categories = await api.product.getCategoriesForProductLine({
+			productLineSlug: "3d-backgrounds",
+			// locale: "en",
+		});
+	} catch (err) {
+		console.error('Failed to load categories:', err);
+		error = true;
+	}
 
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-				{/* Hero Section */}
+				{/* Hero Section - ALWAYS LOADS (no DB) */}
 				<section className="relative overflow-hidden bg-black">
 					<div className="relative h-[500px] md:h-[500px]">
 						<Image
@@ -29,7 +37,7 @@ export default async function ThreeDBackgroundsPage() {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -67,8 +75,8 @@ export default async function ThreeDBackgroundsPage() {
 					</div>
 				</section>
 
-				{/* Categories Grid */}
-				<section id="categories" className="relative pt-16 md:py-24 bg-gradient-to-b from-muted/30 to-background">
+				{/* Categories Grid - Only part that needs DB */}
+				<section id="categories" className="relative pt-16 md:py-24 bg-linear-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" className="" />
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="mb-12">
@@ -80,16 +88,37 @@ export default async function ThreeDBackgroundsPage() {
 							</p>
 						</div>
 
-						<CategoryGrid
-							categories={categories}
-							productLineSlug="3d-backgrounds"
-							columns="3"
-						/>
+						{/* Error State */}
+						{error ? (
+							<div className="py-16 text-center space-y-4">
+								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
+								<div className="space-y-2">
+									<p className="text-lg font-display font-normal">
+										Unable to load categories
+									</p>
+									<p className="text-muted-foreground font-display font-light">
+										Please try refreshing the page
+									</p>
+								</div>
+							</div>
+						) : categories.length === 0 ? (
+							<div className="py-16 text-center">
+								<p className="text-muted-foreground font-display font-light">
+									No categories available yet
+								</p>
+							</div>
+						) : (
+							<CategoryGrid
+								categories={categories}
+								productLineSlug="3d-backgrounds"
+								columns="3"
+							/>
+						)}
 					</div>
 				</section>
 
-				{/* Why Choose Us */}
-				<section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
+				{/* Why Choose Us - ALWAYS LOADS (no DB) */}
+				<section className="py-16 md:py-24 bg-linear-to-b from-background to-muted/30">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="text-center mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
@@ -156,10 +185,9 @@ export default async function ThreeDBackgroundsPage() {
 					<WaveDivider position="bottom" color="black" className="" />
 				</div>
 
-				{/* Built to Last Forever - Enhanced with gradient background */}
+				{/* Built to Last Forever - ALWAYS LOADS (no DB) */}
 				<section className="relative py-16 md:py-20 overflow-hidden">
-					{/* Gradient orb background */}
-					<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-cyan-500/5 to-transparent" />
+					<div className="absolute inset-0 bg-linear-to-br from-primary/5 via-cyan-500/5 to-transparent" />
 					<div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 					<div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
 
@@ -220,7 +248,7 @@ export default async function ThreeDBackgroundsPage() {
 					</div>
 				</section>
 
-				{/* Complete Your Setup CTA with Wave Container */}
+				{/* Complete Your Setup CTA - ALWAYS LOADS (no DB) */}
 				<WaveContainer className="relative mt-16 py-12">
 					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
 						<div className="text-center space-y-8 mb-12">
@@ -245,7 +273,6 @@ export default async function ThreeDBackgroundsPage() {
 							</Button>
 						</div>
 
-						{/* Trust signals inside wave */}
 						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
