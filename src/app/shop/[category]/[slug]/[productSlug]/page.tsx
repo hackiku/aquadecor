@@ -105,6 +105,28 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 											<h2 className="text-2xl font-display font-normal">Specifications</h2>
 											<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-muted/30 rounded-xl border">
 												{Object.entries(product.specifications).map(([key, value]) => {
+													// Skip rendering nested objects (like dimensions)
+													if (typeof value === 'object' && value !== null) {
+														// Handle dimensions object specially
+														if (key === 'dimensions') {
+															const dims = value as any;
+															return (
+																<div key={key} className="space-y-1 sm:col-span-2">
+																	<dt className="text-xs text-muted-foreground font-display uppercase tracking-wide">
+																		Dimensions
+																	</dt>
+																	<dd className="text-base font-display font-medium">
+																		{dims.widthCm && `${dims.widthCm}cm W`}
+																		{dims.heightCm && ` × ${dims.heightCm}cm H`}
+																		{dims.depthCm && ` × ${dims.depthCm}cm D`}
+																	</dd>
+																</div>
+															);
+														}
+														return null; // Skip other objects
+													}
+
+													// Format label
 													const formattedKey = key
 														.replace(/([A-Z])/g, " $1")
 														.replace(/Cm$/, "")
@@ -113,11 +135,22 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 														.join(" ");
 
-													const formattedValue = typeof value === 'object'
-														? JSON.stringify(value)
-														: key.toLowerCase().includes('cm') || key.toLowerCase().includes('depth') || key.toLowerCase().includes('width') || key.toLowerCase().includes('height')
-															? `${value} cm`
-															: String(value);
+													// Format value
+													let formattedValue: string;
+
+													if (typeof value === 'boolean') {
+														formattedValue = value ? "Yes" : "No";
+													} else if (key === 'productionTime') {
+														formattedValue = String(value);
+													} else if (key === 'plantType' || key === 'woodType' || key === 'rockFormation') {
+														// Format IDs to readable text
+														formattedValue = String(value)
+															.split('-')
+															.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+															.join(' ');
+													} else {
+														formattedValue = String(value);
+													}
 
 													return (
 														<div key={key} className="space-y-1">

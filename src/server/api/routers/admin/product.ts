@@ -1,23 +1,24 @@
 // src/server/api/routers/admin/product.ts
 
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 import {
 	categories,
 	products,
 	productTranslations,
-	productImages,
+	media,
 	categoryTranslations,
 } from "~/server/db/schema";
 import { eq, and, inArray, desc, asc, sql } from "drizzle-orm";
 
 export const adminProductRouter = createTRPCRouter({
 	// Get all products with category info and translations (for admin table)
-	getAll: publicProcedure
+	getAll: adminProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
 			categoryId: z.string().optional(),
-			stockStatus: z.enum(["in_stock", "made_to_order", "out_of_stock"]).optional(),
+			productLine: z.string().optional(),
+			stockStatus: z.enum(["in_stock", "made_to_order", "requires_quote"]).optional(),
 			isActive: z.boolean().optional(),
 			sortBy: z.enum(["name", "sku", "price", "created"]).default("created"),
 			sortOrder: z.enum(["asc", "desc"]).default("desc"),
@@ -37,6 +38,10 @@ export const adminProductRouter = createTRPCRouter({
 				conditions.push(eq(products.isActive, input.isActive));
 			}
 
+			if (input?.productLine) {
+				conditions.push(eq(categories.productLine, input.productLine));
+			}
+
 			let query = ctx.db
 				.select({
 					id: products.id,
@@ -49,14 +54,17 @@ export const adminProductRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
+					availableMarkets: products.availableMarkets,
 					isActive: products.isActive,
 					isFeatured: products.isFeatured,
 					sortOrder: products.sortOrder,
+					productType: products.productType,
+					variantType: products.variantType,
 					createdAt: products.createdAt,
 					updatedAt: products.updatedAt,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
-					featuredImageUrl: productImages.storageUrl,
+					heroImageUrl: media.storageUrl,
 				})
 				.from(products)
 				.leftJoin(categories, eq(categories.id, products.categoryId))
@@ -75,10 +83,11 @@ export const adminProductRouter = createTRPCRouter({
 					)
 				)
 				.leftJoin(
-					productImages,
+					media,
 					and(
-						eq(productImages.productId, products.id),
-						eq(productImages.sortOrder, 0)
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
 					)
 				);
 
@@ -114,7 +123,7 @@ export const adminProductRouter = createTRPCRouter({
 		}),
 
 	// Get single product with all details (for admin detail view)
-	getById: publicProcedure
+	getById: adminProcedure
 		.input(z.object({
 			id: z.string(),
 			locale: z.string().default("en"),
@@ -133,7 +142,12 @@ export const adminProductRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					specifications: products.specifications,
+					variantOptions: products.variantOptions,
+					customizationOptions: products.customizationOptions,
+					availableMarkets: products.availableMarkets,
 					stockStatus: products.stockStatus,
+					productType: products.productType,
+					variantType: products.variantType,
 					isActive: products.isActive,
 					isFeatured: products.isFeatured,
 					sortOrder: products.sortOrder,
@@ -142,6 +156,8 @@ export const adminProductRouter = createTRPCRouter({
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 					fullDescription: productTranslations.fullDescription,
+					metaTitle: productTranslations.metaTitle,
+					metaDescription: productTranslations.metaDescription,
 				})
 				.from(products)
 				.leftJoin(categories, eq(categories.id, products.categoryId))
@@ -166,12 +182,12 @@ export const adminProductRouter = createTRPCRouter({
 				return null;
 			}
 
-			// Get all images
+			// Get all images for this product
 			const images = await ctx.db
 				.select()
-				.from(productImages)
-				.where(eq(productImages.productId, input.id))
-				.orderBy(productImages.sortOrder);
+				.from(media)
+				.where(eq(media.productId, input.id))
+				.orderBy(media.sortOrder);
 
 			// Get all translations
 			const translations = await ctx.db
@@ -187,7 +203,7 @@ export const adminProductRouter = createTRPCRouter({
 		}),
 
 	// Get product stats for dashboard
-	getStats: publicProcedure
+	getStats: adminProcedure
 		.query(async ({ ctx }) => {
 			const allProducts = await ctx.db
 				.select({
@@ -196,6 +212,7 @@ export const adminProductRouter = createTRPCRouter({
 					stockStatus: products.stockStatus,
 					isActive: products.isActive,
 					isFeatured: products.isFeatured,
+					availableMarkets: products.availableMarkets,
 				})
 				.from(products);
 
@@ -205,11 +222,12 @@ export const adminProductRouter = createTRPCRouter({
 			const featured = allProducts.filter(p => p.isFeatured).length;
 			const customOnly = allProducts.filter(p => !p.basePriceEurCents).length;
 			const withPrice = total - customOnly;
+			const usRestricted = allProducts.filter(p => !p.availableMarkets?.includes("US")).length;
 
 			const stockBreakdown = {
 				in_stock: allProducts.filter(p => p.stockStatus === "in_stock").length,
 				made_to_order: allProducts.filter(p => p.stockStatus === "made_to_order").length,
-				out_of_stock: allProducts.filter(p => p.stockStatus === "out_of_stock").length,
+				requires_quote: allProducts.filter(p => p.stockStatus === "requires_quote").length,
 			};
 
 			return {
@@ -219,27 +237,35 @@ export const adminProductRouter = createTRPCRouter({
 				featured,
 				customOnly,
 				withPrice,
+				usRestricted,
 				stockBreakdown,
 			};
 		}),
 
 	// Create new product
-	create: publicProcedure
+	create: adminProcedure
 		.input(z.object({
 			categoryId: z.string(),
 			slug: z.string(),
 			sku: z.string().optional(),
+			productType: z.enum(["simple", "variable"]).default("simple"),
+			variantType: z.string().optional(),
 			basePriceEurCents: z.number().optional(),
 			priceNote: z.string().optional(),
-			stockStatus: z.enum(["in_stock", "made_to_order", "out_of_stock"]).default("made_to_order"),
+			stockStatus: z.enum(["in_stock", "made_to_order", "requires_quote"]).default("made_to_order"),
+			availableMarkets: z.array(z.string()).default(["EU", "UK"]),
 			isActive: z.boolean().default(true),
 			isFeatured: z.boolean().default(false),
 			sortOrder: z.number().default(0),
 			specifications: z.any().optional(),
+			variantOptions: z.any().optional(),
+			customizationOptions: z.any().optional(),
 			// Translation (English required)
 			name: z.string(),
 			shortDescription: z.string().optional(),
 			fullDescription: z.string().optional(),
+			metaTitle: z.string().optional(),
+			metaDescription: z.string().optional(),
 		}))
 		.mutation(async ({ ctx, input }) => {
 			// Insert product
@@ -249,13 +275,18 @@ export const adminProductRouter = createTRPCRouter({
 					categoryId: input.categoryId,
 					slug: input.slug,
 					sku: input.sku,
+					productType: input.productType,
+					variantType: input.variantType,
 					basePriceEurCents: input.basePriceEurCents,
 					priceNote: input.priceNote,
 					stockStatus: input.stockStatus,
+					availableMarkets: input.availableMarkets,
 					isActive: input.isActive,
 					isFeatured: input.isFeatured,
 					sortOrder: input.sortOrder,
 					specifications: input.specifications,
+					variantOptions: input.variantOptions,
+					customizationOptions: input.customizationOptions,
 				})
 				.returning();
 
@@ -266,32 +297,41 @@ export const adminProductRouter = createTRPCRouter({
 				name: input.name,
 				shortDescription: input.shortDescription,
 				fullDescription: input.fullDescription,
+				metaTitle: input.metaTitle,
+				metaDescription: input.metaDescription,
 			});
 
 			return product;
 		}),
 
 	// Update product
-	update: publicProcedure
+	update: adminProcedure
 		.input(z.object({
 			id: z.string(),
 			categoryId: z.string().optional(),
 			slug: z.string().optional(),
 			sku: z.string().optional(),
+			productType: z.enum(["simple", "variable"]).optional(),
+			variantType: z.string().optional().nullable(),
 			basePriceEurCents: z.number().optional().nullable(),
 			priceNote: z.string().optional().nullable(),
-			stockStatus: z.enum(["in_stock", "made_to_order", "out_of_stock"]).optional(),
+			stockStatus: z.enum(["in_stock", "made_to_order", "requires_quote"]).optional(),
+			availableMarkets: z.array(z.string()).optional(),
 			isActive: z.boolean().optional(),
 			isFeatured: z.boolean().optional(),
 			sortOrder: z.number().optional(),
 			specifications: z.any().optional().nullable(),
+			variantOptions: z.any().optional().nullable(),
+			customizationOptions: z.any().optional().nullable(),
 			// Translation update
 			name: z.string().optional(),
 			shortDescription: z.string().optional().nullable(),
 			fullDescription: z.string().optional().nullable(),
+			metaTitle: z.string().optional().nullable(),
+			metaDescription: z.string().optional().nullable(),
 		}))
 		.mutation(async ({ ctx, input }) => {
-			const { id, name, shortDescription, fullDescription, ...productData } = input;
+			const { id, name, shortDescription, fullDescription, metaTitle, metaDescription, ...productData } = input;
 
 			// Update product
 			const [updated] = await ctx.db
@@ -301,11 +341,13 @@ export const adminProductRouter = createTRPCRouter({
 				.returning();
 
 			// Update English translation if provided
-			if (name || shortDescription !== undefined || fullDescription !== undefined) {
+			if (name || shortDescription !== undefined || fullDescription !== undefined || metaTitle !== undefined || metaDescription !== undefined) {
 				const translationData: any = {};
 				if (name) translationData.name = name;
 				if (shortDescription !== undefined) translationData.shortDescription = shortDescription;
 				if (fullDescription !== undefined) translationData.fullDescription = fullDescription;
+				if (metaTitle !== undefined) translationData.metaTitle = metaTitle;
+				if (metaDescription !== undefined) translationData.metaDescription = metaDescription;
 
 				await ctx.db
 					.update(productTranslations)
@@ -322,12 +364,42 @@ export const adminProductRouter = createTRPCRouter({
 		}),
 
 	// Delete product
-	delete: publicProcedure
+	delete: adminProcedure
 		.input(z.object({
 			id: z.string(),
 		}))
 		.mutation(async ({ ctx, input }) => {
+			// Media will cascade delete via FK
 			await ctx.db.delete(products).where(eq(products.id, input.id));
 			return { success: true };
+		}),
+
+	// Bulk operations
+	bulkUpdateMarkets: adminProcedure
+		.input(z.object({
+			productIds: z.array(z.string()),
+			availableMarkets: z.array(z.string()),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.update(products)
+				.set({ availableMarkets: input.availableMarkets })
+				.where(inArray(products.id, input.productIds));
+
+			return { success: true, updated: input.productIds.length };
+		}),
+
+	bulkUpdateStatus: adminProcedure
+		.input(z.object({
+			productIds: z.array(z.string()),
+			isActive: z.boolean(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.update(products)
+				.set({ isActive: input.isActive })
+				.where(inArray(products.id, input.productIds));
+
+			return { success: true, updated: input.productIds.length };
 		}),
 });

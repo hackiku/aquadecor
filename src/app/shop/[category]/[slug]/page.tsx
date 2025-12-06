@@ -1,4 +1,5 @@
 // src/app/shop/[category]/[slug]/page.tsx
+// UPDATED VERSION
 
 import { notFound } from "next/navigation";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
@@ -29,30 +30,24 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 		notFound();
 	}
 
-	const categoryNames: Record<string, string> = {
-		"a-models": "A Models - Classic Rocky Backgrounds",
-		"slim-models": "A Slim Models - Thin Rocky Backgrounds",
-		"b-models": "B Models - Amazonian Tree Trunks",
-		"aquarium-plants": "Aquarium Plants",
-		"aquarium-rocks": "Aquarium Rocks",
-		"d-models": "D Models - Logs, Leaves, Driftwood, Rocks and Roots",
-		"h-models": "H Models – Artificial Reefs",
-		"j-models": "J Models - Protective Rubber Mats",
-		"m-models": "M Models - Magnetic Rocks",
-		"s-models": "S Models - Back Panel Roots",
-		"starter-sets": "Starter Sets",
-		"v-models": "V Models - Centerpiece Decorations",
-	};
+	// Get full category info with description
+	const categories = await api.product.getCategoriesForProductLine({
+		productLineSlug: productLineSlug ?? "aquarium-decorations",
+		locale: "en",
+	});
+
+	const currentCategory = categories.find(c => c.slug === categorySlug);
 
 	const productLineNames: Record<string, string> = {
 		"3d-backgrounds": "3D Backgrounds",
 		"aquarium-decorations": "Aquarium Decorations",
 	};
 
-	const categoryName = categoryNames[slug] || slug;
-	const productLineName = productLineNames[category] || category;
+	const categoryName = currentCategory?.name ?? slug;
+	const categoryDescription = currentCategory?.description;
+	const productLineName = productLineNames[category] ?? category;
 
-	// Transform data to match ProductGrid interface strictly
+	// Transform data to match ProductGrid interface
 	const productsWithSlugs = products.map(product => ({
 		id: product.id,
 		slug: product.slug,
@@ -62,14 +57,15 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 		basePriceEurCents: product.basePriceEurCents ?? null,
 		priceNote: product.priceNote ?? null,
 		stockStatus: product.stockStatus,
-		featuredImageUrl: product.featuredImageUrl ?? null,
+		heroImageUrl: product.heroImageUrl ?? null,
+		heroImageAlt: product.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLineSlug,
 	}));
 
 	return (
 		<main className="min-h-screen">
-			<section className="py-16 md:py-20 bg-linear-to-b from-muted/30 to-transparent">
+			<section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-transparent">
 				<div className="px-4 max-w-7xl mx-auto">
 					<div className="max-w-4xl mx-auto text-center space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
@@ -77,13 +73,47 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 								{productLineName}
 							</span>
 						</div>
+
+						{/* Model Code Badge */}
+						{currentCategory?.modelCode && (
+							<div className="inline-flex items-center gap-2 px-3 py-1 bg-muted rounded-full border ml-2">
+								<span className="text-xs font-display font-medium text-muted-foreground">
+									{currentCategory.modelCode} Series
+								</span>
+							</div>
+						)}
+
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 							{categoryName}
 						</h1>
-						<p className="text-lg md:text-xl text-muted-foreground font-display font-light">
+
+						{/* Category Description */}
+						{categoryDescription && (
+							<p className="text-lg md:text-xl text-muted-foreground font-display font-light leading-relaxed max-w-2xl mx-auto">
+								{categoryDescription}
+							</p>
+						)}
+
+						<p className="text-base text-muted-foreground/80 font-display font-light">
 							{products.length} {products.length === 1 ? "product" : "products"} available
 						</p>
 					</div>
+
+					{/* Category Features from contentBlocks */}
+					{currentCategory?.contentBlocks && (
+						<div className="mt-12 max-w-4xl mx-auto">
+							{currentCategory.contentBlocks.features && (
+								<div className="flex flex-wrap justify-center gap-3">
+									{currentCategory.contentBlocks.features.map((feature, idx) => (
+										<div key={idx} className="inline-flex items-center gap-2 px-4 py-2 bg-primary/5 border border-primary/10 rounded-full">
+											<span className="text-primary text-sm">✓</span>
+											<span className="text-sm font-display font-light">{feature}</span>
+										</div>
+									))}
+								</div>
+							)}
+						</div>
+					)}
 				</div>
 			</section>
 

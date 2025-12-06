@@ -1,17 +1,18 @@
 // src/server/api/routers/admin/category.ts
 
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 import {
 	categories,
 	categoryTranslations,
 	products,
+	media,
 } from "~/server/db/schema";
 import { eq, and, sql, desc, asc } from "drizzle-orm";
 
 export const adminCategoryRouter = createTRPCRouter({
 	// Get all categories with product counts
-	getAll: publicProcedure
+	getAll: adminProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
 			productLine: z.string().optional(),
@@ -28,18 +29,21 @@ export const adminCategoryRouter = createTRPCRouter({
 				conditions.push(eq(categories.isActive, input.isActive));
 			}
 
-			// Get categories with product counts
+			// Get categories with product counts and hero images
 			const results = await ctx.db
 				.select({
 					id: categories.id,
 					slug: categories.slug,
 					productLine: categories.productLine,
+					modelCode: categories.modelCode,
 					sortOrder: categories.sortOrder,
 					isActive: categories.isActive,
+					contentBlocks: categories.contentBlocks,
 					createdAt: categories.createdAt,
 					updatedAt: categories.updatedAt,
 					name: categoryTranslations.name,
 					description: categoryTranslations.description,
+					heroImageUrl: media.storageUrl,
 					// Count products in this category
 					productCount: sql<number>`(
 						SELECT COUNT(*)::int 
@@ -53,6 +57,14 @@ export const adminCategoryRouter = createTRPCRouter({
 					and(
 						eq(categoryTranslations.categoryId, categories.id),
 						eq(categoryTranslations.locale, input?.locale ?? "en")
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.categoryId, categories.id),
+						eq(media.usageType, "category"),
+						eq(media.sortOrder, 0)
 					)
 				);
 
@@ -69,7 +81,7 @@ export const adminCategoryRouter = createTRPCRouter({
 		}),
 
 	// Get single category with all details
-	getById: publicProcedure
+	getById: adminProcedure
 		.input(z.object({
 			id: z.string(),
 			locale: z.string().default("en"),
@@ -80,12 +92,16 @@ export const adminCategoryRouter = createTRPCRouter({
 					id: categories.id,
 					slug: categories.slug,
 					productLine: categories.productLine,
+					modelCode: categories.modelCode,
 					sortOrder: categories.sortOrder,
 					isActive: categories.isActive,
+					contentBlocks: categories.contentBlocks,
 					createdAt: categories.createdAt,
 					updatedAt: categories.updatedAt,
 					name: categoryTranslations.name,
 					description: categoryTranslations.description,
+					metaTitle: categoryTranslations.metaTitle,
+					metaDescription: categoryTranslations.metaDescription,
 				})
 				.from(categories)
 				.leftJoin(
@@ -108,6 +124,18 @@ export const adminCategoryRouter = createTRPCRouter({
 				.from(categoryTranslations)
 				.where(eq(categoryTranslations.categoryId, input.id));
 
+			// Get category media
+			const categoryMedia = await ctx.db
+				.select()
+				.from(media)
+				.where(
+					and(
+						eq(media.categoryId, input.id),
+						eq(media.usageType, "category")
+					)
+				)
+				.orderBy(media.sortOrder);
+
 			// Get product count
 			const productCount = await ctx.db
 				.select({ count: sql<number>`COUNT(*)::int` })
@@ -117,12 +145,13 @@ export const adminCategoryRouter = createTRPCRouter({
 			return {
 				...category,
 				translations,
+				media: categoryMedia,
 				productCount: productCount[0]?.count ?? 0,
 			};
 		}),
 
 	// Get category stats for dashboard
-	getStats: publicProcedure
+	getStats: adminProcedure
 		.query(async ({ ctx }) => {
 			const allCategories = await ctx.db
 				.select({
@@ -150,15 +179,19 @@ export const adminCategoryRouter = createTRPCRouter({
 		}),
 
 	// Create new category
-	create: publicProcedure
+	create: adminProcedure
 		.input(z.object({
 			slug: z.string(),
 			productLine: z.enum(["3d-backgrounds", "aquarium-decorations"]),
+			modelCode: z.string().optional(),
 			sortOrder: z.number().default(0),
 			isActive: z.boolean().default(true),
+			contentBlocks: z.any().optional(),
 			// Translation (English required)
 			name: z.string(),
 			description: z.string().optional(),
+			metaTitle: z.string().optional(),
+			metaDescription: z.string().optional(),
 		}))
 		.mutation(async ({ ctx, input }) => {
 			// Insert category
@@ -167,8 +200,10 @@ export const adminCategoryRouter = createTRPCRouter({
 				.values({
 					slug: input.slug,
 					productLine: input.productLine,
+					modelCode: input.modelCode,
 					sortOrder: input.sortOrder,
 					isActive: input.isActive,
+					contentBlocks: input.contentBlocks,
 				})
 				.returning();
 
@@ -178,25 +213,31 @@ export const adminCategoryRouter = createTRPCRouter({
 				locale: "en",
 				name: input.name,
 				description: input.description,
+				metaTitle: input.metaTitle,
+				metaDescription: input.metaDescription,
 			});
 
 			return category;
 		}),
 
 	// Update category
-	update: publicProcedure
+	update: adminProcedure
 		.input(z.object({
 			id: z.string(),
 			slug: z.string().optional(),
 			productLine: z.enum(["3d-backgrounds", "aquarium-decorations"]).optional(),
+			modelCode: z.string().optional().nullable(),
 			sortOrder: z.number().optional(),
 			isActive: z.boolean().optional(),
+			contentBlocks: z.any().optional().nullable(),
 			// Translation update
 			name: z.string().optional(),
 			description: z.string().optional().nullable(),
+			metaTitle: z.string().optional().nullable(),
+			metaDescription: z.string().optional().nullable(),
 		}))
 		.mutation(async ({ ctx, input }) => {
-			const { id, name, description, ...categoryData } = input;
+			const { id, name, description, metaTitle, metaDescription, ...categoryData } = input;
 
 			// Update category
 			const [updated] = await ctx.db
@@ -206,10 +247,12 @@ export const adminCategoryRouter = createTRPCRouter({
 				.returning();
 
 			// Update English translation if provided
-			if (name || description !== undefined) {
+			if (name || description !== undefined || metaTitle !== undefined || metaDescription !== undefined) {
 				const translationData: any = {};
 				if (name) translationData.name = name;
 				if (description !== undefined) translationData.description = description;
+				if (metaTitle !== undefined) translationData.metaTitle = metaTitle;
+				if (metaDescription !== undefined) translationData.metaDescription = metaDescription;
 
 				await ctx.db
 					.update(categoryTranslations)
@@ -226,7 +269,7 @@ export const adminCategoryRouter = createTRPCRouter({
 		}),
 
 	// Delete category
-	delete: publicProcedure
+	delete: adminProcedure
 		.input(z.object({
 			id: z.string(),
 		}))
@@ -241,6 +284,7 @@ export const adminCategoryRouter = createTRPCRouter({
 				throw new Error("Cannot delete category with products");
 			}
 
+			// Media will cascade delete via FK
 			await ctx.db.delete(categories).where(eq(categories.id, input.id));
 			return { success: true };
 		}),

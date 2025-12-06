@@ -6,29 +6,31 @@ import {
 	categories,
 	products,
 	productTranslations,
-	productImages,
+	media,
 	categoryTranslations,
 } from "~/server/db/schema";
 import { eq, and, inArray } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
 
-	// Get categories for a product line (now uses productLine tag instead of parentId)
+	// Get categories for a product line
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
 			productLineSlug: z.string(),
 			locale: z.string().default("en"),
 		}))
 		.query(async ({ ctx, input }) => {
-			// Direct query with productLine tag (no need to find parent!)
 			const results = await ctx.db
 				.select({
 					id: categories.id,
 					slug: categories.slug,
 					productLine: categories.productLine,
+					modelCode: categories.modelCode,
 					sortOrder: categories.sortOrder,
+					contentBlocks: categories.contentBlocks,
 					name: categoryTranslations.name,
 					description: categoryTranslations.description,
+					heroImageUrl: media.storageUrl,
 				})
 				.from(categories)
 				.leftJoin(
@@ -38,9 +40,17 @@ export const productRouter = createTRPCRouter({
 						eq(categoryTranslations.locale, input.locale)
 					)
 				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.categoryId, categories.id),
+						eq(media.usageType, "category"),
+						eq(media.sortOrder, 0)
+					)
+				)
 				.where(
 					and(
-						eq(categories.productLine, input.productLineSlug), // ✅ NEW: Direct productLine query
+						eq(categories.productLine, input.productLineSlug),
 						eq(categories.isActive, true)
 					)
 				)
@@ -54,6 +64,7 @@ export const productRouter = createTRPCRouter({
 		.input(z.object({
 			categorySlug: z.string(),
 			locale: z.string().default("en"),
+			userMarket: z.string().default("EU"), // For market filtering
 		}))
 		.query(async ({ ctx, input }) => {
 			// First find the category
@@ -64,10 +75,10 @@ export const productRouter = createTRPCRouter({
 				.limit(1);
 
 			if (!category) {
-				return [];
+				return { products: [], categorySlug: input.categorySlug, productLineSlug: null };
 			}
 
-			// Get products in this category with first image (sortOrder = 0)
+			// Get products in this category with hero image
 			const results = await ctx.db
 				.select({
 					id: products.id,
@@ -76,8 +87,12 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					basePriceEurCents: products.basePriceEurCents,
 					stockStatus: products.stockStatus,
+					availableMarkets: products.availableMarkets,
 					categoryId: products.categoryId,
-					featuredImageUrl: productImages.storageUrl,
+					specifications: products.specifications,
+					variantOptions: products.variantOptions,
+					heroImageUrl: media.storageUrl,
+					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
@@ -90,10 +105,11 @@ export const productRouter = createTRPCRouter({
 					)
 				)
 				.leftJoin(
-					productImages,
+					media,
 					and(
-						eq(productImages.productId, products.id),
-						eq(productImages.sortOrder, 0) // ✅ First image only
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
 					)
 				)
 				.where(
@@ -104,11 +120,15 @@ export const productRouter = createTRPCRouter({
 				)
 				.orderBy(products.sortOrder);
 
-			// Add category metadata to response for breadcrumbs
+			// Filter by market availability
+			const filteredProducts = results.filter(p =>
+				p.availableMarkets?.includes(input.userMarket) ?? true
+			);
+
 			return {
-				products: results,
+				products: filteredProducts,
 				categorySlug: category.slug,
-				productLineSlug: category.productLine, // ✅ NEW: For routing
+				productLineSlug: category.productLine,
 			};
 		}),
 
@@ -117,24 +137,39 @@ export const productRouter = createTRPCRouter({
 		.input(z.object({
 			slug: z.string(),
 			locale: z.string().default("en"),
+			userMarket: z.string().default("EU"),
 		}))
 		.query(async ({ ctx, input }) => {
-			// Get product with translation
+			// Get product with translation and category info
 			const [product] = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
 					categoryId: products.categoryId,
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					specifications: products.specifications,
+					variantOptions: products.variantOptions,
+					customizationOptions: products.customizationOptions,
+					availableMarkets: products.availableMarkets,
 					stockStatus: products.stockStatus,
+					productType: products.productType,
+					variantType: products.variantType,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 					fullDescription: productTranslations.fullDescription,
+					metaTitle: productTranslations.metaTitle,
+					metaDescription: productTranslations.metaDescription,
+					specOverrides: productTranslations.specOverrides, // ✅ NEW
 				})
 				.from(products)
+				.leftJoin(
+					categories,
+					eq(categories.id, products.categoryId)
+				)
 				.leftJoin(
 					productTranslations,
 					and(
@@ -149,12 +184,30 @@ export const productRouter = createTRPCRouter({
 				return null;
 			}
 
-			// Get all images for this product
+			// Check market availability
+			if (!product.availableMarkets?.includes(input.userMarket)) {
+				return null;
+			}
+
+			// Get all images for this product (hero + gallery)
 			const images = await ctx.db
-				.select()
-				.from(productImages)
-				.where(eq(productImages.productId, product.id))
-				.orderBy(productImages.sortOrder);
+				.select({
+					id: media.id,
+					storageUrl: media.storageUrl,
+					altText: media.altText,
+					width: media.width,
+					height: media.height,
+					usageType: media.usageType,
+					sortOrder: media.sortOrder,
+				})
+				.from(media)
+				.where(
+					and(
+						eq(media.productId, product.id),
+						inArray(media.usageType, ["product", "product-slider"])
+					)
+				)
+				.orderBy(media.sortOrder);
 
 			return {
 				...product,
@@ -167,6 +220,7 @@ export const productRouter = createTRPCRouter({
 		.input(z.object({
 			ids: z.array(z.string()),
 			locale: z.string().default("en"),
+			userMarket: z.string().default("EU"),
 		}))
 		.query(async ({ ctx, input }) => {
 			if (!input.ids || input.ids.length === 0) {
@@ -182,17 +236,19 @@ export const productRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
+					availableMarkets: products.availableMarkets,
 					categoryId: products.categoryId,
-					categorySlug: categories.slug, // ✅ For routing
-					productLineSlug: categories.productLine, // ✅ For routing
-					featuredImageUrl: productImages.storageUrl,
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+					heroImageUrl: media.storageUrl,
+					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
 				.leftJoin(
 					categories,
-					eq(categories.id, products.categoryId) // ✅ Join category
+					eq(categories.id, products.categoryId)
 				)
 				.leftJoin(
 					productTranslations,
@@ -202,10 +258,11 @@ export const productRouter = createTRPCRouter({
 					)
 				)
 				.leftJoin(
-					productImages,
+					media,
 					and(
-						eq(productImages.productId, products.id),
-						eq(productImages.sortOrder, 0) // ✅ First image only
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
 					)
 				)
 				.where(
@@ -215,7 +272,10 @@ export const productRouter = createTRPCRouter({
 					)
 				);
 
-			return results;
+			// Filter by market availability
+			return results.filter(p =>
+				p.availableMarkets?.includes(input.userMarket) ?? true
+			);
 		}),
 
 	// Get featured products for homepage
@@ -223,6 +283,7 @@ export const productRouter = createTRPCRouter({
 		.input(z.object({
 			locale: z.string().default("en"),
 			limit: z.number().default(5),
+			userMarket: z.string().default("EU"),
 		}))
 		.query(async ({ ctx, input }) => {
 			const results = await ctx.db
@@ -232,17 +293,19 @@ export const productRouter = createTRPCRouter({
 					sku: products.sku,
 					priceNote: products.priceNote,
 					basePriceEurCents: products.basePriceEurCents,
+					availableMarkets: products.availableMarkets,
 					categoryId: products.categoryId,
-					categorySlug: categories.slug, // ✅ For routing
-					productLineSlug: categories.productLine, // ✅ For routing
-					featuredImageUrl: productImages.storageUrl,
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+					heroImageUrl: media.storageUrl,
+					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
 				.leftJoin(
 					categories,
-					eq(categories.id, products.categoryId) // ✅ Join category
+					eq(categories.id, products.categoryId)
 				)
 				.leftJoin(
 					productTranslations,
@@ -252,10 +315,11 @@ export const productRouter = createTRPCRouter({
 					)
 				)
 				.leftJoin(
-					productImages,
+					media,
 					and(
-						eq(productImages.productId, products.id),
-						eq(productImages.sortOrder, 0) // ✅ First image only
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
 					)
 				)
 				.where(
@@ -267,6 +331,9 @@ export const productRouter = createTRPCRouter({
 				.orderBy(products.sortOrder)
 				.limit(input.limit);
 
-			return results;
+			// Filter by market availability
+			return results.filter(p =>
+				p.availableMarkets?.includes(input.userMarket) ?? true
+			);
 		}),
 });

@@ -59,6 +59,7 @@ export const categoryTranslations = createTable(
 	],
 );
 
+
 // ============================================================================
 // PRODUCTS
 // ============================================================================
@@ -90,7 +91,7 @@ export const products = createTable(
 			};
 		}>(),
 
-		// Flexible specifications
+		// Flexible specifications (STAYS TECHNICAL)
 		specifications: jsonb().$type<{
 			dimensions?: {
 				widthCm?: number;
@@ -145,6 +146,7 @@ export const products = createTable(
 	],
 );
 
+
 export const productTranslations = createTable(
 	"product_translation",
 	(d) => ({
@@ -156,6 +158,11 @@ export const productTranslations = createTable(
 		fullDescription: d.text(),
 		metaTitle: d.text(),
 		metaDescription: d.text(),
+
+		// ✅ NEW: Optional spec overrides for translation
+		specOverrides: jsonb().$type<Record<string, string>>(),
+		// Example: { "productionTime": "10-12 Werktage", "material": "Silberbirke" }
+
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
@@ -164,6 +171,7 @@ export const productTranslations = createTable(
 		index("product_translation_locale_idx").on(t.locale),
 	],
 );
+
 
 // ============================================================================
 // QUOTES (3D Calculator)
