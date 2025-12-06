@@ -1,83 +1,193 @@
-// src/server/db/seed/data/translations/seed-translations-categories.ts
-
 export const categoryTranslations = {
-	"classic-rocky-backgrounds": {
+
+	"slim-amazonian-backgrounds": {
 		en: {
-			name: "Classic Rocky Backgrounds",
-			description: "Custom-made 3D aquarium backgrounds with realistic stone formations. Each background is built to your exact tank dimensions with optional filtration cutouts and side panels.",
+			name: "E Models - Slim Amazonian Backgrounds",
+			description: "Premium E Models - Slim Amazonian Backgrounds products.",
 		},
 		de: {
-			name: "Klassische Felsen-Hintergründe",
-			description: "Maßgefertigte 3D-Aquarienhintergründe mit realistischen Steinformationen. Jeder Hintergrund wird nach Ihren genauen Tankmaßen gefertigt.",
+			name: "E Models - Slim Amazonian Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"massive-rocky-backgrounds": {
+		en: {
+			name: "C Models - Massive Rocky Backgrounds",
+			description: "Premium C Models - Massive Rocky Backgrounds products.",
+		},
+		de: {
+			name: "C Models - Massive Rocky Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"juwel-aquarium-backgrounds": {
+		en: {
+			name: "L Models - Juwel 3D Aquarium Backgrounds",
+			description: "Premium L Models - Juwel 3D Aquarium Backgrounds products.",
+		},
+		de: {
+			name: "L Models - Juwel 3D Aquarium Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"saltwater-marine-backgrounds": {
+		en: {
+			name: "K Models - Saltwater/Marine Backgrounds",
+			description: "Premium K Models - Saltwater/Marine Backgrounds products.",
+		},
+		de: {
+			name: "K Models - Saltwater/Marine Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"classic-rocky-backgrounds": {
+		en: {
+			name: "A Models - Classic Rocky Backgrounds",
+			description: "Premium A Models - Classic Rocky Backgrounds products.",
+		},
+		de: {
+			name: "A Models - Classic Rocky Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"massive-slim-backgrounds": {
+		en: {
+			name: "N Models - Massive 3D Slim Backgrounds",
+			description: "Premium N Models - Massive 3D Slim Backgrounds products.",
+		},
+		de: {
+			name: "N Models - Massive 3D Slim Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"slim-stone-backgrounds": {
+		en: {
+			name: "G Models - Slim Stone Backgrounds",
+			description: "Premium G Models - Slim Stone Backgrounds products.",
+		},
+		de: {
+			name: "G Models - Slim Stone Backgrounds",
+			description: "German translation pending...",
 		},
 	},
 	"amazonian-tree-trunks": {
 		en: {
-			name: "Amazonian Tree Trunks",
-			description: "Natural Amazon tree trunk backgrounds that recreate underwater forest environments. Perfect for discus, angelfish, and tetra setups.",
+			name: "B Models - Amazonian Tree Trunks",
+			description: "Premium B Models - Amazonian Tree Trunks products.",
 		},
 		de: {
-			name: "Amazonas-Baumstämme",
-			description: "Natürliche Amazonas-Baumstamm-Hintergründe für Unterwasser-Waldumgebungen. Perfekt für Diskus und Salmler.",
+			name: "B Models - Amazonian Tree Trunks",
+			description: "German translation pending...",
 		},
 	},
-	"slim-backgrounds": {
+	"slim-rocky-backgrounds": {
 		en: {
-			name: "Slim Backgrounds",
-			description: "Space-saving slim 3D backgrounds perfect for rimless tanks and modern aquarium setups. Maximum visual impact with minimal depth.",
+			name: "A Slim Models - Thin Rocky Backgrounds",
+			description: "Premium A Slim Models - Thin Rocky Backgrounds products.",
 		},
 		de: {
-			name: "Schlanke Hintergründe",
-			description: "Platzsparende schlanke 3D-Hintergründe perfekt für rahmenlose Tanks und moderne Aquarien-Setups.",
+			name: "A Slim Models - Thin Rocky Backgrounds",
+			description: "German translation pending...",
+		},
+	},
+	"room-divider-backgrounds": {
+		en: {
+			name: "F Models - Room Dividers",
+			description: "Premium F Models - Room Dividers products.",
+		},
+		de: {
+			name: "F Models - Room Dividers",
+			description: "German translation pending...",
+		},
+	},
+	"magnetic-rocks": {
+		en: {
+			name: "M Models - Magnetic Rocks",
+			description: "Premium M Models - Magnetic Rocks products.",
+		},
+		de: {
+			name: "M Models - Magnetic Rocks",
+			description: "German translation pending...",
 		},
 	},
 	"aquarium-plants": {
 		en: {
 			name: "Aquarium Plants",
-			description: "Ultra-realistic artificial aquarium plants. 100% neutral material, indestructible by cichlids, zero maintenance required. Available in multiple sizes and types.",
+			description: "Premium Aquarium Plants products.",
 		},
 		de: {
-			name: "Aquariumpflanzen",
-			description: "Ultrarealistische künstliche Aquariumpflanzen. 100% neutrales Material, unzerstörbar durch Buntbarsche, keine Wartung erforderlich.",
-		},
-		us: {
-			// US locale uses different messaging due to Trump tariffs
 			name: "Aquarium Plants",
-			description: "Premium European artificial aquarium plants. Select models available for US delivery. Contact us for availability and shipping options.",
+			description: "German translation pending...",
 		},
 	},
-	"logs-and-driftwood": {
+	"centerpiece-decorations": {
 		en: {
-			name: "Logs, Driftwood & Roots",
-			description: "Non-floating standing logs, driftwood, and root systems. Handcrafted realistic bark texture. Made to order in 10-12 business days.",
+			name: "V Models - Centerpiece Decorations",
+			description: "Premium V Models - Centerpiece Decorations products.",
 		},
 		de: {
-			name: "Stämme, Treibholz & Wurzeln",
-			description: "Nicht schwimmende Stämme, Treibholz und Wurzelsysteme. Handgefertigte realistische Rindenstruktur.",
+			name: "V Models - Centerpiece Decorations",
+			description: "German translation pending...",
 		},
 	},
 	"aquarium-rocks": {
 		en: {
 			name: "Aquarium Rocks",
-			description: "Handcrafted non-floating aquarium rocks. No glue or soaking needed. Perfect for cichlid tanks with natural hiding spots and breeding caves.",
+			description: "Premium Aquarium Rocks products.",
 		},
 		de: {
-			name: "Aquariumsteine",
-			description: "Handgefertigte nicht schwimmende Aquariumsteine. Kein Kleben oder Einweichen erforderlich. Perfekt für Buntbarsch-Becken.",
+			name: "Aquarium Rocks",
+			description: "German translation pending...",
 		},
 	},
-	"starter-sets": {
+	"aquascaping-starter-sets": {
 		en: {
-			name: "Aquascaping Starter Sets",
-			description: "Complete aquascaping starter sets with rocks, logs, plants, and decorations. Everything you need to create a stunning natural aquarium in one package.",
+			name: "Starter Sets",
+			description: "Premium Starter Sets products.",
 		},
 		de: {
-			name: "Aquascaping Starter-Sets",
-			description: "Komplette Aquascaping-Sets mit Steinen, Stämmen, Pflanzen und Dekorationen. Alles was Sie für ein atemberaubendes Naturaquarium benötigen.",
+			name: "Starter Sets",
+			description: "German translation pending...",
 		},
-		us: {
-			name: "Aquascaping Starter Sets",
-			description: "Premium European aquascaping sets. Limited availability for US customers. Contact us to check current stock and shipping rates.",
+	},
+	"protective-rubber-mats": {
+		en: {
+			name: "J Models - Protective Rubber Mats for Cichlid Aquariums",
+			description: "Premium J Models - Protective Rubber Mats for Cichlid Aquariums products.",
+		},
+		de: {
+			name: "J Models - Protective Rubber Mats for Cichlid Aquariums",
+			description: "German translation pending...",
+		},
+	},
+	"logs-leaves-driftwood-rocks": {
+		en: {
+			name: "D Models - Logs, Leaves, Driftwood, Rocks and Roots",
+			description: "Premium D Models - Logs, Leaves, Driftwood, Rocks and Roots products.",
+		},
+		de: {
+			name: "D Models - Logs, Leaves, Driftwood, Rocks and Roots",
+			description: "German translation pending...",
+		},
+	},
+	"back-panel-roots": {
+		en: {
+			name: "S Models - Back Panel Roots",
+			description: "Premium S Models - Back Panel Roots products.",
+		},
+		de: {
+			name: "S Models - Back Panel Roots",
+			description: "German translation pending...",
+		},
+	},
+	"artificial-reefs": {
+		en: {
+			name: "H Models – Artificial Reefs",
+			description: "Premium H Models – Artificial Reefs products.",
+		},
+		de: {
+			name: "H Models – Artificial Reefs",
+			description: "German translation pending...",
 		},
 	},
 };

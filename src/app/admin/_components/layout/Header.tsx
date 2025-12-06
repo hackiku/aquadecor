@@ -4,7 +4,7 @@
 
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { Bell, Settings } from "lucide-react";
+import { Bell, Globe, Globe2, Settings, WholeWord } from "lucide-react";
 import { ModeToggle } from "~/components/ui/mode-toggle";
 import { getAdminPage } from "~/app/admin/_data/admin-pages";
 import {
@@ -68,6 +68,13 @@ export function Header() {
 					>
 						<Button variant="ghost" size="icon" className="rounded-full">
 							<Settings className="h-4 w-4" />
+						</Button>
+					</Link>
+					<Link
+						href={"/"}
+					>
+						<Button variant="ghost" size="icon" className="rounded-full">
+							<Globe className="h-4 w-4" />
 						</Button>
 					</Link>
 				</div>

@@ -1,84 +1,212 @@
-// src/server/db/seed/data/seed-categories.ts
-
 export const categoryStructure = [
-	// ===== 3D BACKGROUNDS =====
+
 	{
-		slug: "classic-rocky-backgrounds",
+		slug: "slim-amazonian-backgrounds",
 		productLine: "3d-backgrounds",
-		modelCode: "A",
+		modelCode: null,
 		sortOrder: 10,
 		isActive: true,
 		contentBlocks: {
-			icon: "mountain",
-			emoji: "🏔️",
-			highlights: [
-				{
-					title: "Custom Built to Size",
-					description: "Made to your exact aquarium dimensions",
-					icon: "ruler",
-				},
-			],
-			features: ["Chemical-resistant", "Heat-proof", "Lifetime warranty"],
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "massive-rocky-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 20,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "juwel-aquarium-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 30,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "saltwater-marine-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 40,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "classic-rocky-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 50,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "massive-slim-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 60,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "slim-stone-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 70,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
 		},
 	},
 	{
 		slug: "amazonian-tree-trunks",
 		productLine: "3d-backgrounds",
-		modelCode: "B",
-		sortOrder: 20,
-		isActive: true,
-		contentBlocks: { icon: "trees", emoji: "🌳" },
-	},
-	{
-		slug: "slim-backgrounds",
-		productLine: "3d-backgrounds",
-		modelCode: "E",
-		sortOrder: 30,
-		isActive: true,
-		contentBlocks: { icon: "panel-top", emoji: "📐" },
-	},
-
-	// ===== DECORATIONS =====
-	{
-		slug: "aquarium-plants",
-		productLine: "aquarium-decorations",
-		modelCode: "Z",
-		sortOrder: 100,
+		modelCode: null,
+		sortOrder: 80,
 		isActive: true,
 		contentBlocks: {
-			icon: "leaf",
-			emoji: "🌿",
-			highlights: [
-				{
-					title: "100% Indestructible",
-					description: "Even cichlids cannot damage them",
-					icon: "shield-check",
-				},
-			],
+			icon: "box",
+			emoji: "📦",
 		},
 	},
 	{
-		slug: "logs-and-driftwood",
+		slug: "slim-rocky-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 90,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "room-divider-backgrounds",
+		productLine: "3d-backgrounds",
+		modelCode: null,
+		sortOrder: 100,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "magnetic-rocks",
 		productLine: "aquarium-decorations",
-		modelCode: "D",
+		modelCode: null,
 		sortOrder: 110,
 		isActive: true,
-		contentBlocks: { icon: "tree-deciduous", emoji: "🪵" },
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "aquarium-plants",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 120,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "centerpiece-decorations",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 130,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
 	},
 	{
 		slug: "aquarium-rocks",
 		productLine: "aquarium-decorations",
-		modelCode: "Q",
-		sortOrder: 120,
+		modelCode: null,
+		sortOrder: 140,
 		isActive: true,
-		contentBlocks: { icon: "mountain", emoji: "🪨" },
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
 	},
 	{
-		slug: "starter-sets",
+		slug: "aquascaping-starter-sets",
 		productLine: "aquarium-decorations",
-		modelCode: "SET",
-		sortOrder: 200,
+		modelCode: null,
+		sortOrder: 150,
 		isActive: true,
-		contentBlocks: { icon: "package-open", emoji: "📦" },
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "protective-rubber-mats",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 160,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "logs-leaves-driftwood-rocks",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 170,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "back-panel-roots",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 180,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
+	},
+	{
+		slug: "artificial-reefs",
+		productLine: "aquarium-decorations",
+		modelCode: null,
+		sortOrder: 190,
+		isActive: true,
+		contentBlocks: {
+			icon: "box",
+			emoji: "📦",
+		},
 	},
 ];
