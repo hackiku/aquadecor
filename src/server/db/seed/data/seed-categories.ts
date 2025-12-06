@@ -1,68 +1,84 @@
 // src/server/db/seed/data/seed-categories.ts
-// Category structure only - translations in separate file
 
 export const categoryStructure = [
-	// === 3D BACKGROUNDS ===
+	// ===== 3D BACKGROUNDS =====
 	{
-		slug: "a-models",
+		slug: "classic-rocky-backgrounds",
 		productLine: "3d-backgrounds",
-		sortOrder: 1,
+		modelCode: "A",
+		sortOrder: 10,
+		isActive: true,
+		contentBlocks: {
+			icon: "mountain",
+			emoji: "🏔️",
+			highlights: [
+				{
+					title: "Custom Built to Size",
+					description: "Made to your exact aquarium dimensions",
+					icon: "ruler",
+				},
+			],
+			features: ["Chemical-resistant", "Heat-proof", "Lifetime warranty"],
+		},
 	},
 	{
-		slug: "slim-models",
+		slug: "amazonian-tree-trunks",
 		productLine: "3d-backgrounds",
-		sortOrder: 2,
+		modelCode: "B",
+		sortOrder: 20,
+		isActive: true,
+		contentBlocks: { icon: "trees", emoji: "🌳" },
 	},
 	{
-		slug: "b-models",
+		slug: "slim-backgrounds",
 		productLine: "3d-backgrounds",
-		sortOrder: 3,
+		modelCode: "E",
+		sortOrder: 30,
+		isActive: true,
+		contentBlocks: { icon: "panel-top", emoji: "📐" },
 	},
 
-	// === AQUARIUM DECORATIONS ===
+	// ===== DECORATIONS =====
 	{
 		slug: "aquarium-plants",
 		productLine: "aquarium-decorations",
-		sortOrder: 1,
+		modelCode: "Z",
+		sortOrder: 100,
+		isActive: true,
+		contentBlocks: {
+			icon: "leaf",
+			emoji: "🌿",
+			highlights: [
+				{
+					title: "100% Indestructible",
+					description: "Even cichlids cannot damage them",
+					icon: "shield-check",
+				},
+			],
+		},
+	},
+	{
+		slug: "logs-and-driftwood",
+		productLine: "aquarium-decorations",
+		modelCode: "D",
+		sortOrder: 110,
+		isActive: true,
+		contentBlocks: { icon: "tree-deciduous", emoji: "🪵" },
 	},
 	{
 		slug: "aquarium-rocks",
 		productLine: "aquarium-decorations",
-		sortOrder: 2,
-	},
-	{
-		slug: "d-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 3,
-	},
-	{
-		slug: "h-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 4,
-	},
-	{
-		slug: "j-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 5,
-	},
-	{
-		slug: "m-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 6,
-	},
-	{
-		slug: "s-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 7,
+		modelCode: "Q",
+		sortOrder: 120,
+		isActive: true,
+		contentBlocks: { icon: "mountain", emoji: "🪨" },
 	},
 	{
 		slug: "starter-sets",
 		productLine: "aquarium-decorations",
-		sortOrder: 8,
-	},
-	{
-		slug: "v-models",
-		productLine: "aquarium-decorations",
-		sortOrder: 9,
+		modelCode: "SET",
+		sortOrder: 200,
+		isActive: true,
+		contentBlocks: { icon: "package-open", emoji: "📦" },
 	},
 ];

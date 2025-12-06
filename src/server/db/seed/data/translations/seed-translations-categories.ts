@@ -1,108 +1,83 @@
 // src/server/db/seed/data/translations/seed-translations-categories.ts
-// Category translations - keyed by category slug
 
 export const categoryTranslations = {
-	// === 3D BACKGROUNDS ===
-	"a-models": {
+	"classic-rocky-backgrounds": {
 		en: {
-			name: "A Models - Classic Rocky Backgrounds",
-			description: "Realistic 3D aquarium stone decor (24 products)",
+			name: "Classic Rocky Backgrounds",
+			description: "Custom-made 3D aquarium backgrounds with realistic stone formations. Each background is built to your exact tank dimensions with optional filtration cutouts and side panels.",
 		},
 		de: {
-			name: "A-Modelle - Klassische Felsenhintergründe",
-			description: "Realistische 3D-Aquariumstein-Dekoration",
+			name: "Klassische Felsen-Hintergründe",
+			description: "Maßgefertigte 3D-Aquarienhintergründe mit realistischen Steinformationen. Jeder Hintergrund wird nach Ihren genauen Tankmaßen gefertigt.",
 		},
 	},
-	"slim-models": {
+	"amazonian-tree-trunks": {
 		en: {
-			name: "A Slim Models - Thin Rocky Backgrounds",
-			description: "Realistic 3D slim aquarium stone decor (11 products)",
+			name: "Amazonian Tree Trunks",
+			description: "Natural Amazon tree trunk backgrounds that recreate underwater forest environments. Perfect for discus, angelfish, and tetra setups.",
 		},
 		de: {
-			name: "A Slim-Modelle - Dünne Felsenhintergründe",
-			description: "Realistische 3D-schlanke Aquariumstein-Dekoration",
+			name: "Amazonas-Baumstämme",
+			description: "Natürliche Amazonas-Baumstamm-Hintergründe für Unterwasser-Waldumgebungen. Perfekt für Diskus und Salmler.",
 		},
 	},
-	"b-models": {
+	"slim-backgrounds": {
 		en: {
-			name: "B Models - Amazonian Tree Trunks",
-			description: "Natural Amazon tree underwater habitat (7 products)",
+			name: "Slim Backgrounds",
+			description: "Space-saving slim 3D backgrounds perfect for rimless tanks and modern aquarium setups. Maximum visual impact with minimal depth.",
 		},
 		de: {
-			name: "B-Modelle - Amazonas-Baumstämme",
-			description: "Natürlicher Amazonas-Baum-Unterwasser-Lebensraum",
+			name: "Schlanke Hintergründe",
+			description: "Platzsparende schlanke 3D-Hintergründe perfekt für rahmenlose Tanks und moderne Aquarien-Setups.",
 		},
 	},
-
-	// === AQUARIUM DECORATIONS ===
 	"aquarium-plants": {
 		en: {
 			name: "Aquarium Plants",
-			description: "The material they are made from provides 100% neutrality, a natural look, and an unlimited lifespan. Even if you keep cichlids and fish that naturally feed on plants, they simply cannot be damaged.",
+			description: "Ultra-realistic artificial aquarium plants. 100% neutral material, indestructible by cichlids, zero maintenance required. Available in multiple sizes and types.",
 		},
 		de: {
 			name: "Aquariumpflanzen",
-			description: "Realistische Aquariumpflanzen",
+			description: "Ultrarealistische künstliche Aquariumpflanzen. 100% neutrales Material, unzerstörbar durch Buntbarsche, keine Wartung erforderlich.",
+		},
+		us: {
+			// US locale uses different messaging due to Trump tariffs
+			name: "Aquarium Plants",
+			description: "Premium European artificial aquarium plants. Select models available for US delivery. Contact us for availability and shipping options.",
+		},
+	},
+	"logs-and-driftwood": {
+		en: {
+			name: "Logs, Driftwood & Roots",
+			description: "Non-floating standing logs, driftwood, and root systems. Handcrafted realistic bark texture. Made to order in 10-12 business days.",
+		},
+		de: {
+			name: "Stämme, Treibholz & Wurzeln",
+			description: "Nicht schwimmende Stämme, Treibholz und Wurzelsysteme. Handgefertigte realistische Rindenstruktur.",
 		},
 	},
 	"aquarium-rocks": {
 		en: {
 			name: "Aquarium Rocks",
-			description: "Unique handmade rocks, ready to use (no special prep needed)",
+			description: "Handcrafted non-floating aquarium rocks. No glue or soaking needed. Perfect for cichlid tanks with natural hiding spots and breeding caves.",
 		},
 		de: {
 			name: "Aquariumsteine",
-			description: "Natürliche Felsformationen",
-		},
-	},
-	"d-models": {
-		en: {
-			name: "D Models - Logs, Leaves, Driftwood, Rocks and Roots",
-			description: "Introducing our highly sought-after sets of logs, leaves, roots, and bottom rocks, now part of the Aquadecor collection.",
-		},
-		de: {
-			name: "D-Modelle - Stämme, Blätter, Treibholz, Steine und Wurzeln",
-			description: "Natürliche Treibholz- und Wurzeldekorationen",
-		},
-	},
-	"h-models": {
-		en: {
-			name: "H Models – Artificial Reefs",
-			description: "About Aquadecor \"H\" Models: Non-floating and ready to use, these backgrounds are designed to provide realistic reef structures.",
-		},
-		de: {
-			name: "H-Modelle – Künstliche Riffe",
-			description: "Realistische Korallenriffstrukturen",
-		},
-	},
-	"j-models": {
-		en: {
-			name: "J Models - Protective Rubber Mats for Cichlid Aquariums",
-			description: "If you choose to decorate your aquarium with genuine stones and massive rocks, you are probably aware of the risk of glass breakage.",
-		},
-	},
-	"m-models": {
-		en: {
-			name: "M Models - Magnetic Rocks",
-			description: "Create your own unique setup with our newest product—magnetic rocks. These innovative rocks offer unlimited customization possibilities.",
-		},
-	},
-	"s-models": {
-		en: {
-			name: "S Models - Back Panel Roots",
-			description: "Back Panel Roots represent a groundbreaking innovation in aquaristics, designed to effortlessly infuse your aquarium with the essence of nature.",
+			description: "Handgefertigte nicht schwimmende Aquariumsteine. Kein Kleben oder Einweichen erforderlich. Perfekt für Buntbarsch-Becken.",
 		},
 	},
 	"starter-sets": {
 		en: {
-			name: "Starter Sets",
-			description: "We proudly present our best-selling aquarium sets, carefully designed to replicate natural environments.",
+			name: "Aquascaping Starter Sets",
+			description: "Complete aquascaping starter sets with rocks, logs, plants, and decorations. Everything you need to create a stunning natural aquarium in one package.",
 		},
-	},
-	"v-models": {
-		en: {
-			name: "V Models - Centerpiece Decorations",
-			description: "Transform your aquarium into a breathtaking underwater world with our Realistic 3D Centerpiece Aquarium Decorations.",
+		de: {
+			name: "Aquascaping Starter-Sets",
+			description: "Komplette Aquascaping-Sets mit Steinen, Stämmen, Pflanzen und Dekorationen. Alles was Sie für ein atemberaubendes Naturaquarium benötigen.",
+		},
+		us: {
+			name: "Aquascaping Starter Sets",
+			description: "Premium European aquascaping sets. Limited availability for US customers. Contact us to check current stock and shipping rates.",
 		},
 	},
 };

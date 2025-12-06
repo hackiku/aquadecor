@@ -35,7 +35,7 @@ export const appRouter = createTRPCRouter({
 		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
-		gallery: adminGalleryRouter,
+		// gallery: adminGalleryRouter,
 	}),
 });
 

@@ -6,28 +6,31 @@ import { createTable } from "./_utils";
 
 // ============================================================================
 // CATEGORIES
-// Flat structure tagged by product line:
-// - A Models (productLine: "3d-backgrounds")
-// - A Slim Models (productLine: "3d-backgrounds")
-// - Aquarium Plants (productLine: "aquarium-decorations")
-// - D Models (productLine: "aquarium-decorations")
-// 
-// Product line landing pages (3d-backgrounds, aquarium-decorations) are 
-// hardcoded Next.js pages, not DB entities - better for CRO control.
 // ============================================================================
 
 export const categories = createTable(
 	"category",
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-		slug: d.text().notNull().unique(), // 'a-models', 'aquarium-plants'
+		slug: d.text().notNull().unique(),
 		productLine: d.text().notNull(), // '3d-backgrounds' | 'aquarium-decorations'
-
-		// Display
+		modelCode: d.text(), // 'Z', 'D', 'A' - for eyebrow display
 		sortOrder: d.integer().default(0).notNull(),
 		isActive: d.boolean().default(true).notNull(),
 
-		// Metadata
+		// CRO Content Blocks
+		contentBlocks: jsonb().$type<{
+			icon?: string;
+			emoji?: string;
+			highlights?: Array<{
+				title: string;
+				description: string;
+				icon?: string;
+			}>;
+			features?: string[];
+			useCases?: string[];
+		}>(),
+
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
@@ -42,12 +45,13 @@ export const categoryTranslations = createTable(
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
 		categoryId: d.text().notNull().references(() => categories.id, { onDelete: "cascade" }),
-		locale: d.text().notNull(), // 'en', 'de', 'pl', 'cs', etc.
-
-		name: d.text().notNull(), // "A Models - Classic Rocky Backgrounds"
-		description: d.text(), // Category description
-
+		locale: d.text().notNull(), // 'en', 'de', 'nl', 'fr', 'us'
+		name: d.text().notNull(),
+		description: d.text(),
+		metaTitle: d.text(),
+		metaDescription: d.text(),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
+		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
 	(t) => [
 		index("category_translation_category_idx").on(t.categoryId),
@@ -57,52 +61,79 @@ export const categoryTranslations = createTable(
 
 // ============================================================================
 // PRODUCTS
-// Single table for both 3D backgrounds and decorations
-// SKU examples: F1, F2 (backgrounds), Z1, Z10 (plants), D1, D10 (logs/roots)
 // ============================================================================
 
 export const products = createTable(
 	"product",
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-		categoryId: d.text().notNull().references(() => categories.id),
-		slug: d.text().notNull().unique(), // 'f1-3d-background', 'z1-aquarium-plant'
-		sku: d.text().unique(), // 'F1', 'Z1' - user-facing semantic ID
+		categoryId: d.text().notNull().references(() => categories.id, { onDelete: "cascade" }),
+		slug: d.text().notNull().unique(),
+		sku: d.text(),
 
-		// Pricing - stored in EUR cents (€49 = 4900)
-		basePriceEurCents: d.integer(), // null = custom-only (quote required)
-		priceNote: d.text(), // "From €199", "Production takes 10-12 business days"
+		// Product type
+		productType: d.text().notNull().default("simple"), // 'simple' | 'variable'
 
-		// Specifications (flexible JSON for both backgrounds and decorations)
+		// Pricing (in EUR cents)
+		basePriceEurCents: d.integer(),
+		priceNote: d.text(), // "From €199" | "Custom quote"
+
+		// Variants (for quantity bundles)
+		variantType: d.text(), // 'quantity' | null
+		variantOptions: jsonb().$type<{
+			quantity?: {
+				options: Array<{
+					value: number;
+					priceEurCents: number;
+					label?: string;
+				}>;
+			};
+		}>(),
+
+		// Flexible specifications
 		specifications: jsonb().$type<{
-			// Common fields
 			dimensions?: {
 				widthCm?: number;
 				heightCm?: number;
 				depthCm?: number;
 			};
 			material?: string;
-			weight?: string;
-			productionTime?: string; // "10-12 business days"
-
-			// Background-specific (nullable)
-			modularity?: "single" | "sectioned";
+			productionTime?: string;
+			modularity?: string;
 			filtrationCutout?: boolean;
-			sidePanels?: "none" | "single" | "both";
-
-			// Decoration-specific (nullable)
-			plantType?: "moss" | "cabomba" | "eucalyptus" | "other";
-			rockFormation?: "cichlid-spawning" | "tanganyika" | "loose" | "magnetic";
-			compatibility?: string[]; // Fish species compatibility
+			// Type-specific fields
+			plantType?: string;
+			woodType?: string;
+			rockFormation?: string;
+			setContents?: string[];
+			compatibility?: string[];
+			isFloating?: boolean;
+			[key: string]: any;
 		}>(),
 
-		// Inventory & Status
-		stockStatus: d.text().default("made_to_order").notNull(), // 'in_stock' | 'made_to_order' | 'out_of_stock'
+		// Customization
+		customizationOptions: jsonb().$type<{
+			allowsCustomDimensions?: boolean;
+			allowsColorCustomization?: boolean;
+			specialRequestField?: {
+				enabled: boolean;
+				label?: string;
+				placeholder?: string;
+				maxLength?: number;
+			};
+		}>(),
+
+		// Market filtering (Trump tariffs)
+		availableMarkets: d.text().array().default(["EU", "UK"]),
+
+		// Stock & display
+		stockStatus: d.text().notNull().default("in_stock"),
+		// 'in_stock' | 'made_to_order' | 'requires_quote'
+
 		isActive: d.boolean().default(true).notNull(),
-		isFeatured: d.boolean().default(false).notNull(), // For homepage ProductSlider
+		isFeatured: d.boolean().default(false).notNull(),
 		sortOrder: d.integer().default(0).notNull(),
 
-		// Timestamps
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
@@ -120,12 +151,13 @@ export const productTranslations = createTable(
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
 		productId: d.text().notNull().references(() => products.id, { onDelete: "cascade" }),
 		locale: d.text().notNull(),
-
-		name: d.text().notNull(), // Product title
-		shortDescription: d.text(), // One-liner for ProductCard
-		fullDescription: d.text(), // Long description for product detail page
-
+		name: d.text().notNull(),
+		shortDescription: d.text(), // ~160 chars for meta/cards
+		fullDescription: d.text(),
+		metaTitle: d.text(),
+		metaDescription: d.text(),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
+		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
 	(t) => [
 		index("product_translation_product_idx").on(t.productId),
@@ -134,59 +166,24 @@ export const productTranslations = createTable(
 );
 
 // ============================================================================
-// PRODUCT IMAGES
-// Supports mixed sources: CDN URLs and local /public/ paths
-// Later: Migrate to Supabase Storage (storagePath will be used then)
-// ============================================================================
-
-export const productImages = createTable(
-	"product_image",
-	(d) => ({
-		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-		productId: d.text().notNull().references(() => products.id, { onDelete: "cascade" }),
-
-		// Image location (supports CDN, public folder, or future Supabase Storage)
-		storageUrl: d.text().notNull(), // Full URL or path
-		storagePath: d.text(), // Future: 'products/abc123/hero.jpg' (nullable for now)
-
-		// Metadata
-		altText: d.text(),
-		width: d.integer(),
-		height: d.integer(),
-		fileSize: d.integer(), // bytes
-		mimeType: d.text(), // 'image/jpeg', 'image/png', 'image/webp'
-
-		// Display
-		sortOrder: d.integer().default(0).notNull(), // 0 = featured/hero image
-
-		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
-	}),
-	(t) => [
-		index("product_image_product_idx").on(t.productId),
-		index("product_image_sort_idx").on(t.sortOrder),
-	],
-);
-
-// ============================================================================
-// QUOTES
-// Calculator submissions for custom 3D backgrounds
+// QUOTES (3D Calculator)
 // ============================================================================
 
 export const quotes = createTable(
 	"quote",
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
-
-		// Customer info
-		name: d.text().notNull(),
+		productSlug: d.text().notNull(),
 		email: d.text().notNull(),
-		country: d.text().notNull(),
+		firstName: d.text(),
+		lastName: d.text(),
+		phone: d.text(),
+		country: d.text(),
 
-		// Configuration (store as JSONB for flexibility)
-		config: d.jsonb().notNull().$type<{
-			modelCategory: string;
-			flexibility: "solid" | "flexible";
-			dimensions: { width: number; height: number; depth: number };
+		dimensions: jsonb().$type<{
+			width: number;
+			height: number;
+			depth?: number;
 			unit: "cm" | "inch";
 			sidePanels: "none" | "single" | "both";
 			sidePanelWidth?: number;
@@ -194,19 +191,15 @@ export const quotes = createTable(
 			notes?: string;
 		}>(),
 
-		// Pricing (stored in EUR cents)
 		estimatedPriceEurCents: d.integer().notNull(),
-		finalPriceEurCents: d.integer(), // After manual review/adjustment
+		finalPriceEurCents: d.integer(),
 
-		// Status tracking
 		status: d.text().notNull().default("pending"),
-		// Values: "pending" | "quoted" | "accepted" | "paid" | "in_production" | "shipped" | "cancelled"
+		// "pending" | "quoted" | "accepted" | "paid" | "in_production" | "shipped" | "cancelled"
 
-		// Notes
 		customerNotes: d.text(),
 		adminNotes: d.text(),
 
-		// Timestamps
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		quotedAt: d.timestamp({ withTimezone: true }),
 		acceptedAt: d.timestamp({ withTimezone: true }),
@@ -241,7 +234,6 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 		references: [categories.id],
 	}),
 	translations: many(productTranslations),
-	images: many(productImages),
 }));
 
 export const productTranslationsRelations = relations(productTranslations, ({ one }) => ({
@@ -251,50 +243,16 @@ export const productTranslationsRelations = relations(productTranslations, ({ on
 	}),
 }));
 
-export const productImagesRelations = relations(productImages, ({ one }) => ({
-	product: one(products, {
-		fields: [productImages.productId],
-		references: [products.id],
-	}),
+export const quotesRelations = relations(quotes, ({ one }) => ({
+	// Could link to users/products if needed
 }));
 
-export const quotesRelations = relations(quotes, ({ one }) => ({
-	// Could link to users table if auth is added
-}));
+// ============================================================================
+// TYPES
+// ============================================================================
 
 export type Category = InferSelectModel<typeof categories>;
+export type CategoryTranslation = InferSelectModel<typeof categoryTranslations>;
 export type Product = InferSelectModel<typeof products>;
 export type ProductTranslation = InferSelectModel<typeof productTranslations>;
-export type ProductImage = InferSelectModel<typeof productImages>;
 export type Quote = InferSelectModel<typeof quotes>;
-
-
-// Commonly used joined types for components
-export type ProductWithDetails = Product & {
-	name: string;
-	shortDescription: string | null;
-	fullDescription: string | null;
-	featuredImageUrl: string | null;
-	categorySlug: string;
-	productLineSlug: string;
-};
-
-// Type for product cards/sliders - exactly what components need
-export type ProductCardData = Pick<Product,
-	| 'id'
-	| 'slug'
-	| 'sku'
-	| 'basePriceEurCents'
-	| 'priceNote'
-	| 'stockStatus'
-	| 'isFeatured'
-> & {
-	name: string;
-	shortDescription: string | null;
-	featuredImageUrl: string | null;
-	categorySlug: string;
-	productLineSlug: string;
-};
-
-// Product line type (for type safety)
-export type ProductLine = "3d-backgrounds" | "aquarium-decorations";

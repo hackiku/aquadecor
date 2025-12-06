@@ -7,24 +7,25 @@ import postgres from "postgres";
 import {
 	users, addresses,
 	categories, categoryTranslations,
-	products, productTranslations, productImages,
+	products, productTranslations,
+	media,
 	reviews,
 	orders, orderItems,
 	promoters, promoterCodes, sales,
 	faqs, faqTranslations,
 	shippingZones, countries,
-	galleryCategories, galleryImageCategories
 } from "../schema";
 
 
-// auth
+// auth & admin
 import { usersSeedData, addressesSeedData } from "./data/seed-users";
 // inventory
 import { categoryStructure } from "./data/seed-categories";
 import { categoryTranslations as catTranslations } from "./data/translations/seed-translations-categories";
 import { productStructure } from "./data/seed-products";
 import { productTranslations as prodTranslations } from "./data/translations/seed-translations-products";
-import { productImages as imageData } from "./data/seed-images";
+// import { productImages as imageData } from "./data/seed-images";
+import { mediaRecords } from "./data/seed-media";
 // selling
 import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
@@ -184,33 +185,77 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 	return productIdMap;
 }
 
-async function seedImages(productIdMap: Map<string, string>) {
-	console.log("🌱 Seeding product images...");
+// async function seedImages(productIdMap: Map<string, string>) {
+// 	console.log("🌱 Seeding product images...");
 
-	for (const img of imageData) {
-		const productId = productIdMap.get(img.productSlug);
-		if (!productId) {
-			console.warn(`  ⚠ No product found for slug: ${img.productSlug}`);
-			continue;
+// 	for (const img of imageData) {
+// 		const productId = productIdMap.get(img.productSlug);
+// 		if (!productId) {
+// 			console.warn(`  ⚠ No product found for slug: ${img.productSlug}`);
+// 			continue;
+// 		}
+
+// 		await db.insert(productImages).values({
+// 			productId,
+// 			storageUrl: img.storageUrl,
+// 			storagePath: null,
+// 			altText: img.altText,
+// 			sortOrder: img.sortOrder,
+// 			width: null,
+// 			height: null,
+// 			fileSize: null,
+// 			mimeType: null,
+// 		});
+
+// 		console.log(`  ✓ ${img.productSlug} - ${img.altText}`);
+// 	}
+
+// 	console.log(`✅ Seeded ${imageData.length} product images\n`);
+// }
+
+async function seedMedia(productIdMap: Map<string, string>, categoryIdMap: Map<string, string>) {
+	console.log("🌱 Seeding media...");
+
+	for (const mediaItem of mediaRecords) {
+		let productId = null;
+		let categoryId = null;
+
+		// Resolve product or category ID
+		if (mediaItem.productSlug) {
+			productId = productIdMap.get(mediaItem.productSlug) || null;
+			if (!productId) {
+				console.warn(`  ⚠ No product found for slug: ${mediaItem.productSlug}`);
+				continue;
+			}
 		}
 
-		await db.insert(productImages).values({
+		if (mediaItem.categorySlug) {
+			categoryId = categoryIdMap.get(mediaItem.categorySlug) || null;
+			if (!categoryId) {
+				console.warn(`  ⚠ No category found for slug: ${mediaItem.categorySlug}`);
+				continue;
+			}
+		}
+
+		await db.insert(media).values({
 			productId,
-			storageUrl: img.storageUrl,
-			storagePath: null,
-			altText: img.altText,
-			sortOrder: img.sortOrder,
-			width: null,
-			height: null,
-			fileSize: null,
-			mimeType: null,
+			categoryId,
+			storageUrl: mediaItem.storageUrl,
+			legacyCdnUrl: mediaItem.legacyCdnUrl,
+			storagePath: mediaItem.storagePath || null,
+			altText: mediaItem.altText,
+			usageType: mediaItem.usageType,
+			sortOrder: mediaItem.sortOrder,
+			tags: mediaItem.tags || [],
 		});
 
-		console.log(`  ✓ ${img.productSlug} - ${img.altText}`);
+		const ref = mediaItem.productSlug || mediaItem.categorySlug || "unknown";
+		console.log(`  ✓ ${ref} - ${mediaItem.altText}`);
 	}
 
-	console.log(`✅ Seeded ${imageData.length} product images\n`);
+	console.log(`✅ Seeded ${mediaRecords.length} media items\n`);
 }
+
 
 async function seedReviews() {
 	console.log("🌱 Seeding reviews...");
@@ -358,7 +403,8 @@ async function main() {
 		await seedUsers();
 		const categoryIdMap = await seedCategories();
 		const productIdMap = await seedProducts(categoryIdMap);
-		await seedImages(productIdMap);
+		await seedMedia(productIdMap, categoryIdMap);  // ✅ NEW - passes both maps
+		// await seedImages(productIdMap);
 		await seedReviews();
 		await seedOrders();
 		await seedSales();
