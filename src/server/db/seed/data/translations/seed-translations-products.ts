@@ -67,7 +67,8 @@ export const productTranslations = {
 	// ===== PLANTS =====
 	"z-1-aquarium-plant": {
 		en: {
-			name: "Z 1 - Artificial Aquarium Plant",
+			// name: "Z 1 - Artificial Aquarium Plant",
+			name: "Artificial Aquarium Plant",
 			shortDescription: "Ultra-realistic artificial plant. 100% indestructible by cichlids, no maintenance required.",
 			fullDescription: "The Z 1 Artificial Aquarium Plant provides the beauty of live plants without any maintenance. Even aggressive cichlids cannot damage these plants. Dimensions: 18cm height. In stock and ready to ship.",
 			specOverrides: {
@@ -93,7 +94,8 @@ export const productTranslations = {
 	},
 	"z-17-boston-fern-plant": {
 		en: {
-			name: "Z 17 - Boston Fern Plant",
+			// name: "Z 17 - Boston Fern Plant",
+			name: "Boston Fern Plant",
 			shortDescription: "Lush Boston fern replica. Indestructible by fish, creates perfect hiding spots.",
 			fullDescription: "The Z 17 Boston Fern brings dense, lush appearance to your aquarium. Perfect for creating hiding spots. Height: 15cm. In stock and ready to ship worldwide.",
 			specOverrides: {

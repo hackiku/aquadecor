@@ -7,6 +7,8 @@ interface Category {
 	slug: string;
 	name: string | null;
 	description: string | null;
+	modelCode?: string | null;
+	heroImageUrl?: string | null;
 	productCount?: number;
 }
 
@@ -46,7 +48,9 @@ export function CategoryGrid({
 					slug={category.slug}
 					name={category.name}
 					description={category.description}
+					modelCode={category.modelCode}
 					productLineSlug={productLineSlug}
+					heroImageUrl={category.heroImageUrl}
 					productCount={category.productCount}
 				/>
 			))}

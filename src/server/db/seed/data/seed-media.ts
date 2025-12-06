@@ -37,8 +37,9 @@ export const mediaRecords = [
 	// Z1 PLANT
 	{
 		productSlug: "z-1-aquarium-plant",
-		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model.webp",
-		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model.webp",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp",
+		// storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp",
 		altText: "Z 1 artificial plant",
 		usageType: "product",
 		sortOrder: 0,
@@ -52,6 +53,13 @@ export const mediaRecords = [
 		usageType: "product-slider",
 		sortOrder: 1,
 		tags: ["lifestyle"],
+	},
+	{
+		productSlug: "z-10-aquarium-moss",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-10-model-aquarium-moss/aqrificial-moss.png", //aqtificial lol
+		altText: "Z10 Artificial Moss - For Driftwood and Rocks",
+		works: true,
+		sortOrder: 0,
 	},
 
 	// Z17 PLANT
@@ -68,7 +76,7 @@ export const mediaRecords = [
 	// D1 ROOTS
 	{
 		productSlug: "d-1-amazonian-standing-roots",
-		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-hero.webp",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-standing-roots.webp",
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-hero.webp",
 		altText: "D 1 Standing Roots",
 		usageType: "product",

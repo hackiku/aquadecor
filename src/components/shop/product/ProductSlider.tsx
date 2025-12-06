@@ -8,7 +8,7 @@ import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import type { Product } from "~/server/db/schema/shop";
+import { Badge } from "~/components/ui/badge";
 
 export function ProductSlider() {
 	// Fetch featured products with error handling
@@ -16,15 +16,16 @@ export function ProductSlider() {
 		{
 			locale: "en",
 			limit: 12,
+			userMarket: "EU",
 		},
 		{
-			staleTime: 5 * 60 * 1000, // 5min - serve stale data while fetching
+			staleTime: 5 * 60 * 1000, // 5min
 			retry: 2,
 			retryDelay: 1000,
 		}
 	);
 
-	// Error state - show message but don't break page
+	// Error state
 	if (isError) {
 		return (
 			<div className="py-12 text-center space-y-4">
@@ -78,14 +79,21 @@ export function ProductSlider() {
 	);
 }
 
-// Type for products returned by getFeatured tRPC endpoint
-type FeaturedProduct = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote'> & {
+// Type for products returned by getFeatured
+interface FeaturedProduct {
+	id: string;
+	slug: string;
+	sku: string | null;
+	basePriceEurCents: number | null;
+	priceNote: string | null;
+	availableMarkets: string[] | null;
 	name: string | null;
 	shortDescription: string | null;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null;
+	heroImageAlt: string | null;
 	categorySlug: string | null;
 	productLineSlug: string | null;
-};
+}
 
 interface ProductRowProps {
 	title: string;
@@ -152,8 +160,6 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 
 function ProductCard({ product }: { product: FeaturedProduct }) {
 	const hasPrice = product.basePriceEurCents !== null;
-
-	// Handle nullable fields from join
 	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
 	const displayName = product.name ?? product.slug;
 
@@ -162,38 +168,47 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 			href={productUrl}
 			className="group block snap-start shrink-0 w-[260px] md:w-[300px]"
 		>
-			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-gradient-to-b from-transparent to-black/80">
+			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-card">
 				{/* Image */}
-				<div className="relative aspect-4/3 bg-muted overflow-hidden">
-					{product.featuredImageUrl ? (
+				<div className="relative aspect-[4/3] bg-muted overflow-hidden">
+					{product.heroImageUrl ? (
 						<Image
-							src={product.featuredImageUrl}
-							alt={displayName}
+							src={product.heroImageUrl}
+							alt={product.heroImageAlt || displayName}
 							fill
-							className="object-cover group-hover:scale-105 transition-transform duration-500"
+							className="object-cover group-hover:scale-110 transition-transform duration-500"
 							sizes="300px"
 						/>
 					) : (
-						<div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+						<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
 							<Package className="h-16 w-16 text-muted-foreground/20" />
 						</div>
 					)}
 
-					{/* Gradient overlay for text readability */}
-					<div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/90" />
+					{/* Gradient overlay */}
+					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/95 dark:to-black/90" />
+
+					{/* SKU Badge */}
+					{product.sku && (
+						<div className="absolute top-3 left-3">
+							<Badge variant="secondary" className="font-display font-medium backdrop-blur-sm bg-background/90 dark:bg-black/90">
+								{product.sku}
+							</Badge>
+						</div>
+					)}
 
 					{/* Content overlay at bottom */}
 					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
-						<h4 className="font-display font-normal text-base line-clamp-2 text-white">
+						<h4 className="font-display font-medium text-base line-clamp-2 text-foreground">
 							{displayName}
 						</h4>
 
 						{hasPrice ? (
-							<p className="text-lg font-display font-medium text-white">
+							<p className="text-lg font-display font-medium text-foreground">
 								€{((product.basePriceEurCents ?? 0) / 100).toFixed(0)}
 							</p>
 						) : (
-							<p className="text-sm font-display font-medium text-white/80">
+							<p className="text-sm font-display font-medium text-muted-foreground">
 								{product.priceNote ?? "Custom Quote"}
 							</p>
 						)}
@@ -208,7 +223,7 @@ function ProductCardSkeleton() {
 	return (
 		<div className="snap-start shrink-0 w-[260px] md:w-[300px]">
 			<Card className="h-full overflow-hidden">
-				<Skeleton className="aspect-4/3 w-full" />
+				<Skeleton className="aspect-[4/3] w-full" />
 			</Card>
 		</div>
 	);

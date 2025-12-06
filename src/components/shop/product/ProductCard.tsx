@@ -3,10 +3,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent, CardFooter } from "~/components/ui/card";
+import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Package } from "lucide-react";
-import { AddToCartButton } from "../cart/AddToCartButton";
 import { WishlistButton } from "../wishlist/WishlistButton";
 import type { Product } from "~/server/db/schema/shop";
 
@@ -14,7 +13,8 @@ interface ProductCardProps {
 	product: Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 		name: string;
 		shortDescription: string | null;
-		featuredImageUrl: string | null;
+		heroImageUrl: string | null;
+		heroImageAlt?: string | null;
 		categorySlug: string;
 		productLineSlug: string;
 	};
@@ -22,127 +22,105 @@ interface ProductCardProps {
 	showQuickAdd?: boolean;
 }
 
-
-// interface ProductCardProps {
-// 	product: {
-// 		id: string;
-// 		slug: string;
-// 		name: string;
-// 		sku?: string | null;
-// 		shortDescription?: string | null;
-// 		basePriceEurCents?: number | null;
-// 		priceNote?: string | null;
-// 		stockStatus: string;
-// 		featuredImageUrl?: string | null;
-// 		categorySlug: string;
-// 		productLineSlug: string;
-// 	};
-// 	variant?: "default" | "compact" | "featured";
-// 	showQuickAdd?: boolean;
-// }
-
-export function ProductCard({ product, variant = "default", showQuickAdd = true }: ProductCardProps) {
+export function ProductCard({ product, variant = "default", showQuickAdd = false }: ProductCardProps) {
 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
 	const hasPrice = product.basePriceEurCents !== null;
 
-// export function ProductCard({
-// 	product,
-// 	variant = "default",
-// 	showQuickAdd = true
-// }: ProductCardProps) {
-// 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
-// 	const hasPrice = product.basePriceEurCents !== null && product.basePriceEurCents !== undefined;
-
-	// Fix: Safely handle the division with fallback
 	const formattedPrice = hasPrice
 		? `€${((product.basePriceEurCents ?? 0) / 100).toFixed(2)}`
 		: null;
 
-	// Stock badge
-	const stockBadge = product.stockStatus === "in_stock"
-		? <Badge variant="secondary" className="text-xs font-display">In Stock</Badge>
-		: product.stockStatus === "made_to_order"
-			? <Badge variant="outline" className="text-xs font-display">Made to Order</Badge>
-			: null;
+	// Stock badge configuration
+	const stockBadgeConfig = {
+		in_stock: { variant: "default" as const, label: "In Stock", className: "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20" },
+		made_to_order: { variant: "outline" as const, label: "Made to Order", className: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20" },
+		requires_quote: { variant: "outline" as const, label: "Custom Quote", className: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20" },
+	};
+
+	const stockBadge = stockBadgeConfig[product.stockStatus as keyof typeof stockBadgeConfig];
 
 	return (
-		<div className="group relative h-full">
-			{/* Wishlist Button - Top Right */}
-			<div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-				<WishlistButton productId={product.id} />
-			</div>
+		<Link
+			href={productUrl}
+			className="group block h-full"
+		>
+			<Card className="h-full overflow-hidden border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl bg-card">
+				{/* Image Container with Gradient Overlay */}
+				<div className="relative aspect-[4/3] overflow-hidden bg-muted">
+					{product.heroImageUrl ? (
+						<Image
+							src={product.heroImageUrl}
+							alt={product.heroImageAlt || product.name}
+							fill
+							className="object-cover transition-transform duration-500 group-hover:scale-110"
+							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+						/>
+					) : (
+						<div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+							<Package className="h-16 w-16 text-muted-foreground/20" />
+						</div>
+					)}
 
-			<Link href={productUrl} className="block h-full">
-				<Card className="h-full flex flex-col overflow-hidden border-2 border-border hover:border-primary/50 hover:shadow-2xl transition-all duration-300">
-					{/* Image */}
-					<div className="relative aspect-[4/3] bg-muted overflow-hidden">
-						{product.featuredImageUrl ? (
-							<Image
-								src={product.featuredImageUrl}
-								alt={product.name}
-								fill
-								className="object-cover group-hover:scale-105 transition-transform duration-500"
-								sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-							/>
-						) : (
-							<div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-								<Package className="h-16 w-16 text-muted-foreground/20" />
-							</div>
-						)}
+					{/* Gradient overlay for text readability */}
+					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/95 dark:to-black/90" />
 
+					{/* Wishlist Button - Top Right */}
+					<div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+						<WishlistButton productId={product.id} />
+					</div>
+
+					{/* Top Badges Row */}
+					<div className="absolute top-3 left-3 flex items-center gap-2">
 						{/* SKU Badge */}
 						{product.sku && (
-							<div className="absolute top-3 left-3">
-								<Badge variant="secondary" className="font-display font-medium backdrop-blur-sm">
-									{product.sku}
-								</Badge>
-							</div>
+							<Badge
+								variant="secondary"
+								className="font-display font-medium backdrop-blur-sm bg-background/90 dark:bg-black/90"
+							>
+								{product.sku}
+							</Badge>
 						)}
 
 						{/* Stock Badge */}
 						{stockBadge && (
-							<div className="absolute bottom-3 left-3">
-								{stockBadge}
-							</div>
+							<Badge
+								variant={stockBadge.variant}
+								className={`text-xs font-display backdrop-blur-sm ${stockBadge.className}`}
+							>
+								{stockBadge.label}
+							</Badge>
 						)}
 					</div>
 
-					{/* Content */}
-					<CardContent className="flex-1 p-6 space-y-3">
-						<h3 className="font-display font-normal text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+					{/* Content Overlay - Bottom */}
+					<div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
+						{/* Product Name */}
+						<h3 className="font-display font-medium text-lg leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors">
 							{product.name}
 						</h3>
 
-						{product.shortDescription && variant !== "compact" && (
-							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
+						{/* Short Description - Hidden in compact mode */}
+						{variant !== "compact" && product.shortDescription && (
+							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
 								{product.shortDescription}
 							</p>
 						)}
 
 						{/* Price */}
-						{formattedPrice ? (
-							<p className="text-2xl font-display font-light text-primary">
-								{formattedPrice}
-							</p>
-						) : product.priceNote ? (
-							<p className="text-sm font-display font-medium text-muted-foreground">
-								{product.priceNote}
-							</p>
-						) : null}
-					</CardContent>
-
-					{/* Footer with CTA */}
-					{showQuickAdd && (
-						<CardFooter className="p-6 pt-0">
-							<AddToCartButton
-								product={product}
-								variant="outline"
-								className="w-full rounded-full"
-							/>
-						</CardFooter>
-					)}
-				</Card>
-			</Link>
-		</div>
+						<div className="pt-1">
+							{formattedPrice ? (
+								<p className="text-2xl font-display font-light text-foreground">
+									{formattedPrice}
+								</p>
+							) : product.priceNote ? (
+								<p className="text-sm font-display font-medium text-muted-foreground">
+									{product.priceNote}
+								</p>
+							) : null}
+						</div>
+					</div>
+				</div>
+			</Card>
+		</Link>
 	);
 }

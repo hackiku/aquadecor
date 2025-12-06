@@ -135,10 +135,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 														.join(" ");
 
-													// Format value
+													// ✅ NEW: Check for specOverride first
 													let formattedValue: string;
 
-													if (typeof value === 'boolean') {
+													if (product.specOverrides && product.specOverrides[key]) {
+														// Use translated override if available
+														formattedValue = product.specOverrides[key];
+													} else if (typeof value === 'boolean') {
 														formattedValue = value ? "Yes" : "No";
 													} else if (key === 'productionTime') {
 														formattedValue = String(value);

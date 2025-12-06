@@ -8,7 +8,8 @@ import type { Product } from "~/server/db/schema/shop";
 type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 	name: string;
 	shortDescription: string | null;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null;
+	heroImageAlt?: string | null;
 	categorySlug: string;
 	productLineSlug: string;
 };
@@ -24,7 +25,7 @@ export function ProductGrid({
 	products,
 	variant = "default",
 	columns = "3",
-	showQuickAdd = true
+	showQuickAdd = false
 }: ProductGridProps) {
 	if (!products || products.length === 0) {
 		return (

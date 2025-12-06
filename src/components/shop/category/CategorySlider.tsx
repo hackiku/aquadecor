@@ -7,6 +7,8 @@ interface Category {
 	slug: string;
 	name: string | null;
 	description: string | null;
+	modelCode?: string | null;
+	heroImageUrl?: string | null;
 }
 
 interface CategorySliderProps {
@@ -50,7 +52,9 @@ function CategorySliderRow({ categories, productLineSlug }: { categories: Catego
 							slug={category.slug}
 							name={category.name}
 							description={category.description}
+							modelCode={category.modelCode}
 							productLineSlug={productLineSlug}
+							heroImageUrl={category.heroImageUrl}
 						/>
 					))}
 				</div>
