@@ -62,26 +62,33 @@ export default function FAQPage() {
 
 	return (
 		// <HydrateClient>
-		<main className="relative min-h-screen bg-linear-to-b from-background to-muted/20">
-			{/* Floating Bubble Icon */}
-			<BubbleIcon
-				icon={MessageCircleQuestion}
-				className="absolute left-18 top-32 z-0 opacity-20 md:opacity-30"
-			/>
-
-			{/* Hero Section */}
-			<div className="relative z-10 mx-auto px-4 py-16 md:pt-20">
-				<div className="mx-auto max-w-3xl text-center">
-					<h1 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-						Frequently Asked Questions
-					</h1>
-					<p className="text-lg text-muted-foreground md:text-xl">
-						Everything you need to know about our custom aquarium backgrounds
-					</p>
-				</div>
+		<main className="relative min-h-screen bg-linear-to-b from-background to-muted/20 overflow-hidden">
+			{/* Background Elements */}
+			<div className="absolute inset-0 overflow-hidden pointer-events-none">
+				<BubbleIcon
+					icon={MessageCircleQuestion}
+					className="absolute left-18 top-32 z-0 opacity-20 md:opacity-30"
+				/>
 			</div>
 
-			<div className="container relative z-10 mx-auto px-4 py-8">
+			{/* Hero Section */}
+			<section className="relative z-10 mx-auto px-4 pt-16 md:pt-24 pb-16">
+				<div className="mx-auto max-w-5xl text-center space-y-6">
+					<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
+						<span className="text-sm text-primary font-display font-medium">
+							Support Center
+						</span>
+					</div>
+					<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
+						Frequently Asked Questions
+					</h1>
+					<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto leading-relaxed">
+						Everything you need to know about our custom aquarium backgrounds.
+					</p>
+				</div>
+			</section>
+
+			<div className="container relative z-10 mx-auto px-4 py-2">
 				<div className="mx-auto max-w-4xl">
 					{/* Search & Filter */}
 					<div className="max-w-2xl mx-auto mb-8 space-y-4">

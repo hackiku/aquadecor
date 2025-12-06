@@ -15,24 +15,12 @@ import { QuickShoutout } from "~/components/proof/QuickShoutout";
 export function HeroSection() {
 	const [isUnderlineVisible, setIsUnderlineVisible] = useState(false);
 
-	// Sync with QuickShoutout's 4-second cycle
-	useEffect(() => {
-		// Show underline after 1 second, hide at 3 seconds
-		const showTimer = setTimeout(() => setIsUnderlineVisible(true), 1000);
-		const hideTimer = setTimeout(() => setIsUnderlineVisible(false), 3000);
-
-		// Repeat every 4 seconds
-		const interval = setInterval(() => {
-			setIsUnderlineVisible(true);
-			setTimeout(() => setIsUnderlineVisible(false), 2000);
-		}, 4000);
-
-		return () => {
-			clearTimeout(showTimer);
-			clearTimeout(hideTimer);
-			clearInterval(interval);
-		};
-	}, []);
+	// Trigger underline animation when slide changes
+	const triggerUnderlineAnimation = () => {
+		setIsUnderlineVisible(true);
+		// Hide after 2 seconds (half of the 4s cycle)
+		setTimeout(() => setIsUnderlineVisible(false), 2000);
+	};
 
 	return (
 		<section className="relative overflow-hidden bg-zinc-950 h-dvh flex items-center justify-center">
@@ -100,12 +88,12 @@ export function HeroSection() {
 			</div>
 
 			{/* Hero Content */}
-			<div className="relative z-20 w-full max-w-7xl px-4 mt-24">
-				<div className="flex items-end justify-between gap-8">
-					{/* Left: Main headline and CTAs */}
-					<div className="max-w-3xl space-y-6">
+			<div className="relative z-20 w-full max-w-7xl px-4 mt-12 md:-mt-6">
+				<div className="flex flex-col items-center text-center gap-12">
+					{/* Main headline and CTAs */}
+					<div className="max-w-4xl space-y-8">
 						{/* Headline with animated underline on "most realistic" */}
-						<h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white font-display font-extralight leading-tight tracking-tight">
+						<h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-display font-extralight leading-tight tracking-tight">
 							World's{" "}
 							<span className="relative inline-block">
 								<span className="relative z-10">most realistic</span>
@@ -135,16 +123,16 @@ export function HeroSection() {
 						</h1>
 
 						{/* Subheadline */}
-						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl leading-relaxed">
+						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto leading-relaxed">
 							The aquarium community's {' '}
 							<span className="text-white italic font-medium">
-								least-kept secret 
+								least-kept secret
 							</span> {' '}
 							for creating gorgeously-looking natural habitat in your fish tank.
 						</p>
 
 						{/* CTAs */}
-						<div className="flex flex-col sm:flex-row gap-4 pt-4">
+						<div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
 							<ShopButton />
 
 							<Button
@@ -158,9 +146,9 @@ export function HeroSection() {
 						</div>
 					</div>
 
-					{/* Right: QuickShoutout - hidden on mobile */}
+					{/* QuickShoutout - Centered below */}
 					<div className="hidden lg:block shrink-0">
-						<QuickShoutout />
+						<QuickShoutout onSlideChange={triggerUnderlineAnimation} />
 					</div>
 				</div>
 			</div>

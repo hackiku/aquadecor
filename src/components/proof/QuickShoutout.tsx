@@ -70,13 +70,22 @@ const REVIEWS: QuickReview[] = [
 	},
 ];
 
-export function QuickShoutout() {
+interface QuickShoutoutProps {
+	onSlideChange?: () => void;
+}
+
+export function QuickShoutout({ onSlideChange }: QuickShoutoutProps) {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isPaused, setIsPaused] = useState(false);
 
 	const currentReview = REVIEWS[currentIndex];
 	const hasFullReview = !!currentReview?.fullReview;
+
+	// Trigger callback when index changes
+	useEffect(() => {
+		onSlideChange?.();
+	}, [currentIndex, onSlideChange]);
 
 	// Auto-rotate every 4 seconds when not expanded
 	useEffect(() => {

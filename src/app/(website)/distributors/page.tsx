@@ -10,6 +10,11 @@ export default function DistributorsPage() {
 			<section className="relative pt-32 md:pt-40 pb-16 md:pb-24 bg-gradient-to-b from-muted/50 to-transparent">
 				<div className="container px-4 max-w-5xl mx-auto">
 					<div className="space-y-6">
+						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
+							<span className="text-sm text-primary font-display font-medium">
+								Global Network
+							</span>
+						</div>
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
 							Official Distributors
 						</h1>

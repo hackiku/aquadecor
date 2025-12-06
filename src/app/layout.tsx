@@ -7,6 +7,7 @@ import { ThemeProvider } from "~/components/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 import { ConditionalNav } from "~/components/navigation/ConditionalNav";
 import { NavWithBanner } from "~/components/navigation/NavWithBanner";
+import { ViewportSize } from "~/components/dev/ViewportSize";
 
 export const metadata: Metadata = {
 	title: "Aquadecor Backgrounds",
@@ -36,6 +37,7 @@ export default function RootLayout({
 						enableSystem
 						disableTransitionOnChange
 					>
+						<ViewportSize />
 						{/* Conditionally render nav based on route (client detects, server renders nav) */}
 						<ConditionalNav navContent={<NavWithBanner />}>
 							{children}
