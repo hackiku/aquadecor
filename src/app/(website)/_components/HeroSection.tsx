@@ -1,111 +1,56 @@
 // src/app/(website)/_components/HeroSection.tsx
 "use client";
 
-// cat blob
-// https://codepen.io/sjoerdkoelewijn/pen/LYxrxeL
-
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShopButton } from "~/components/cta/ShopButton";
-import { Button } from "~/components/ui/button";
 import { QuickShoutout } from "~/components/proof/QuickShoutout";
+import { HeroVideoWave } from "~/components/ui/water/hero-video-wave";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 export function HeroSection() {
 	const [isUnderlineVisible, setIsUnderlineVisible] = useState(false);
+	const [isPaused, setIsPaused] = useState(false);
 
 	// Trigger underline animation when slide changes
 	const triggerUnderlineAnimation = () => {
 		setIsUnderlineVisible(true);
-		// Hide after 2 seconds (half of the 4s cycle)
-		setTimeout(() => setIsUnderlineVisible(false), 2000);
+		setTimeout(() => setIsUnderlineVisible(false), 600);
 	};
 
 	return (
-		<section className="relative overflow-hidden bg-zinc-950 h-dvh flex items-center justify-center">
-			{/* Video with Animated Blob Mask */}
-			<div className="absolute inset-0">
-				{/* Video layer */}
-				<div
-					className="absolute inset-0 opacity-30"
-					style={{
-						clipPath: "url(#blobMask)",
-						WebkitClipPath: "url(#blobMask)",
-					}}
-				>
-					<video
-						autoPlay
-						loop
-						muted
-						playsInline
-						className="w-full h-full object-cover"
-					>
-						<source src="/media/videos/banner-video.mp4" type="video/mp4" />
-					</video>
-				</div>
-
-				{/* Animated SVG Mask */}
-				<svg className="absolute inset-0 w-full h-full pointer-events-none">
-					<defs>
-						<clipPath id="blobMask" clipPathUnits="objectBoundingBox">
-							<path d="
-								M 0.02,0.15
-								C 0.01,0.08 0.03,0.02 0.08,0.01
-								C 0.15,0.00 0.25,0.01 0.35,0.01
-								C 0.45,0.01 0.55,0.01 0.65,0.01
-								C 0.75,0.01 0.85,0.00 0.92,0.01
-								C 0.97,0.02 0.99,0.08 0.98,0.15
-								L 0.98,0.65
-								C 0.95,0.70 0.90,0.73 0.85,0.75
-								Q 0.75,0.78 0.65,0.80
-								Q 0.55,0.82 0.45,0.80
-								Q 0.35,0.78 0.25,0.75
-								Q 0.15,0.72 0.05,0.68
-								C 0.03,0.67 0.02,0.64 0.02,0.60
-								L 0.02,0.15
-								Z
-							">
-								<animate
-									attributeName="d"
-									dur="15s"
-									repeatCount="indefinite"
-									values="
-										M 0.02,0.15 C 0.01,0.08 0.03,0.02 0.08,0.01 C 0.15,0.00 0.25,0.01 0.35,0.01 C 0.45,0.01 0.55,0.01 0.65,0.01 C 0.75,0.01 0.85,0.00 0.92,0.01 C 0.97,0.02 0.99,0.08 0.98,0.15 L 0.98,0.65 C 0.95,0.70 0.90,0.73 0.85,0.75 Q 0.75,0.78 0.65,0.80 Q 0.55,0.82 0.45,0.80 Q 0.35,0.78 0.25,0.75 Q 0.15,0.72 0.05,0.68 C 0.03,0.67 0.02,0.64 0.02,0.60 L 0.02,0.15 Z;
-										M 0.01,0.18 C 0.00,0.10 0.02,0.03 0.07,0.015 C 0.14,0.00 0.24,0.005 0.34,0.01 C 0.44,0.015 0.54,0.01 0.64,0.005 C 0.74,0.00 0.84,0.005 0.91,0.015 C 0.98,0.025 0.995,0.10 0.99,0.18 L 0.99,0.68 C 0.96,0.73 0.91,0.76 0.86,0.78 Q 0.76,0.81 0.66,0.83 Q 0.56,0.85 0.46,0.83 Q 0.36,0.81 0.26,0.78 Q 0.16,0.75 0.06,0.71 C 0.04,0.70 0.01,0.67 0.01,0.63 L 0.01,0.18 Z;
-										M 0.015,0.12 C 0.005,0.06 0.025,0.015 0.075,0.005 C 0.145,0.00 0.245,0.01 0.345,0.015 C 0.445,0.02 0.545,0.015 0.645,0.01 C 0.745,0.005 0.845,0.00 0.915,0.005 C 0.975,0.01 0.995,0.06 0.985,0.12 L 0.985,0.62 C 0.955,0.68 0.905,0.71 0.855,0.73 Q 0.755,0.76 0.655,0.78 Q 0.555,0.80 0.455,0.78 Q 0.355,0.76 0.255,0.73 Q 0.155,0.70 0.055,0.66 C 0.035,0.65 0.015,0.62 0.015,0.58 L 0.015,0.12 Z;
-										M 0.02,0.15 C 0.01,0.08 0.03,0.02 0.08,0.01 C 0.15,0.00 0.25,0.01 0.35,0.01 C 0.45,0.01 0.55,0.01 0.65,0.01 C 0.75,0.01 0.85,0.00 0.92,0.01 C 0.97,0.02 0.99,0.08 0.98,0.15 L 0.98,0.65 C 0.95,0.70 0.90,0.73 0.85,0.75 Q 0.75,0.78 0.65,0.80 Q 0.55,0.82 0.45,0.80 Q 0.35,0.78 0.25,0.75 Q 0.15,0.72 0.05,0.68 C 0.03,0.67 0.02,0.64 0.02,0.60 L 0.02,0.15 Z
-									"
-								/>
-							</path>
-						</clipPath>
-					</defs>
-				</svg>
-
-				{/* Gradient overlays */}
-				<div className="absolute inset-0 bg-linear-to-b from-zinc-950/60 via-zinc-950/40 to-zinc-950/90" />
-				<div className="absolute inset-0 bg-linear-to-t from-zinc-950 via-transparent to-transparent" />
+		<section className="relative overflow-hidden h-dvh -mt-16">
+			<WaveDivider position="bottom" color="black"/>
+			{/* Full-width video with wave cutout */}
+			<div className="absolute inset-0 opacity-40">
+				<HeroVideoWave
+					videoSrc="/media/videos/banner-video.mp4"
+					posterSrc="/media/images/video-poster.jpg"
+				/>
 			</div>
 
+			{/* Gradient overlays */}
+			<div className="absolute inset-0 mb-12 bg-linear-to-b from-zinc-950/80 via-zinc-900/50 to-black" />
+			{/* <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" /> */}
+
 			{/* Hero Content */}
-			<div className="relative z-20 w-full max-w-7xl px-4 mt-12 md:-mt-6">
-				<div className="flex flex-col items-center text-center gap-12">
-					{/* Main headline and CTAs */}
-					<div className="max-w-4xl space-y-8">
-						{/* Headline with animated underline on "most realistic" */}
+			<div className="relative z-20 w-full h-full flex items-start justify-center pt-32 md:pt-40">
+				<div className="w-full max-w-5xl px-4">
+					<div className="flex flex-col items-center text-center space-y-6 md:space-y-8">
+						{/* Headline */}
 						<h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-display font-extralight leading-tight tracking-tight">
 							World's{" "}
 							<span className="relative inline-block">
 								<span className="relative z-10">most realistic</span>
-								{/* Hand-drawn swoosh underline */}
+								{/* Animated underline */}
 								<motion.svg
 									className="absolute -bottom-2 left-0 w-full h-4"
 									viewBox="0 0 200 10"
 									preserveAspectRatio="none"
 									initial={{ pathLength: 0, opacity: 0 }}
 									animate={{
-										pathLength: isUnderlineVisible ? 1 : 0,
-										opacity: isUnderlineVisible ? 1 : 0
+										pathLength: isUnderlineVisible && !isPaused ? 1 : 0,
+										opacity: isUnderlineVisible && !isPaused ? 1 : 0
 									}}
 									transition={{ duration: 0.6, ease: "easeInOut" }}
 								>
@@ -123,34 +68,43 @@ export function HeroSection() {
 						</h1>
 
 						{/* Subheadline */}
-						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto leading-relaxed">
+						<p className="text-lg md:text-xl text-zinc-400 font-display font-light max-w-xl mx-auto leading-relaxed">
 							The aquarium community's {' '}
-							<span className="text-white italic font-medium">
+							<span className="text-white italic font-regular">
 								least-kept secret
 							</span> {' '}
-							for creating gorgeously-looking natural habitat in your fish tank.
+							for creating gorgeously-looking natural habitats.
 						</p>
 
 						{/* CTAs */}
 						<div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-							<ShopButton />
-
-							<Button
-								asChild
-								variant="outline"
-								size="lg"
-								className="rounded-full w-full sm:w-auto text-white border-white hover:bg-white hover:text-zinc-950"
+							{/* Shop Now - primary button */}
+							<Link
+								href="/shop"
+								className="inline-flex items-center justify-center px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium text-base transition-all hover:scale-105 sm:w-auto"
 							>
-								<Link href="/calculator">Order custom</Link>
-							</Button>
+								Shop Now
+							</Link>
+
+							{/* Order Custom - outline button */}
+							<Link
+								href="/calculator"
+								className="inline-flex items-center justify-center px-8 py-3 bg-transparent hover:bg-white/10 text-white border-2 border-white rounded-full font-display font-medium text-base transition-all sm:w-auto"
+							>
+								Order custom
+							</Link>
 						</div>
 					</div>
-
-					{/* QuickShoutout - Centered below */}
-					<div className="hidden lg:block shrink-0">
-						<QuickShoutout onSlideChange={triggerUnderlineAnimation} />
-					</div>
 				</div>
+			</div>
+
+			{/* QuickShoutout */}
+			<div className="absolute -bottom-2 right-4 md:bottom-36 md:right-8 lg:right-12">
+				<QuickShoutout
+					onSlideChange={triggerUnderlineAnimation}
+					isPaused={isPaused}
+					onPauseChange={setIsPaused}
+				/>
 			</div>
 		</section>
 	);

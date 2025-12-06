@@ -15,6 +15,7 @@ import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
 import { CompaniesLogos } from "~/components/proof/CompaniesLogos";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
+import { MediaBlob } from "~/components/ui/water/media-blob";
 // content
 import { HeroSection } from "./_components/HeroSection";
 import { ComparisonTable } from "./_components/ComparisonTable";
@@ -65,8 +66,8 @@ export default function LandingPage() {
 
 				</div>
 
-				{/* Trust Signals - always show */}
-				<div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+				{/* Trust Signals */}
+				<div className="mt-24 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto px-4">
 					<div className="text-center space-y-2">
 						<div className="text-4xl mb-2">🔬</div>
 						<h3 className="font-display font-medium">Laboratory Tested</h3>
@@ -82,13 +83,11 @@ export default function LandingPage() {
 				</div>
 			</section>
 
-
-
 			{/* Features Section with Parallax Annotations */}
 			<section className="relative py-24 md:py-32 overflow-hidden">
 
 				{/* Headline */}
-				<div className="text-center mb-16">
+				<div className="text-center mb-16 px-4">
 					<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
 						Built to Last Forever
 					</h2>
@@ -97,16 +96,15 @@ export default function LandingPage() {
 					</p>
 				</div>
 
-				<div className="max-w-5xl mx-auto">
+				<div className="max-w-5xl mx-auto px-4">
 					<FeaturesLayout />
 					<CompaniesLogos />
 				</div>
 
 			</section>
 
-
 			{/* Social Proof - Customer Content */}
-			<section className="relative py-24 md:py-36 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
+			<section className="relative py-24 md:py-36 bg-gradient-to-b from-card/80 to-transparent overflow-hidden">
 				{/* Top Wave Divider */}
 				<WaveDivider position="top" color="currentColor" className="text-background" />
 
@@ -129,14 +127,8 @@ export default function LandingPage() {
 						<SocialLinks showFollowers={true} />
 					</div>
 				</div>
-			</section>
 
-			{/* Stats - Social Proof */}
-			<section className="relative py-16 md:py-24 bg-linear-to-b from-card to-background">
-				{/* Top wave matching background color */}
-				{/* <NegativeWave position="top" bgColor="bg-background" /> */}
-
-				<div className="px-4 max-w-7xl mx-auto">
+				<div className="mt-24 px-4 max-w-7xl mx-auto">
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
 						<div className="text-center space-y-2">
 							<p className="text-4xl md:text-5xl font-display font-light text-primary">20+</p>
@@ -158,11 +150,17 @@ export default function LandingPage() {
 				</div>
 			</section>
 
+			{/* Stats - Social Proof */}
+			{/* <section className="relative py-16 md:py-24 bg-linear-to-b from-card to-background">
+				
+			</section> */}
 
-			<section className=" border border-red-500/20">
+			{/* Whatever you choose section with proper wave integration */}
+			<section className="relative">
 				<WaveContainer>
-					<div className="max-w-7xl mx-auto px-4 pt-32">
-						<div className="text-center md:mb-16 ">
+					<div className="max-w-7xl mx-auto px-4 __pb-12">
+						{/* Headline - positioned to be inside the cyan wave */}
+						<div className="text-center mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4 text-white">
 								Whatever you choose, you won't regret it!
 							</h2>
@@ -170,7 +168,43 @@ export default function LandingPage() {
 								Standard dimensions for quick setup, or custom-made to fit your exact vision.
 							</p>
 						</div>
+
+						{/* Comparison Table */}
 						<ComparisonTable />
+
+						{/* Calculator Demo Video */}
+						<div className="mt-24 text-center">
+							<h3 className="text-2xl md:text-3xl font-display font-light text-white mb-4">
+								Design Your Perfect Background in 3D
+							</h3>
+							<p className="text-base text-cyan-100/70 font-display font-light mb-8 max-w-2xl mx-auto">
+								Our interactive 3D calculator lets you visualize and customize every detail before ordering.
+							</p>
+
+							{/* Video showcase */}
+							<div className="max-w-4xl mx-auto rounded-2xl overflow-hidden border-2 border-cyan-400/30 shadow-2xl">
+								<video
+									autoPlay
+									loop
+									muted
+									playsInline
+									className="w-full h-auto"
+									poster="/media/images/calculator-poster.jpg"
+								>
+									<source src="/media/videos/calculator-screencast-1.7x.mp4" type="video/mp4" />
+								</video>
+							</div>
+
+							<div className="mt-8">
+								<Link
+									href="/calculator"
+									className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-400 hover:bg-cyan-300 text-cyan-950 rounded-full font-display font-medium text-lg transition-all hover:scale-105"
+								>
+									Try the Calculator
+									<ArrowRight className="h-5 w-5" />
+								</Link>
+							</div>
+						</div>
 
 						{/* Newsletter positioned to overlap bottom wave */}
 						<div className="relative mt-24 pb-12">

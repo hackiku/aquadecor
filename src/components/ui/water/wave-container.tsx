@@ -11,17 +11,16 @@ interface WaveContainerProps {
 export function WaveContainer({ children, className }: WaveContainerProps) {
 	return (
 		<div className={cn("relative", className)}>
-			{/* Single seamless SVG blob with animated waves */}
+			{/* SVG background with animated waves on both edges */}
 			<svg
 				width="100%"
 				height="100%"
 				fill="none"
 				version="1.1"
 				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 1920 800"
+				viewBox="0 0 1920 1080"
 				preserveAspectRatio="none"
 				className="absolute inset-0 w-full h-full"
-				style={{ minHeight: '600px' }}
 			>
 				<defs>
 					<linearGradient id="blobGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -33,69 +32,29 @@ export function WaveContainer({ children, className }: WaveContainerProps) {
 				<path
 					fill="url(#blobGradient)"
 					d="
-						M0 77
-						C 473,283
-							822,-40
-							1920,116
-						V 684
-						C 1447,800
-							698,483
-							0,716
+						M0,60
+						C473,10 822,100 1920,40
+						L1920,1020
+						C1447,1060 698,1000 0,1040
 						Z"
 				>
 					<animate
 						repeatCount="indefinite"
-						fill="url(#blobGradient)"
 						attributeName="d"
 						dur="15s"
 						attributeType="XML"
 						values="
-							M0 77
-							C 473,283
-								822,-40
-								1920,116
-							V 684
-							C 1447,800
-								698,483
-								0,716
-							Z;
-
-							M0 77
-							C 473,-40
-								1222,283
-								1920,136
-							V 677
-							C 1447,883
-								698,600
-								0,736
-							Z;
-
-							M0 77
-							C 973,260
-								1722,-53
-								1920,120
-							V 680
-							C 947,540
-								198,877
-								0,720
-							Z;
-
-							M0 77
-							C 473,283
-								822,-40
-								1920,116
-							V 684
-							C 1447,800
-								698,483
-								0,716
-							Z
+							M0,60 C473,20 822,80 1920,50 L1920,1020 C1447,1060 698,1000 0,1040 Z;
+							M0,50 C473,80 1222,20 1920,60 L1920,1030 C1447,990 698,1070 0,1020 Z;
+							M0,70 C973,30 1722,90 1920,55 L1920,1010 C947,1050 198,980 0,1030 Z;
+							M0,60 C473,20 822,80 1920,50 L1920,1020 C1447,1060 698,1000 0,1040 Z
 						"
 					/>
 				</path>
 			</svg>
 
 			{/* Content positioned over the SVG */}
-			<div className="relative z-10">
+			<div className="relative z-10 pt-44 _pb-12">
 				{children}
 			</div>
 		</div>

@@ -5,49 +5,17 @@ import { Button } from "~/components/ui/button";
 import { Check, X } from "lucide-react";
 
 const STANDARD_FEATURES = [
-	{
-		included: true,
-		title: "Entirely handmade",
-		description: "Completely hand-made to bring nature into your fish tank. Only nature can copy us."
-	},
-	{
-		included: true,
-		title: "Easy selection",
-		description: "Choose from available variations without needing customization."
-	},
-	{
-		included: true,
-		title: "Fast production and delivery",
-		description: "Standard dimensions guarantee faster order processing and delivery."
-	},
-	{
-		included: false,
-		title: "Limited customization",
-		description: "May not find exact size or dimensions among available variations."
-	},
+	{ included: true, title: "Handcrafted 3D realism" },
+	{ included: true, title: "Ready-made dimensions" },
+	{ included: true, title: "Faster delivery (7-10 days)" },
+	{ included: false, title: "Limited size options" },
 ];
 
 const CUSTOM_FEATURES = [
-	{
-		included: true,
-		title: "Entirely handmade",
-		description: "Completely hand-made to bring nature into your fish tank. Only nature can copy us."
-	},
-	{
-		included: true,
-		title: "Personalization",
-		description: "Customize dimensions and sizes according to your specific needs and preferences."
-	},
-	{
-		included: false,
-		title: "Extended production time",
-		description: "Custom products may require longer lead times for production."
-	},
-	{
-		included: true,
-		title: "Unique products",
-		description: "Made to order, ensuring each product is unique and tailored to requirements."
-	},
+	{ included: true, title: "Handcrafted 3D realism" },
+	{ included: true, title: "Perfect fit for your tank" },
+	{ included: true, title: "Accommodates overflow boxes" },
+	{ included: false, title: "Longer lead time (10-14 days)" },
 ];
 
 export function ComparisonTable() {
@@ -57,7 +25,7 @@ export function ComparisonTable() {
 			<div className="hidden lg:grid lg:grid-cols-2 gap-8">
 				<ComparisonCard
 					title="Standard dimensions"
-					description="Products in standard dimensions and sizes."
+					description="Ready-made sizes for immediate ordering"
 					features={STANDARD_FEATURES}
 					ctaHref="/store"
 					ctaText="Shop now"
@@ -65,7 +33,7 @@ export function ComparisonTable() {
 				/>
 				<ComparisonCard
 					title="Custom dimensions"
-					description="Customize dimensions and sizes based on your needs."
+					description="Built exactly to your tank specifications"
 					features={CUSTOM_FEATURES}
 					ctaHref="/calculator"
 					ctaText="Order custom"
@@ -78,7 +46,7 @@ export function ComparisonTable() {
 			<div className="lg:hidden space-y-8">
 				<ComparisonCard
 					title="Standard dimensions"
-					description="Products in standard dimensions and sizes."
+					description="Ready-made sizes for immediate ordering"
 					features={STANDARD_FEATURES}
 					ctaHref="/store"
 					ctaText="Shop now"
@@ -86,9 +54,9 @@ export function ComparisonTable() {
 				/>
 				<ComparisonCard
 					title="Custom dimensions"
-					description="Customize dimensions and sizes based on your needs."
+					description="Built exactly to your tank specifications"
 					features={CUSTOM_FEATURES}
-					ctaHref="/store/configurator"
+					ctaHref="/calculator"
 					ctaText="Order custom"
 					variant="default"
 					highlighted
@@ -137,25 +105,20 @@ function ComparisonCard({
 				</p>
 			</div>
 
-			<div className="space-y-6 flex-grow mb-8">
+			<div className="space-y-4 flex-grow mb-8">
 				{features.map((feature, index) => (
-					<div key={index} className="space-y-2">
-						<div className="flex items-start gap-3">
-							{feature.included ? (
-								<div className="shrink-0 mt-0.5 w-6 h-6 rounded-full bg-cyan-400/20 flex items-center justify-center">
-									<Check className="h-4 w-4 text-cyan-400" />
-								</div>
-							) : (
-								<div className="shrink-0 mt-0.5 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-									<X className="h-4 w-4 text-white/40" />
-								</div>
-							)}
-							<p className="text-base font-display font-normal text-white">
-								{feature.title}
-							</p>
-						</div>
-						<p className="text-sm text-cyan-100/60 font-display font-light ml-9">
-							{feature.description}
+					<div key={index} className="flex items-center gap-3">
+						{feature.included ? (
+							<div className="shrink-0 w-6 h-6 rounded-full bg-cyan-400/20 flex items-center justify-center">
+								<Check className="h-4 w-4 text-cyan-400" />
+							</div>
+						) : (
+							<div className="shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
+								<X className="h-4 w-4 text-white/40" />
+							</div>
+						)}
+						<p className="text-base font-display font-normal text-white">
+							{feature.title}
 						</p>
 					</div>
 				))}
