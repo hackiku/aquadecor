@@ -8,14 +8,14 @@ export const productImages = [
 		productSlug: "a-1-classic-rocky-background",
 		// https://aquadecorbackgrounds.com/shop/3d-backgrounds/a-models-classic-rocky-backgrounds/a-1-classic-rocky-background
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/f1-3d-background.webp",
-		// works: false,
+		works: false,
 		altText: "F1 3D Rocky Background - Stone Riverbed Design",
 		sortOrder: 0,
 	},
 	{
 		productSlug: "f1-3d-background",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/f1-3d-background.webp",
-		// works: false,
+		works: false,
 		altText: "F1 3D Rocky Background - Stone Riverbed Design",
 		sortOrder: 0,
 	},
@@ -24,7 +24,7 @@ export const productImages = [
 		productSlug: "f2-3d-background",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/f2-3d-background.webp",
 		altText: "F2 Rocky Wood Background - Petrified Wood Appearance",
-		// works: false,
+		works: false,
 		sortOrder: 0,
 	},
 
@@ -33,7 +33,7 @@ export const productImages = [
 		productSlug: "z1-aquarium-plant",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp",
 		altText: "Z1 Aquarium Plant - Realistic Synthetic Plant",
-		// works: true,
+		works: true,
 		sortOrder: 0,
 	},
 
@@ -42,7 +42,7 @@ export const productImages = [
 		productSlug: "z10-model-aquarium-moss",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-10-model-aquarium-moss/aqrificial-moss.png",
 		altText: "Z10 Artificial Moss - For Driftwood and Rocks",
-		// works: true,
+		works: true,
 		sortOrder: 0,
 	},
 
@@ -105,6 +105,7 @@ export const productImages = [
 		productSlug: "d-27-model",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-27-model/d-27-rocks.webp",
 		altText: "D27 Malawi Tanganyika Rocks - Cichlid Habitat Rocks",
+		works: true,
 		sortOrder: 0,
 	},
 

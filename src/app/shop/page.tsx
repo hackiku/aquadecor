@@ -46,7 +46,7 @@ export default async function ShopPage() {
 						</p>
 					</div>
 
-					<div className="bg-linear-to-br from-primary/20 via-transparent to-primary/20 rounded-2xl p-8">
+					{/* <div className="bg-linear-to-br from-primary/20 via-transparent to-primary/20 rounded-2xl p-8">
 						<h2 className="text-2xl font-display font-light mb-4">
 							🇺🇸 We Haven't Forgotten About You
 						</h2>
@@ -58,7 +58,7 @@ export default async function ShopPage() {
 						<p className="text-xs text-muted-foreground mt-4">
 							In the meantime, check our <Link href="/us/distributors">trusted US distributors</Link>
 						</p>
-					</div>
+					</div> */}
 
 				</section>
 
