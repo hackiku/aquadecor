@@ -114,7 +114,7 @@ export default function LandingPage() {
 					{/* Headline */}
 					<div className="text-center mx-auto max-w-3xl mb-12 md:mb-16">
 						<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
-							Trusted for 20+ years by 200K+ Aquarium Enthusiasts
+							Trusted for 20+ years by 200K+ Tankheads
 						</h2>
 						<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
 							Real-as-rain setups from aquarium enthusiasts worldwide.

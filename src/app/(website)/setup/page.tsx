@@ -90,7 +90,7 @@ export default function SetupPage() {
 	return (
 		<main className="min-h-screen">
 			{/* Hero */}
-			<section className="relative pt-32 md:pt-40 pb-16 md:pb-24 bg-gradient-to-b from-muted/50 to-transparent overflow-hidden">
+			<section className="relative pt-16 md:pt-24 pb-16 md:pb-24 bg-linear-to-b from-muted/50 to-transparent overflow-hidden">
 				<div className="container px-4 max-w-5xl mx-auto">
 					<div className="text-center space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
