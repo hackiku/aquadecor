@@ -7,7 +7,7 @@ export const translations: TranslationSeed = {
 
 	"z-1-model-aquarium-plant": {
 		en: {
-			name: "Z 1 Model - Aquarium Plant",
+			name: "Aquarium Plant",
 			shortDescription: "Plastic plants, Carpet grass, and moss are alongside our Cattapa leaves as the latest addition to our offer. The size of the product is approximately 4x10x18cm....",
 			fullDescription: "Plastic plants, Carpet grass, and moss are alongside our Cattapa leaves as the latest addition to our offer. The size of the product is approximately 4x10x18cm. You can order plants in a combination set of 3, 6, 10, 15, and 20. The set doesn’t have to be with the same type of plant, you can combine them and make your own. These plants are made from plastic, modeled after existing aquarium plants such as Vallisneria Americana, Anubias Nana, Cabomba Caroliniana, etc. The material they are made from provides 100% neutrality, a natural look, and an unlimited lifespan. Even if you keep cichlids and fish that naturally feed on plants, they simply cannot be damaged.",
 			specOverrides: {
@@ -15,14 +15,14 @@ export const translations: TranslationSeed = {
 			},
 		},
 		de: {
-			name: "Z 1 Model - Aquarium Plant",
+			name: "Aquarium Plant",
 			shortDescription: "German translation pending...",
 			fullDescription: "German description pending...",
 		},
 	},
 	"z-2-model-aquarium-plant": {
 		en: {
-			name: "Z 2 Model - Aquarium Plant",
+			name: "Aquarium Plant",
 			shortDescription: "Plastic plants, Carpet grass, and moss are alongside our Cattapa leaves as the latest addition to our offer. The size of the product is 5x4x12cm. You can order ...",
 			fullDescription: "Plastic plants, Carpet grass, and moss are alongside our Cattapa leaves as the latest addition to our offer. The size of the product is 5x4x12cm. You can order plants in a combination set of 3, 6, 10, 15, and 20. The set don’t have to be with the same type of plant, you can combine them and make your own. These plants are made from plastic, modeled after existing aquarium plants such as Vallisneria Americana, Anubias Nana, Cabomba Caroliniana, etc. The material they are made from provides 100% neutrality, a natural look, and an unlimited lifespan. Even if you keep cichlids and fish that naturally feed on plants, they simply cannot be damaged.",
 			specOverrides: {
@@ -30,7 +30,7 @@ export const translations: TranslationSeed = {
 			},
 		},
 		de: {
-			name: "Z 2 Model - Aquarium Plant",
+			name: "Aquarium Plant",
 			shortDescription: "German translation pending...",
 			fullDescription: "German description pending...",
 		},

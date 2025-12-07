@@ -57,7 +57,7 @@ export const mainNavLinks: NavLink[] = [
 		label: "Gallery",
 		href: "/gallery",
 		enabled: true,
-		showInNav: false,
+		showInNav: true,
 		showInFooter: true,
 		category: "shop",
 	},

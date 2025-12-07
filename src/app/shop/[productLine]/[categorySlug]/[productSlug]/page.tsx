@@ -1,5 +1,4 @@
-// @ts-nocheck
-// src/app/shop/[category]/[slug]/[productSlug]/page.tsx
+// src/app/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -12,16 +11,17 @@ import { Package, Truck, Clock, Shield, Zap, CheckCircle2 } from "lucide-react";
 
 interface ProductDetailPageProps {
 	params: Promise<{
-		category: string;
-		slug: string;
+		productLine: string;
+		categorySlug: string;
 		productSlug: string;
 	}>;
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-	const { category, slug, productSlug } = await params;
+	// 1. Await params properly for Next.js 15
+	const { productLine, categorySlug, productSlug } = await params;
 
-	// Load product
+	// 2. Fetch product using just the slug
 	const product = await api.product.getBySlug({
 		slug: productSlug,
 		locale: "en",
@@ -32,6 +32,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 	}
 
 	const isCustomOnly = !product.basePriceEurCents;
+
+	// 3. Inject route params into the product object so buttons/links work
+	const productForButtons = {
+		...product,
+		categorySlug,
+		productLineSlug: productLine
+	};
 
 	return (
 		<HydrateClient>
@@ -135,12 +142,12 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 														.join(" ");
 
-													// ✅ NEW: Check for specOverride first
+													// Check for specOverride first
 													let formattedValue: string;
 
 													if (product.specOverrides && product.specOverrides[key]) {
 														// Use translated override if available
-														formattedValue = product.specOverrides[key];
+														formattedValue = product.specOverrides[key]!;
 													} else if (typeof value === 'boolean') {
 														formattedValue = value ? "Yes" : "No";
 													} else if (key === 'productionTime') {
@@ -255,7 +262,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 										{!isCustomOnly && (
 											<div className="space-y-2 pb-6 border-b">
 												<div className="text-4xl font-display font-light">
-													€{(product.basePriceEurCents / 100).toFixed(2)}
+													€{((product.basePriceEurCents ?? 0) / 100).toFixed(2)}
 												</div>
 												{product.priceNote && (
 													<p className="text-sm text-muted-foreground font-display font-light">
@@ -292,7 +299,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 												</a>
 											) : (
 												<AddToCartButton
-													product={product}
+													product={productForButtons}
 													size="lg"
 													className="w-full rounded-full"
 												/>
@@ -324,9 +331,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 						</div>
 					</div>
 				</section>
-
-				{/* Social Proof Section - Placeholder */}
-				{/* TODO: Add social mentions masonry here */}
 			</main>
 		</HydrateClient>
 	);
