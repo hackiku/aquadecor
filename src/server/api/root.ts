@@ -6,6 +6,7 @@ import { reviewsRouter } from "~/server/api/routers/reviews";
 // content
 import { faqRouter } from "~/server/api/routers/faq";
 import { countryRouter, publicCountryRouter } from "./routers/admin/country";
+import { mediaRouter } from "./routers/media";
 import { adminMediaRouter } from "./routers/admin/media";
 // admin
 import { adminProductRouter } from "~/server/api/routers/admin/product";
@@ -24,6 +25,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
 	account: accountRouter,
 	product: productRouter,
+	media: mediaRouter,
 	reviews: reviewsRouter,
 	faq: faqRouter,
 	publicCountry: publicCountryRouter,
