@@ -4,11 +4,9 @@ import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplit
 import { ProductCard } from "~/components/shop/product/ProductCard";
 import { api, HydrateClient } from "~/trpc/server";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
-import { NewsletterForm } from "~/components/cta/email/NewsletterForm";
 import { AlertCircle } from "lucide-react";
 
 export default async function ShopPage() {
-	// Fetch featured products with error handling
 	let featuredProducts: Awaited<ReturnType<typeof api.product.getFeatured>> = [];
 	let error = false;
 
@@ -22,7 +20,6 @@ export default async function ShopPage() {
 		error = true;
 	}
 
-	// Split featured products by product line
 	const backgroundProducts = featuredProducts.filter(
 		p => p.productLineSlug === "3d-backgrounds"
 	).slice(0, 3);
@@ -44,21 +41,6 @@ export default async function ShopPage() {
 							Explore our complete range of 3D backgrounds and decorations. Handcrafted in Serbia, trusted by 50,000+ aquarists worldwide.
 						</p>
 					</div>
-
-					{/* <div className="bg-linear-to-br from-primary/20 via-transparent to-primary/20 rounded-2xl p-8">
-						<h2 className="text-2xl font-display font-light mb-4">
-							🇺🇸 We Haven't Forgotten About You
-						</h2>
-						<p className="text-muted-foreground mb-6">
-							Trade policies change. Our commitment to US aquarists doesn't.
-							Join 50,000+ hobbyists and be first to know when direct orders resume.
-						</p>
-						<NewsletterForm />
-						<p className="text-xs text-muted-foreground mt-4">
-							In the meantime, check our <Link href="/us/distributors">trusted US distributors</Link>
-						</p>
-					</div> */}
-
 				</section>
 
 				{/* 3D Backgrounds Section */}
@@ -67,7 +49,6 @@ export default async function ShopPage() {
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
 						<ProductLineSplitHero />
 
-						{/* Error State */}
 						{error && (
 							<div className="py-12 text-center space-y-4">
 								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
@@ -75,14 +56,10 @@ export default async function ShopPage() {
 									<p className="text-lg font-display font-normal">
 										Unable to load products
 									</p>
-									<p className="text-muted-foreground font-display font-light">
-										Please try refreshing the page or check back later
-									</p>
 								</div>
 							</div>
 						)}
 
-						{/* Featured Products */}
 						{!error && backgroundProducts.length > 0 && (
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{backgroundProducts.map((product) => (
@@ -91,53 +68,21 @@ export default async function ShopPage() {
 										product={{
 											...product,
 											name: product.name ?? "Untitled Product",
-											stockStatus: (product as any).stockStatus || 'made_to_order'
+											stockStatus: (product as any).stockStatus || 'made_to_order',
+											// Fix missing props
+											categorySlug: product.categorySlug ?? "",
+											productLineSlug: product.productLineSlug ?? "3d-backgrounds",
 										}}
 									/>
 								))}
 							</div>
 						)}
-
-						{/* Empty State */}
-						{!error && backgroundProducts.length === 0 && (
-							<div className="py-12 text-center">
-								<p className="text-muted-foreground font-display font-light">
-									No featured backgrounds available yet
-								</p>
-							</div>
-						)}
-
-						{/* Key Features */}
-						<div className="grid md:grid-cols-3 gap-8 mt-16 p-8 bg-muted/30 rounded-2xl">
-							<div className="text-center space-y-3">
-								<div className="text-4xl">🎨</div>
-								<h4 className="font-display font-medium">Hand-Painted</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Every background is individually hand-painted for realistic detail
-								</p>
-							</div>
-							<div className="text-center space-y-3">
-								<div className="text-4xl">📐</div>
-								<h4 className="font-display font-medium">Custom Fit</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Made to your exact dimensions, including weirs and overflows
-								</p>
-							</div>
-							<div className="text-center space-y-3">
-								<div className="text-4xl">🛡️</div>
-								<h4 className="font-display font-medium">Lifetime Warranty</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Chemical-resistant materials that never leach or affect pH
-								</p>
-							</div>
-						</div>
 					</div>
 				</section>
 
 				{/* Aquarium Decorations Section */}
 				<section id="aquarium-decorations" className="relative py-24 md:py-32 bg-muted/10">
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						{/* Section Header */}
 						<div className="text-center space-y-4">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-extralight tracking-tight">
 								Aquarium Decorations
@@ -147,7 +92,6 @@ export default async function ShopPage() {
 							</p>
 						</div>
 
-						{/* Featured Products */}
 						{!error && decorationProducts.length > 0 && (
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{decorationProducts.map((product) => (
@@ -156,70 +100,15 @@ export default async function ShopPage() {
 										product={{
 											...product,
 											name: product.name ?? "Untitled Product",
-											stockStatus: (product as any).stockStatus || 'made_to_order'
+											stockStatus: (product as any).stockStatus || 'made_to_order',
+											// Fix missing props
+											categorySlug: product.categorySlug ?? "",
+											productLineSlug: product.productLineSlug ?? "aquarium-decorations",
 										}}
 									/>
 								))}
 							</div>
 						)}
-
-						{/* Empty State */}
-						{!error && decorationProducts.length === 0 && (
-							<div className="py-12 text-center">
-								<p className="text-muted-foreground font-display font-light">
-									No featured decorations available yet
-								</p>
-							</div>
-						)}
-
-						{/* Key Features */}
-						<div className="grid md:grid-cols-3 gap-8 mt-16 p-8 bg-background rounded-2xl">
-							<div className="text-center space-y-3">
-								<div className="text-4xl">🌿</div>
-								<h4 className="font-display font-medium">100% Neutral</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Won't affect water chemistry or leach minerals into your tank
-								</p>
-							</div>
-							<div className="text-center space-y-3">
-								<div className="text-4xl">♾️</div>
-								<h4 className="font-display font-medium">Never Decays</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Unlike natural materials, these never rot, float, or need replacement
-								</p>
-							</div>
-							<div className="text-center space-y-3">
-								<div className="text-4xl">🐟</div>
-								<h4 className="font-display font-medium">Fish-Safe</h4>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Even aggressive cichlids can't damage our decorations
-								</p>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* Trust Bar */}
-				<section className="py-12 md:py-16">
-					<div className="px-4 max-w-7xl mx-auto">
-						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light">
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>Free Worldwide Shipping</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>20+ Years in Business</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>50,000+ Products Shipped</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-primary text-lg">✓</span>
-								<span>Lifetime Warranty</span>
-							</div>
-						</div>
 					</div>
 				</section>
 			</main>

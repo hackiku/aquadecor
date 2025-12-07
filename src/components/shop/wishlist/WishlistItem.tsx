@@ -7,11 +7,11 @@ import { X, ShoppingCart, Package } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import type { Product } from "~/server/db/schema/shop";
 
-// Type for wishlist product (matches what WishlistDrawer passes)
+// Type matches what WishlistDrawer passes (ProductForWishlist)
 type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
 	name: string | null;
 	shortDescription: string | null;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null; // UPDATED from featuredImageUrl
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
@@ -22,7 +22,6 @@ interface WishlistItemProps {
 }
 
 export function WishlistItem({ product, onRemove }: WishlistItemProps) {
-	// Safe handling of nullable fields
 	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
 	const displayName = product.name ?? "Unknown Product";
 	const hasPrice = product.basePriceEurCents !== null;
@@ -32,7 +31,6 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 		e.stopPropagation();
 
 		if (hasPrice) {
-			// Add to cart
 			const cartItem = {
 				id: crypto.randomUUID(),
 				productId: product.id,
@@ -40,41 +38,33 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 				addedAt: new Date(),
 			};
 
-			// Get existing cart
 			const existingCart = localStorage.getItem("cart");
 			const cart = existingCart ? JSON.parse(existingCart) : [];
-
-			// Check if product already in cart
 			const existingItemIndex = cart.findIndex((item: any) => item.productId === product.id);
 
 			if (existingItemIndex >= 0) {
-				// Increment quantity
 				cart[existingItemIndex].quantity += 1;
 			} else {
-				// Add new item
 				cart.push(cartItem);
 			}
 
-			// Save and notify
 			localStorage.setItem("cart", JSON.stringify(cart));
 			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: cart } }));
 
-			// TODO: Show toast notification
-			console.log("Added to cart:", product.id);
+			// Optional: Remove from wishlist after adding to cart
+			// onRemove(); 
 		} else {
-			// Open quote modal for custom products
-			// TODO: Implement quote modal
 			console.log("Request quote:", product.id);
 		}
 	};
 
 	return (
-		<div className="flex gap-4 group">
+		<div className="flex gap-4 group relative">
 			{/* Image */}
-			<Link href={productUrl} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-				{product.featuredImageUrl ? (
+			<Link href={productUrl} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 border border-border">
+				{product.heroImageUrl ? (
 					<Image
-						src={product.featuredImageUrl}
+						src={product.heroImageUrl}
 						alt={displayName}
 						fill
 						className="object-cover"
@@ -88,24 +78,32 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 			</Link>
 
 			{/* Details */}
-			<div className="flex-1 min-w-0 space-y-2">
-				<Link href={productUrl} className="block">
-					<h3 className="font-display font-normal text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-						{displayName}
-					</h3>
-				</Link>
+			<div className="flex-1 min-w-0 space-y-1.5">
+				<div className="flex justify-between items-start gap-2">
+					<Link href={productUrl} className="block">
+						<h3 className="font-display font-medium text-sm leading-tight line-clamp-2 hover:text-primary transition-colors">
+							{displayName}
+						</h3>
+					</Link>
+					<Button
+						variant="ghost"
+						size="icon"
+						className="h-6 w-6 -mr-2 -mt-1 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+						onClick={onRemove}
+					>
+						<X className="h-3.5 w-3.5" />
+					</Button>
+				</div>
 
-				{/* Description */}
 				{product.shortDescription && (
 					<p className="text-xs text-muted-foreground font-display font-light line-clamp-1">
 						{product.shortDescription}
 					</p>
 				)}
 
-				{/* Price */}
-				<div className="flex items-center justify-between">
+				<div className="flex items-center justify-between pt-1">
 					{hasPrice ? (
-						<p className="text-sm font-display font-medium">
+						<p className="text-sm font-display font-semibold">
 							€{((product.basePriceEurCents ?? 0) / 100).toFixed(2)}
 						</p>
 					) : (
@@ -113,29 +111,18 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 							{product.priceNote ?? "Custom Quote"}
 						</p>
 					)}
+
+					<Button
+						variant="secondary"
+						size="sm"
+						className="h-7 px-3 text-xs rounded-full gap-1.5"
+						onClick={handleAddToCart}
+					>
+						<ShoppingCart className="h-3 w-3" />
+						{hasPrice ? "Add" : "Quote"}
+					</Button>
 				</div>
-
-				{/* Add to Cart Button */}
-				<Button
-					variant="outline"
-					size="sm"
-					className="w-full rounded-full text-xs gap-2"
-					onClick={handleAddToCart}
-				>
-					<ShoppingCart className="h-3 w-3" />
-					{hasPrice ? "Add to Cart" : "Request Quote"}
-				</Button>
 			</div>
-
-			{/* Remove Button */}
-			<Button
-				variant="ghost"
-				size="icon"
-				className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-				onClick={onRemove}
-			>
-				<X className="h-4 w-4" />
-			</Button>
 		</div>
 	);
 }

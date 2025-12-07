@@ -23,12 +23,11 @@ interface CartItemData {
 }
 
 // Product data from tRPC getByIds endpoint
-// Must match exactly what the tRPC query returns
 type ProductForCart = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 	categoryId: string;
 	name: string | null;
 	shortDescription: string | null;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null; // UPDATED to match schema
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
@@ -99,7 +98,6 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 			const product = products?.find(p => p.id === cartItem.productId);
 			if (!product) return null;
 
-			// Type assertion: we know product matches ProductForCart because it comes from tRPC
 			return {
 				...cartItem,
 				product: product as ProductForCart
@@ -235,7 +233,6 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 							className="w-full rounded-full gap-2"
 							size="lg"
 							onClick={() => {
-								// TODO: Navigate to checkout
 								console.log("Proceed to checkout");
 							}}
 						>

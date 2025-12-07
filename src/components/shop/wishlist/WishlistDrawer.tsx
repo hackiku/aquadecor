@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { X, Heart } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { WishlistItem } from "./WishlistItem";
@@ -14,19 +13,11 @@ import type { Product } from "~/server/db/schema/shop";
 // CLIENT-ONLY TYPES (localStorage wishlist state)
 // ============================================================================
 
-// const router = useRouter();
-
-// Raw wishlist item stored in localStorage
-interface WishlistItemData {
-	productId: string;
-	addedAt: Date;
-}
-
 // Product data from tRPC getByIds endpoint
 type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
 	name: string | null;
 	shortDescription: string | null;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null; // UPDATED from featuredImageUrl
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
@@ -50,7 +41,6 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 			if (wishlist) {
 				try {
 					const parsed = JSON.parse(wishlist);
-					// Extract just the product IDs
 					const ids = Array.isArray(parsed)
 						? parsed.map((item: any) => typeof item === 'string' ? item : item.productId)
 						: [];
@@ -67,7 +57,7 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 		}
 	}, [isOpen]);
 
-	// Listen for wishlist updates from other components
+	// Listen for wishlist updates
 	useEffect(() => {
 		const handleWishlistUpdate = (e: CustomEvent<{ items: string[] }>) => {
 			setWishlistIds(e.detail.items);
@@ -77,13 +67,12 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 		return () => window.removeEventListener("wishlist-updated", handleWishlistUpdate as EventListener);
 	}, []);
 
-	// Fetch product details for all wishlist items
+	// Fetch product details
 	const { data: products, isLoading } = api.product.getByIds.useQuery(
 		{ ids: wishlistIds, locale: "en" },
 		{ enabled: wishlistIds.length > 0 && isOpen }
 	);
 
-	// Remove item from wishlist
 	const removeItem = (productId: string) => {
 		const updated = wishlistIds.filter(id => id !== productId);
 		setWishlistIds(updated);
@@ -91,7 +80,6 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 		window.dispatchEvent(new CustomEvent("wishlist-updated", { detail: { items: updated } }));
 	};
 
-	// Clear entire wishlist
 	const clearWishlist = () => {
 		setWishlistIds([]);
 		localStorage.removeItem("wishlist");
@@ -147,11 +135,11 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 							</div>
 
 							<Button variant="outline" className="rounded-full"
-									onClick={() => {
-										onClose();
-										window.location.href = "/shop";
-									}} 
-									>
+								onClick={() => {
+									onClose();
+									window.location.href = "/shop";
+								}}
+							>
 								Browse Products
 							</Button>
 						</div>
@@ -168,10 +156,8 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 								))}
 							</div>
 
-							{/* Signup Incentive */}
 							<SignupIncentive trigger="wishlist" />
 
-							{/* Clear All Button */}
 							{wishlistIds.length > 1 && (
 								<Button
 									variant="outline"

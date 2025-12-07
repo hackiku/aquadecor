@@ -111,7 +111,7 @@ export default async function ThreeDBackgroundsPage() {
 							<CategoryGrid
 								categories={categories}
 								productLineSlug="3d-backgrounds"
-								columns="3"
+								initialColumns="3"
 							/>
 						)}
 					</div>

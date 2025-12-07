@@ -11,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 
 export function ProductSlider() {
-	// Fetch featured products with error handling
 	const { data: products, isLoading, isError, refetch } = api.product.getFeatured.useQuery(
 		{
 			locale: "en",
@@ -19,13 +18,12 @@ export function ProductSlider() {
 			userMarket: "EU",
 		},
 		{
-			staleTime: 5 * 60 * 1000, // 5min
+			staleTime: 5 * 60 * 1000,
 			retry: 2,
 			retryDelay: 1000,
 		}
 	);
 
-	// Error state
 	if (isError) {
 		return (
 			<div className="py-12 text-center space-y-4">
@@ -47,7 +45,6 @@ export function ProductSlider() {
 		);
 	}
 
-	// Split by product line
 	const backgroundProducts = products?.filter(
 		(p) => p.productLineSlug === "3d-backgrounds"
 	).slice(0, 6) || [];
@@ -58,7 +55,6 @@ export function ProductSlider() {
 
 	return (
 		<div className="space-y-12">
-			{/* 3D Backgrounds Row */}
 			<ProductRow
 				title="3D Backgrounds"
 				subtitle="Custom-made realistic rock formations"
@@ -67,7 +63,6 @@ export function ProductSlider() {
 				href="/shop/3d-backgrounds"
 			/>
 
-			{/* Aquarium Decorations Row */}
 			<ProductRow
 				title="Aquarium Decorations"
 				subtitle="Plants, rocks, and driftwood that last forever"
@@ -79,14 +74,14 @@ export function ProductSlider() {
 	);
 }
 
-// Type for products returned by getFeatured
+// Updated interface to match schema
 interface FeaturedProduct {
 	id: string;
 	slug: string;
 	sku: string | null;
 	basePriceEurCents: number | null;
 	priceNote: string | null;
-	availableMarkets: string[] | null;
+	excludedMarkets: string[] | null; // UPDATED from availableMarkets
 	name: string | null;
 	shortDescription: string | null;
 	heroImageUrl: string | null;
@@ -106,7 +101,6 @@ interface ProductRowProps {
 function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowProps) {
 	return (
 		<div className="space-y-6">
-			{/* Header */}
 			<div className="flex items-end justify-between">
 				<div>
 					<h3 className="text-2xl md:text-3xl font-display font-light mb-1">
@@ -125,7 +119,6 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 				</Link>
 			</div>
 
-			{/* Products Grid/Scroll */}
 			<div className="relative -mx-4 px-4">
 				<div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
 					{isLoading ? (
@@ -146,7 +139,6 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 				</div>
 			</div>
 
-			{/* Mobile View All Button */}
 			<Link
 				href={href}
 				className="md:hidden flex items-center justify-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
@@ -169,7 +161,6 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 			className="group block snap-start shrink-0 w-[260px] md:w-[300px]"
 		>
 			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-card">
-				{/* Image */}
 				<div className="relative aspect-[4/3] bg-muted overflow-hidden">
 					{product.heroImageUrl ? (
 						<Image
@@ -185,10 +176,8 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 						</div>
 					)}
 
-					{/* Gradient overlay */}
 					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/95 dark:to-black/90" />
 
-					{/* SKU Badge */}
 					{product.sku && (
 						<div className="absolute top-3 left-3">
 							<Badge variant="secondary" className="font-display font-medium backdrop-blur-sm bg-background/90 dark:bg-black/90">
@@ -197,7 +186,6 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 						</div>
 					)}
 
-					{/* Content overlay at bottom */}
 					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
 						<h4 className="font-display font-medium text-base line-clamp-2 text-foreground">
 							{displayName}

@@ -12,8 +12,9 @@ type ProductForAddToCart = Pick<Product, 'id' | 'basePriceEurCents'>;
 
 interface AddToCartButtonProps {
 	product: ProductForAddToCart;
-	variant?: "default" | "outline" | "ghost";
-	size?: "default" | "sm" | "lg";
+	// Expanded to support all standard shadcn button variants
+	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+	size?: "default" | "sm" | "lg" | "icon";
 	className?: string;
 }
 
@@ -55,7 +56,7 @@ export function AddToCartButton({
 					id: crypto.randomUUID(),
 					productId: product.id,
 					quantity: 1,
-					addedAt: new Date().toISOString(), // Store as string for localStorage
+					addedAt: new Date().toISOString(),
 				});
 			}
 
@@ -66,6 +67,7 @@ export function AddToCartButton({
 			console.log("Added to cart:", product.id);
 		}
 
+		// Fake loading delay for UX
 		setTimeout(() => setIsLoading(false), 500);
 	};
 
@@ -73,12 +75,12 @@ export function AddToCartButton({
 		<Button
 			variant={variant}
 			size={size}
-			className={cn("gap-2", className)}
+			className={cn("gap-2 shadow-sm transition-all active:scale-95", className)}
 			onClick={handleClick}
 			disabled={isLoading}
 		>
 			{isLoading ? (
-				<>Processing...</>
+				<span className="animate-pulse">Processing...</span>
 			) : isQuoteProduct ? (
 				<>
 					<Calculator className="h-4 w-4" />
@@ -87,7 +89,7 @@ export function AddToCartButton({
 			) : (
 				<>
 					<ShoppingCart className="h-4 w-4" />
-					Add to Cart
+					Add
 				</>
 			)}
 		</Button>

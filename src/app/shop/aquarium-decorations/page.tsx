@@ -4,11 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { api, HydrateClient } from "~/trpc/server";
-import { CategorySlider } from "~/components/shop/category/CategorySlider";
+import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
-import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 
 export default async function AquariumDecorationsPage() {
 	// Load categories for aquarium decorations
@@ -112,7 +111,7 @@ export default async function AquariumDecorationsPage() {
 							<CategoryGrid
 								categories={categories}
 								productLineSlug="aquarium-decorations"
-								columns="3"
+								initialColumns="3"
 							/>
 						)}
 					</div>
