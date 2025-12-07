@@ -1,4 +1,5 @@
 // src/app/admin/content/gallery/_components/ImageDetailClient.tsx
+// src/app/admin/content/gallery/_components/ImageDetailClient.tsx
 "use client";
 
 import { useState } from "react";
@@ -43,9 +44,8 @@ import { toast } from "sonner";
 interface ImageDetailClientProps {
 	image: {
 		id: string;
-		productId: string;
+		productId: string | null;
 		storageUrl: string;
-		storagePath?: string | null;
 		altText?: string | null;
 		width?: number | null;
 		height?: number | null;
@@ -53,10 +53,12 @@ interface ImageDetailClientProps {
 		mimeType?: string | null;
 		sortOrder: number;
 		createdAt: Date;
+		// Add relations if needed
+		categoryId?: string | null;
 	};
 	categories: Array<{
 		id: string;
-		name: string;
+		name: string | null;
 		slug: string;
 	}>;
 }
@@ -70,14 +72,13 @@ export function ImageDetailClient({
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [copied, setCopied] = useState(false);
 
-	// Form state
 	const [altText, setAltText] = useState(initialImage.altText || "");
 	const [sortOrder, setSortOrder] = useState(initialImage.sortOrder);
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const [categoryToAdd, setCategoryToAdd] = useState<string>("");
+	// We handle single category assignment now as per schema
+	const [assignedCategory, setAssignedCategory] = useState<string | null>(initialImage.categoryId || null);
 
-	// Mutations
-	const updateMutation = api.admin.gallery.update.useMutation({
+	// Mutations - UPDATED TO MEDIA ROUTER
+	const updateMutation = api.admin.media.update.useMutation({
 		onSuccess: () => {
 			setIsEditing(false);
 			toast.success("Image updated");
@@ -87,7 +88,7 @@ export function ImageDetailClient({
 		},
 	});
 
-	const deleteMutation = api.admin.gallery.delete.useMutation({
+	const deleteMutation = api.admin.media.delete.useMutation({
 		onSuccess: () => {
 			toast.success("Image deleted");
 			router.push("/admin/content/gallery");
@@ -97,26 +98,25 @@ export function ImageDetailClient({
 		},
 	});
 
-	const addToCategoryMutation = api.admin.gallery.addImageToCategory.useMutation({
+	const addToCategoryMutation = api.admin.media.addImageToCategory.useMutation({
 		onSuccess: () => {
-			toast.success("Added to category");
-			setCategoryToAdd("");
+			toast.success("Category updated");
 		},
 		onError: (error) => {
-			toast.error(`Failed to add: ${error.message}`);
+			toast.error(`Failed to update: ${error.message}`);
 		},
 	});
 
-	const removeFromCategoryMutation = api.admin.gallery.removeImageFromCategory.useMutation({
+	const removeFromCategoryMutation = api.admin.media.removeImageFromCategory.useMutation({
 		onSuccess: () => {
-			toast.success("Removed from category");
+			toast.success("Category removed");
+			setAssignedCategory(null);
 		},
 		onError: (error) => {
 			toast.error(`Failed to remove: ${error.message}`);
 		},
 	});
 
-	// Handlers
 	const handleSave = () => {
 		updateMutation.mutate({
 			id: initialImage.id,
@@ -129,19 +129,21 @@ export function ImageDetailClient({
 		deleteMutation.mutate({ id: initialImage.id });
 	};
 
-	const handleAddToCategory = () => {
-		if (!categoryToAdd) return;
+	const handleAssignCategory = (catId: string) => {
+		setAssignedCategory(catId);
 		addToCategoryMutation.mutate({
 			imageId: initialImage.id,
-			categoryId: categoryToAdd,
+			categoryId: catId,
 		});
 	};
 
-	const handleRemoveFromCategory = (categoryId: string) => {
-		removeFromCategoryMutation.mutate({
-			imageId: initialImage.id,
-			categoryId,
-		});
+	const handleRemoveCategory = () => {
+		if (assignedCategory) {
+			removeFromCategoryMutation.mutate({
+				imageId: initialImage.id,
+				categoryId: assignedCategory,
+			});
+		}
 	};
 
 	const copyToClipboard = async (text: string) => {
@@ -157,19 +159,9 @@ export function ImageDetailClient({
 		return `${(kb / 1024).toFixed(1)} MB`;
 	};
 
-	const formatDate = (date: Date) => {
-		return new Date(date).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-		});
-	};
-
 	return (
 		<div className="space-y-8">
-			{/* Header */}
+			{/* Header - same as before ... */}
 			<div className="flex items-start justify-between">
 				<div className="space-y-4">
 					<Button variant="ghost" asChild className="font-display font-light -ml-4">
@@ -182,55 +174,25 @@ export function ImageDetailClient({
 						<h1 className="text-4xl font-display font-extralight tracking-tight">
 							{initialImage.altText || "Untitled Image"}
 						</h1>
-						<p className="text-muted-foreground font-display font-light text-lg">
-							Uploaded {formatDate(initialImage.createdAt)}
-						</p>
 					</div>
 				</div>
 				<div className="flex gap-2">
 					{isEditing ? (
 						<>
-							<Button
-								variant="outline"
-								onClick={() => setIsEditing(false)}
-								disabled={updateMutation.isPending}
-								className="rounded-full"
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={handleSave}
-								disabled={updateMutation.isPending}
-								className="rounded-full"
-							>
-								<Save className="mr-2 h-4 w-4" />
-								Save Changes
-							</Button>
+							<Button variant="outline" onClick={() => setIsEditing(false)} className="rounded-full">Cancel</Button>
+							<Button onClick={handleSave} className="rounded-full"><Save className="mr-2 h-4 w-4" /> Save</Button>
 						</>
 					) : (
 						<>
-							<Button
-								variant="outline"
-								onClick={() => setIsEditing(true)}
-								className="rounded-full"
-							>
-								Edit Details
-							</Button>
-							<Button
-								variant="destructive"
-								onClick={() => setDeleteDialogOpen(true)}
-								className="rounded-full"
-							>
-								<Trash2 className="mr-2 h-4 w-4" />
-								Delete
-							</Button>
+							<Button variant="outline" onClick={() => setIsEditing(true)} className="rounded-full">Edit Details</Button>
+							<Button variant="destructive" onClick={() => setDeleteDialogOpen(true)} className="rounded-full"><Trash2 className="mr-2 h-4 w-4" /> Delete</Button>
 						</>
 					)}
 				</div>
 			</div>
 
 			<div className="grid gap-8 lg:grid-cols-2">
-				{/* Left: Image Preview */}
+				{/* Image Preview */}
 				<div className="space-y-6">
 					<Card className="border-2">
 						<CardContent className="p-0">
@@ -244,200 +206,75 @@ export function ImageDetailClient({
 							</div>
 						</CardContent>
 					</Card>
-
-					{/* Image Actions */}
 					<div className="flex gap-2">
-						<Button
-							variant="outline"
-							onClick={() => window.open(initialImage.storageUrl, "_blank")}
-							className="flex-1 rounded-full"
-						>
-							<ExternalLink className="mr-2 h-4 w-4" />
-							Open Original
+						<Button variant="outline" onClick={() => window.open(initialImage.storageUrl, "_blank")} className="flex-1 rounded-full">
+							<ExternalLink className="mr-2 h-4 w-4" /> Open Original
 						</Button>
-						<Button
-							variant="outline"
-							onClick={() => copyToClipboard(initialImage.storageUrl)}
-							className="flex-1 rounded-full"
-						>
-							{copied ? (
-								<>
-									<Check className="mr-2 h-4 w-4 text-green-500" />
-									Copied!
-								</>
-							) : (
-								<>
-									<Copy className="mr-2 h-4 w-4" />
-									Copy URL
-								</>
-							)}
+						<Button variant="outline" onClick={() => copyToClipboard(initialImage.storageUrl)} className="flex-1 rounded-full">
+							{copied ? <Check className="mr-2 h-4 w-4 text-green-500" /> : <Copy className="mr-2 h-4 w-4" />} Copy URL
 						</Button>
 					</div>
 				</div>
 
-				{/* Right: Details & Categories */}
+				{/* Details */}
 				<div className="space-y-6">
-					{/* Basic Info */}
 					<Card className="border-2">
-						<CardHeader>
-							<CardTitle className="font-display font-normal">Image Details</CardTitle>
-						</CardHeader>
+						<CardHeader><CardTitle className="font-display font-normal">Image Details</CardTitle></CardHeader>
 						<CardContent className="space-y-4">
 							<div>
-								<Label htmlFor="altText" className="font-display font-light">
-									Alt Text (SEO & Accessibility)
-								</Label>
-								<Input
-									id="altText"
-									value={altText}
-									onChange={(e) => setAltText(e.target.value)}
-									disabled={!isEditing}
-									className="font-display font-light"
-								/>
+								<Label htmlFor="altText">Alt Text</Label>
+								<Input id="altText" value={altText} onChange={(e) => setAltText(e.target.value)} disabled={!isEditing} />
 							</div>
-
 							<div>
-								<Label htmlFor="sortOrder" className="font-display font-light">
-									Sort Order (0 = hero image)
-								</Label>
-								<Input
-									id="sortOrder"
-									type="number"
-									value={sortOrder}
-									onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)}
-									disabled={!isEditing}
-									className="font-display font-light"
-								/>
+								<Label htmlFor="sortOrder">Sort Order</Label>
+								<Input id="sortOrder" type="number" value={sortOrder} onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)} disabled={!isEditing} />
 							</div>
-
-							{/* Metadata (read-only) */}
 							<div className="pt-4 space-y-3 border-t">
 								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground font-display font-light">
-										Dimensions
-									</span>
-									<span className="font-display font-light">
-										{initialImage.width && initialImage.height
-											? `${initialImage.width}×${initialImage.height}px`
-											: "—"
-										}
-									</span>
+									<span className="text-muted-foreground">Dimensions</span>
+									<span>{initialImage.width ? `${initialImage.width}×${initialImage.height}px` : "—"}</span>
 								</div>
 								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground font-display font-light">
-										File Size
-									</span>
-									<span className="font-display font-light">
-										{formatFileSize(initialImage.fileSize)}
-									</span>
-								</div>
-								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground font-display font-light">
-										Format
-									</span>
-									<Badge variant="outline" className="font-display font-light">
-										{initialImage.mimeType?.split("/")[1]?.toUpperCase() || "—"}
-									</Badge>
-								</div>
-								<div className="flex justify-between text-sm">
-									<span className="text-muted-foreground font-display font-light">
-										Image ID
-									</span>
-									<span className="font-display font-light font-mono text-xs">
-										{initialImage.id.slice(0, 8)}...
-									</span>
+									<span className="text-muted-foreground">File Size</span>
+									<span>{formatFileSize(initialImage.fileSize)}</span>
 								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					{/* Categories */}
+					{/* Category Assignment */}
 					<Card className="border-2">
-						<CardHeader>
-							<CardTitle className="font-display font-normal">Categories</CardTitle>
-						</CardHeader>
+						<CardHeader><CardTitle className="font-display font-normal">Category</CardTitle></CardHeader>
 						<CardContent className="space-y-4">
-							{/* Current categories */}
-							{selectedCategories.length > 0 && (
-								<div className="flex flex-wrap gap-2">
-									{selectedCategories.map((catId) => {
-										const category = categories.find(c => c.id === catId);
-										return category ? (
-											<Badge key={catId} variant="secondary" className="font-display font-light">
-												{category.name}
-												<button
-													onClick={() => handleRemoveFromCategory(catId)}
-													className="ml-2 hover:text-destructive"
-												>
-													<X className="h-3 w-3" />
-												</button>
-											</Badge>
-										) : null;
-									})}
+							{assignedCategory ? (
+								<div className="flex items-center justify-between p-3 border rounded-lg">
+									<span>{categories.find(c => c.id === assignedCategory)?.name || "Unknown Category"}</span>
+									<Button variant="ghost" size="sm" onClick={handleRemoveCategory}><X className="h-4 w-4" /></Button>
 								</div>
-							)}
-
-							{/* Add to category */}
-							<div className="flex gap-2">
-								<Select value={categoryToAdd} onValueChange={setCategoryToAdd}>
-									<SelectTrigger className="flex-1 font-display font-light">
-										<SelectValue placeholder="Add to category..." />
-									</SelectTrigger>
+							) : (
+								<Select onValueChange={handleAssignCategory}>
+									<SelectTrigger><SelectValue placeholder="Assign to category..." /></SelectTrigger>
 									<SelectContent>
-										{categories
-											.filter(c => !selectedCategories.includes(c.id))
-											.map((cat) => (
-												<SelectItem
-													key={cat.id}
-													value={cat.id}
-													className="font-display font-light"
-												>
-													{cat.name}
-												</SelectItem>
-											))
-										}
+										{categories.map((cat) => (
+											<SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+										))}
 									</SelectContent>
 								</Select>
-								<Button
-									onClick={handleAddToCategory}
-									disabled={!categoryToAdd}
-									className="rounded-full"
-								>
-									<Plus className="h-4 w-4" />
-								</Button>
-							</div>
-
-							{selectedCategories.length === 0 && (
-								<p className="text-sm text-muted-foreground font-display font-light">
-									Not assigned to any categories
-								</p>
 							)}
 						</CardContent>
 					</Card>
 				</div>
 			</div>
 
-			{/* Delete confirmation */}
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle className="font-display font-normal">
-							Delete this image?
-						</AlertDialogTitle>
-						<AlertDialogDescription className="font-display font-light">
-							This will permanently delete this image. This action cannot be undone.
-						</AlertDialogDescription>
+						<AlertDialogTitle>Delete this image?</AlertDialogTitle>
+						<AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel className="rounded-full font-display font-light">
-							Cancel
-						</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={handleDelete}
-							className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full font-display font-light"
-						>
-							Delete
-						</AlertDialogAction>
+						<AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90 rounded-full">Delete</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>

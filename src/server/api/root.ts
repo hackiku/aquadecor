@@ -6,6 +6,7 @@ import { reviewsRouter } from "~/server/api/routers/reviews";
 // content
 import { faqRouter } from "~/server/api/routers/faq";
 import { countryRouter, publicCountryRouter } from "./routers/admin/country";
+import { adminMediaRouter } from "./routers/admin/media";
 // admin
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
@@ -29,12 +30,12 @@ export const appRouter = createTRPCRouter({
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
+		media: adminMediaRouter,
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
 		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
-		// gallery: adminGalleryRouter,
 	}),
 });
 

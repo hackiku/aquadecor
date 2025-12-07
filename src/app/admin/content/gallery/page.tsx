@@ -7,7 +7,6 @@ import { ImageCard } from "~/components/media/ImageCard";
 import { ImageUpload } from "~/components/media/ImageUpload";
 import { GalleryStats } from "./_components/GalleryStats";
 import { GalleryFilters } from "./_components/GalleryFilters";
-import { GalleryCategoryGrid } from "./_components/GalleryCategoryGrid";
 import { GalleryDeleteFlow } from "./_components/GalleryDeleteFlow";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -22,16 +21,11 @@ import {
 import {
 	Upload,
 	Image as ImageIcon,
-	Layers,
-	Filter,
 } from "lucide-react";
 import { toast } from "sonner";
 
-type ViewMode = "grid" | "categories";
-
 export default function GalleryPage() {
 	// View state
-	const [viewMode, setViewMode] = useState<ViewMode>("grid");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sortBy, setSortBy] = useState<"createdAt" | "sortOrder" | "altText">("createdAt");
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -41,8 +35,8 @@ export default function GalleryPage() {
 	const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-	// Queries
-	const { data, isLoading, refetch } = api.admin.gallery.getAll.useQuery({
+	// Queries - UPDATED TO MEDIA ROUTER
+	const { data, isLoading, refetch } = api.admin.media.getAll.useQuery({
 		searchQuery: searchQuery || undefined,
 		categoryId: selectedCategoryId,
 		sortBy,
@@ -50,13 +44,13 @@ export default function GalleryPage() {
 		limit: 100,
 	});
 
-	const { data: stats } = api.admin.gallery.getStats.useQuery();
-	const { data: categories } = api.admin.gallery.getCategories.useQuery({
+	const { data: stats } = api.admin.media.getStats.useQuery();
+	const { data: categories } = api.admin.media.getCategories.useQuery({
 		isActive: true,
 	});
 
-	// Mutations
-	const createMutation = api.admin.gallery.create.useMutation({
+	// Mutations - UPDATED TO MEDIA ROUTER
+	const createMutation = api.admin.media.create.useMutation({
 		onSuccess: () => {
 			refetch();
 			setUploadDialogOpen(false);
@@ -67,7 +61,7 @@ export default function GalleryPage() {
 		},
 	});
 
-	const deleteMutation = api.admin.gallery.delete.useMutation({
+	const deleteMutation = api.admin.media.delete.useMutation({
 		onSuccess: () => {
 			refetch();
 			toast.success("Image deleted");
@@ -77,7 +71,7 @@ export default function GalleryPage() {
 		},
 	});
 
-	const bulkDeleteMutation = api.admin.gallery.bulkDelete.useMutation({
+	const bulkDeleteMutation = api.admin.media.bulkDelete.useMutation({
 		onSuccess: () => {
 			refetch();
 			setSelectedImages([]);
@@ -94,11 +88,10 @@ export default function GalleryPage() {
 		file: File,
 		metadata: { altText: string; productId?: string; sortOrder: number }
 	) => {
-		// TODO: Replace with real upload to Vercel Blob/Supabase
+		// Mock upload - Replace with Vercel Blob later
 		const placeholderUrl = `https://cdn.aquadecorbackgrounds.com/uploads/${file.name}`;
 
 		await createMutation.mutateAsync({
-			productId: metadata.productId || "placeholder-product-id",
 			storageUrl: placeholderUrl,
 			altText: metadata.altText,
 			sortOrder: metadata.sortOrder,
@@ -106,6 +99,7 @@ export default function GalleryPage() {
 			height: 1080,
 			fileSize: file.size,
 			mimeType: file.type,
+			usageType: "gallery"
 		});
 	};
 
@@ -133,15 +127,6 @@ export default function GalleryPage() {
 		}
 	};
 
-	const handleSelectCategory = (categoryId: string) => {
-		setSelectedCategoryId(categoryId);
-		setViewMode("grid");
-	};
-
-	const handleClearCategoryFilter = () => {
-		setSelectedCategoryId(undefined);
-	};
-
 	const gridSizeClasses = {
 		sm: "grid-cols-2 md:grid-cols-4 lg:grid-cols-6",
 		md: "grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
@@ -154,30 +139,13 @@ export default function GalleryPage() {
 			<div className="flex items-start justify-between">
 				<div className="space-y-2">
 					<h1 className="text-4xl font-display font-extralight tracking-tight">
-						Gallery
+						Media Gallery
 					</h1>
 					<p className="text-muted-foreground font-display font-light text-lg">
-						Manage marketing images across products, blog, and social
+						Manage images for products and categories
 					</p>
 				</div>
 				<div className="flex gap-2">
-					<Button
-						variant="outline"
-						onClick={() => setViewMode(viewMode === "grid" ? "categories" : "grid")}
-						className="rounded-full"
-					>
-						{viewMode === "grid" ? (
-							<>
-								<Layers className="mr-2 h-4 w-4" />
-								View Categories
-							</>
-						) : (
-							<>
-								<ImageIcon className="mr-2 h-4 w-4" />
-								View Images
-							</>
-						)}
-					</Button>
 					<Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
 						<DialogTrigger asChild>
 							<Button className="rounded-full">
@@ -201,21 +169,21 @@ export default function GalleryPage() {
 			</div>
 
 			{/* Stats */}
-			{stats && viewMode === "grid" && (
+			{stats && (
 				<GalleryStats
 					total={stats.total}
 					totalSizeMB={stats.totalSizeMB}
-					byProduct={stats.byProduct}
+					byProduct={stats.byProduct as any}
 				/>
 			)}
 
-			{/* Category filter breadcrumb (when category is selected) */}
-			{selectedCategoryId && viewMode === "grid" && (
+			{/* Category filter breadcrumb */}
+			{selectedCategoryId && (
 				<div className="flex items-center gap-2">
 					<Button
 						variant="ghost"
 						size="sm"
-						onClick={handleClearCategoryFilter}
+						onClick={() => setSelectedCategoryId(undefined)}
 						className="font-display font-light"
 					>
 						All Images
@@ -227,83 +195,64 @@ export default function GalleryPage() {
 				</div>
 			)}
 
-			{/* View: Categories */}
-			{viewMode === "categories" && categories && (
-				<GalleryCategoryGrid
-					categories={categories}
-					onSelectCategory={handleSelectCategory}
-				/>
-			)}
+			{/* Filters */}
+			<GalleryFilters
+				searchQuery={searchQuery}
+				onSearchChange={setSearchQuery}
+				sortBy={sortBy}
+				onSortByChange={setSortBy}
+				sortOrder={sortOrder}
+				onSortOrderChange={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+				categories={categories || []}
+				selectedCategoryId={selectedCategoryId}
+				onCategoryChange={setSelectedCategoryId}
+				gridSize={gridSize}
+				onGridSizeChange={setGridSize}
+				selectedCount={selectedImages.length}
+				totalCount={data?.images.length ?? 0}
+				onSelectAll={selectAll}
+				onBulkDelete={() => setDeleteDialogOpen(true)}
+			/>
 
-			{/* View: Grid */}
-			{viewMode === "grid" && (
-				<>
-					{/* Filters */}
-					<GalleryFilters
-						searchQuery={searchQuery}
-						onSearchChange={setSearchQuery}
-						sortBy={sortBy}
-						onSortByChange={setSortBy}
-						sortOrder={sortOrder}
-						onSortOrderChange={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-						categories={categories}
-						selectedCategoryId={selectedCategoryId}
-						onCategoryChange={setSelectedCategoryId}
-						gridSize={gridSize}
-						onGridSizeChange={setGridSize}
-						selectedCount={selectedImages.length}
-						totalCount={data?.images.length ?? 0}
-						onSelectAll={selectAll}
-						onBulkDelete={() => setDeleteDialogOpen(true)}
-					/>
-
-					{/* Gallery Grid */}
-					{isLoading ? (
-						<div className="py-16 text-center">
-							<p className="text-muted-foreground font-display font-light">
-								Loading gallery...
-							</p>
-						</div>
-					) : !data?.images || data.images.length === 0 ? (
-						<div className="py-16 text-center space-y-4">
-							<ImageIcon className="mx-auto h-16 w-16 text-muted-foreground" />
-							<div className="space-y-2">
-								<p className="text-lg text-muted-foreground font-display font-light">
-									No images found
-								</p>
-								<p className="text-sm text-muted-foreground font-display font-light">
-									{searchQuery || selectedCategoryId
-										? "Try a different filter or search query"
-										: "Upload your first image to get started"
-									}
-								</p>
-							</div>
-							<Button onClick={() => setUploadDialogOpen(true)} className="rounded-full">
-								<Upload className="mr-2 h-4 w-4" />
-								Upload Image
-							</Button>
-						</div>
-					) : (
-						<div className={`grid gap-4 ${gridSizeClasses[gridSize]}`}>
-							{data.images.map((image) => (
-								<ImageCard
-									key={image.id}
-									id={image.id}
-									url={image.storageUrl}
-									alt={image.altText}
-									width={image.width}
-									height={image.height}
-									fileSize={image.fileSize}
-									mimeType={image.mimeType}
-									sortOrder={image.sortOrder}
-									isSelected={selectedImages.includes(image.id)}
-									onSelect={toggleSelectImage}
-									onDelete={handleDelete}
-								/>
-							))}
-						</div>
-					)}
-				</>
+			{/* Gallery Grid */}
+			{isLoading ? (
+				<div className="py-16 text-center">
+					<p className="text-muted-foreground font-display font-light">
+						Loading gallery...
+					</p>
+				</div>
+			) : !data?.images || data.images.length === 0 ? (
+				<div className="py-16 text-center space-y-4">
+					<ImageIcon className="mx-auto h-16 w-16 text-muted-foreground" />
+					<div className="space-y-2">
+						<p className="text-lg text-muted-foreground font-display font-light">
+							No images found
+						</p>
+						<Button onClick={() => setUploadDialogOpen(true)} className="rounded-full">
+							<Upload className="mr-2 h-4 w-4" />
+							Upload Image
+						</Button>
+					</div>
+				</div>
+			) : (
+				<div className={`grid gap-4 ${gridSizeClasses[gridSize]}`}>
+					{data.images.map((image) => (
+						<ImageCard
+							key={image.id}
+							id={image.id}
+							url={image.storageUrl}
+							alt={image.altText}
+							width={image.width}
+							height={image.height}
+							fileSize={image.fileSize}
+							mimeType={image.mimeType}
+							sortOrder={image.sortOrder}
+							isSelected={selectedImages.includes(image.id)}
+							onSelect={toggleSelectImage}
+							onDelete={handleDelete}
+						/>
+					))}
+				</div>
 			)}
 
 			{/* Bulk delete confirmation */}

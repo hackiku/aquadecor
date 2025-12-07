@@ -17,7 +17,7 @@ import {
 
 export default function ContentOverviewPage() {
 	// Get stats for content sections
-	const { data: galleryStats } = api.admin.gallery.getStats.useQuery();
+	const { data: galleryStats } = api.admin.media.getStats.useQuery(); 
 	const { data: faqs } = api.admin.faq.getAll.useQuery();
 
 	const contentSections = [

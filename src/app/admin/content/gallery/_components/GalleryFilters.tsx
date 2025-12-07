@@ -18,7 +18,6 @@ import {
 	Image as ImageIcon,
 	Trash2,
 } from "lucide-react";
-import { cn } from "~/lib/utils";
 
 interface GalleryFiltersProps {
 	// Search & Sort
@@ -33,7 +32,7 @@ interface GalleryFiltersProps {
 	categories?: Array<{
 		id: string;
 		name: string;
-		imageCount: number;
+		imageCount?: number; // UPDATED: Made optional
 	}>;
 	selectedCategoryId?: string;
 	onCategoryChange: (categoryId?: string) => void;
@@ -94,7 +93,7 @@ export function GalleryFilters({
 							</SelectItem>
 							{categories.map((cat) => (
 								<SelectItem key={cat.id} value={cat.id} className="font-display font-light">
-									{cat.name} ({cat.imageCount})
+									{cat.name} {cat.imageCount !== undefined ? `(${cat.imageCount})` : ""}
 								</SelectItem>
 							))}
 						</SelectContent>

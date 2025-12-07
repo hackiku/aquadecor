@@ -70,15 +70,15 @@ export default function TestStoragePage() {
 	};
 
 	// Save to database after upload
-	const createImageMutation = api.admin.gallery.create.useMutation({
+	const createImageMutation = api.admin.media.create.useMutation({
 		onSuccess: () => {
-			toast.success("Image saved to database");
-			setRefreshKey(prev => prev + 1);
+			toast.success("Image record created in DB");
 		},
 		onError: (error) => {
-			toast.error(`Failed to save: ${error.message}`);
+			toast.error(`DB Error: ${error.message}`);
 		},
 	});
+
 
 	const handleUpload = async (
 		file: File,

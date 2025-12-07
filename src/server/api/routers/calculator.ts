@@ -1,5 +1,4 @@
 // src/server/api/routers/calculator.ts
-// TEMPLATE - Integrate with your existing tRPC setup
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -26,7 +25,7 @@ const quoteConfigSchema = z.object({
 	dimensions: z.object({
 		width: z.number().min(50).max(200),
 		height: z.number().min(30).max(100),
-		depth: z.number().min(30).max(80),
+		depth: z.number().min(30).max(80).optional(),
 	}),
 	unit: z.enum(["cm", "inch"]),
 
@@ -76,14 +75,36 @@ export const calculatorRouter = createTRPCRouter({
 
 			const estimatedPriceCents = Math.round(total * 100);
 
+			// Split name into first/last for schema compatibility
+			const fullName = input.name?.trim() ?? "Anonymous";
+			const nameParts = fullName.split(" ");
+			const firstName = nameParts[0] ?? "Anonymous";
+			const lastName = nameParts.slice(1).join(" ");
+
 			// Insert into database
 			const [quote] = await ctx.db.insert(quotes).values({
-				name: input.name ?? "Anonymous",
-				email: input.email ?? "",
+				// Map input fields to schema columns
+				productSlug: input.modelCategory, // Using category as slug for now
+				email: input.email ?? "no-email@provided.com",
+				firstName: firstName,
+				lastName: lastName || undefined,
 				country: input.country,
-				config: input, // Store entire config as JSONB
+
+				// Map dimensions and options to JSONB column
+				dimensions: {
+					width: input.dimensions.width,
+					height: input.dimensions.height,
+					depth: input.dimensions.depth,
+					unit: input.unit,
+					sidePanels: input.sidePanels,
+					sidePanelWidth: input.sidePanelWidth,
+					filtrationCutout: input.filtrationCutout,
+					notes: input.notes
+				},
+
 				estimatedPriceEurCents: estimatedPriceCents,
 				status: "pending",
+				customerNotes: input.notes,
 			}).returning();
 
 			// TODO: Send emails
