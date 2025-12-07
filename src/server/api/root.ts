@@ -6,7 +6,6 @@ import { reviewsRouter } from "~/server/api/routers/reviews";
 // content
 import { faqRouter } from "~/server/api/routers/faq";
 import { countryRouter, publicCountryRouter } from "./routers/admin/country";
-import { adminGalleryRouter } from "./routers/admin/gallery";
 // admin
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";

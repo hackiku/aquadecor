@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Loader2 } from "lucide-react";
 
 export interface Column<T = any> {
 	header: string;
@@ -28,7 +28,8 @@ interface AdminTableProps<T = any> {
 	onRowClick?: (row: T) => string | void;
 	searchable?: boolean;
 	searchPlaceholder?: string;
-	pageSize?: number; // <--- New prop
+	pageSize?: number;
+	isLoading?: boolean; // <--- Added this prop
 }
 
 export function AdminTable<T extends Record<string, any>>({
@@ -37,13 +38,14 @@ export function AdminTable<T extends Record<string, any>>({
 	onRowClick,
 	searchable = true,
 	searchPlaceholder = "Search...",
-	pageSize = 10, // <--- Default to 10
+	pageSize = 10,
+	isLoading = false, // <--- Default false
 }: AdminTableProps<T>) {
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 
-	const itemsPerPage = pageSize; // <--- Use the prop
+	const itemsPerPage = pageSize;
 
 	// Filter data based on search
 	const filteredData = searchQuery
@@ -83,6 +85,7 @@ export function AdminTable<T extends Record<string, any>>({
 								setCurrentPage(1); // Reset to first page on search
 							}}
 							className="pl-9 font-display font-light"
+							disabled={isLoading}
 						/>
 					</div>
 				</div>
@@ -104,7 +107,23 @@ export function AdminTable<T extends Record<string, any>>({
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{currentData.length === 0 ? (
+						{isLoading ? (
+							// Loading State
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-32 text-center"
+								>
+									<div className="flex flex-col items-center justify-center gap-2">
+										<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+										<p className="text-muted-foreground font-display font-light text-sm">
+											Loading data...
+										</p>
+									</div>
+								</TableCell>
+							</TableRow>
+						) : currentData.length === 0 ? (
+							// Empty State
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
@@ -116,6 +135,7 @@ export function AdminTable<T extends Record<string, any>>({
 								</TableCell>
 							</TableRow>
 						) : (
+							// Data Rows
 							currentData.map((row, rowIndex) => (
 								<TableRow
 									key={rowIndex}
@@ -140,7 +160,7 @@ export function AdminTable<T extends Record<string, any>>({
 			</div>
 
 			{/* Pagination */}
-			{totalPages > 1 && (
+			{!isLoading && totalPages > 1 && (
 				<div className="flex items-center justify-between">
 					<p className="text-sm text-muted-foreground font-display font-light">
 						Showing {startIndex + 1} to {Math.min(endIndex, filteredData.length)}{" "}

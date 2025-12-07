@@ -144,7 +144,7 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 			priceNote: prod.priceNote,
 			specifications: prod.specifications as any,
 			customizationOptions: prod.customizationOptions as any,
-			availableMarkets: prod.availableMarkets,
+			excludedMarkets: prod.excludedMarkets,
 			stockStatus: prod.stockStatus,
 			isActive: prod.isActive,
 			isFeatured: prod.isFeatured,

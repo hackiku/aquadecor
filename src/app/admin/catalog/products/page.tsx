@@ -29,7 +29,7 @@ type ProductRow = {
 	stockStatus: string | null;
 	isActive: boolean;
 	isFeatured: boolean;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null;
 };
 
 export default function ProductsListPage() {
@@ -56,12 +56,12 @@ export default function ProductsListPage() {
 	const columns: Column<ProductRow>[] = [
 		{
 			header: "Image",
-			accessorKey: "featuredImageUrl",
+			accessorKey: "heroImageUrl",
 			cell: (row) => (
 				<div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
-					{row.featuredImageUrl ? (
+					{row.heroImageUrl ? (
 						<Image
-							src={row.featuredImageUrl}
+							src={row.heroImageUrl}
 							alt={row.name || "Product"}
 							fill
 							className="object-cover"

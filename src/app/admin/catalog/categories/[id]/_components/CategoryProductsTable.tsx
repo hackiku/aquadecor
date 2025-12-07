@@ -17,6 +17,7 @@ interface CategoryProductsTableProps {
 	productCount: number;
 }
 
+// Updated type definition to match new schema
 type ProductRow = {
 	id: string;
 	slug: string;
@@ -26,7 +27,7 @@ type ProductRow = {
 	stockStatus: string | null;
 	isActive: boolean;
 	isFeatured: boolean;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null; // UPDATED
 };
 
 export function CategoryProductsTable({
@@ -49,19 +50,19 @@ export function CategoryProductsTable({
 	const columns: Column<ProductRow>[] = [
 		{
 			header: "Image",
-			accessorKey: "featuredImageUrl",
+			accessorKey: "heroImageUrl", // UPDATED
 			cell: (row) => (
-				<div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
-					{row.featuredImageUrl ? (
+				<div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted border border-border">
+					{row.heroImageUrl ? (
 						<Image
-							src={row.featuredImageUrl}
+							src={row.heroImageUrl}
 							alt={row.name || "Product"}
 							fill
 							className="object-cover"
 						/>
 					) : (
 						<div className="flex items-center justify-center h-full">
-							<Package className="h-5 w-5 text-muted-foreground" />
+							<Package className="h-5 w-5 text-muted-foreground/30" />
 						</div>
 					)}
 				</div>
@@ -71,8 +72,8 @@ export function CategoryProductsTable({
 			header: "SKU",
 			accessorKey: "sku",
 			cell: (row) => (
-				<span className="font-mono text-sm">
-					{row.sku || <span className="text-muted-foreground">—</span>}
+				<span className="font-mono text-sm text-muted-foreground">
+					{row.sku || "—"}
 				</span>
 			),
 		},
@@ -80,9 +81,12 @@ export function CategoryProductsTable({
 			header: "Product",
 			accessorKey: "name",
 			cell: (row) => (
-				<p className="font-display font-normal">
+				<Link
+					href={`/admin/catalog/products/${row.id}`}
+					className="font-display font-medium hover:underline hover:text-primary transition-colors"
+				>
 					{row.name || "Untitled"}
-				</p>
+				</Link>
 			),
 		},
 		{
@@ -101,6 +105,7 @@ export function CategoryProductsTable({
 				const statusMap = {
 					in_stock: { label: "In Stock", variant: "default" as const },
 					made_to_order: { label: "MTO", variant: "secondary" as const },
+					requires_quote: { label: "Quote", variant: "outline" as const },
 					out_of_stock: { label: "Out", variant: "destructive" as const },
 				};
 				const status = row.stockStatus ? statusMap[row.stockStatus as keyof typeof statusMap] : null;
@@ -117,13 +122,13 @@ export function CategoryProductsTable({
 			cell: (row) => (
 				<div className="flex gap-2">
 					<Badge
-						variant={row.isActive ? "default" : "secondary"}
+						variant={row.isActive ? "outline" : "secondary"}
 						className="font-display font-light text-xs"
 					>
 						{row.isActive ? "Active" : "Inactive"}
 					</Badge>
 					{row.isFeatured && (
-						<Badge variant="outline" className="font-display font-light text-xs">
+						<Badge variant="default" className="font-display font-light text-xs bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 border-amber-500/20">
 							★
 						</Badge>
 					)}
@@ -134,7 +139,7 @@ export function CategoryProductsTable({
 
 	if (!showTable) {
 		return (
-			<Card className="border-2">
+			<Card className="border-2 border-border shadow-sm">
 				<CardHeader>
 					<div className="flex items-center justify-between">
 						<CardTitle className="font-display font-normal">Products in Category</CardTitle>
@@ -149,7 +154,7 @@ export function CategoryProductsTable({
 					</div>
 				</CardHeader>
 				<CardContent>
-					<p className="text-muted-foreground font-display font-light">
+					<p className="text-muted-foreground font-display font-light text-sm">
 						This category contains {productCount} product{productCount !== 1 ? "s" : ""}.
 					</p>
 				</CardContent>
@@ -157,21 +162,8 @@ export function CategoryProductsTable({
 		);
 	}
 
-	if (isLoading) {
-		return (
-			<Card className="border-2">
-				<CardHeader>
-					<CardTitle className="font-display font-normal">Products in Category</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<p className="text-muted-foreground font-display font-light">Loading products...</p>
-				</CardContent>
-			</Card>
-		);
-	}
-
 	return (
-		<Card className="border-2">
+		<Card className="border-2 border-border shadow-sm">
 			<CardHeader>
 				<div className="flex items-center justify-between">
 					<CardTitle className="font-display font-normal">
@@ -184,7 +176,7 @@ export function CategoryProductsTable({
 						className="rounded-full font-display font-light"
 					>
 						<Link href={`/admin/catalog/products?category=${categoryId}`}>
-							View in Products List
+							Manage List
 						</Link>
 					</Button>
 				</div>
@@ -192,9 +184,10 @@ export function CategoryProductsTable({
 			<CardContent>
 				<AdminTable
 					columns={columns}
-					data={products || []}
+					data={(products as ProductRow[]) || []}
+					isLoading={isLoading}
 					onRowClick={(row) => `/admin/catalog/products/${row.id}`}
-					searchPlaceholder="Search products..."
+					searchPlaceholder="Filter products..."
 					pageSize={10}
 				/>
 			</CardContent>

@@ -1,22 +1,24 @@
 // src/app/admin/catalog/_components/ProductLineClient.tsx
 "use client";
 
-import { Badge } from "~/components/ui/badge";
 import { AdminTable, type Column } from "~/app/admin/_components/primitives/AdminTable";
-import { ShoppingBag } from "lucide-react";
+import { Badge } from "~/components/ui/badge";
+import { Package } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
-type ProductRow = {
+// Updated interface
+export type ProductRow = {
 	id: string;
 	slug: string;
 	sku: string | null;
 	name: string | null;
-	categoryName: string | null;
 	basePriceEurCents: number | null;
 	stockStatus: string | null;
 	isActive: boolean;
 	isFeatured: boolean;
-	featuredImageUrl: string | null;
+	heroImageUrl: string | null; // UPDATED
+	productLine: string | null;
 };
 
 interface ProductLineClientProps {
@@ -32,44 +34,31 @@ export function ProductLineClient({ products }: ProductLineClientProps) {
 	const columns: Column<ProductRow>[] = [
 		{
 			header: "Image",
-			accessorKey: "featuredImageUrl",
+			accessorKey: "heroImageUrl", // UPDATED
 			cell: (row) => (
-				<div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted">
-					{row.featuredImageUrl ? (
+				<div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted border border-border">
+					{row.heroImageUrl ? (
 						<Image
-							src={row.featuredImageUrl}
+							src={row.heroImageUrl}
 							alt={row.name || "Product"}
 							fill
 							className="object-cover"
 						/>
 					) : (
 						<div className="flex items-center justify-center h-full">
-							<ShoppingBag className="h-5 w-5 text-muted-foreground" />
+							<Package className="h-5 w-5 text-muted-foreground/30" />
 						</div>
 					)}
 				</div>
 			),
 		},
 		{
-			header: "SKU",
-			accessorKey: "sku",
-			cell: (row) => (
-				<span className="font-mono text-sm">
-					{row.sku || <span className="text-muted-foreground">—</span>}
-				</span>
-			),
-		},
-		{
-			header: "Product",
+			header: "Name",
 			accessorKey: "name",
 			cell: (row) => (
-				<div className="space-y-1">
-					<p className="font-display font-normal text-sm">
-						{row.name || "Untitled"}
-					</p>
-					<p className="text-xs text-muted-foreground font-display font-light">
-						{row.categoryName}
-					</p>
+				<div className="space-y-0.5">
+					<p className="font-display font-medium">{row.name || "Untitled"}</p>
+					<p className="font-mono text-xs text-muted-foreground">{row.sku}</p>
 				</div>
 			),
 		},
@@ -84,22 +73,30 @@ export function ProductLineClient({ products }: ProductLineClientProps) {
 		},
 		{
 			header: "Status",
-			accessorKey: "isActive",
-			cell: (row) => (
-				<div className="flex gap-1">
-					<Badge
-						variant={row.isActive ? "default" : "secondary"}
-						className="font-display font-light text-xs"
-					>
-						{row.isActive ? "Active" : "Inactive"}
-					</Badge>
-					{row.isFeatured && (
-						<Badge variant="outline" className="font-display font-light text-xs">
-							★
-						</Badge>
-					)}
-				</div>
-			),
+			accessorKey: "stockStatus",
+			cell: (row) => {
+				const statusMap = {
+					in_stock: { label: "In Stock", variant: "default" as const },
+					made_to_order: { label: "MTO", variant: "secondary" as const },
+					requires_quote: { label: "Quote", variant: "outline" as const },
+					out_of_stock: { label: "Out", variant: "destructive" as const },
+				};
+				const status = row.stockStatus ? statusMap[row.stockStatus as keyof typeof statusMap] : null;
+				return (
+					<div className="flex gap-2 items-center">
+						{status && (
+							<Badge variant={status.variant} className="font-display font-light text-xs">
+								{status.label}
+							</Badge>
+						)}
+						{row.isFeatured && (
+							<Badge variant="outline" className="text-xs border-amber-500/50 text-amber-600 bg-amber-500/10">
+								★
+							</Badge>
+						)}
+					</div>
+				);
+			},
 		},
 	];
 
@@ -107,8 +104,8 @@ export function ProductLineClient({ products }: ProductLineClientProps) {
 		<AdminTable
 			columns={columns}
 			data={products}
+			searchPlaceholder="Search products..."
 			onRowClick={(row) => `/admin/catalog/products/${row.id}`}
-			searchable={false}
 			pageSize={10}
 		/>
 	);
