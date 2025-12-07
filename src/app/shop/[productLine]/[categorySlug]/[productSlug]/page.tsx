@@ -61,7 +61,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 					)}
 
 					{/* Gradient overlay */}
-					<div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+					<div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
 
 					{/* Quick info overlay */}
 					<div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
@@ -103,9 +103,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 								{/* Short Description */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">Product Details</h2>
-									{/* <p className="text-lg text-muted-foreground font-display font-light leading-relaxed">
-										{product.shortDescription || product.shortDescription}
-									</p> */}
 									{/* Long Description with Read More */}
 									<LongDescriptionSection longDescription={product.fullDescription} />
 								</div>
