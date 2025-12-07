@@ -1,10 +1,14 @@
 // src/components/shop/product/ProductGrid.tsx
 "use client";
 
+import { useState } from "react";
 import { ProductCard } from "./ProductCard";
+import { LayoutGrid, Grid2X2, RectangleHorizontal } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 import type { Product } from "~/server/db/schema/shop";
 
-// Type for products in grid - matches what ProductCard expects
+// Reuse the type definition
 type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 	name: string;
 	shortDescription: string | null;
@@ -17,21 +21,23 @@ type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' 
 interface ProductGridProps {
 	products: ProductForGrid[];
 	variant?: "default" | "compact";
-	columns?: "2" | "3" | "4";
-	showQuickAdd?: boolean;
+	initialColumns?: "2" | "3" | "4";
+	showControls?: boolean;
 }
 
 export function ProductGrid({
 	products,
 	variant = "default",
-	columns = "3",
-	showQuickAdd = false
+	initialColumns = "3",
+	showControls = true
 }: ProductGridProps) {
+	const [columns, setColumns] = useState<"2" | "3" | "4">(initialColumns);
+
 	if (!products || products.length === 0) {
 		return (
-			<div className="py-12 text-center">
+			<div className="py-24 text-center border-2 border-dashed rounded-xl">
 				<p className="text-lg text-muted-foreground font-display font-light">
-					No products found
+					No products found in this category.
 				</p>
 			</div>
 		);
@@ -44,15 +50,51 @@ export function ProductGrid({
 	}[columns];
 
 	return (
-		<div className={`grid ${gridCols} gap-6`}>
-			{products.map((product) => (
-				<ProductCard
-					key={product.id}
-					product={product}
-					variant={variant}
-					showQuickAdd={showQuickAdd}
-				/>
-			))}
+		<div className="space-y-6">
+			{/* Grid Controls - Floating Top Right */}
+			{showControls && (
+				<div className="hidden md:flex justify-end mb-2 relative z-10 pointer-events-none">
+					<div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm border rounded-lg p-1 pointer-events-auto shadow-sm">
+						<Button
+							variant="ghost"
+							size="icon"
+							className={cn("h-8 w-8", columns === "2" && "bg-muted text-primary")}
+							onClick={() => setColumns("2")}
+							title="2 Columns"
+						>
+							<RectangleHorizontal className="h-4 w-4" />
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className={cn("h-8 w-8", columns === "3" && "bg-muted text-primary")}
+							onClick={() => setColumns("3")}
+							title="3 Columns"
+						>
+							<Grid2X2 className="h-4 w-4" />
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							className={cn("h-8 w-8 hidden xl:flex", columns === "4" && "bg-muted text-primary")}
+							onClick={() => setColumns("4")}
+							title="4 Columns"
+						>
+							<LayoutGrid className="h-4 w-4" />
+						</Button>
+					</div>
+				</div>
+			)}
+
+			<div className={`grid ${gridCols} gap-6`}>
+				{products.map((product) => (
+					<ProductCard
+						key={product.id}
+						product={product}
+						variant={variant}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }

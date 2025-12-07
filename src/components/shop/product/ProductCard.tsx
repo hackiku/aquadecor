@@ -7,120 +7,132 @@ import { Card } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Package } from "lucide-react";
 import { WishlistButton } from "../wishlist/WishlistButton";
+import { AddToCartButton } from "../cart/AddToCartButton";
+import { cn } from "~/lib/utils";
 import type { Product } from "~/server/db/schema/shop";
 
+// Use the grid type from your setup
+type ProductForCard = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+	name: string;
+	shortDescription: string | null;
+	heroImageUrl: string | null;
+	heroImageAlt?: string | null;
+	categorySlug: string;
+	productLineSlug: string;
+};
+
 interface ProductCardProps {
-	product: Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
-		name: string;
-		shortDescription: string | null;
-		heroImageUrl: string | null;
-		heroImageAlt?: string | null;
-		categorySlug: string;
-		productLineSlug: string;
-	};
+	product: ProductForCard;
 	variant?: "default" | "compact";
-	showQuickAdd?: boolean;
+	className?: string;
 }
 
-export function ProductCard({ product, variant = "default", showQuickAdd = false }: ProductCardProps) {
+export function ProductCard({ product, variant = "default", className }: ProductCardProps) {
 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
 	const hasPrice = product.basePriceEurCents !== null;
 
+	// Price formatting
 	const formattedPrice = hasPrice
-		? `€${((product.basePriceEurCents ?? 0) / 100).toFixed(2)}`
+		? new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format((product.basePriceEurCents ?? 0) / 100)
 		: null;
 
-	// Stock badge configuration
+	// Logic: If price note says "Custom Quote" and stock status is "requires_quote", 
+	// we don't need to show the text "Custom Quote" twice.
+	const showPriceNote = product.priceNote && product.stockStatus !== 'requires_quote';
+
 	const stockBadgeConfig = {
-		in_stock: { variant: "default" as const, label: "In Stock", className: "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20" },
-		made_to_order: { variant: "outline" as const, label: "Made to Order", className: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20" },
-		requires_quote: { variant: "outline" as const, label: "Custom Quote", className: "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20" },
+		in_stock: { label: "In Stock", className: "bg-emerald-500/90 text-white" },
+		made_to_order: { label: "Made to Order", className: "bg-blue-600/90 text-white" },
+		requires_quote: { label: "Custom Only", className: "bg-slate-700/90 text-white" },
 	};
 
-	const stockBadge = stockBadgeConfig[product.stockStatus as keyof typeof stockBadgeConfig];
+	const badge = stockBadgeConfig[product.stockStatus as keyof typeof stockBadgeConfig];
 
 	return (
-		<Link
-			href={productUrl}
-			className="group block h-full"
-		>
-			<Card className="h-full overflow-hidden border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl bg-card">
-				{/* Image Container with Gradient Overlay */}
-				<div className="relative aspect-[4/3] overflow-hidden bg-muted">
-					{product.heroImageUrl ? (
-						<Image
-							src={product.heroImageUrl}
-							alt={product.heroImageAlt || product.name}
-							fill
-							className="object-cover transition-transform duration-500 group-hover:scale-110"
-							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-						/>
-					) : (
-						<div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-							<Package className="h-16 w-16 text-muted-foreground/20" />
-						</div>
+		<Card className={cn("group relative flex flex-col h-full overflow-hidden border-2 border-border bg-card transition-all hover:border-primary/50 hover:shadow-xl", className)}>
+
+			{/* CLICKABLE AREA WRAPPER (Excludes buttons) */}
+			<Link href={productUrl} className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+
+				{/* IMAGE */}
+				{product.heroImageUrl ? (
+					<Image
+						src={product.heroImageUrl}
+						alt={product.heroImageAlt || product.name}
+						fill
+						className="object-cover transition-transform duration-700 group-hover:scale-105"
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+					/>
+				) : (
+					<div className="flex h-full items-center justify-center bg-muted/50">
+						<Package className="h-12 w-12 text-muted-foreground/30" />
+					</div>
+				)}
+
+				{/* OVERLAY - Subtle gradient for text contrast if needed */}
+				<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+				{/* BADGES (Top Left) */}
+				<div className="absolute top-3 left-3 flex flex-col gap-2">
+					{product.sku && (
+						<Badge variant="outline" className="bg-background/80 backdrop-blur font-mono text-xs shadow-xs">
+							{product.sku}
+						</Badge>
 					)}
+					{badge && (
+						<Badge className={cn("shadow-sm backdrop-blur-sm border-none", badge.className)}>
+							{badge.label}
+						</Badge>
+					)}
+				</div>
+			</Link>
 
-					{/* Gradient overlay for text readability */}
-					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/95 dark:to-black/90" />
+			{/* WISHLIST BUTTON (Z-Index Fixed) */}
+			{/* Placed outside Link so it doesn't trigger navigation */}
+			<div className="absolute top-3 right-3 z-20">
+				<WishlistButton
+					productId={product.id}
+					className="h-10 w-10 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black text-foreground shadow-sm cursor-pointer"
+				/>
+			</div>
 
-					{/* Wishlist Button - Top Right */}
-					<div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-						<WishlistButton productId={product.id} />
+			{/* CONTENT */}
+			<div className="flex flex-1 flex-col p-5">
+				<Link href={productUrl} className="block space-y-2 mb-4">
+					<h3 className="font-display text-lg font-medium leading-tight group-hover:text-primary transition-colors">
+						{product.name}
+					</h3>
+					{variant !== 'compact' && product.shortDescription && (
+						<p className="text-sm text-muted-foreground line-clamp-2 font-light">
+							{product.shortDescription}
+						</p>
+					)}
+				</Link>
+
+				<div className="mt-auto flex items-end justify-between gap-4 pt-4 border-t border-border/50">
+					{/* PRICE BLOCK */}
+					<div className="flex flex-col">
+						{showPriceNote && (
+							<span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+								{product.priceNote}
+							</span>
+						)}
+						<span className="text-xl font-display font-semibold text-foreground">
+							{formattedPrice || "Custom Quote"}
+						</span>
 					</div>
 
-					{/* Top Badges Row */}
-					<div className="absolute top-3 left-3 flex items-center gap-2">
-						{/* SKU Badge */}
-						{product.sku && (
-							<Badge
-								variant="secondary"
-								className="font-display font-medium backdrop-blur-sm bg-background/90 dark:bg-black/90"
-							>
-								{product.sku}
-							</Badge>
-						)}
-
-						{/* Stock Badge */}
-						{stockBadge && (
-							<Badge
-								variant={stockBadge.variant}
-								className={`text-xs font-display backdrop-blur-sm ${stockBadge.className}`}
-							>
-								{stockBadge.label}
-							</Badge>
-						)}
-					</div>
-
-					{/* Content Overlay - Bottom */}
-					<div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-						{/* Product Name */}
-						<h3 className="font-display font-medium text-lg leading-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors">
-							{product.name}
-						</h3>
-
-						{/* Short Description - Hidden in compact mode */}
-						{variant !== "compact" && product.shortDescription && (
-							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-								{product.shortDescription}
-							</p>
-						)}
-
-						{/* Price */}
-						<div className="pt-1">
-							{formattedPrice ? (
-								<p className="text-2xl font-display font-light text-foreground">
-									{formattedPrice}
-								</p>
-							) : product.priceNote ? (
-								<p className="text-sm font-display font-medium text-muted-foreground">
-									{product.priceNote}
-								</p>
-							) : null}
-						</div>
+					{/* ACTION BUTTON */}
+					<div className="shrink-0 z-20">
+						<AddToCartButton
+							product={{ id: product.id, basePriceEurCents: product.basePriceEurCents }}
+							variant={hasPrice ? "default" : "secondary"}
+							size="sm"
+							className={cn("rounded-full", !hasPrice && "hover:bg-primary hover:text-primary-foreground")}
+						/>
 					</div>
 				</div>
-			</Card>
-		</Link>
+			</div>
+		</Card>
 	);
 }

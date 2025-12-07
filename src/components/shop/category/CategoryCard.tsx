@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { cn } from "~/lib/utils";
+import { Badge } from "~/components/ui/badge";
 
 interface CategoryCardProps {
 	id: string;
@@ -18,7 +20,6 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({
-	id,
 	slug,
 	name,
 	description,
@@ -27,7 +28,7 @@ export function CategoryCard({
 	heroImageUrl,
 	productCount
 }: CategoryCardProps) {
-	// Fallback image based on product line
+	// Fallback logic
 	const categoryImage = heroImageUrl || (productLineSlug === "3d-backgrounds"
 		? "/media/images/3d-backgrounds_500px.webp"
 		: "/media/images/additional-items_500px.webp");
@@ -35,70 +36,90 @@ export function CategoryCard({
 	return (
 		<Link
 			href={`/shop/${productLineSlug}/${slug}`}
-			className="group flex-shrink-0 w-full max-w-[380px]"
+			className="group relative flex h-[380px] w-full flex-col overflow-hidden rounded-2xl border-2 border-border bg-card shadow-sm transition-all hover:border-primary/50 hover:shadow-xl"
 		>
-			<div className="h-full bg-card dark:bg-neutral-950 rounded-xl overflow-hidden border-2 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
-				{/* Image Container */}
-				<div className="relative aspect-[4/3] overflow-hidden">
-					<Image
-						src={categoryImage}
-						alt={name || slug}
-						fill
-						className="object-cover transition-transform duration-500 group-hover:scale-110"
-						sizes="(max-width: 768px) 100vw, 380px"
-					/>
+			{/* Image Layer */}
+			<div className="absolute top-0 inset-0 z-0">
+				<Image
+					src={categoryImage}
+					alt={name || slug}
+					fill
+					className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
+					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+				/>
+				{/* Refined Gradient: Only covers bottom 2/3, leaves top crisp */}
+				<div className="absolute bottom-0 left-0 right-0 h-2/3 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
+			</div>
 
-					{/* Gradient overlay */}
-					<div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-background/95 dark:to-neutral-950 transition-all duration-300" />
+			{/* Top Badges - Higher contrast & Primary Color */}
+			<div className="relative z-20 flex w-full items-start justify-between p-4">
+				{modelCode && (
+					<Badge className="bg-primary/60 text-foreground/70 text-sm font-display font-medium backdrop-blur-md shadow-lg border-white/10 px-3 py-1">
+						{modelCode} Series
+					</Badge>
+				)}
 
-					{/* Top badges row */}
-					<div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
-						{/* Model code badge */}
-						{modelCode && (
-							<div className="px-3 py-1.5 bg-background/90 dark:bg-neutral-950/90 backdrop-blur-sm rounded-lg border border-border">
-								<span className="text-xs font-display font-medium text-foreground">
-									{modelCode} Series
-								</span>
-							</div>
-						)}
+				{productCount !== undefined && (
+					<Badge variant="secondary" className="ml-auto bg-black/60 text-white backdrop-blur-md border-white/10">
+						{productCount} {productCount === 1 ? 'Item' : 'Items'}
+					</Badge>
+				)}
+			</div>
 
-						{/* Product count badge */}
-						{productCount !== undefined && (
-							<div className="px-3 py-1.5 bg-background/90 dark:bg-neutral-950/90 backdrop-blur-sm rounded-lg border border-border">
-								<span className="text-xs font-display font-medium text-muted-foreground">
-									{productCount} {productCount === 1 ? 'product' : 'products'}
-								</span>
-							</div>
-						)}
+			{/* Spacer to push content down */}
+			<div className="flex-1" />
 
-						{/* Spacer */}
-						<div className="flex-1" />
-
-						{/* Arrow indicator */}
-						<motion.div
-							whileHover={{ scale: 1.1 }}
-							transition={{ duration: 0.2 }}
-							className="w-8 h-8 rounded-full bg-background/90 dark:bg-neutral-950/90 backdrop-blur-sm border border-border flex items-center justify-center transition-all duration-300 group-hover:border-primary group-hover:bg-primary"
-						>
-							<ArrowRight className="h-4 w-4 text-foreground group-hover:text-primary-foreground" />
-						</motion.div>
-					</div>
-
-					{/* Content overlay - bottom */}
-					<div className="absolute bottom-0 left-0 right-0 p-5 overflow-hidden">
-						{/* Title - slides up on hover */}
-						<h4 className="text-xl md:text-2xl font-display font-medium text-foreground transition-all duration-300 group-hover:text-primary group-hover:-translate-y-2">
+			{/* Content Interaction Layer */}
+			<div className="relative z-20 p-6">
+				<motion.div
+					initial="idle"
+					whileHover="hover"
+					className="space-y-2"
+				>
+					{/* Header Row: Title + Arrow */}
+					<motion.div
+						className="flex items-end justify-between gap-4"
+						variants={{
+							idle: { y: 0 },
+							hover: { y: -5 }
+						}}
+						transition={{ duration: 0.3, ease: "easeOut" }}
+					>
+						<h3 className="font-display text-2xl font-thin group-hover:font-extralight leading-tight text-white drop-shadow-md">
 							{name || slug}
-						</h4>
+						</h3>
 
-						{/* Description - revealed when title slides up */}
-						{description && (
-							<p className="text-sm text-muted-foreground font-display font-light line-clamp-2 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+						{/* Arrow Circle */}
+						<motion.div
+							className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white"
+							variants={{
+								idle: { x: 0, backgroundColor: "rgba(255,255,255,0.1)" },
+								hover: { x: 5, backgroundColor: "hsl(var(--primary))", borderColor: "hsl(var(--primary))" }
+							}}
+						>
+							<ArrowRight className="h-5 w-5" />
+						</motion.div>
+					</motion.div>
+
+					{/* Description Reveal */}
+					{description && (
+						<motion.div
+							className="overflow-hidden"
+							variants={{
+								idle: { height: "24px", opacity: 0.8 }, // Show 1 line approx
+								hover: { height: "auto", opacity: 1 }
+							}}
+							transition={{ duration: 0.3 }}
+						>
+							<p className={cn(
+								"font-display text-sm font-light leading-relaxed text-gray-200",
+								"line-clamp-1 group-hover:line-clamp-none" // CSS fallback/helper
+							)}>
 								{description}
 							</p>
-						)}
-					</div>
-				</div>
+						</motion.div>
+					)}
+				</motion.div>
 			</div>
 		</Link>
 	);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // src/app/shop/page.tsx
 import Link from "next/link";
 import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero";
