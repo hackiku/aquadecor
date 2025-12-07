@@ -202,7 +202,7 @@ export const products: ProductSeed[] = [
 		excludedMarkets: ["US"],
 		stockStatus: "requires_quote",
 		isActive: true,
-		isFeatured: false,
+		isFeatured: true,
 		sortOrder: 10,
 	},
 	{

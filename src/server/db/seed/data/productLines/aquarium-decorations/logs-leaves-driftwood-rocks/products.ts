@@ -902,7 +902,7 @@ export const products: ProductSeed[] = [
 		excludedMarkets: ["US"],
 		stockStatus: "in_stock",
 		isActive: true,
-		isFeatured: false,
+		isFeatured: true,
 		sortOrder: 45,
 	},
 	{
