@@ -1,11 +1,9 @@
 // src/components/media/SupabaseImageUpload.tsx
-// Supabase- temp name to avoid conflicts
-
 "use client";
 
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { supabase } from "~/lib/supabase";
+import { supabase } from "~/lib/supabase/client";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -26,6 +24,7 @@ interface ImageUploadProps {
 	maxSizeMB?: number;
 	allowedTypes?: string[];
 	className?: string;
+	bucket?: string;
 }
 
 interface ImageMetadata {
@@ -59,6 +58,7 @@ export function ImageUpload({
 	maxSizeMB = 10,
 	allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"],
 	className,
+	bucket = "aquadecor-gallery"
 }: ImageUploadProps) {
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
@@ -128,7 +128,7 @@ export function ImageUpload({
 
 			// 3. Upload to Supabase Storage
 			const { data, error: uploadError } = await supabase.storage
-				.from('aquadecor-gallery')
+				.from(bucket)
 				.upload(path, file, {
 					cacheControl: '3600',
 					upsert: false
@@ -140,7 +140,7 @@ export function ImageUpload({
 
 			// 4. Get public URL
 			const { data: { publicUrl } } = supabase.storage
-				.from('aquadecor-gallery')
+				.from(bucket)
 				.getPublicUrl(data.path);
 
 			// 5. Call parent's onUpload with all the info

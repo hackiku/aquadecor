@@ -2,20 +2,20 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "~/lib/supabase";
+import { supabase } from "~/lib/supabase/client";
 import { api } from "~/trpc/react";
 import { ImageUpload } from "~/components/media/SupabaseImageUpload";
 import { StorageGallery } from "./_components/StorageGallery";
 import { DebugEnv } from "./_components/DebugEnv";
 import { ClientDebug } from "./_components/ClientDebug";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-// Bucket to test with
-const BUCKET_NAME = "aquadecor-shop";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Loader2, Check, X } from "lucide-react";
+import { Loader2, Check, X, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+
+// Bucket to test with
+const BUCKET_NAME = "aquadecor-gallery";
 
 type TestStatus = "idle" | "testing" | "success" | "error";
 
@@ -30,28 +30,10 @@ export default function TestStoragePage() {
 		setConnectionMessage("Checking Supabase Storage connection...");
 
 		try {
-			// Test 1: List buckets
-			const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-
-			if (bucketsError) {
-				throw new Error(`Cannot list buckets: ${bucketsError.message}`);
-			}
-
-			setConnectionMessage(`✓ Connected! Found ${buckets?.length ?? 0} bucket(s)`);
-
-			// Test 2: Check if our bucket exists
-			const galleryBucket = buckets?.find(b => b.name === BUCKET_NAME);
-
-			if (!galleryBucket) {
-				throw new Error(`Bucket '${BUCKET_NAME}' not found`);
-			}
-
-			setConnectionMessage(`✓ Bucket '${BUCKET_NAME}' exists! (${galleryBucket.public ? 'Public' : 'Private'})`);
-
-			// Test 3: Try to list files
+			// Test: Try to list files (works with publishable key for public buckets)
 			const { data: files, error: filesError } = await supabase.storage
 				.from(BUCKET_NAME)
-				.list('', { limit: 5 }); // Empty string = list root
+				.list('', { limit: 5 });
 
 			if (filesError) {
 				throw new Error(`Cannot list files: ${filesError.message}`);
@@ -59,8 +41,8 @@ export default function TestStoragePage() {
 
 			setConnectionMessage(
 				`✓ All checks passed!\n` +
-				`✓ Bucket '${BUCKET_NAME}' exists and is ${galleryBucket.public ? 'public' : 'private'}\n` +
-				`✓ Found ${files?.length ?? 0} file(s) in bucket root`
+				`✓ Connected to bucket '${BUCKET_NAME}'\n` +
+				`✓ Found ${files?.length ?? 0} file(s) in bucket`
 			);
 			setConnectionStatus("success");
 		} catch (err) {
@@ -69,40 +51,63 @@ export default function TestStoragePage() {
 		}
 	};
 
-	// Save to database after upload
-	const createImageMutation = api.admin.media.create.useMutation({
-		onSuccess: () => {
-			toast.success("Image record created in DB");
-		},
-		onError: (error) => {
-			toast.error(`DB Error: ${error.message}`);
-		},
-	});
-
+	// IMPORTANT: This uses a SEPARATE test router (admin.supabaseTest)
+	// Your production media.create router is UNTOUCHED and still uses old CDN
+	const createTestImageMutation = api.admin.supabaseTest.testConnection.useQuery(
+		undefined,
+		{ enabled: false } // Don't auto-run
+	);
 
 	const handleUpload = async (
 		file: File,
 		metadata: { altText: string; productId?: string; sortOrder: number },
 		uploadResult: { publicUrl: string; storagePath: string; dimensions: { width: number; height: number } }
 	) => {
-		await createImageMutation.mutateAsync({
-			productId: metadata.productId || "test-product",
-			storageUrl: uploadResult.publicUrl,
-			storagePath: uploadResult.storagePath,
-			altText: metadata.altText,
-			width: uploadResult.dimensions.width,
-			height: uploadResult.dimensions.height,
-			fileSize: file.size,
-			mimeType: file.type,
-			sortOrder: metadata.sortOrder,
+		// For now, just show success without saving to DB
+		// Later you can create a test-specific table or add to real media table
+		toast.success(
+			<div className="space-y-1">
+				<p className="font-display font-normal">Upload successful!</p>
+				<p className="text-xs text-muted-foreground">
+					File uploaded to Supabase Storage
+				</p>
+			</div>
+		);
+
+		// Log the result for inspection
+		console.log("Supabase upload result:", {
+			file: file.name,
+			url: uploadResult.publicUrl,
+			path: uploadResult.storagePath,
+			dimensions: uploadResult.dimensions,
+			metadata,
 		});
+
+		// Refresh gallery to show new image
+		setRefreshKey(prev => prev + 1);
 	};
 
 	return (
 		<div className="space-y-8 max-w-6xl">
+			{/* Warning banner */}
+			<div className="border-2 border-yellow-500/50 bg-yellow-500/5 rounded-lg p-4">
+				<div className="flex items-start gap-3">
+					<AlertTriangle className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+					<div className="space-y-1">
+						<p className="text-sm font-display font-normal text-yellow-500">
+							Testing Environment
+						</p>
+						<p className="text-xs text-muted-foreground font-display font-light">
+							This page tests Supabase Storage only. Your production media system (old CDN)
+							is completely untouched and continues to work normally.
+						</p>
+					</div>
+				</div>
+			</div>
+
 			<div className="space-y-2">
 				<h1 className="text-4xl font-display font-extralight tracking-tight">
-					Storage Test
+					Supabase Storage Test
 				</h1>
 				<p className="text-muted-foreground font-display font-light text-lg">
 					Test Supabase Storage connection, RLS policies, and uploads
@@ -113,7 +118,7 @@ export default function TestStoragePage() {
 			<Card className="border-2 border-yellow-500/50 bg-yellow-500/5">
 				<CardHeader>
 					<CardTitle className="font-display font-normal text-sm">
-						🐛 Debug: Environment Variables & Client
+						🛠 Debug: Environment Variables & Admin Connection
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="space-y-4">
@@ -131,7 +136,7 @@ export default function TestStoragePage() {
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<p className="text-sm text-muted-foreground font-display font-light">
-						Check if we can connect to Supabase and see the bucket
+						Check if we can connect to Supabase and read from the bucket
 					</p>
 					<Button
 						onClick={testConnection}
@@ -166,7 +171,7 @@ export default function TestStoragePage() {
 				</CardContent>
 			</Card>
 
-			{/* Step 2: View Files (Read-only, should work with public bucket) */}
+			{/* Step 2: View Files */}
 			<Card className="border-2">
 				<CardHeader>
 					<CardTitle className="font-display font-normal">
@@ -181,7 +186,7 @@ export default function TestStoragePage() {
 				</CardContent>
 			</Card>
 
-			{/* Step 3: Upload Test (Requires RLS policy) */}
+			{/* Step 3: Upload Test */}
 			<Card className="border-2">
 				<CardHeader>
 					<div className="flex items-start justify-between">
@@ -217,7 +222,10 @@ WITH CHECK (
 						</p>
 					</div>
 
-					<ImageUpload onUpload={handleUpload} />
+					<ImageUpload
+						onUpload={handleUpload}
+						bucket={BUCKET_NAME}
+					/>
 				</CardContent>
 			</Card>
 

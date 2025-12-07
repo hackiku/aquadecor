@@ -15,6 +15,8 @@ import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
 import { adminFaqRouter } from "./routers/admin/faq";
+// TEMPORARY: Supabase testing router (delete after migration)
+import { supabaseTestRouter } from "./routers/test/supabase-test";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 
 /**
@@ -25,19 +27,21 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
 	account: accountRouter,
 	product: productRouter,
-	media: mediaRouter,
+	media: mediaRouter, // Public media (old CDN)
 	reviews: reviewsRouter,
 	faq: faqRouter,
 	publicCountry: publicCountryRouter,
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
-		media: adminMediaRouter,
+		media: adminMediaRouter, // Admin media (old CDN)
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
 		sale: adminSaleRouter,
 		faq: adminFaqRouter,
 		country: countryRouter,
+		// TEMPORARY: Supabase testing (delete after migration)
+		supabaseTest: supabaseTestRouter,
 	}),
 });
 

@@ -1,17 +1,12 @@
 // src/lib/supabase/client.ts
-// Browser-side Supabase client using @supabase/ssr
-// Use in "use client" components
 
-import { createBrowserClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { env } from '~/env';
 
-export function createClient() {
-	return createBrowserClient(
-		env.NEXT_PUBLIC_SUPABASE_URL,
-		env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-	);
-}
-
-// Legacy singleton export for backward compatibility
-export const supabase = createClient();
-export const supabaseClient = supabase;
+// Client-side Supabase (uses publishable key)
+// Safe to use in "use client" components
+// Can read from public buckets, but uploads require RLS policies
+export const supabase = createClient(
+	env.NEXT_PUBLIC_SUPABASE_URL,
+	env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+);

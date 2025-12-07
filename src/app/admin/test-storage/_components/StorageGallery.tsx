@@ -1,22 +1,21 @@
-// @ts-nocheck
 // src/app/admin/test-storage/_components/StorageGallery.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "~/lib/supabase";
+import { supabase } from "~/lib/supabase/client";
 import { Loader2, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
 interface StorageFile {
 	name: string;
 	id: string;
-	updated_at: string;
-	created_at: string;
-	last_accessed_at: string;
-	metadata: {
-		size: number;
-		mimetype: string;
-	};
+	updated_at?: string;
+	created_at?: string;
+	last_accessed_at?: string;
+	metadata?: {
+		size?: number;
+		mimetype?: string;
+	} | null;
 }
 
 interface StorageGalleryProps {
@@ -30,24 +29,26 @@ export function StorageGallery({ bucket = "aquadecor-gallery" }: StorageGalleryP
 
 	useEffect(() => {
 		loadFiles();
-	}, []);
+	}, [bucket]);
 
 	const loadFiles = async () => {
 		try {
 			setLoading(true);
 			setError(null);
 
-			// List files in bucket root (or 'gallery' folder if it exists)
+			// List files in bucket root
 			const { data, error: listError } = await supabase.storage
 				.from(bucket)
-				.list('', { // Empty string = list root
+				.list('', {
 					limit: 100,
 					sortBy: { column: 'created_at', order: 'desc' }
 				});
 
 			if (listError) throw listError;
 
-			setFiles(data || []);
+			// Filter out folders (they have id null) and keep only files
+			const filesOnly = (data || []).filter(item => item.id);
+			setFiles(filesOnly);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : 'Failed to load files');
 		} finally {
@@ -58,8 +59,15 @@ export function StorageGallery({ bucket = "aquadecor-gallery" }: StorageGalleryP
 	const getPublicUrl = (filename: string) => {
 		const { data } = supabase.storage
 			.from(bucket)
-			.getPublicUrl(filename); // Use filename directly (works for root or folders)
+			.getPublicUrl(filename);
 		return data.publicUrl;
+	};
+
+	// Helper to format file size
+	const formatFileSize = (file: StorageFile): string => {
+		const size = file.metadata?.size;
+		if (!size) return 'Unknown size';
+		return (size / 1024 / 1024).toFixed(2) + ' MB';
 	};
 
 	if (loading) {
@@ -109,7 +117,7 @@ export function StorageGallery({ bucket = "aquadecor-gallery" }: StorageGalleryP
 							{file.name}
 						</p>
 						<p className="text-xs text-white/60 font-display font-light">
-							{(file.metadata.size / 1024 / 1024).toFixed(2)} MB
+							{formatFileSize(file)}
 						</p>
 					</div>
 				</div>
