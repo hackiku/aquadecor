@@ -1,4 +1,7 @@
 // src/app/gallery/page.tsx
+
+
+// src/app/gallery/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -37,10 +40,10 @@ export default function GalleryPage() {
 	return (
 		<main className="min-h-screen bg-background">
 			{/* Hero Section */}
-			<section className="relative py-20 md:py-28 bg-black text-white overflow-hidden">
+			<section className="relative py-16 md:py-24 bg-black text-white overflow-hidden">
 				{/* Background Element */}
 				<div className="absolute inset-0 z-0">
-					<div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10" />
+					<div className="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent z-10" />
 					{/* Optional: Add a subtle blurry background image here */}
 				</div>
 
@@ -55,11 +58,13 @@ export default function GalleryPage() {
 					</p>
 				</div>
 			</section>
-
-			<WaveDivider position="top" color="background" className="text-black -mt-1" />
+			
+			<div className="relative pb-12 md:pb-20">
+				<WaveDivider position="top" color="black" className="text-black" />
+			</div>
 
 			{/* Main Layout */}
-			<div className="max-w-[1800px] mx-auto px-4 py-8 md:py-12">
+			<section className="-mt-20 max-w-[1800px] mx-auto px-4 py-8 md:py-24 bg-linear-to-b from-card to-transparent">
 				<div className="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
 					{/* Sidebar */}
@@ -121,13 +126,13 @@ export default function GalleryPage() {
 											"Load More Inspiration"
 										)}
 									</Button>
-									<ShopButton variant="default" size="lg" />
+									<ShopButton />
 								</div>
 							</div>
 						)}
 					</div>
 				</div>
-			</div>
+			</section>
 		</main>
 	);
 }
