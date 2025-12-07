@@ -9,6 +9,7 @@ import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { SpecificationsGrid } from "~/components/shop/product/SpecificationsGrid";
 import { PricingCard } from "~/components/shop/checkout/PricingCard";
 import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
+import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -45,7 +46,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		<HydrateClient>
 			<main className="min-h-screen">
 				{/* Hero Section - Full Width Image */}
-				<section className="relative h-[40vh] md:h-[50vh] border-b">
+				<section className="relative h-[40vh] md:h-[50vh] border-b bg-black">
 					{product.images && product.images[0] ? (
 						<Image
 							src={product.images[0].storageUrl}
@@ -61,7 +62,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 					)}
 
 					{/* Gradient overlay */}
-					<div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
+					<div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
 
 					{/* Quick info overlay */}
 					<div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
@@ -85,7 +86,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light text-white drop-shadow-lg">
 								{product.name ?? "Product"}
 							</h1>
-							<p className="text-lg text-muted-foreground font-display font-light leading-relaxed">
+							<p className="text-lg text-neutral-400/90 max-w-4xl font-display font-light leading-relaxed">
 								{product.shortDescription || product.shortDescription}
 							</p>
 						</div>
@@ -99,6 +100,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 							{/* Left Column - Info */}
 							<div className="lg:col-span-2 space-y-8">
+
+								<ImageSliderWithModal
+									images={product.images || []}
+									productName={product.name ?? "Product"}
+								/>
 
 								{/* Short Description */}
 								<div className="space-y-4">

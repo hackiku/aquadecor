@@ -4,20 +4,33 @@
 import type { TranslationSeed } from "../../../../../schema";
 
 export const translations: TranslationSeed = {
-
 	"d-1-standing-roots": {
 		en: {
-			name: "Standing roots",
-			shortDescription: "These non-floating standing roots are an ideal addition to Amazonian-themed aquarium setups, offering a natural and realistic look that enhances the beauty of y...",
-			fullDescription: "These non-floating standing roots are an ideal addition to Amazonian-themed aquarium setups, offering a natural and realistic look that enhances the beauty of your aquatic environment. Designed for convenience, they don’t need to be soaked or glued before use, allowing you to place them directly into your tank and start enjoying their aesthetic appeal immediately. These roots provide excellent hiding spots for various types of fish, making them perfect for species that seek shelter and privacy. One of the great features of these standing roots is their customizable design. They can be made in the colors of your choice, allowing you to match them with your specific tank’s theme or other decorations. Their maximum height is 70 cm (28″), but if you prefer shorter roots, you can easily specify the desired height when placing your order. If no specific height is mentioned, the roots will be crafted at the standard 70 cm. Whether you're looking to create a lush, natural habitat for your fish or add an eye-catching element to your aquarium, these standing roots offer the perfect blend of functionality and aesthetic appeal.",
+			name: "Standing Roots", // No model prefix
+			shortDescription: "Non-floating standing roots perfect for Amazonian aquariums. Customizable colors and heights up to 70cm for natural hiding spots.",
+			fullDescription: "Enhance your aquarium with these realistic standing roots, designed for Amazonian-themed setups.\n\nThey provide ample hiding places for fish without needing soaking or gluing—ready to use right away.\n\nCustomize in your preferred colors and specify heights (max 70cm/28\"). Base width approx. 20-30cm for stability.\n\nIdeal for creating a natural, stress-free environment for species like Discus.",
+			metaTitle: "Standing Roots Aquarium Decoration | Customizable Non-Floating Roots",
+			metaDescription: "Buy non-floating standing roots for your aquarium. Custom heights up to 70cm, safe materials, instant setup. Perfect for Amazonian biotopes.",
 			specOverrides: {
-				material: "Safe aquarium decoration",
+				material: "Aquarium-safe resin",
+				productionTime: "Ready to ship",
 			},
 		},
 		de: {
 			name: "Standing roots",
 			shortDescription: "German translation pending...",
 			fullDescription: "German description pending...",
+		},
+		it: {
+			name: "Radici in Piedi",
+			shortDescription: "Radici in piedi non galleggianti perfette per acquari amazoniani. Colori e altezze personalizzabili fino a 70 cm per nascondigli naturali.",
+			fullDescription: "Migliora il tuo acquario con queste radici in piedi realistiche, progettate per setup a tema amazoniano.\n\nOffrono ampi nascondigli per i pesci senza bisogno di immersione o incollaggio: pronte all'uso immediato.\n\nPersonalizzabili nei colori preferiti e specifica le altezze (max 70 cm). Larghezza alla base circa 20-30 cm per stabilità.\n\nIdeali per creare un ambiente naturale e senza stress per specie come i Discus.",
+			metaTitle: "Decorazione Radici in Piedi per Acquari | Radici Non Galleggianti Personalizzabili",
+			metaDescription: "Acquista radici in piedi non galleggianti per il tuo acquario. Altezze personalizzate fino a 70 cm, materiali sicuri, setup immediato. Perfette per biotopi amazoniani.",
+			specOverrides: {
+				material: "Resina sicura per acquari",
+				productionTime: "Pronto per la spedizione",
+			},
 		},
 	},
 	"d-1-plus-standing-roots": {
@@ -729,15 +742,29 @@ export const translations: TranslationSeed = {
 		en: {
 			name: "Rocks",
 			shortDescription: "Our non-floating rocks are designed for maximum convenience and versatility in your aquarium setup. They require no soaking or siliconing, allowing you to easil...",
-			fullDescription: "Our non-floating rocks are designed for maximum convenience and versatility in your aquarium setup. They require no soaking or siliconing, allowing you to easily move them around as you desire. Their hollow construction means you can fill them with water to ensure they stay securely at the bottom of the tank, providing a natural look while maintaining stability. Once filled, simply place them in your desired location, and you’re all set! These rocks can be taken out and reused multiple times, making them a practical choice for anyone looking to change up their aquarium layout or refresh their aquatic landscape. Their lightweight nature makes it easy to reposition them, allowing for creative arrangements that suit your aesthetic preferences. Enjoy the flexibility and ease of use that our non-floating rocks bring to your aquarium, ensuring your aquatic environment remains both beautiful and functional.",
+			fullDescription: "These versatile rocks add natural texture to your tank without hassle.\n\nHollow and lightweight, fill with water to sink them securely—reposition or reuse anytime.\n\nDimensions vary; customizable colors available. Safe for all aquatic life.\n\nGreat for creating caves and landscapes in freshwater or marine setups.",
+			metaTitle: "Non-Floating Aquarium Rocks | Easy Setup Decor",
+			metaDescription: "Shop hollow, non-floating rocks for aquariums. Fill with water for stability, no silicone needed. Versatile and reusable.",
 			specOverrides: {
-				material: "Safe aquarium decoration",
+				material: "Aquarium-safe resin",
+				productionTime: "Ready to ship",
 			},
 		},
 		de: {
 			name: "Rocks",
 			shortDescription: "German translation pending...",
 			fullDescription: "German description pending...",
+		},
+		it: {
+			name: "Rocce per Acquario",
+			shortDescription: "Rocce non galleggianti convenienti per un setup facile dell'acquario. Design cavo permette il riempimento con acqua per stabilità, senza immersione.",
+			fullDescription: "Queste rocce versatili aggiungono texture naturale al tuo serbatoio senza problemi.\n\nCave e leggere, riempile con acqua per farle affondare in modo sicuro: riposiziona o riutilizza in qualsiasi momento.\n\nDimensioni variabili; colori personalizzabili disponibili. Sicure per tutta la vita acquatica.\n\nOttime per creare grotte e paesaggi in setup d'acqua dolce o marina.",
+			metaTitle: "Rocce Non Galleggianti per Acquari | Decorazione Facile",
+			metaDescription: "Acquista rocce cave non galleggianti per acquari. Riempi con acqua per stabilità, senza silicone. Versatili e riutilizzabili.",
+			specOverrides: {
+				material: "Resina sicura per acquari",
+				productionTime: "Pronto per la spedizione",
+			},
 		},
 	},
 };

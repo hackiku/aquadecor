@@ -1,7 +1,6 @@
-
 // src/server/db/seed/data/productLine/aquarium-decorations/back-panel-roots/products.ts
 
-import type { ProductSeed } from "../../../../../schema"; 
+import type { ProductSeed } from "../../../../../schema";
 
 export const products: ProductSeed[] = [
 
@@ -15,6 +14,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED DIMENSIONS
+			dimensions: {
+				widthCm: 10,
+				heightCm: 20,
+				depthCm: 5,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
@@ -35,6 +40,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED DIMENSIONS
+			dimensions: {
+				widthCm: 12,
+				heightCm: 25,
+				depthCm: 6,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
@@ -55,6 +66,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED DIMENSIONS
+			dimensions: {
+				widthCm: 15,
+				heightCm: 30,
+				depthCm: 7,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
@@ -75,6 +92,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED DIMENSIONS
+			dimensions: {
+				widthCm: 18,
+				heightCm: 40,
+				depthCm: 8,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
@@ -95,6 +118,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED DIMENSIONS
+			dimensions: {
+				widthCm: 20,
+				heightCm: 50,
+				depthCm: 10,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,

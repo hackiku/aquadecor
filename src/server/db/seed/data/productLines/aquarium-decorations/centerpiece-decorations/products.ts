@@ -1,7 +1,6 @@
-
 // src/server/db/seed/data/productLine/aquarium-decorations/centerpiece-decorations/products.ts
 
-import type { ProductSeed } from "../../../../../schema"; 
+import type { ProductSeed } from "../../../../../schema";
 
 export const products: ProductSeed[] = [
 
@@ -15,6 +14,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED PLAUSIBLE DIMENSIONS
+			dimensions: {
+				widthCm: 25,
+				heightCm: 18,
+				depthCm: 15,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
@@ -35,6 +40,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			// ✅ ADDED PLAUSIBLE DIMENSIONS (Taller)
+			dimensions: {
+				widthCm: 20,
+				heightCm: 30,
+				depthCm: 10,
+			},
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,

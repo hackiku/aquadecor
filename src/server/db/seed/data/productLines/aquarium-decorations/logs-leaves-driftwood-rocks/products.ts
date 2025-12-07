@@ -4,7 +4,6 @@
 import type { ProductSeed } from "../../../../../schema"; 
 
 export const products: ProductSeed[] = [
-
 	{
 		categorySlug: "logs-leaves-driftwood-rocks",
 		slug: "d-1-standing-roots",
@@ -15,9 +14,12 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			dimensions: { heightCm: 70, widthCm: 25 }, // Inferred avg from "20-30cm wide at base"
+			isFloating: false,
 		},
 		customizationOptions: {
-			allowsCustomDimensions: false,
+			allowsCustomDimensions: true, // From desc: "specify the desired height"
+			allowsColorCustomization: true, // "made in the colors of your choice"
 		},
 		excludedMarkets: ["US"],
 		stockStatus: "in_stock",
@@ -975,6 +977,8 @@ export const products: ProductSeed[] = [
 		specifications: {
 			material: "Safe aquarium decoration",
 			productionTime: "Ready to ship",
+			isFloating: false,
+			setContents: ["Varied rock sizes"],
 		},
 		customizationOptions: {
 			allowsCustomDimensions: false,
