@@ -283,6 +283,7 @@ export type TranslationBlock = {
 	shortDescription?: string;
 	fullDescription?: string;
 	description?: string; // For categories
+	longDescription?: string; // AI-written later
 	metaTitle?: string;
 	metaDescription?: string;
 	model?: string; // Custom field for categories
