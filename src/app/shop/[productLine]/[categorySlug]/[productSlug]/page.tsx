@@ -2,12 +2,13 @@
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { AddToCartButton } from "~/components/shop/cart/AddToCartButton";
-import { WishlistButton } from "~/components/shop/wishlist/WishlistButton";
-import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { api, HydrateClient } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
-import { Package, Truck, Clock, Shield, Zap, CheckCircle2 } from "lucide-react";
+import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
+import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
+import { SpecificationsGrid } from "~/components/shop/product/SpecificationsGrid";
+import { PricingCard } from "~/components/shop/checkout/PricingCard";
+import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -64,7 +65,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 					{/* Quick info overlay */}
 					<div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-						<div className="max-w-7xl mx-auto">
+						<div className="max-w-7xl mx-auto space-y-3">
 							<div className="flex items-center gap-3 mb-4">
 								<Badge variant="secondary" className="font-display text-xs">
 									{product.sku}
@@ -84,6 +85,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							<h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-light text-white drop-shadow-lg">
 								{product.name ?? "Product"}
 							</h1>
+							<p className="text-lg text-muted-foreground font-display font-light leading-relaxed">
+								{product.shortDescription || product.shortDescription}
+							</p>
 						</div>
 					</div>
 				</section>
@@ -96,88 +100,25 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							{/* Left Column - Info */}
 							<div className="lg:col-span-2 space-y-8">
 
-								{/* Description */}
+								{/* Short Description */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">Product Details</h2>
-									<p className="text-lg text-muted-foreground font-display font-light leading-relaxed">
-										{product.fullDescription || product.shortDescription}
-									</p>
+									{/* <p className="text-lg text-muted-foreground font-display font-light leading-relaxed">
+										{product.shortDescription || product.shortDescription}
+									</p> */}
+									{/* Long Description with Read More */}
+									<LongDescriptionSection longDescription={product.fullDescription} />
 								</div>
 
 								{/* Specifications */}
-								{product.specifications &&
-									typeof product.specifications === 'object' &&
-									Object.keys(product.specifications).length > 0 && (
-										<div className="space-y-4">
-											<h2 className="text-2xl font-display font-normal">Specifications</h2>
-											<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 bg-muted/30 rounded-xl border">
-												{Object.entries(product.specifications).map(([key, value]) => {
-													// Skip rendering nested objects (like dimensions)
-													if (typeof value === 'object' && value !== null) {
-														// Handle dimensions object specially
-														if (key === 'dimensions') {
-															const dims = value as any;
-															return (
-																<div key={key} className="space-y-1 sm:col-span-2">
-																	<dt className="text-xs text-muted-foreground font-display uppercase tracking-wide">
-																		Dimensions
-																	</dt>
-																	<dd className="text-base font-display font-medium">
-																		{dims.widthCm && `${dims.widthCm}cm W`}
-																		{dims.heightCm && ` × ${dims.heightCm}cm H`}
-																		{dims.depthCm && ` × ${dims.depthCm}cm D`}
-																	</dd>
-																</div>
-															);
-														}
-														return null; // Skip other objects
-													}
+								<SpecificationsGrid
+									specifications={product.specifications || {}}
+									specOverrides={product.specOverrides}
+								/>
 
-													// Format label
-													const formattedKey = key
-														.replace(/([A-Z])/g, " $1")
-														.replace(/Cm$/, "")
-														.trim()
-														.split(" ")
-														.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-														.join(" ");
 
-													// Check for specOverride first
-													let formattedValue: string;
 
-													if (product.specOverrides && product.specOverrides[key]) {
-														// Use translated override if available
-														formattedValue = product.specOverrides[key]!;
-													} else if (typeof value === 'boolean') {
-														formattedValue = value ? "Yes" : "No";
-													} else if (key === 'productionTime') {
-														formattedValue = String(value);
-													} else if (key === 'plantType' || key === 'woodType' || key === 'rockFormation') {
-														// Format IDs to readable text
-														formattedValue = String(value)
-															.split('-')
-															.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-															.join(' ');
-													} else {
-														formattedValue = String(value);
-													}
-
-													return (
-														<div key={key} className="space-y-1">
-															<dt className="text-xs text-muted-foreground font-display uppercase tracking-wide">
-																{formattedKey}
-															</dt>
-															<dd className="text-base font-display font-medium">
-																{formattedValue}
-															</dd>
-														</div>
-													);
-												})}
-											</div>
-										</div>
-									)}
-
-								{/* Features */}
+								{/* Key Features */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">Key Features</h2>
 									<div className="grid gap-4">
@@ -242,90 +183,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 								)}
 							</div>
 
-							{/* Right Column - Sticky Buy Box */}
+							{/* Right Column - Sticky Pricing Card */}
 							<div className="lg:col-span-1">
-								<div className="sticky top-24 space-y-6">
-									{/* Buy Box */}
-									<div className="p-6 rounded-2xl border-2 border-border bg-card/50 backdrop-blur space-y-6">
-
-										{/* Wishlist */}
-										<div className="flex justify-end">
-											<WishlistButton productId={product.id} />
-										</div>
-
-										{/* Custom Only Banner */}
-										{isCustomOnly && (
-											<CustomOnlyBadge variant="banner" showCalculatorLink />
-										)}
-
-										{/* Price */}
-										{!isCustomOnly && (
-											<div className="space-y-2 pb-6 border-b">
-												<div className="text-4xl font-display font-light">
-													€{((product.basePriceEurCents ?? 0) / 100).toFixed(2)}
-												</div>
-												{product.priceNote && (
-													<p className="text-sm text-muted-foreground font-display font-light">
-														{product.priceNote}
-													</p>
-												)}
-											</div>
-										)}
-
-										{/* Trust Signals */}
-										<div className="space-y-3">
-											<div className="flex items-center gap-3 text-sm">
-												<Truck className="h-5 w-5 text-primary flex-shrink-0" />
-												<span className="font-display font-light">Free worldwide shipping</span>
-											</div>
-											<div className="flex items-center gap-3 text-sm">
-												<Clock className="h-5 w-5 text-primary flex-shrink-0" />
-												<span className="font-display font-light">10-12 day production time</span>
-											</div>
-											<div className="flex items-center gap-3 text-sm">
-												<Package className="h-5 w-5 text-primary flex-shrink-0" />
-												<span className="font-display font-light">Custom sizes available</span>
-											</div>
-										</div>
-
-										{/* CTA */}
-										<div className="space-y-3">
-											{isCustomOnly ? (
-												<a
-													href="/calculator"
-													className="block w-full px-6 py-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all hover:scale-[1.02] text-center"
-												>
-													Get Custom Quote
-												</a>
-											) : (
-												<AddToCartButton
-													product={productForButtons}
-													size="lg"
-													className="w-full rounded-full"
-												/>
-											)}
-											<p className="text-center text-xs text-muted-foreground font-display font-light">
-												Questions? <a href="/contact" className="text-primary hover:underline">Contact us</a> for custom sizing
-											</p>
-										</div>
-									</div>
-
-									{/* Additional Info */}
-									<div className="p-4 rounded-xl bg-muted/30 space-y-2">
-										<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-											<span className="text-primary">✓</span>
-											<span>20+ years experience</span>
-										</div>
-										<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-											<span className="text-primary">✓</span>
-											<span>50,000+ products shipped</span>
-										</div>
-										<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-											<span className="text-primary">✓</span>
-											<span>Made in Serbia</span>
-										</div>
-									</div>
-								</div>
+								<PricingCard
+									productId={product.id}
+									product={productForButtons}
+									isCustomOnly={isCustomOnly}
+								/>
 							</div>
 
 						</div>

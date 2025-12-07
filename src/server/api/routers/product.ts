@@ -95,6 +95,7 @@ export const productRouter = createTRPCRouter({
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
+					fullDescription: productTranslations.fullDescription,
 				})
 				.from(products)
 				.leftJoin(
@@ -244,6 +245,7 @@ export const productRouter = createTRPCRouter({
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
+					fullDescription: productTranslations.fullDescription,
 				})
 				.from(products)
 				.leftJoin(
@@ -300,7 +302,7 @@ export const productRouter = createTRPCRouter({
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
-					shortDescription: productTranslations.shortDescription,
+					fullDescription: productTranslations.fullDescription,
 				})
 				.from(products)
 				.leftJoin(
