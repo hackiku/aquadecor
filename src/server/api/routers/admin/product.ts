@@ -54,7 +54,7 @@ export const adminProductRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					isActive: products.isActive,
 					isFeatured: products.isFeatured,
 					sortOrder: products.sortOrder,
@@ -144,7 +144,7 @@ export const adminProductRouter = createTRPCRouter({
 					specifications: products.specifications,
 					variantOptions: products.variantOptions,
 					customizationOptions: products.customizationOptions,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					stockStatus: products.stockStatus,
 					productType: products.productType,
 					variantType: products.variantType,
@@ -212,7 +212,7 @@ export const adminProductRouter = createTRPCRouter({
 					stockStatus: products.stockStatus,
 					isActive: products.isActive,
 					isFeatured: products.isFeatured,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 				})
 				.from(products);
 
@@ -222,7 +222,7 @@ export const adminProductRouter = createTRPCRouter({
 			const featured = allProducts.filter(p => p.isFeatured).length;
 			const customOnly = allProducts.filter(p => !p.basePriceEurCents).length;
 			const withPrice = total - customOnly;
-			const usRestricted = allProducts.filter(p => !p.availableMarkets?.includes("US")).length;
+			const usRestricted = allProducts.filter(p => p.excludedMarkets?.includes("US")).length;
 
 			const stockBreakdown = {
 				in_stock: allProducts.filter(p => p.stockStatus === "in_stock").length,
@@ -253,7 +253,7 @@ export const adminProductRouter = createTRPCRouter({
 			basePriceEurCents: z.number().optional(),
 			priceNote: z.string().optional(),
 			stockStatus: z.enum(["in_stock", "made_to_order", "requires_quote"]).default("made_to_order"),
-			availableMarkets: z.array(z.string()).default(["EU", "UK"]),
+			excludedMarkets: z.array(z.string()).default([]),
 			isActive: z.boolean().default(true),
 			isFeatured: z.boolean().default(false),
 			sortOrder: z.number().default(0),
@@ -280,7 +280,7 @@ export const adminProductRouter = createTRPCRouter({
 					basePriceEurCents: input.basePriceEurCents,
 					priceNote: input.priceNote,
 					stockStatus: input.stockStatus,
-					availableMarkets: input.availableMarkets,
+					excludedMarkets: input.excludedMarkets,
 					isActive: input.isActive,
 					isFeatured: input.isFeatured,
 					sortOrder: input.sortOrder,
@@ -316,7 +316,7 @@ export const adminProductRouter = createTRPCRouter({
 			basePriceEurCents: z.number().optional().nullable(),
 			priceNote: z.string().optional().nullable(),
 			stockStatus: z.enum(["in_stock", "made_to_order", "requires_quote"]).optional(),
-			availableMarkets: z.array(z.string()).optional(),
+			excludedMarkets: z.array(z.string()).optional(),
 			isActive: z.boolean().optional(),
 			isFeatured: z.boolean().optional(),
 			sortOrder: z.number().optional(),
@@ -378,12 +378,12 @@ export const adminProductRouter = createTRPCRouter({
 	bulkUpdateMarkets: adminProcedure
 		.input(z.object({
 			productIds: z.array(z.string()),
-			availableMarkets: z.array(z.string()),
+			excludedMarkets: z.array(z.string()),
 		}))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.update(products)
-				.set({ availableMarkets: input.availableMarkets })
+				.set({ excludedMarkets: input.excludedMarkets })
 				.where(inArray(products.id, input.productIds));
 
 			return { success: true, updated: input.productIds.length };

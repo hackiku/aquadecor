@@ -1,7 +1,7 @@
 
 // src/server/db/seed/data/productLine/aquarium-decorations/category-translations.ts
 
-import type { TranslationSeed } from "../../../../schema/seeds";
+import type { TranslationSeed } from "../../../../schema";
 
 export const categoryTranslations: TranslationSeed = {
 

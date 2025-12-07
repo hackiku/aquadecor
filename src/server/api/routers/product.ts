@@ -87,7 +87,7 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					basePriceEurCents: products.basePriceEurCents,
 					stockStatus: products.stockStatus,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					specifications: products.specifications,
 					variantOptions: products.variantOptions,
@@ -122,7 +122,7 @@ export const productRouter = createTRPCRouter({
 
 			// Filter by market availability
 			const filteredProducts = results.filter(p =>
-				p.availableMarkets?.includes(input.userMarket) ?? true
+				!p.excludedMarkets?.includes(input.userMarket)
 			);
 
 			return {
@@ -154,7 +154,7 @@ export const productRouter = createTRPCRouter({
 					specifications: products.specifications,
 					variantOptions: products.variantOptions,
 					customizationOptions: products.customizationOptions,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					stockStatus: products.stockStatus,
 					productType: products.productType,
 					variantType: products.variantType,
@@ -185,7 +185,7 @@ export const productRouter = createTRPCRouter({
 			}
 
 			// Check market availability
-			if (!product.availableMarkets?.includes(input.userMarket)) {
+			if (product.excludedMarkets?.includes(input.userMarket)) {
 				return null;
 			}
 
@@ -236,7 +236,7 @@ export const productRouter = createTRPCRouter({
 					basePriceEurCents: products.basePriceEurCents,
 					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
@@ -274,7 +274,7 @@ export const productRouter = createTRPCRouter({
 
 			// Filter by market availability
 			return results.filter(p =>
-				p.availableMarkets?.includes(input.userMarket) ?? true
+				!p.excludedMarkets?.includes(input.userMarket)
 			);
 		}),
 
@@ -293,7 +293,7 @@ export const productRouter = createTRPCRouter({
 					sku: products.sku,
 					priceNote: products.priceNote,
 					basePriceEurCents: products.basePriceEurCents,
-					availableMarkets: products.availableMarkets,
+					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
@@ -333,7 +333,7 @@ export const productRouter = createTRPCRouter({
 
 			// Filter by market availability
 			return results.filter(p =>
-				p.availableMarkets?.includes(input.userMarket) ?? true
+				!p.excludedMarkets?.includes(input.userMarket)
 			);
 		}),
 });

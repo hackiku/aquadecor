@@ -19,7 +19,7 @@ export const products: ProductSeed[] = [
 		customizationOptions: {
 			allowsCustomDimensions: true,
 		},
-		availableMarkets: ["EU", "UK"],
+		excludedMarkets: ["US"],
 		stockStatus: "requires_quote",
 		isActive: true,
 		isFeatured: false,
@@ -39,7 +39,7 @@ export const products: ProductSeed[] = [
 		customizationOptions: {
 			allowsCustomDimensions: true,
 		},
-		availableMarkets: ["EU", "UK"],
+		excludedMarkets: ["US"],
 		stockStatus: "requires_quote",
 		isActive: true,
 		isFeatured: false,
@@ -59,7 +59,7 @@ export const products: ProductSeed[] = [
 		customizationOptions: {
 			allowsCustomDimensions: true,
 		},
-		availableMarkets: ["EU", "UK"],
+		excludedMarkets: ["US"],
 		stockStatus: "requires_quote",
 		isActive: true,
 		isFeatured: false,

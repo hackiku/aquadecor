@@ -125,7 +125,8 @@ export const products = createTable(
 		}>(),
 
 		// Market filtering (Trump tariffs)
-		availableMarkets: d.text().array().default(["EU", "UK"]),
+		// availableMarkets: d.text().array().default(["EU", "UK"]),
+		excludedMarkets: d.text().array().default([]), // Default [] means available everywhere
 
 		// Stock & display
 		stockStatus: d.text().notNull().default("in_stock"),
@@ -274,6 +275,8 @@ export type CategorySeed = Omit<
 	InferInsertModel<typeof categories>,
 	"id" | "createdAt" | "updatedAt"
 >;
+
+
 
 export type TranslationBlock = {
 	name: string;
