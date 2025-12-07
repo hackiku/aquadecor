@@ -1,6 +1,6 @@
 // src/server/db/schema/shop.ts
 import { relations } from "drizzle-orm";
-import type { InferSelectModel } from "drizzle-orm";
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 
@@ -258,6 +258,41 @@ export const quotesRelations = relations(quotes, ({ one }) => ({
 // ============================================================================
 // TYPES
 // ============================================================================
+
+// for seeding files
+// Omit ID/Dates (auto-generated) and categoryId (we look this up via slug)
+// Add categorySlug for the seeder to find the parent
+export type ProductSeed = Omit<
+	InferInsertModel<typeof products>,
+	"id" | "categoryId" | "createdAt" | "updatedAt"
+> & {
+	categorySlug: string;
+};
+
+// 3. CATEGORY SEED
+export type CategorySeed = Omit<
+	InferInsertModel<typeof categories>,
+	"id" | "createdAt" | "updatedAt"
+>;
+
+export type TranslationBlock = {
+	name: string;
+	shortDescription?: string;
+	fullDescription?: string;
+	description?: string; // For categories
+	metaTitle?: string;
+	metaDescription?: string;
+	model?: string; // Custom field for categories
+	specOverrides?: Record<string, string>;
+};
+
+export type TranslationSeed = Record<string, {
+	en: TranslationBlock;
+	de: TranslationBlock;
+	[key: string]: TranslationBlock;
+}>;
+
+// inference for use in UI components
 
 export type Category = InferSelectModel<typeof categories>;
 export type CategoryTranslation = InferSelectModel<typeof categoryTranslations>;

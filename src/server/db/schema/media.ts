@@ -1,6 +1,6 @@
 // src/server/db/schema/media.ts
 import { relations } from "drizzle-orm";
-import type { InferSelectModel } from "drizzle-orm";
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 import { products, categories } from "./shop";
@@ -66,5 +66,17 @@ export const mediaRelations = relations(media, ({ one }) => ({
 		references: [categories.id],
 	}),
 }));
+
+
+// 2. MEDIA SEED -- for seeding files
+// We use slugs to find the parent ID during seeding
+export type MediaSeed = Omit<
+	InferInsertModel<typeof media>,
+	"id" | "productId" | "categoryId" | "createdAt"
+> & {
+	productSlug?: string;
+	categorySlug?: string;
+};
+
 
 export type Media = InferSelectModel<typeof media>;
