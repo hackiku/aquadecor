@@ -1,8 +1,9 @@
 // src/components/i18n/LanguageSwitcher.tsx
 'use client';
 
-import { useLocale } from '~/lib/i18n/hooks';
-import { locales, localeNames, type Locale } from '~/i18n.config';
+import { useLocale } from './hooks';
+// import { locales, localeNames, type Locale } from '~/i18n.config';
+import { locales, localeNames, type Locale } from './config';
 import { usePathname, useRouter } from 'next/navigation';
 import {
 	DropdownMenu,

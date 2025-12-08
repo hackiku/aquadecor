@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ui/mode-toggle";
-import { LanguageSwitcher } from "../i18n/LanguageSwitcher";
+import { LanguageSwitcher } from "~/i18n/LanguageSwitcher";
 import { ShoppingCart, Search, User, Menu, X, Heart } from "lucide-react";
 import { CartDrawer } from "~/components/shop/cart/CartDrawer";
 import { WishlistDrawer } from "~/components/shop/wishlist/WishlistDrawer";

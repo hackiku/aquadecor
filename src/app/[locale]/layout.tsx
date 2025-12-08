@@ -2,7 +2,7 @@
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { locales } from '~/lib/i18n/config';
+import { locales } from '~/i18n/config';
 import { Geist } from 'next/font/google';
 import { ThemeProvider } from '~/components/theme-provider';
 import { TRPCReactProvider } from '~/trpc/react';
