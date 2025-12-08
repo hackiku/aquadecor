@@ -69,7 +69,7 @@ export const mainNavLinks: NavLink[] = [
 		enabled: true,
 		showInNav: true,
 		showInFooter: true,
-		category: "custom",
+		category: "shop",
 		badge: "Custom",
 		description: "Design your custom background",
 	},
