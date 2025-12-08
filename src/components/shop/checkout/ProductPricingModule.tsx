@@ -25,25 +25,29 @@ interface ProductPricingModuleProps {
 }
 
 export function ProductPricingModule({ product, isCustomOnly }: ProductPricingModuleProps) {
-	// State for core product/variant selection
+	// 🎯 Set initial states to null/0 to force useEffect to set the real price
 	const [basePriceEurCents, setBasePriceEurCents] = useState(product.basePriceEurCents || 0);
 	const [quantity, setQuantity] = useState(1);
-
-	// State for add-ons/options
 	const [selectedAddons, setSelectedAddons] = useState<AddonState>({});
 
-	// Determine pricing mode flags
 	const hasVariantOptions = !!product.variantOptions?.quantity?.options?.length;
 	const hasAddons = !!product.addonOptions?.items?.length;
 
-	// Effect to set the initial base price and quantity
+	// 🎯 FIX 1: Ensure initial price is set from the first variant option
 	useEffect(() => {
 		if (hasVariantOptions && product.variantOptions?.quantity?.options) {
 			const defaultVariant = product.variantOptions.quantity.options[0];
+
+			// If it's a variant product, the initial price is the variant's price
 			setBasePriceEurCents(defaultVariant.priceEurCents);
 			setQuantity(defaultVariant.value);
-		} else if (product.basePriceEurCents) {
+		} else if (product.basePriceEurCents !== null) {
+			// If it's a simple product with a price, use that
 			setBasePriceEurCents(product.basePriceEurCents);
+			setQuantity(1);
+		} else {
+			// For true custom products (stockStatus: requires_quote) this remains 0
+			setBasePriceEurCents(0);
 			setQuantity(1);
 		}
 	}, [hasVariantOptions, product.basePriceEurCents, product.variantOptions?.quantity?.options]);
@@ -52,19 +56,17 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 	// Calculate the final price
 	const { totalProductPrice, totalAddonPrice, finalTotalPrice } = useMemo(() => {
 		const totalProductPrice = basePriceEurCents * quantity;
-
 		const totalAddonPrice = Object.values(selectedAddons).reduce((acc, addon) => {
 			return acc + (addon.price * addon.quantity);
 		}, 0);
-
 		const finalTotalPrice = totalProductPrice + totalAddonPrice;
-
 		return { totalProductPrice, totalAddonPrice, finalTotalPrice };
 	}, [basePriceEurCents, quantity, selectedAddons]);
 
-	// Price Formatting
+	// Price Formatting (Logic remains correct)
 	const formattedTotal = (finalTotalPrice / 100).toFixed(2);
 	const formattedProductPrice = (totalProductPrice / 100).toFixed(2);
+
 
 	// Cart Payload Construction
 	const cartItemPayload = {
@@ -89,7 +91,6 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 			{/* Price and Options Section - Mode 2 & 3 */}
 			{!isCustomOnly && (
 				<div className="space-y-4 pb-6 border-b">
-
 					{/* Variant Selector (Quantity Bundles) */}
 					{hasVariantOptions ? (
 						<QuantityVariantSelector
@@ -106,6 +107,7 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 							onQuantityChange={setQuantity}
 						/>
 					)}
+
 
 					{/* Add-on/Custom Input Selectors */}
 					{hasAddons && (

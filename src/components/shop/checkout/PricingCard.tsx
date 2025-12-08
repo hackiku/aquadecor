@@ -34,21 +34,7 @@ export function PricingCard({ productId, product, isCustomOnly }: PricingCardPro
 
 			</div>
 
-			{/* Trust Badge Card (Kept outside for distinct styling) */}
-			<div className="p-4 rounded-xl bg-muted/30 border space-y-2">
-				<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-					<span className="text-primary">✓</span>
-					<span>20+ years experience</span>
-				</div>
-				<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-					<span className="text-primary">✓</span>
-					<span>50,000+ products shipped</span>
-				</div>
-				<div className="flex items-center gap-2 text-xs text-muted-foreground font-display">
-					<span className="text-primary">✓</span>
-					<span>Made in Serbia</span>
-				</div>
-			</div>
+
 		</div>
 	);
 }

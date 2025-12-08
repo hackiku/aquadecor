@@ -21,9 +21,10 @@ export function QuantityVariantSelector({ variantOptions, onSelect }: QuantityVa
 		}
 	};
 
-	// Set initial value to the lowest price/quantity option
-	// Use the first option's value/quantity as the default selection
-	const defaultValue = `${quantityOptions[0].priceEurCents}|${quantityOptions[0].value}`;
+	// 🎯 FIX: Ensure the defaultValue is correctly pulled from the first option
+	// It's the price of the variant/bundle, not the unit price * quantity
+	const firstOption = quantityOptions[0];
+	const defaultValue = `${firstOption.priceEurCents}|${firstOption.value}`;
 
 	return (
 		<div className="space-y-3">

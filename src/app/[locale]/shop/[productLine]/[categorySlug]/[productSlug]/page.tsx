@@ -7,10 +7,10 @@ import { Badge } from "~/components/ui/badge";
 import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
 import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { SpecificationsGrid } from "~/components/shop/product/SpecificationsGrid";
-import { PricingCard } from "~/components/shop/checkout/PricingCard"; // Correct Import
+import { PricingCard } from "~/components/shop/checkout/PricingCard";
 import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
 import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
-import { ProductGrid } from "~/components/shop/product/ProductGrid"; // Import for related products
+import { ProductGrid } from "~/components/shop/product/ProductGrid";
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -40,7 +40,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		notFound();
 	}
 
-	const isCustomOnly = !product.basePriceEurCents;
+	// 🎯 CRITICAL FIX: Base price can be null for variant products (like plants). 
+	// The only reliable indicator for a 'Custom Quote' product is the stock status.
+	const isCustomOnly = product.stockStatus === "requires_quote";
 
 	// 4. Inject route params into the product object so buttons/links work
 	const productForButtons = {
@@ -67,7 +69,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		heroImageAlt: p.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		// Assuming the necessary variant/addon fields are included in the API response
+		variantOptions: p.variantOptions, // Ensure these are passed
+		addonOptions: p.addonOptions,     // Ensure these are passed
 	}));
 
 

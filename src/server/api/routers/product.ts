@@ -90,7 +90,10 @@ export const productRouter = createTRPCRouter({
 					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					specifications: products.specifications,
+					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
 					variantOptions: products.variantOptions,
+					addonOptions: products.addonOptions,
+					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
@@ -154,6 +157,9 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					specifications: products.specifications,
 					variantOptions: products.variantOptions,
+					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
+					addonOptions: products.addonOptions,
+					// ------------------------------------
 					customizationOptions: products.customizationOptions,
 					excludedMarkets: products.excludedMarkets,
 					stockStatus: products.stockStatus,
@@ -164,7 +170,7 @@ export const productRouter = createTRPCRouter({
 					fullDescription: productTranslations.fullDescription,
 					metaTitle: productTranslations.metaTitle,
 					metaDescription: productTranslations.metaDescription,
-					specOverrides: productTranslations.specOverrides, // ✅ NEW
+					specOverrides: productTranslations.specOverrides,
 				})
 				.from(products)
 				.leftJoin(
@@ -241,6 +247,10 @@ export const productRouter = createTRPCRouter({
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
+					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
+					variantOptions: products.variantOptions,
+					addonOptions: products.addonOptions,
+					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
@@ -299,6 +309,10 @@ export const productRouter = createTRPCRouter({
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
+					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS (Important for ProductCard on homepage)
+					variantOptions: products.variantOptions,
+					addonOptions: products.addonOptions,
+					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
