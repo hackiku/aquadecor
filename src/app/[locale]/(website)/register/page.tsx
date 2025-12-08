@@ -1,9 +1,10 @@
-// src/app/[locale]/(website)/setup/page.tsx (Converted to Server Component)
+// src/app/[locale]/(website)/setup/page.tsx
 
 import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
-import { getPageMessages } from '~/lib/i18n/i18n.utils';
+import { getPageMessages } from '~/i18n/utils';
+// import { getPageMessages } from '~/lib/i18n/i18n.utils';
 import Link from 'next/link'; // Use Next's Link component
 
 // --- 1. SEO Metadata Function (Server-Side) ---

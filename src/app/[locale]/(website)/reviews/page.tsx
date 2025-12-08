@@ -1,8 +1,8 @@
-// src/app/shop/reviews/page.tsx
+// src/app/[locale]/(website)/reviews/page.tsx
 
 import { api, HydrateClient } from "~/trpc/server";
 import { ReviewCard } from "~/components/proof/ReviewCard";
-import { ReviewFilter } from "./ReviewFilter";
+import { ReviewFilter } from "./_components/ReviewFilter";
 
 export default async function ReviewsPage() {
 	// Load all approved reviews using reviews API

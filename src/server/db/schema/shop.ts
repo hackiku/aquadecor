@@ -91,6 +91,18 @@ export const products = createTable(
 			};
 		}>(),
 
+		addonOptions: jsonb().$type<{ // Changed name from productOptions to addonOptions for clarity
+			items?: Array<{
+				name: string;
+				description?: string;
+				type: "checkbox" | "select" | "input" | "textarea";
+				priceEurCents?: number; // Added to cart line item price
+				options?: string[]; // For select type
+				required?: boolean; // e.g. "Enter height" is required
+			}>;
+			// Add other keys for more complex option groups if needed
+		}>(),
+
 		// Flexible specifications (STAYS TECHNICAL)
 		specifications: jsonb().$type<{
 			dimensions?: {

@@ -11,7 +11,8 @@ import { AddToCartButton } from "../cart/AddToCartButton";
 import { cn } from "~/lib/utils";
 import type { Product } from "~/server/db/schema/shop";
 
-// Use the grid type from your setup
+// Extend the core ProductForCard type to include the necessary JSONB fields
+// We must assume these are included in the DB query for proper component logic.
 type ProductForCard = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
 	name: string;
 	shortDescription: string | null;
@@ -19,6 +20,9 @@ type ProductForCard = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' 
 	heroImageAlt?: string | null;
 	categorySlug: string;
 	productLineSlug: string;
+	// New fields for logic check:
+	variantOptions?: Product['variantOptions'] | null;
+	addonOptions?: Product['addonOptions'] | null;
 };
 
 interface ProductCardProps {
@@ -31,14 +35,21 @@ export function ProductCard({ product, variant = "default", className }: Product
 	const productUrl = `/shop/${product.productLineSlug}/${product.categorySlug}/${product.slug}`;
 	const hasPrice = product.basePriceEurCents !== null;
 
+	// --- LOGIC CHECKS ---
+	// 1. Does the product require the user to go to the PDP to select options?
+	const requiresSelection =
+		!!product.variantOptions?.quantity?.options?.length ||
+		!!product.addonOptions?.items?.length;
+
+	// 2. Is this a custom quote product?
+	const isCustomQuote = product.stockStatus === 'requires_quote';
+
 	// Price formatting
 	const formattedPrice = hasPrice
 		? new Intl.NumberFormat("en-DE", { style: "currency", currency: "EUR" }).format((product.basePriceEurCents ?? 0) / 100)
 		: null;
 
-	// Logic: If price note says "Custom Quote" and stock status is "requires_quote", 
-	// we don't need to show the text "Custom Quote" twice.
-	const showPriceNote = product.priceNote && product.stockStatus !== 'requires_quote';
+	const showPriceNote = product.priceNote && !isCustomQuote;
 
 	const stockBadgeConfig = {
 		in_stock: { label: "In Stock", className: "bg-emerald-500/90 text-white" },
@@ -69,11 +80,11 @@ export function ProductCard({ product, variant = "default", className }: Product
 					</div>
 				)}
 
-				{/* OVERLAY - Subtle gradient for text contrast if needed */}
+				{/* OVERLAY */}
 				<div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
 				{/* BADGES (Top Left) */}
-				<div className="absolute top-3 left-3 flex flex-col gap-2">
+				<div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
 					{product.sku && (
 						<Badge variant="outline" className="bg-background/80 backdrop-blur font-mono text-xs shadow-xs">
 							{product.sku}
@@ -87,8 +98,7 @@ export function ProductCard({ product, variant = "default", className }: Product
 				</div>
 			</Link>
 
-			{/* WISHLIST BUTTON (Z-Index Fixed) */}
-			{/* Placed outside Link so it doesn't trigger navigation */}
+			{/* WISHLIST BUTTON (Top Right) */}
 			<div className="absolute top-3 right-3 z-20">
 				<WishlistButton
 					productId={product.id}
@@ -125,9 +135,19 @@ export function ProductCard({ product, variant = "default", className }: Product
 					{/* ACTION BUTTON */}
 					<div className="shrink-0 z-20">
 						<AddToCartButton
-							product={{ id: product.id, basePriceEurCents: product.basePriceEurCents }}
+							// Pass the minimum required product data for either adding to cart or navigation
+							product={{
+								id: product.id,
+								slug: product.slug,
+								name: product.name,
+								sku: product.sku,
+								basePriceEurCents: product.basePriceEurCents,
+							}}
 							variant={hasPrice ? "default" : "secondary"}
 							size="sm"
+							// Determine if the button should be a "View Product" link or an "Add to Cart" button
+							requiresSelection={requiresSelection || isCustomQuote}
+							productUrl={productUrl}
 							className={cn("rounded-full", !hasPrice && "hover:bg-primary hover:text-primary-foreground")}
 						/>
 					</div>

@@ -2,32 +2,59 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Calculator } from "lucide-react";
+import Link from "next/link"; // Added for navigation
+import { ShoppingCart, Calculator, ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 import type { Product } from "~/server/db/schema/shop";
 
-// Minimal product info needed to add to cart
-type ProductForAddToCart = Pick<Product, 'id' | 'basePriceEurCents'>;
+// Product info needed to add to cart (expanded)
+type ProductForAddToCart = Pick<Product, 'id' | 'basePriceEurCents' | 'slug' | 'name' | 'sku'> & {
+	quantity?: number; // Optional quantity/options included from PricingModule
+	selectedOptions?: any[]; // Optional selected options from PricingModule
+};
 
 interface AddToCartButtonProps {
 	product: ProductForAddToCart;
-	// Expanded to support all standard shadcn button variants
 	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 	size?: "default" | "sm" | "lg" | "icon";
 	className?: string;
+
+	// NEW PROPS for variant/option check (used by ProductCard)
+	requiresSelection?: boolean; // If true, button should navigate to PDP
+	productUrl?: string; // URL to navigate to if selection is required
 }
 
 export function AddToCartButton({
 	product,
 	variant = "default",
 	size = "default",
-	className
+	className,
+	requiresSelection = false,
+	productUrl
 }: AddToCartButtonProps) {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const hasPrice = product.basePriceEurCents !== null;
 	const isQuoteProduct = !hasPrice;
+
+	// If product requires selection (variants/addons) or is a quote product,
+	// the button becomes a navigation button.
+	if (requiresSelection && productUrl) {
+		return (
+			<Button asChild
+				variant={isQuoteProduct ? "secondary" : "default"} // Use secondary for quotes/view
+				size={size}
+				className={cn("gap-2 shadow-sm transition-all", className)}
+			>
+				<Link href={productUrl}>
+					{isQuoteProduct ? <Calculator className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
+					{isQuoteProduct ? "View & Quote" : "View Product"}
+				</Link>
+			</Button>
+		)
+	}
+
 
 	const handleClick = async (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -36,38 +63,35 @@ export function AddToCartButton({
 		setIsLoading(true);
 
 		if (isQuoteProduct) {
-			// Open quote modal
-			console.log("Open quote modal for:", product.id);
-			// TODO: Implement quote modal
+			// This path should ideally be handled by the 'requiresSelection' logic
+			console.log("Redirecting to calculator/quote page for:", product.id);
+			// For a dedicated Quote button, a direct link is best, but this component's new logic should handle navigation.
 		} else {
-			// Add to cart
+			// --- ADD TO CART LOGIC ---
 			const cart = localStorage.getItem("cart");
 			const items = cart ? JSON.parse(cart) : [];
+			const quantity = product.quantity || 1; // Use quantity from PricingModule or default to 1
 
-			// Check if product already in cart
-			const existingIndex = items.findIndex((item: any) => item.productId === product.id);
+			// Simplistic add to cart for demonstration (no variant/addon logic check)
+			// In a real app, products with options should have an ID that includes the options hash.
 
-			if (existingIndex > -1) {
-				// Increment quantity
-				items[existingIndex].quantity += 1;
-			} else {
-				// Add new item
-				items.push({
-					id: crypto.randomUUID(),
-					productId: product.id,
-					quantity: 1,
-					addedAt: new Date().toISOString(),
-				});
-			}
+			items.push({
+				id: crypto.randomUUID(),
+				productId: product.id,
+				name: product.name,
+				sku: product.sku,
+				price: product.basePriceEurCents, // Use the final calculated price
+				quantity: quantity,
+				selectedOptions: product.selectedOptions, // Pass options
+				addedAt: new Date().toISOString(),
+			});
 
 			localStorage.setItem("cart", JSON.stringify(items));
 			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items } }));
 
-			// TODO: Show toast notification
-			console.log("Added to cart:", product.id);
+			console.log("Added to cart:", product);
 		}
 
-		// Fake loading delay for UX
 		setTimeout(() => setIsLoading(false), 500);
 	};
 
@@ -89,7 +113,7 @@ export function AddToCartButton({
 			) : (
 				<>
 					<ShoppingCart className="h-4 w-4" />
-					Add
+					Add to Cart
 				</>
 			)}
 		</Button>

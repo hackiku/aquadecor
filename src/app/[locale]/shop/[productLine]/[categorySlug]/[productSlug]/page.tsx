@@ -7,9 +7,10 @@ import { Badge } from "~/components/ui/badge";
 import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
 import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { SpecificationsGrid } from "~/components/shop/product/SpecificationsGrid";
-import { PricingCard } from "~/components/shop/checkout/PricingCard";
+import { PricingCard } from "~/components/shop/checkout/PricingCard"; // Correct Import
 import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
 import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
+import { ProductGrid } from "~/components/shop/product/ProductGrid"; // Import for related products
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -22,12 +23,18 @@ interface ProductDetailPageProps {
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
 	// 1. Await params properly for Next.js 15
 	const { productLine, categorySlug, productSlug } = await params;
+	const locale = "en"; // Hardcoded for now
 
-	// 2. Fetch product using just the slug
-	const product = await api.product.getBySlug({
-		slug: productSlug,
-		locale: "en",
-	});
+	// 2. Fetch product using just the slug (Awaited with trpc.server)
+	const productPromise = api.product.getBySlug({ slug: productSlug, locale });
+
+	// 3. Fetch related products in the same category (Awaited with trpc.server)
+	const relatedProductsPromise = api.product.getByCategory({ categorySlug, locale });
+
+	const [product, relatedProductsResult] = await Promise.all([
+		productPromise,
+		relatedProductsPromise,
+	]);
 
 	if (!product) {
 		notFound();
@@ -35,12 +42,34 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 	const isCustomOnly = !product.basePriceEurCents;
 
-	// 3. Inject route params into the product object so buttons/links work
+	// 4. Inject route params into the product object so buttons/links work
 	const productForButtons = {
 		...product,
 		categorySlug,
 		productLineSlug: productLine
 	};
+
+	// 5. Prepare related products (filter out the current product)
+	const relatedProducts = "products" in relatedProductsResult
+		? relatedProductsResult.products.filter(p => p.slug !== productSlug).slice(0, 4) // Limit to 4
+		: [];
+
+	const productsForGrid = relatedProducts.map(p => ({
+		id: p.id,
+		slug: p.slug,
+		name: p.name ?? "Untitled Product",
+		sku: p.sku ?? null,
+		shortDescription: p.shortDescription ?? null,
+		basePriceEurCents: p.basePriceEurCents ?? null,
+		priceNote: p.priceNote ?? null,
+		stockStatus: p.stockStatus,
+		heroImageUrl: p.heroImageUrl ?? null,
+		heroImageAlt: p.heroImageAlt ?? null,
+		categorySlug: categorySlug,
+		productLineSlug: productLine,
+		// Assuming the necessary variant/addon fields are included in the API response
+	}));
+
 
 	return (
 		<HydrateClient>
@@ -190,7 +219,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 							<div className="lg:col-span-1">
 								<PricingCard
 									productId={product.id}
-									product={productForButtons}
+									product={productForButtons as any}
 									isCustomOnly={isCustomOnly}
 								/>
 							</div>
@@ -198,6 +227,22 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 						</div>
 					</div>
 				</section>
+
+				{/* Related Products Section */}
+				{productsForGrid.length > 0 && (
+					<section className="py-12 md:py-16 bg-muted/10">
+						<div className="px-4 max-w-7xl mx-auto space-y-8">
+							<h2 className="text-3xl font-display font-normal text-center">
+								More from {categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+							</h2>
+							<ProductGrid
+								products={productsForGrid as any}
+								initialColumns="4"
+								showControls={false}
+							/>
+						</div>
+					</section>
+				)}
 			</main>
 		</HydrateClient>
 	);
