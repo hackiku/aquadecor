@@ -1,4 +1,4 @@
-// src/app/shop/aquarium-decorations/page.tsx
+// src/app/[locale]/shop/aquarium-decorations/page.tsx
 
 import Link from "next/link";
 import Image from "next/image";

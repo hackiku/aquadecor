@@ -1,4 +1,4 @@
-// src/app/shop/layout.tsx
+// src/app/[locale]/shop/layout.tsx
 
 import { Footer } from "~/components/navigation/Footer";
 import { Breadcrumbs } from "~/components/navigation/Breadcrumbs";

@@ -1,4 +1,4 @@
-// src/lib/i18n/utils.ts
+// src/i18n/utils.ts
 import { headers } from 'next/headers';
 import { type Locale, locales, defaultLocale, isUSMarket } from '~/i18n.config';
 

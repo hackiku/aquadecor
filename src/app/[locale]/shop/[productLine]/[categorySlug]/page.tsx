@@ -1,4 +1,4 @@
-// src/app/shop/[productLine]/[categorySlug]/page.tsx
+// src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
 import { notFound } from "next/navigation";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
 import { api, HydrateClient } from "~/trpc/server";

@@ -1,4 +1,4 @@
-// src/lib/i18n/config.ts
+// src/i18n/config.ts
 export const locales = ['en', 'de', 'nl', 'it', 'us'] as const;
 export const defaultLocale = 'en' as const;
 

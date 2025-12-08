@@ -1,4 +1,4 @@
-// src/app/blog/[slug]/page.tsx
+// src/app/[locale]/blog/[slug]/page.tsx
 
 import Image from "next/image";
 import Link from "next/link";

@@ -1,4 +1,4 @@
-// src/app/shop/3d-backgrounds/page.tsx
+// src/app/[locale]/shop/3d-backgrounds/page.tsx
 
 import Link from "next/link";
 import Image from "next/image";

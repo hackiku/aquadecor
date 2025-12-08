@@ -1,4 +1,4 @@
-// src/app/blog/page.tsx
+// src/app/[locale]/blog/page.tsx
 
 import { BlogCard } from "~/components/blog/BlogCard";
 import { getBlogPosts } from "~/lib/strapi/queries";

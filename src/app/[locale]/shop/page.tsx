@@ -1,4 +1,4 @@
-// src/app/shop/page.tsx
+// src/app/[locale]/shop/page.tsx
 import Link from "next/link";
 import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero";
 import { ProductCard } from "~/components/shop/product/ProductCard";

@@ -1,4 +1,4 @@
-// src/lib/i18n/types.ts
+// src/i18n/types.ts
 
 /**
  * Type utilities for type-safe translations

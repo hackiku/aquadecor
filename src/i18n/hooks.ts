@@ -1,4 +1,4 @@
-// src/lib/i18n/hooks.ts
+// src/i18n/hooks.ts
 'use client';
 
 import { useTranslations as useNextIntlTranslations, useLocale as useNextIntlLocale } from 'next-intl';

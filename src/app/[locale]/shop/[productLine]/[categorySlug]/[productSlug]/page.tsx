@@ -1,4 +1,4 @@
-// src/app/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
+// src/app/[locale]/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
 import { notFound } from "next/navigation";
 import Image from "next/image";
