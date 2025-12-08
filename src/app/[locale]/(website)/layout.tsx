@@ -1,4 +1,4 @@
-// src/app/(website)/layout.tsx
+// src/app/[locale]/(website)/layout.tsx
 
 import { Footer } from "~/components/navigation/Footer";
 

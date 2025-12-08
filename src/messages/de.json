@@ -1,0 +1,123 @@
+{
+	"common": {
+		"nav": {
+			"shop": "Shop",
+			"calculator": "Rechner",
+			"about": "Über uns",
+			"faq": "FAQ",
+			"login": "Anmelden"
+		},
+		"buttons": {
+			"buyNow": "Jetzt kaufen",
+			"viewDetails": "Details ansehen",
+			"addToCart": "In den Warenkorb",
+			"checkout": "Zur Kasse",
+			"learnMore": "Mehr erfahren"
+		},
+		"forms": {
+			"email": "E-Mail-Adresse",
+			"password": "Passwort",
+			"confirmPassword": "Passwort bestätigen",
+			"submit": "Absenden",
+			"cancel": "Abbrechen"
+		},
+		"errors": {
+			"fieldRequired": "Dieses Feld ist erforderlich",
+			"invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+			"somethingWentWrong": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut."
+		},
+		"success": {
+			"saved": "Erfolgreich gespeichert",
+			"updated": "Erfolgreich aktualisiert"
+		}
+	},
+	"metadata": {
+		"home": {
+			"title": "Aquadecor - Premium 3D Aquarium Hintergründe",
+			"description": "Verwandeln Sie Ihr Aquarium mit den realistischsten 3D-Hintergründen und Dekorationen. Handgefertigt in Europa."
+		},
+		"shop": {
+			"title": "Shop 3D Aquarium Hintergründe | Aquadecor",
+			"description": "Durchsuchen Sie unsere komplette Kollektion von 3D-Aquarium-Hintergründen und Dekorationen."
+		},
+		"setup": {
+			"title": "Installationsanleitung | Aquadecor 3D Hintergründe",
+			"description": "Professionelle Installationsanleitungen für jede Aquariumkonfiguration."
+		}
+	},
+	"home": {
+		"hero": {
+			"title": "Verwandeln Sie Ihr Aquarium",
+			"subtitle": "Die realistischsten 3D-Hintergründe, handgefertigt in Europa",
+			"cta": "Jetzt einkaufen"
+		}
+	},
+	"setup": {
+		"guideBadge": "Installationsanleitung",
+		"headline": "Einrichten Ihres 3D-Hintergrunds",
+		"subHeadline": "Professionelle Installationsanleitungen für jede Aquariumkonfiguration. Von einfachen Rückwänden bis zu komplexen Mehrkammer-Systemen.",
+		"beforeYouStart": "Bevor Sie beginnen",
+		"proTipHeadline": "Bevor Sie beginnen",
+		"proTipText1": "Aquadecor-Hintergründe bestehen aus leichtem Material, das Ihr Aquariumglas nicht belastet. Der Wasserdruck bedeutet jedoch, dass der Hintergrund mit aquariumsicherem Silikon fest befestigt werden muss.",
+		"proTipText2": "Profi-Tipp: Überprüfen Sie immer das Verfallsdatum Ihres Silikons, bevor Sie mit der Installation beginnen.",
+		"configHeadline": "10 Einrichtungskonfigurationen",
+		"configSubHeadline": "Wählen Sie die perfekte Konfiguration für Ihre Aquarium-Platzierung und -Ausrüstung",
+		"bestFor": "Am besten für:",
+		"ctaHeadline": "Brauchen Sie Hilfe bei der Auswahl?",
+		"ctaSubHeadline": "Sie sind sich nicht sicher, welches Setup für Ihr Aquarium geeignet ist? Unser Team kann Ihnen helfen, die perfekte Konfiguration zu entwerfen.",
+		"ctaButton1": "Konfigurieren Sie Ihren Hintergrund",
+		"ctaButton2": "Produkte durchsuchen",
+		"examples": {
+			"1": {
+				"title": "Klassische Einzelwand-Einrichtung",
+				"description": "Die beliebteste Konfiguration - bedeckt die Rückscheibe mit einer Gerätekammer. Perfekt für Standard-Aquarien an einer Wand.",
+				"bestFor": "Standard-Aquarien, Anfänger"
+			},
+			"2": {
+				"title": "Natürliches Riss-Design",
+				"description": "Verbessern Sie Ihre Einrichtung mit natürlich integriertem Geräteversteck. Wasser tritt durch realistische Risse im Gestein ein.",
+				"bestFor": "Fortgeschrittene Aquascaping"
+			},
+			"3": {
+				"title": "L-förmige Eckmontage",
+				"description": "Maximieren Sie die Präsenz Ihres Aquariums durch Abdecken der Rückwand plus einer Seite. Ideal für Tanks neben Wänden.",
+				"bestFor": "Eckplatzierungen, Seitenwand-Aquarien"
+			},
+			"4": {
+				"title": "Vollständige Umgebungs-Immersion",
+				"description": "Verwandeln Sie Ihr Aquarium in ein Betrachtungsportal. Bedeckt Rückseite und beide Seiten und schafft eine komplette Unterwasserwelt.",
+				"bestFor": "Raumteiler, Herzstück-Aquarien"
+			},
+			"5": {
+				"title": "Insel-Teiler-Setup",
+				"description": "Platzieren Sie den Hintergrund in der Mitte als natürlichen Teiler mit Kammern oder Filtern auf beiden Seiten.",
+				"bestFor": "Installationen zwischen Räumen"
+			},
+			"6": {
+				"title": "Tiefen-Illusions-Design",
+				"description": "Schaffen Sie dramatische Tiefe, indem Sie ein schwarzes/marineblaues foliertes Rückglas teilweise bedecken. Der Hintergrund scheint im Raum zu schweben.",
+				"bestFor": "Maximierung der Tiefenwahrnehmung"
+			},
+			"7": {
+				"title": "Mehrwand-Tiefen-Design",
+				"description": "Erweitern Sie die Tiefenillusion auf eine oder beide Seiten mit foliertem Glas. Schafft ein unglaublich immersives Betrachtungserlebnis.",
+				"bestFor": "Wandmontierte, eingebaute Aquarien"
+			},
+			"8": {
+				"title": "Integration des Innenfilters",
+				"description": "Verstecken Sie jeden Innenfilter unabhängig von der Position. Benutzerdefinierte Risse und Eingänge passen zu Ihrem spezifischen Filtertyp.",
+				"bestFor": "Innenfilter, Überlaufsysteme"
+			},
+			"9": {
+				"title": "Strömungspumpenabdeckung",
+				"description": "Klassische Rückwandabdeckung mit Bonus: Verstecken Sie Ihre Strömungspumpe hinter einem abnehmbaren Felsen.",
+				"bestFor": "Hochstrom-Systeme, Wellenmacher"
+			},
+			"10": {
+				"title": "Schlankes Bio-Filter-Design",
+				"description": "Flexibler einteiliger Hintergrund mit biologischem Filtrationsraum dahinter. Füllen Sie die Lücke mit Bio-Bällen oder Siporax.",
+				"bestFor": "Biologische Filtration, Buntbarsch-Aquarien"
+			}
+		}
+	}
+}

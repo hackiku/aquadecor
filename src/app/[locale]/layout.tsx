@@ -1,41 +1,60 @@
 // src/app/[locale]/layout.tsx
-import { Nav } from "~/components/navigation/Nav";
-import { Footer } from "~/components/navigation/Footer";
-import type { Locale } from "~/lib/i18n/dictionaries";
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { locales } from '~/lib/i18n/config';
+import { Geist } from 'next/font/google';
+import { ThemeProvider } from '~/components/theme-provider';
+import { TRPCReactProvider } from '~/trpc/react';
+import { ConditionalNav } from '~/components/navigation/ConditionalNav';
+import { NavWithBanner } from '~/components/navigation/NavWithBanner';
 
-// Generate static params for supported locales
-export function generateStaticParams() {
-	return [
-		{ locale: "us" },
-		{ locale: "de" },
-		{ locale: "nl" },
-	] satisfies { locale: Locale }[];
-}
+const geist = Geist({
+	subsets: ['latin'],
+	variable: '--font-geist-sans',
+});
 
-// Layout accepts `params` as Promise<{ locale: string }>
+type Props = {
+	children: React.ReactNode;
+	params: Promise<{ locale: string }>; // ← Changed in Next.js 15!
+};
+
 export default async function LocaleLayout({
 	children,
-	params,
-}: {
-	children: React.ReactNode;
-	params: Promise<{ locale: string }>;
-}) {
-	const { locale } = await params;
+	params
+}: Props) {
+	const { locale } = await params; // ← MUST await params now!
 
-	// Runtime validation: ensure locale is valid
-	const validLocales: Locale[] = ["us", "de", "nl"];
-	const safeLocale = validLocales.includes(locale as Locale)
-		? (locale as Locale)
-		: "us"; // fallback
+	// Validate locale
+	if (!locales.includes(locale as any)) {
+		notFound();
+	}
 
-	// Optional: set i18n context here later
-	// setRequestLocale(safeLocale);
+	// Get messages
+	const messages = await getMessages();
 
 	return (
-		<>
-			{/* <Nav /> */}
-			{children}
-			<Footer />
-		</>
+		<html className={geist.variable} lang={locale} suppressHydrationWarning>
+			<body>
+				<TRPCReactProvider>
+					<ThemeProvider
+						attribute="class"
+						defaultTheme="system"
+						enableSystem
+						disableTransitionOnChange
+					>
+						<NextIntlClientProvider messages={messages}>
+							<ConditionalNav navContent={<NavWithBanner />}>
+								{children}
+							</ConditionalNav>
+						</NextIntlClientProvider>
+					</ThemeProvider>
+				</TRPCReactProvider>
+			</body>
+		</html>
 	);
+}
+
+export function generateStaticParams() {
+	return locales.map((locale) => ({ locale }));
 }
