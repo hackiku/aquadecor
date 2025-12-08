@@ -52,7 +52,7 @@ export function CategoryGrid({
 		<div className="space-y-6">
 			{/* Grid Controls */}
 			{showControls && (
-				<div className="hidden md:flex justify-end mb-2 relative z-10 pointer-events-none">
+				<div className="_hidden _md: flex justify-center mb-4 relative z-10 pointer-events-none">
 					<div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm border rounded-lg p-1 pointer-events-auto shadow-sm">
 						<Button
 							variant="ghost"

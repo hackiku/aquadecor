@@ -76,17 +76,17 @@ export default async function AquariumDecorationsPage() {
 				</section>
 
 				{/* Categories Slider - Double Row */}
-				<section id="categories" className="relative pt-16 md:py-24 bg-linear-to-b from-muted/30 to-background">
+				<section id="categories" className="relative md:pt-6 pb-24 bg-linear-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" className="" />
 					<div className="px-4 max-w-7xl mx-auto">
-						<div className="mb-12">
+						{/* <div className="mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
 								Browse by Category
 							</h2>
 							<p className="text-lg text-muted-foreground font-display font-light">
 								Select from our full range of aquarium decorations and accessories
 							</p>
-						</div>
+						</div> */}
 
 						{/* Error State */}
 						{error ? (

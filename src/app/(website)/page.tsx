@@ -90,9 +90,10 @@ export default function LandingPage() {
 				<div className="text-center mb-16 px-4">
 					<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
 						Built to Last Forever
+						<span className="block">(and Look the Part)</span>
 					</h2>
 					<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-						Obsessive about hyper-realistic replicas made from polyurethane/resin blends. Non-toxic, temperature-resistant, and come with 20-year or lifetime warranties.
+						Obsessively hyper-realistic replicas, made from polyurethane/resin blends. Non-toxic, temperature-resistant, and come with 20-year or lifetime warranties.
 					</p>
 				</div>
 

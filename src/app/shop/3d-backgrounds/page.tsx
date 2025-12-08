@@ -37,7 +37,7 @@ export default async function ThreeDBackgroundsPage() {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -76,17 +76,17 @@ export default async function ThreeDBackgroundsPage() {
 				</section>
 
 				{/* Categories Grid - Only part that needs DB */}
-				<section id="categories" className="relative pt-16 md:py-24 bg-gradient-to-b from-muted/30 to-background">
+				<section id="categories" className="relative md:pt-10 pb-24 bg-linear-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" className="" />
 					<div className="px-4 max-w-7xl mx-auto">
-						<div className="mb-12">
+						{/* <div className="mb-12">
 							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
 								Choose Your Style
 							</h2>
 							<p className="text-lg text-muted-foreground font-display font-light">
 								From classic rocky terrains to slim profiles for rimless tanks
 							</p>
-						</div>
+						</div> */}
 
 						{/* Error State */}
 						{error ? (

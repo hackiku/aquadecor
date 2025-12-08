@@ -36,7 +36,7 @@ export function CategoryCard({
 	return (
 		<Link
 			href={`/shop/${productLineSlug}/${slug}`}
-			className="group relative flex h-[380px] w-full flex-col overflow-hidden rounded-2xl border-2 border-border bg-card shadow-sm transition-all hover:border-primary/50 hover:shadow-xl"
+			className="group relative flex h-[380px] w-full flex-col overflow-hidden rounded-2xl border-2 border-border bg-black shadow-sm transition-all hover:border-primary/50 hover:shadow-xl"
 		>
 			{/* Image Layer */}
 			<div className="absolute inset-0  z-0 h-full w-full">

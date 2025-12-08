@@ -52,7 +52,7 @@ export function ProductCard({ product, variant = "default", className }: Product
 		<Card className={cn("group relative flex flex-col h-full overflow-hidden border-2 border-border bg-card transition-all hover:border-primary/50 hover:shadow-xl", className)}>
 
 			{/* CLICKABLE AREA WRAPPER (Excludes buttons) */}
-			<Link href={productUrl} className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+			<Link href={productUrl} className="relative aspect-4/3 w-full overflow-hidden __bg-muted">
 
 				{/* IMAGE */}
 				{product.heroImageUrl ? (
