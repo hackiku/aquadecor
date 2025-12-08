@@ -9,10 +9,6 @@ import { TRPCReactProvider } from '~/trpc/react';
 import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
 
-const geist = Geist({
-	subsets: ['latin'],
-	variable: '--font-geist-sans',
-});
 
 type Props = {
 	children: React.ReactNode;
@@ -34,8 +30,8 @@ export default async function LocaleLayout({
 	const messages = await getMessages();
 
 	return (
-		<html className={geist.variable} lang={locale} suppressHydrationWarning>
-			<body>
+		// <html className={geist.variable} lang={locale} suppressHydrationWarning>
+			// <body>
 				<TRPCReactProvider>
 					<ThemeProvider
 						attribute="class"
@@ -50,8 +46,8 @@ export default async function LocaleLayout({
 						</NextIntlClientProvider>
 					</ThemeProvider>
 				</TRPCReactProvider>
-			</body>
-		</html>
+			// </body>
+		// </html>
 	);
 }
 
