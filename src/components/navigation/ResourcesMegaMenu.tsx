@@ -33,7 +33,7 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 			onMouseLeave={() => setIsOpen(false)}
 		>
 			{/* Trigger */}
-			<button className="flex items-center gap-1 text-sm font-normal transition-colors hover:text-blue-400 text-white font-display outline-none">
+			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none">
 				Resources
 				<ChevronDown
 					className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -48,9 +48,9 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -10 }}
 						transition={{ duration: 0.2 }}
-						className="absolute top-full right-0 mt-2 w-[320px] bg-zinc-900 border border-white/10 rounded-lg shadow-2xl overflow-hidden"
+						className="absolute top-full right-0 mt-2 w-[320px] bg-black border border-t-0 border-white/10 rounded-lg shadow-2xl overflow-hidden"
 					>
-						<div className="p-2">
+						<div className="__flex p-2">
 							{resourceLinks.map((resource, index) => {
 								const Icon = resource.icon ? iconMap[resource.icon] : null;
 

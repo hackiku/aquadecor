@@ -87,7 +87,7 @@ export function Nav() {
 								<Link
 									key={link.href}
 									href={link.href}
-									className="text-sm font-normal transition-colors hover:text-blue-400 text-white font-display relative group"
+									className="text-md font-light transition-colors hover:text-blue-400 text-white font-display relative group"
 								>
 									{link.label}
 									{link.badge && (

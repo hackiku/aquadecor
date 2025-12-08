@@ -19,13 +19,14 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 	};
 
 	return (
+		// The parent div is the trigger area
 		<div
-			className="relative"
+			className="relative h-full flex items-center"
 			onMouseEnter={() => setIsOpen(true)}
 			onMouseLeave={() => setIsOpen(false)}
 		>
 			{/* Trigger */}
-			<button className="flex items-center gap-1 text-sm font-normal transition-colors hover:text-blue-400 text-white font-display outline-none">
+			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none h-full">
 				Shop
 				<ChevronDown
 					className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
@@ -36,65 +37,50 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 			<AnimatePresence>
 				{isOpen && (
 					<motion.div
-						initial={{ opacity: 0, y: -10 }}
+						initial={{ opacity: 0, y: -5 }}
 						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: -10 }}
+						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[500px] bg-zinc-900 border border-white/10 rounded-lg shadow-2xl p-6"
+						// 🎯 STYLING CHANGES: Aligned left/top, no shadow, clean borders
+						className="absolute top-full -left-4 mt-0 pt-2 w-[400px] bg-black border-r border-l border-b border-white/10 rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
-						{/* Product Lines */}
-						<div className="mb-6">
-							<h3 className="text-xs uppercase tracking-wide text-gray-400 font-display mb-4">
-								Product Lines
-							</h3>
-							<div className="grid grid-cols-2 gap-4">
-								{/* 3D Backgrounds */}
-								<Link
-									href="/shop/3d-backgrounds"
-									onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
-									className="group p-4 rounded-lg hover:bg-white/5 transition-colors"
-								>
-									<div className="flex items-start gap-3">
-										<div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/20 transition-colors">
-											<span className="text-2xl">🪨</span>
-										</div>
+						<div className="p-6">
+							{/* Product Lines */}
+							<div className="mb-6">
+								<h3 className="text-xs uppercase tracking-wide text-gray-400 font-display mb-4">
+									Product Lines
+								</h3>
+								<div className="grid grid-cols-1 gap-1">
+									{/* 3D Backgrounds */}
+									<Link
+										href="/shop/3d-backgrounds"
+										onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
+										className="group flex items-center p-3 rounded-lg hover:bg-white/5 transition-colors -mx-3"
+									>
+										<span className="text-2xl mr-3">🪨</span>
 										<div>
-											<h4 className="font-display font-normal text-white mb-1">
-												3D Backgrounds
-											</h4>
-											<p className="text-xs text-gray-400 font-display font-light">
-												Custom-made realistic backgrounds
-											</p>
+											<h4 className="font-display font-medium text-white">3D Backgrounds</h4>
+											<p className="text-xs text-gray-400 font-display font-light">Custom-made realistic backgrounds</p>
 										</div>
-									</div>
-								</Link>
+									</Link>
 
-								{/* Decorations */}
-								<Link
-									href="/shop/aquarium-decorations"
-									onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
-									className="group p-4 rounded-lg hover:bg-white/5 transition-colors"
-								>
-									<div className="flex items-start gap-3">
-										<div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-colors">
-											<span className="text-2xl">🌿</span>
-										</div>
+									{/* Decorations */}
+									<Link
+										href="/shop/aquarium-decorations"
+										onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
+										className="group flex items-center p-3 rounded-lg hover:bg-white/5 transition-colors -mx-3"
+									>
+										<span className="text-2xl mr-3">🌿</span>
 										<div>
-											<h4 className="font-display font-normal text-white mb-1">
-												Decorations
-											</h4>
-											<p className="text-xs text-gray-400 font-display font-light">
-												Plants, rocks & driftwood
-											</p>
+											<h4 className="font-display font-medium text-white">Decorations</h4>
+											<p className="text-xs text-gray-400 font-display font-light">Plants, rocks & driftwood</p>
 										</div>
-									</div>
-								</Link>
+									</Link>
+								</div>
 							</div>
-						</div>
 
-						{/* Quick Links */}
-						<div className="pt-4 border-t border-white/10">
-							<div className="flex items-center justify-between gap-4">
+							{/* Quick Links */}
+							<div className="pt-4 border-t border-white/10 flex flex-col space-y-2">
 								<Link
 									href="/shop"
 									onMouseEnter={() => handleMouseEnter("/shop")}
