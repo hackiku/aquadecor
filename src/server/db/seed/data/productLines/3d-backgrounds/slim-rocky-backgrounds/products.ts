@@ -4,7 +4,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-1-slim-rocky-aquarium-background",
-		"sku": "A1",
+		"sku": "A1SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -15,7 +15,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-2-slim-rocky-aquarium-background",
-		"sku": "A2",
+		"sku": "A2SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -26,7 +26,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-4-slim-rocky-aquarium-background",
-		"sku": "A4",
+		"sku": "A4SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -37,7 +37,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-9-slim-rocky-aquarium-background",
-		"sku": "A9",
+		"sku": "A9SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -48,7 +48,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-10-slim-rocky-aquarium-background",
-		"sku": "A10",
+		"sku": "A10SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -59,7 +59,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-17-slim-rocky-aquarium-background",
-		"sku": "A17",
+		"sku": "A17SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -70,7 +70,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-19-slim-rocky-aquarium-background",
-		"sku": "A19",
+		"sku": "A19SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -81,7 +81,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-21-slim-rocky-aquarium-background",
-		"sku": "A21",
+		"sku": "A21SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -92,7 +92,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-26-slim-rocky-aquarium-background",
-		"sku": "A26",
+		"sku": "A26SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -103,7 +103,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-27-slim-rocky-aquarium-background",
-		"sku": "A27",
+		"sku": "A27SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": false,
@@ -114,7 +114,7 @@ export const products = [
 	{
 		"categorySlug": "slim-rocky-backgrounds",
 		"slug": "a-43-slim-rocky-aquarium-background",
-		"sku": "A43",
+		"sku": "A43SLIM",
 		"stockStatus": "requires_quote",
 		"isActive": true,
 		"isFeatured": true,

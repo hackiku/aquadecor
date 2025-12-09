@@ -76,6 +76,30 @@ export const media: MediaSeed[] = [
 		"storagePath": null
 	},
 	{
+		"productSlug": "d-5-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-5-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-5-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-6-rocks-floating",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-6-rocks-floating.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-6-rocks-floating.webp",
+		"altText": "Rocks(floating)",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
 		"productSlug": "d-7-bamboo-standing-logs",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-7-bamboo-standing-logs.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-7-bamboo-standing-logs.webp",
@@ -220,6 +244,42 @@ export const media: MediaSeed[] = [
 		"storagePath": null
 	},
 	{
+		"productSlug": "d-17-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-17-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-17-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-18-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-18-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-18-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-21-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-21-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-21-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
 		"productSlug": "d-22-tree-trunk-with-moss",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-22-tree-trunk-with-moss.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-22-tree-trunk-with-moss.webp",
@@ -260,6 +320,18 @@ export const media: MediaSeed[] = [
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-25-corals.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-25-corals.webp",
 		"altText": "Corals",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-27-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-27-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-27-rocks.webp",
+		"altText": "Rocks",
 		"usageType": "product",
 		"sortOrder": 0,
 		"tags": [
@@ -364,6 +436,54 @@ export const media: MediaSeed[] = [
 		"storagePath": null
 	},
 	{
+		"productSlug": "d-41-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-41-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-41-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-42-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-42-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-42-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-43-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-43-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-43-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-44-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-44-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-44-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
 		"productSlug": "d-45-standing-logs",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-45-standing-logs.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-45-standing-logs.webp",
@@ -380,6 +500,30 @@ export const media: MediaSeed[] = [
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-46-standing-logs.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-46-standing-logs.webp",
 		"altText": "Standing logs",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-47-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-47-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-47-rocks.webp",
+		"altText": "Rocks",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-48-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-48-rocks.webp",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-48-rocks.webp",
+		"altText": "Rocks",
 		"usageType": "product",
 		"sortOrder": 0,
 		"tags": [
@@ -428,6 +572,18 @@ export const media: MediaSeed[] = [
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-52-amazonian-aquarium-tree-with-vines/aquarium-tree-with-vines.png",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-52-amazonian-aquarium-tree-with-vines/aquarium-tree-with-vines.png",
 		"altText": "Amazonian Aquarium tree with vines",
+		"usageType": "product",
+		"sortOrder": 0,
+		"tags": [
+			"hero-shot"
+		],
+		"storagePath": null
+	},
+	{
+		"productSlug": "d-53-rocks",
+		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-53-–-rocks/sedimental-stones.png",
+		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-53-–-rocks/sedimental-stones.png",
+		"altText": "Rocks",
 		"usageType": "product",
 		"sortOrder": 0,
 		"tags": [

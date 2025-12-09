@@ -72,14 +72,25 @@ export const products = [
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"
 	},
+	// {
+	// 	"categorySlug": "logs-leaves-driftwood-rocks",
+	// 	"slug": "d-5-rocks",
+	// 	"sku": "D5",
+	// 	"stockStatus": "in_stock",
+	// 	"isActive": true,
+	// 	"isFeatured": false,
+	// 	"sortOrder": 7,
+	// 	"material": "Safe aquarium decoration",
+	// 	"productionTime": "Ready to ship"
+	// },
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
-		"slug": "d-7-slim-bamboo-standing-logs",
-		"sku": "D7SLIM",
+		"slug": "d-6-rocks-floating",
+		"sku": "D6",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
-		"sortOrder": 10,
+		"sortOrder": 8,
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"
 	},
@@ -91,6 +102,17 @@ export const products = [
 		"isActive": true,
 		"isFeatured": false,
 		"sortOrder": 9,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-7-slim-bamboo-standing-logs",
+		"sku": "D7",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 10,
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"
 	},
@@ -119,7 +141,7 @@ export const products = [
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
 		"slug": "d-10-slim-standing-logs",
-		"sku": "D10SLIM",
+		"sku": "D10",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
@@ -206,6 +228,39 @@ export const products = [
 	},
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-17-rocks",
+		"sku": "D17",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 21,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-18-rocks",
+		"sku": "D18",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 22,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-21-rocks",
+		"sku": "D21",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 23,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
 		"slug": "d-22-tree-trunk-with-moss",
 		"sku": "D22",
 		"stockStatus": "in_stock",
@@ -250,6 +305,17 @@ export const products = [
 	},
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-27-rocks",
+		"sku": "D27",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 28,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
 		"slug": "d-29-standing-logs",
 		"sku": "D29",
 		"stockStatus": "in_stock",
@@ -284,7 +350,7 @@ export const products = [
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
 		"slug": "d-33-plus-amazonian-roots-with-moss",
-		"sku": "D33PLUS",
+		"sku": "D33",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
@@ -338,6 +404,50 @@ export const products = [
 	},
 	{
 		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-41-rocks",
+		"sku": "D41",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 37,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-42-rocks",
+		"sku": "D42",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 38,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-43-rocks",
+		"sku": "D43",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 39,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-44-rocks",
+		"sku": "D44",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 40,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
 		"slug": "d-45-standing-logs",
 		"sku": "D45",
 		"stockStatus": "in_stock",
@@ -355,6 +465,28 @@ export const products = [
 		"isActive": true,
 		"isFeatured": false,
 		"sortOrder": 42,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-47-rocks",
+		"sku": "D47",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 43,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-48-rocks",
+		"sku": "D48",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 44,
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"
 	},
@@ -401,5 +533,19 @@ export const products = [
 		"sortOrder": 48,
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"
+	},
+	{
+		"categorySlug": "logs-leaves-driftwood-rocks",
+		"slug": "d-53-rocks",
+		"sku": "D53",
+		"stockStatus": "in_stock",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 49,
+		"material": "Safe aquarium decoration",
+		"productionTime": "Ready to ship",
+		"technicalSpecs": {
+			"isFloating": false
+		}
 	}
 ];

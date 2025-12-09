@@ -159,17 +159,5 @@ export const media: MediaSeed[] = [
 			"hero-shot"
 		],
 		"storagePath": null
-	},
-	{
-		"productSlug": "d-53-model",
-		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-53-–-rocks/sedimental-stones.png",
-		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-53-–-rocks/sedimental-stones.png",
-		"altText": "D - 53 Model",
-		"usageType": "product",
-		"sortOrder": 0,
-		"tags": [
-			"hero-shot"
-		],
-		"storagePath": null
 	}
 ];

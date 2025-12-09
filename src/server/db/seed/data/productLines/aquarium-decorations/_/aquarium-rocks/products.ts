@@ -168,18 +168,5 @@ export const products = [
 				"Breeding"
 			]
 		}
-	},
-	{
-		"categorySlug": "aquarium-rocks",
-		"slug": "d-53-model",
-		"sku": "D53",
-		"stockStatus": "in_stock",
-		"isActive": true,
-		"isFeatured": false,
-		"sortOrder": 13,
-		"material": "Resin",
-		"technicalSpecs": {
-			"isFloating": false
-		}
 	}
 ];

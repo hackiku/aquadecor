@@ -53,6 +53,22 @@ export const pricing = [
 		"maxQuantity": 100
 	},
 	{
+		"productSlug": "d-5-rocks",
+		"slug": "d-5-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-6-rocks-floating",
+		"slug": "d-6-rocks-floating-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
 		"productSlug": "d-7-bamboo-standing-logs",
 		"slug": "d-7-bamboo-standing-logs-pricing",
 		"pricingType": "simple",
@@ -149,6 +165,30 @@ export const pricing = [
 		"maxQuantity": 100
 	},
 	{
+		"productSlug": "d-17-rocks",
+		"slug": "d-17-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-18-rocks",
+		"slug": "d-18-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-21-rocks",
+		"slug": "d-21-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
 		"productSlug": "d-22-tree-trunk-with-moss",
 		"slug": "d-22-tree-trunk-with-moss-pricing",
 		"pricingType": "simple",
@@ -175,6 +215,14 @@ export const pricing = [
 	{
 		"productSlug": "d-25-corals",
 		"slug": "d-25-corals-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-27-rocks",
+		"slug": "d-27-rocks-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
@@ -245,6 +293,38 @@ export const pricing = [
 		"maxQuantity": 100
 	},
 	{
+		"productSlug": "d-41-rocks",
+		"slug": "d-41-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-42-rocks",
+		"slug": "d-42-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-43-rocks",
+		"slug": "d-43-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-44-rocks",
+		"slug": "d-44-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
 		"productSlug": "d-45-standing-logs",
 		"slug": "d-45-standing-logs-pricing",
 		"pricingType": "simple",
@@ -255,6 +335,22 @@ export const pricing = [
 	{
 		"productSlug": "d-46-standing-logs",
 		"slug": "d-46-standing-logs-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-47-rocks",
+		"slug": "d-47-rocks-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-48-rocks",
+		"slug": "d-48-rocks-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
@@ -287,6 +383,14 @@ export const pricing = [
 	{
 		"productSlug": "d-52-amazonian-aquarium-tree-with-vines",
 		"slug": "d-52-amazonian-aquarium-tree-with-vines-pricing",
+		"pricingType": "simple",
+		"unitPriceEurCents": 4900,
+		"allowQuantity": true,
+		"maxQuantity": 100
+	},
+	{
+		"productSlug": "d-53-rocks",
+		"slug": "d-53-rocks-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
@@ -330,6 +434,14 @@ export const marketExclusions = [
 	},
 	{
 		"productSlug": "d-4-logs",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-5-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-6-rocks-floating",
 		"market": "US"
 	},
 	{
@@ -381,6 +493,18 @@ export const marketExclusions = [
 		"market": "US"
 	},
 	{
+		"productSlug": "d-17-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-18-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-21-rocks",
+		"market": "US"
+	},
+	{
 		"productSlug": "d-22-tree-trunk-with-moss",
 		"market": "US"
 	},
@@ -394,6 +518,10 @@ export const marketExclusions = [
 	},
 	{
 		"productSlug": "d-25-corals",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-27-rocks",
 		"market": "US"
 	},
 	{
@@ -429,11 +557,35 @@ export const marketExclusions = [
 		"market": "US"
 	},
 	{
+		"productSlug": "d-41-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-42-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-43-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-44-rocks",
+		"market": "US"
+	},
+	{
 		"productSlug": "d-45-standing-logs",
 		"market": "US"
 	},
 	{
 		"productSlug": "d-46-standing-logs",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-47-rocks",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-48-rocks",
 		"market": "US"
 	},
 	{
@@ -450,6 +602,10 @@ export const marketExclusions = [
 	},
 	{
 		"productSlug": "d-52-amazonian-aquarium-tree-with-vines",
+		"market": "US"
+	},
+	{
+		"productSlug": "d-53-rocks",
 		"market": "US"
 	}
 ];

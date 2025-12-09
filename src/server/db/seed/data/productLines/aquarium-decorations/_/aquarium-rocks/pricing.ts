@@ -99,14 +99,6 @@ export const pricing = [
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
 		"maxQuantity": 100
-	},
-	{
-		"productSlug": "d-53-model",
-		"slug": "d-53-model-pricing",
-		"pricingType": "simple",
-		"unitPriceEurCents": 4900,
-		"allowQuantity": true,
-		"maxQuantity": 100
 	}
 ];
 
@@ -170,10 +162,6 @@ export const marketExclusions = [
 	},
 	{
 		"productSlug": "d-48-model",
-		"market": "US"
-	},
-	{
-		"productSlug": "d-53-model",
 		"market": "US"
 	}
 ];
