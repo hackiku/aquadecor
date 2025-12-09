@@ -187,7 +187,7 @@ export default function LandingPage() {
 						{/* Headline - positioned to be inside the cyan wave */}
 						<div className="text-center mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4 text-white">
-								Scape Your Way
+								Scape Exactly Your Way
 							</h2>
 							<p className="text-lg text-cyan-100/80 font-display font-light max-w-2xl mx-auto">
 								Standard dimensions for quick setup, or custom-made to fit your exact vision.

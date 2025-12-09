@@ -189,7 +189,7 @@ export function Footer() {
 
 					{/* Veenie Attribution */}
 					<p className="text-xs text-gray-500 order-1 lg:order-2">
-						Website by <Link href="https://veenie.space" target="_blank" className="text-primary hover:text-blue-400 transition-colors">🎈 Veenie Aerospace</Link>
+						Web + Shop by <Link href="https://veenie.space" target="_blank" className="text-primary hover:text-blue-400 transition-colors">Veenie Aerospace</Link>
 					</p>
 				</div>
 			</div>
