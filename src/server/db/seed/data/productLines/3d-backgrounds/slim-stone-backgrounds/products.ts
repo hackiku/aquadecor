@@ -1,0 +1,323 @@
+// src/server/db/seed/data/productLines/3d-backgrounds/slim-stone-backgrounds/products.ts
+
+export const products = [
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-1-slim-rocky-backgrounds",
+		"sku": "G1",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 1,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-2-slim-rocky-backgrounds",
+		"sku": "G2",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 2,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-3-slim-rocky-backgrounds",
+		"sku": "G3",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 3,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-4-slim-rocky-backgrounds",
+		"sku": "G4",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 4,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-5-slim-rocky-backgrounds",
+		"sku": "G5",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 5,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-6-slim-rocky-backgrounds",
+		"sku": "G6",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 6,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-7-slim-rocky-backgrounds",
+		"sku": "G7",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 7,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-8-slim-rocky-backgrounds",
+		"sku": "G8",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 8,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-9-slim-rocky-backgrounds",
+		"sku": "G9",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 9,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-11-slim-rocky-backgrounds",
+		"sku": "G11",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 10,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-16-slim-rocky-backgrounds",
+		"sku": "G16",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 11,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-17-slim-rocky-backgrounds",
+		"sku": "G17",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 12,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-18-slim-rocky-backgrounds",
+		"sku": "G18",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 13,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-26-slim-rocky-backgrounds",
+		"sku": "G26",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 14,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-27-slim-rocky-backgrounds",
+		"sku": "G27",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 15,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-29-slim-rocky-backgrounds",
+		"sku": "G29",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 16,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-31-slim-rocky-backgrounds",
+		"sku": "G31",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 17,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-32-slim-rocky-backgrounds",
+		"sku": "G32",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 18,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-34-slim-rocky-backgrounds",
+		"sku": "G34",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 19,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-35-slim-rocky-backgrounds",
+		"sku": "G35",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 20,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-38-slim-rocky-backgrounds",
+		"sku": "G38",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 21,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-43-slim-rocky-backgrounds",
+		"sku": "G43",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 22,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-44-slim-rocky-backgrounds",
+		"sku": "G44",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 23,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-45-slim-rocky-backgrounds",
+		"sku": "G45",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 24,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-48-slim-rocky-backgrounds",
+		"sku": "G48",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 25,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-51-slim-rocky-backgrounds",
+		"sku": "G51",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 26,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-55-slim-rocky-backgrounds",
+		"sku": "G55",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 27,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-58-slim-rocky-backgrounds",
+		"sku": "G58",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 28,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	},
+	{
+		"categorySlug": "slim-stone-backgrounds",
+		"slug": "g-59-slim-rocky-backgrounds",
+		"sku": "G59",
+		"stockStatus": "requires_quote",
+		"isActive": true,
+		"isFeatured": false,
+		"sortOrder": 29,
+		"material": "High-quality resin",
+		"productionTime": "10-12 business days"
+	}
+];

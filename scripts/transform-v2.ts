@@ -10,34 +10,6 @@ const OLD_DIR = path.join(process.cwd(), 'src/server/db/seed/data/old');
 const NEW_DIR = path.join(process.cwd(), 'src/server/db/seed/data/productLines');
 
 // ============================================================================
-// HELPER: Parse TypeScript export
-// ============================================================================
-
-function parseExport(fileContent: string, exportName: string): any {
-	// Extract the exported array/object
-	const regex = new RegExp(`export const ${exportName}[:\\s]*(?:.*?=\\s*)?(\\[|\\{)[\\s\\S]*?(?:\\n\\];|\\n\\};)`, 'g');
-	const match = fileContent.match(regex);
-
-	if (!match) return null;
-
-	// Eval in safe context (only for seed data transformation)
-	try {
-		const code = match[0]
-			.replace(`export const ${exportName}`, `const ${exportName}`)
-			.replace(/\/\/.*/g, '') // Remove comments
-			.replace(/\/\*[\s\S]*?\*\//g, ''); // Remove block comments
-
-		// eslint-disable-next-line no-eval
-		eval(code);
-		// eslint-disable-next-line no-eval
-		return eval(exportName);
-	} catch (error) {
-		console.error(`Error parsing ${exportName}:`, error);
-		return null;
-	}
-}
-
-// ============================================================================
 // TRANSFORMATION LOGIC
 // ============================================================================
 
@@ -117,16 +89,18 @@ function extractBundles(old: any): any[] {
 }
 
 function extractAddons(old: any): any[] {
-	if (!old.addonOptions) return [];
+	if (!old.addonOptions?.items) return [];
 
-	return old.addonOptions.map((addon: any) => ({
-		productSlug: old.slug,
-		addonId: addon.id,
-		name: addon.name,
-		description: addon.description,
-		priceEurCents: addon.priceEurCents,
-		isDefault: addon.default || false,
-	}));
+	return old.addonOptions.items
+		.filter((addon: any) => addon.type === 'checkbox')
+		.map((addon: any) => ({
+			productSlug: old.slug,
+			addonId: addon.name.toLowerCase().replace(/\s+/g, '_'),
+			name: addon.name,
+			description: addon.description,
+			priceEurCents: addon.priceEurCents || 0,
+			isDefault: false,
+		}));
 }
 
 function extractMarketExclusions(old: any): any[] {
@@ -151,7 +125,7 @@ function transformTranslations(oldTranslations: any): any {
 			const c = content as any;
 			newTranslations[slug][locale] = {
 				name: c.name,
-				shortDescription: c.shortDescription,
+				shortDescription: c.shortDescription || '',
 				fullDescription: c.fullDescription || c.longDescription || c.description || '',
 				metaTitle: c.metaTitle || `${c.name} | Aquadecor Backgrounds`,
 				metaDescription: c.metaDescription || (c.shortDescription?.substring(0, 155) || ''),
@@ -240,15 +214,15 @@ export const media: MediaSeed[] = ${JSON.stringify(media, null, '\t')};
 }
 
 // ============================================================================
-// CATEGORY PROCESSOR
+// CATEGORY PROCESSOR (Using Dynamic Import)
 // ============================================================================
 
-function processCategory(oldCategoryPath: string, newCategoryPath: string): void {
+async function processCategory(oldCategoryPath: string, newCategoryPath: string): Promise<void> {
 	const categoryName = path.basename(oldCategoryPath);
 	console.log(`\n📦 Processing: ${categoryName}`);
 
 	try {
-		// Read old files
+		// Build absolute paths for dynamic import
 		const productsPath = path.join(oldCategoryPath, 'products.ts');
 		const translationsPath = path.join(oldCategoryPath, 'translations.ts');
 		const mediaPath = path.join(oldCategoryPath, 'media.ts');
@@ -258,11 +232,12 @@ function processCategory(oldCategoryPath: string, newCategoryPath: string): void
 			return;
 		}
 
-		const productsContent = fs.readFileSync(productsPath, 'utf-8');
-		const oldProducts = parseExport(productsContent, 'products');
+		// Dynamic import (works with TypeScript!)
+		const productsModule = await import(`file://${productsPath}`);
+		const oldProducts = productsModule.products;
 
 		if (!oldProducts) {
-			console.log(`  ❌ Could not parse products`);
+			console.log(`  ❌ No products export found`);
 			return;
 		}
 
@@ -282,8 +257,8 @@ function processCategory(oldCategoryPath: string, newCategoryPath: string): void
 		// Transform translations
 		let newTranslations = {};
 		if (fs.existsSync(translationsPath)) {
-			const translationsContent = fs.readFileSync(translationsPath, 'utf-8');
-			const oldTranslations = parseExport(translationsContent, 'translations');
+			const translationsModule = await import(`file://${translationsPath}`);
+			const oldTranslations = translationsModule.translations;
 			if (oldTranslations) {
 				newTranslations = transformTranslations(oldTranslations);
 				console.log(`  ✓ Transformed translations`);
@@ -293,8 +268,8 @@ function processCategory(oldCategoryPath: string, newCategoryPath: string): void
 		// Transform media
 		let newMedia: any[] = [];
 		if (fs.existsSync(mediaPath)) {
-			const mediaContent = fs.readFileSync(mediaPath, 'utf-8');
-			const oldMedia = parseExport(mediaContent, 'media');
+			const mediaModule = await import(`file://${mediaPath}`);
+			const oldMedia = mediaModule.media;
 			if (oldMedia) {
 				newMedia = transformMedia(oldMedia);
 				console.log(`  ✓ Transformed ${newMedia.length} media items`);
@@ -402,7 +377,7 @@ async function main() {
 			const oldCategoryPath = path.join(oldProductLinePath, category);
 			const newCategoryPath = path.join(newProductLinePath, category);
 
-			processCategory(oldCategoryPath, newCategoryPath);
+			await processCategory(oldCategoryPath, newCategoryPath);
 		}
 	}
 
@@ -411,7 +386,7 @@ async function main() {
 	console.log('='.repeat(60));
 	console.log('\nNext steps:');
 	console.log('1. Review generated files in productLines/');
-	console.log('2. Update seed/seed.ts to use new structure');
+	console.log('2. Update seed/seed.ts imports to use productLines/');
 	console.log('3. Run: bun run db:fresh\n');
 }
 
