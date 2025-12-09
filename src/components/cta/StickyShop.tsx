@@ -100,7 +100,7 @@ export function StickyShop({ triggerRef }: StickyShopProps) {
 						{/* Shop Button - Always visible when component is mounted */}
 						<motion.div
 							animate={{
-								scale: isCollapsed && !isHovered ? 1.1 : 1,
+								scale: isCollapsed && !isHovered ? 1.05 : 0.95,
 							}}
 							transition={{ duration: 0.3 }}
 						>
