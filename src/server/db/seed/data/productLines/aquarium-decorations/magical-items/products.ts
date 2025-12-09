@@ -29,7 +29,7 @@ export const products: ProductSeed[] = [
 		},
 
 		customizationOptions: { allowsCustomDimensions: false },
-		excludedMarkets: [],
+		excludedMarkets: ["US"],
 		isActive: true,
 		isFeatured: true,
 		sortOrder: 1,
