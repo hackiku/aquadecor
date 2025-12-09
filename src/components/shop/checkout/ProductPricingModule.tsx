@@ -6,7 +6,6 @@ import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { AddToCartButton } from "~/components/shop/cart/AddToCartButton";
 import { Input } from "~/components/ui/input";
 import { Truck, Clock, Package } from "lucide-react";
-import type { Product } from "~/server/db/schema/shop";
 import { Button } from "~/components/ui/button";
 import { BundleSelector } from "./BundleSelector";
 import { AddonCheckboxes } from "./AddonCheckboxes";
@@ -15,32 +14,34 @@ import { SelectOptions } from "./SelectOptions";
 import { PriceDisplay } from "./PriceDisplay";
 
 interface ProductPricingModuleProps {
-	product: Product & { categorySlug: string; productLineSlug: string };
+	product: any; // Product from getBySlug query
 	isCustomOnly: boolean;
 }
 
 export function ProductPricingModule({ product, isCustomOnly }: ProductPricingModuleProps) {
-	// Debug logging (remove after testing)
+	// Debug logging
 	useEffect(() => {
 		console.log('[ProductPricingModule] Initialized', {
 			productId: product.id,
 			slug: product.slug,
 			isCustomOnly,
-			pricingType: product.pricing?.type,
-			stockStatus: product.stockStatus,
-			hasPricing: !!product.pricing,
-			hasLegacyPrice: !!product.basePriceEurCents,
+			pricingType: product.pricing?.pricingType,
+			hasBundles: !!product.bundles,
+			hasAddons: !!product.addons,
+			hasCustomOptions: !!product.customizationOptions,
 		});
 	}, [product, isCustomOnly]);
 
-	// Get pricing config (new or legacy)
-	const pricingConfig = product.pricing || legacyToPricing(product);
-	const customConfig = product.customization;
+	// Extract data from V2 structure
+	const pricing = product.pricing;
+	const bundles = product.bundles || [];
+	const addons = product.addons || [];
+	const customOptions = product.customizationOptions || [];
 
 	// State
 	const [selectedBundleIndex, setSelectedBundleIndex] = useState(() => {
-		if (pricingConfig?.type === 'quantity_bundle') {
-			const defaultIndex = pricingConfig.bundles.findIndex(b => b.isDefault);
+		if (pricing?.pricingType === 'quantity_bundle' && bundles.length > 0) {
+			const defaultIndex = bundles.findIndex((b: any) => b.isDefault);
 			return defaultIndex !== -1 ? defaultIndex : 0;
 		}
 		return 0;
@@ -51,52 +52,54 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 	const [inputValues, setInputValues] = useState<Record<string, string>>({});
 	const [selectValues, setSelectValues] = useState<Record<string, string>>({});
 
-	// Initialize defaults
+	// Initialize select defaults
 	useEffect(() => {
-		if (customConfig?.selects) {
-			const defaults: Record<string, string> = {};
-			customConfig.selects.forEach(select => {
-				const defaultOpt = select.options.find(o => o.isDefault) || select.options[0];
-				if (defaultOpt) defaults[select.id] = defaultOpt.value;
-			});
-			setSelectValues(defaults);
-		}
-	}, [customConfig]);
+		const defaults: Record<string, string> = {};
+		customOptions.forEach((opt: any) => {
+			if (opt.type === 'select' && opt.selectOptions) {
+				const defaultOpt = opt.selectOptions.find((o: any) => o.isDefault) || opt.selectOptions[0];
+				if (defaultOpt) defaults[opt.id] = defaultOpt.value;
+			}
+		});
+		setSelectValues(defaults);
+	}, [customOptions]);
 
 	// Validation
 	const { errors, isValid } = useMemo(() => {
 		const errors: Record<string, string> = {};
 
-		customConfig?.inputs?.forEach(input => {
-			const value = inputValues[input.id];
+		customOptions.forEach((opt: any) => {
+			const value = inputValues[opt.id];
 
-			if (input.required && !value) {
-				errors[input.id] = `${input.label} is required`;
+			if (opt.type === 'input' || opt.type === 'textarea') {
+				if (opt.required && !value) {
+					errors[opt.id] = `${opt.label} is required`;
+				}
+
+				if (value && opt.inputType === 'number') {
+					const num = parseFloat(value);
+					if (isNaN(num)) {
+						errors[opt.id] = 'Must be a valid number';
+					} else {
+						if (opt.minValue !== undefined && num < opt.minValue) {
+							errors[opt.id] = `Must be at least ${opt.minValue}`;
+						}
+						if (opt.maxValue !== undefined && num > opt.maxValue) {
+							errors[opt.id] = `Must not exceed ${opt.maxValue}`;
+						}
+					}
+				}
 			}
 
-			if (value && input.type === 'number') {
-				const num = parseFloat(value);
-				if (isNaN(num)) {
-					errors[input.id] = 'Must be a valid number';
-				} else {
-					if (input.validation?.min !== undefined && num < input.validation.min) {
-						errors[input.id] = `Must be at least ${input.validation.min}`;
-					}
-					if (input.validation?.max !== undefined && num > input.validation.max) {
-						errors[input.id] = `Must not exceed ${input.validation.max}`;
-					}
+			if (opt.type === 'select') {
+				if (opt.required && !selectValues[opt.id]) {
+					errors[opt.id] = `${opt.label} is required`;
 				}
 			}
 		});
 
-		customConfig?.selects?.forEach(select => {
-			if (select.required && !selectValues[select.id]) {
-				errors[select.id] = `${select.label} is required`;
-			}
-		});
-
 		return { errors, isValid: Object.keys(errors).length === 0 };
-	}, [inputValues, selectValues, customConfig]);
+	}, [inputValues, selectValues, customOptions]);
 
 	// Price calculation
 	const { totalPrice, breakdown } = useMemo(() => {
@@ -104,59 +107,59 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 		const breakdown: Array<{ label: string; amountEurCents: number }> = [];
 
 		// Base price
-		if (pricingConfig?.type === 'simple') {
-			base = pricingConfig.unitPriceEurCents * quantity;
+		if (pricing?.pricingType === 'simple') {
+			base = (pricing.unitPriceEurCents || 0) * quantity;
 			breakdown.push({ label: `Unit Price × ${quantity}`, amountEurCents: base });
-		} else if (pricingConfig?.type === 'quantity_bundle') {
-			const bundle = pricingConfig.bundles[selectedBundleIndex];
+		} else if (pricing?.pricingType === 'quantity_bundle' && bundles.length > 0) {
+			const bundle = bundles[selectedBundleIndex];
 			if (bundle) {
-				base = bundle.totalPriceEurCents;
+				base = bundle.totalPriceEurCents || 0;
 				breakdown.push({ label: bundle.label || `${bundle.quantity} pieces`, amountEurCents: base });
 			}
 		}
 
 		// Addons
-		customConfig?.addons?.forEach(addon => {
+		addons.forEach((addon: any) => {
 			if (selectedAddonIds.has(addon.id)) {
-				base += addon.priceEurCents;
-				breakdown.push({ label: `+ ${addon.name}`, amountEurCents: addon.priceEurCents });
+				base += addon.priceEurCents || 0;
+				breakdown.push({ label: `+ ${addon.name}`, amountEurCents: addon.priceEurCents || 0 });
 			}
 		});
 
 		// Select options
-		customConfig?.selects?.forEach(select => {
-			const selectedValue = selectValues[select.id];
-			const selectedOption = select.options.find(o => o.value === selectedValue);
-			if (selectedOption?.priceEurCents) {
-				base += selectedOption.priceEurCents;
-				breakdown.push({ label: `+ ${selectedOption.label}`, amountEurCents: selectedOption.priceEurCents });
+		customOptions.forEach((opt: any) => {
+			if (opt.type === 'select' && opt.selectOptions) {
+				const selectedValue = selectValues[opt.id];
+				const selectedOption = opt.selectOptions.find((o: any) => o.value === selectedValue);
+				if (selectedOption?.priceEurCents) {
+					base += selectedOption.priceEurCents;
+					breakdown.push({ label: `+ ${selectedOption.label}`, amountEurCents: selectedOption.priceEurCents });
+				}
 			}
 		});
 
-		console.log('[Price Calculation]', { base, breakdown, pricingType: pricingConfig?.type });
+		console.log('[Price Calculation]', { base, breakdown, pricingType: pricing?.pricingType });
 
 		return { totalPrice: base, breakdown };
-	}, [pricingConfig, selectedBundleIndex, quantity, selectedAddonIds, selectValues, customConfig]);
+	}, [pricing, selectedBundleIndex, quantity, selectedAddonIds, selectValues, addons, customOptions, bundles]);
 
 	// Custom quote products
-	if (isCustomOnly || pricingConfig?.type === 'configuration') {
-		console.log('[Custom Only Mode]', { isCustomOnly, pricingType: pricingConfig?.type });
+	if (isCustomOnly || pricing?.pricingType === 'configured') {
+		console.log('[Custom Only Mode]');
 		return (
 			<div className="space-y-6">
 				<CustomOnlyBadge variant="banner" showCalculatorLink />
 				<TrustSignals />
 				<Button asChild className="w-full rounded-full shadow-lg shadow-primary/20">
-					<a href={pricingConfig?.type === 'configuration' ? pricingConfig.calculatorUrl || '/calculator' : '/calculator'}>
-						Get Custom Quote
-					</a>
+					<a href="/calculator">Get Custom Quote</a>
 				</Button>
 			</div>
 		);
 	}
 
-	// No pricing configured at all
-	if (!pricingConfig || totalPrice === 0) {
-		console.warn('[No Pricing]', { pricingConfig, totalPrice });
+	// No pricing configured
+	if (!pricing || totalPrice === 0) {
+		console.warn('[No Pricing]', { pricing, totalPrice });
 		return (
 			<div className="space-y-4 text-center p-6 border-2 border-dashed rounded-xl">
 				<p className="text-sm text-muted-foreground">Pricing not configured for this product</p>
@@ -164,22 +167,42 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 		);
 	}
 
-	// Regular products
-	console.log('[Regular Product Mode]', { totalPrice, isValid, pricingType: pricingConfig.type });
+	// Format bundles for BundleSelector component
+	const formattedBundles = bundles.map((b: any) => ({
+		quantity: b.quantity,
+		totalPriceEurCents: b.totalPriceEurCents,
+		label: b.label,
+		isDefault: b.isDefault,
+	}));
+
+	// Format addons for AddonCheckboxes component
+	const formattedAddons = addons.map((a: any) => ({
+		id: a.id,
+		name: a.name,
+		description: a.description,
+		priceEurCents: a.priceEurCents,
+		isDefault: a.isDefault,
+	}));
+
+	// Format custom inputs
+	const inputOptions = customOptions.filter((opt: any) => opt.type === 'input' || opt.type === 'textarea');
+	const selectOptions = customOptions.filter((opt: any) => opt.type === 'select');
+
+	console.log('[Regular Product Mode]', { totalPrice, isValid, pricingType: pricing.pricingType });
 
 	return (
 		<div className="space-y-6">
 			{/* Bundle Selector */}
-			{pricingConfig?.type === 'quantity_bundle' && pricingConfig.bundles.length > 0 && (
+			{pricing?.pricingType === 'quantity_bundle' && formattedBundles.length > 0 && (
 				<BundleSelector
-					bundles={pricingConfig.bundles}
+					bundles={formattedBundles}
 					selectedIndex={selectedBundleIndex}
 					onSelect={setSelectedBundleIndex}
 				/>
 			)}
 
 			{/* Simple Quantity */}
-			{pricingConfig?.type === 'simple' && pricingConfig.allowQuantity && (
+			{pricing?.pricingType === 'simple' && pricing.allowQuantity && (
 				<div className="space-y-3 pb-4 border-b">
 					<div className="flex items-center justify-between">
 						<label className="text-sm font-display font-medium">Quantity</label>
@@ -188,7 +211,7 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 					<Input
 						type="number"
 						min={1}
-						max={pricingConfig.maxQuantity || 100}
+						max={pricing.maxQuantity || 100}
 						value={quantity}
 						onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
 						className="font-display"
@@ -197,9 +220,9 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 			)}
 
 			{/* Addons */}
-			{customConfig?.addons && (
+			{formattedAddons.length > 0 && (
 				<AddonCheckboxes
-					addons={customConfig.addons}
+					addons={formattedAddons}
 					selectedIds={selectedAddonIds}
 					onToggle={(id) => {
 						const newSet = new Set(selectedAddonIds);
@@ -211,18 +234,34 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 			)}
 
 			{/* Selects */}
-			{customConfig?.selects && (
+			{selectOptions.length > 0 && (
 				<SelectOptions
-					selects={customConfig.selects}
+					selects={selectOptions.map((opt: any) => ({
+						id: opt.id,
+						label: opt.label,
+						required: opt.required,
+						options: opt.selectOptions || [],
+					}))}
 					selectedValues={selectValues}
 					onSelect={(id, value) => setSelectValues(prev => ({ ...prev, [id]: value }))}
 				/>
 			)}
 
 			{/* Inputs */}
-			{customConfig?.inputs && (
+			{inputOptions.length > 0 && (
 				<CustomInputs
-					inputs={customConfig.inputs}
+					inputs={inputOptions.map((opt: any) => ({
+						id: opt.id,
+						label: opt.label,
+						type: opt.inputType || opt.type,
+						required: opt.required,
+						placeholder: opt.placeholder,
+						validation: {
+							min: opt.minValue,
+							max: opt.maxValue,
+							maxLength: opt.maxLength,
+						},
+					}))}
 					values={inputValues}
 					errors={errors}
 					onChange={(id, value) => setInputValues(prev => ({ ...prev, [id]: value }))}
@@ -243,7 +282,7 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 					name: product.name,
 					sku: product.sku,
 					basePriceEurCents: totalPrice,
-					quantity: pricingConfig?.type === 'simple' ? quantity : 1,
+					quantity: pricing?.pricingType === 'simple' ? quantity : 1,
 				}}
 				size="lg"
 				className="w-full rounded-full shadow-lg shadow-primary/20"
@@ -283,37 +322,4 @@ function TrustSignals() {
 			</div>
 		</div>
 	);
-}
-
-// Legacy adapter
-function legacyToPricing(product: Product): Product['pricing'] {
-	if (product.pricing) return product.pricing;
-
-	// Check for quantity bundles first
-	if (product.variantOptions?.quantity?.options) {
-		return {
-			type: 'quantity_bundle',
-			bundles: product.variantOptions.quantity.options.map((opt, idx) => ({
-				quantity: opt.value,
-				totalPriceEurCents: opt.priceEurCents,
-				label: opt.label,
-				isDefault: idx === 0,
-			})),
-		};
-	}
-
-	// Simple pricing
-	if (product.basePriceEurCents !== null && product.basePriceEurCents !== undefined) {
-		return {
-			type: 'simple',
-			unitPriceEurCents: product.basePriceEurCents,
-			allowQuantity: true,
-		};
-	}
-
-	// Fallback to configuration (custom quote)
-	return {
-		type: 'configuration',
-		requiresQuote: true,
-	};
 }

@@ -2,16 +2,20 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link"; // Added for navigation
+import Link from "next/link";
 import { ShoppingCart, Calculator, ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import type { Product } from "~/server/db/schema/shop";
 
-// Product info needed to add to cart (expanded)
-type ProductForAddToCart = Pick<Product, 'id' | 'basePriceEurCents' | 'slug' | 'name' | 'sku'> & {
-	quantity?: number; // Optional quantity/options included from PricingModule
-	selectedOptions?: any[]; // Optional selected options from PricingModule
+// Product info needed to add to cart (simple type, not tied to schema)
+type ProductForAddToCart = {
+	id: string;
+	slug: string;
+	name: string;
+	sku: string;
+	basePriceEurCents: number | null;
+	quantity?: number;
+	selectedOptions?: any[];
 };
 
 interface AddToCartButtonProps {
@@ -19,10 +23,11 @@ interface AddToCartButtonProps {
 	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 	size?: "default" | "sm" | "lg" | "icon";
 	className?: string;
+	disabled?: boolean; // NEW: Support disabled state
 
-	// NEW PROPS for variant/option check (used by ProductCard)
-	requiresSelection?: boolean; // If true, button should navigate to PDP
-	productUrl?: string; // URL to navigate to if selection is required
+	// For variant/option check (used by ProductCard)
+	requiresSelection?: boolean;
+	productUrl?: string;
 }
 
 export function AddToCartButton({
@@ -30,6 +35,7 @@ export function AddToCartButton({
 	variant = "default",
 	size = "default",
 	className,
+	disabled = false,
 	requiresSelection = false,
 	productUrl
 }: AddToCartButtonProps) {
@@ -43,7 +49,7 @@ export function AddToCartButton({
 	if (requiresSelection && productUrl) {
 		return (
 			<Button asChild
-				variant={isQuoteProduct ? "secondary" : "default"} // Use secondary for quotes/view
+				variant={isQuoteProduct ? "secondary" : "default"}
 				size={size}
 				className={cn("gap-2 shadow-sm transition-all", className)}
 			>
@@ -63,26 +69,21 @@ export function AddToCartButton({
 		setIsLoading(true);
 
 		if (isQuoteProduct) {
-			// This path should ideally be handled by the 'requiresSelection' logic
 			console.log("Redirecting to calculator/quote page for:", product.id);
-			// For a dedicated Quote button, a direct link is best, but this component's new logic should handle navigation.
 		} else {
 			// --- ADD TO CART LOGIC ---
 			const cart = localStorage.getItem("cart");
 			const items = cart ? JSON.parse(cart) : [];
-			const quantity = product.quantity || 1; // Use quantity from PricingModule or default to 1
-
-			// Simplistic add to cart for demonstration (no variant/addon logic check)
-			// In a real app, products with options should have an ID that includes the options hash.
+			const quantity = product.quantity || 1;
 
 			items.push({
 				id: crypto.randomUUID(),
 				productId: product.id,
 				name: product.name,
 				sku: product.sku,
-				price: product.basePriceEurCents, // Use the final calculated price
+				price: product.basePriceEurCents,
 				quantity: quantity,
-				selectedOptions: product.selectedOptions, // Pass options
+				selectedOptions: product.selectedOptions,
 				addedAt: new Date().toISOString(),
 			});
 
@@ -101,7 +102,7 @@ export function AddToCartButton({
 			size={size}
 			className={cn("gap-2 shadow-sm transition-all active:scale-95", className)}
 			onClick={handleClick}
-			disabled={isLoading}
+			disabled={isLoading || disabled}
 		>
 			{isLoading ? (
 				<span className="animate-pulse">Processing...</span>

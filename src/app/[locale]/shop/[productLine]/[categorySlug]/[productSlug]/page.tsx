@@ -25,10 +25,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 	const { productLine, categorySlug, productSlug } = await params;
 	const locale = "en"; // Hardcoded for now
 
-	// 2. Fetch product using just the slug (Awaited with trpc.server)
+	// 2. Fetch product using just the slug
 	const productPromise = api.product.getBySlug({ slug: productSlug, locale });
 
-	// 3. Fetch related products in the same category (Awaited with trpc.server)
+	// 3. Fetch related products in the same category
 	const relatedProductsPromise = api.product.getByCategory({ categorySlug, locale });
 
 	const [product, relatedProductsResult] = await Promise.all([
@@ -42,20 +42,19 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 	// ✅ FIXED: Properly determine if product requires custom quote
 	const isCustomOnly =
-		product.pricing?.type === 'configuration' ||
+		product.pricing?.pricingType === 'configured' ||
 		product.stockStatus === "requires_quote" ||
-		// Legacy fallback: no pricing data at all
-		(!product.pricing && !product.basePriceEurCents && !product.variantOptions);
+		// No pricing config at all
+		!product.pricing;
 
-	// Debug logging (remove after testing)
-	console.log('[Product Page] isCustomOnly check:', {
+	// Debug logging
+	console.log('[Product Page] Data:', {
 		slug: productSlug,
 		isCustomOnly,
-		pricingType: product.pricing?.type,
-		stockStatus: product.stockStatus,
-		hasPricing: !!product.pricing,
-		hasBasePriceEurCents: !!product.basePriceEurCents,
-		hasVariantOptions: !!product.variantOptions,
+		pricingType: product.pricing?.pricingType,
+		hasBundles: !!product.bundles,
+		hasAddons: !!product.addons,
+		hasCustomOptions: !!product.customizationOptions,
 	});
 
 	// 4. Inject route params into the product object so buttons/links work
@@ -63,12 +62,12 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		...product,
 		categorySlug,
 		productLineSlug: productLine,
-		name: product.name ?? "Product", // Ensure name exists
+		name: product.name ?? "Product",
 	};
 
 	// 5. Prepare related products (filter out the current product)
 	const relatedProducts = "products" in relatedProductsResult
-		? relatedProductsResult.products.filter(p => p.slug !== productSlug).slice(0, 4) // Limit to 4
+		? relatedProductsResult.products.filter(p => p.slug !== productSlug).slice(0, 4)
 		: [];
 
 	const productsForGrid = relatedProducts.map(p => ({
@@ -77,17 +76,14 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		name: p.name ?? "Untitled Product",
 		sku: p.sku ?? null,
 		shortDescription: p.shortDescription ?? null,
-		basePriceEurCents: p.basePriceEurCents ?? null,
-		priceNote: p.priceNote ?? null,
 		stockStatus: p.stockStatus,
 		heroImageUrl: p.heroImageUrl ?? null,
 		heroImageAlt: p.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		variantOptions: p.variantOptions,
-		addonOptions: p.addonOptions,
-		pricing: p.pricing,
-		customization: p.customization,
+		// V2 pricing fields
+		pricingType: p.pricingType,
+		unitPriceEurCents: p.unitPriceEurCents,
 	}));
 
 
@@ -160,17 +156,41 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 								{/* Short Description */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">Product Details</h2>
-									{/* Long Description with Read More */}
-									<LongDescriptionSection longDescription={product.fullDescription} />
+									<LongDescriptionSection longDescription={product.longDescription} />
 								</div>
 
 								{/* Specifications */}
-								<SpecificationsGrid
-									specifications={product.specifications || {}}
-									specOverrides={product.specOverrides}
-								/>
-
-
+								{product.material && (
+									<div className="space-y-4">
+										<h2 className="text-2xl font-display font-normal">Specifications</h2>
+										<div className="grid gap-3">
+											{product.material && (
+												<div className="flex justify-between py-2 border-b">
+													<span className="text-muted-foreground">Material</span>
+													<span className="font-medium">{product.material}</span>
+												</div>
+											)}
+											{product.widthCm && (
+												<div className="flex justify-between py-2 border-b">
+													<span className="text-muted-foreground">Width</span>
+													<span className="font-medium">{product.widthCm} cm</span>
+												</div>
+											)}
+											{product.heightCm && (
+												<div className="flex justify-between py-2 border-b">
+													<span className="text-muted-foreground">Height</span>
+													<span className="font-medium">{product.heightCm} cm</span>
+												</div>
+											)}
+											{product.productionTime && (
+												<div className="flex justify-between py-2 border-b">
+													<span className="text-muted-foreground">Production Time</span>
+													<span className="font-medium">{product.productionTime}</span>
+												</div>
+											)}
+										</div>
+									</div>
+								)}
 
 								{/* Key Features */}
 								<div className="space-y-4">
