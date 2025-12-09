@@ -6,6 +6,12 @@ import {
 	categories,
 	products,
 	productTranslations,
+	productPricing,
+	pricingBundles,
+	productAddons,
+	customizationOptions,
+	selectOptions,
+	productMarketExclusions,
 	media,
 	categoryTranslations,
 } from "~/server/db/schema";
@@ -13,7 +19,10 @@ import { eq, and, inArray } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
 
-	// Get categories for a product line
+	// ============================================================================
+	// CATEGORIES
+	// ============================================================================
+
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
 			productLineSlug: z.string(),
@@ -59,15 +68,18 @@ export const productRouter = createTRPCRouter({
 			return results;
 		}),
 
-	// Get products by category slug
+	// ============================================================================
+	// PRODUCT LISTINGS
+	// ============================================================================
+
 	getByCategory: publicProcedure
 		.input(z.object({
 			categorySlug: z.string(),
 			locale: z.string().default("en"),
-			userMarket: z.string().default("EU"), // For market filtering
+			userMarket: z.string().default("ROW"), // 'ROW' | 'US' | 'CA' | 'UK'
 		}))
 		.query(async ({ ctx, input }) => {
-			// First find the category
+			// Find category
 			const [category] = await ctx.db
 				.select()
 				.from(categories)
@@ -78,32 +90,33 @@ export const productRouter = createTRPCRouter({
 				return { products: [], categorySlug: input.categorySlug, productLineSlug: null };
 			}
 
-			// Get products in this category with hero image
+			// Get products with basic pricing info
 			const results = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
-					priceNote: products.priceNote,
-					basePriceEurCents: products.basePriceEurCents,
 					stockStatus: products.stockStatus,
-					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
-					specifications: products.specifications,
-					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
-					variantOptions: products.variantOptions,
-					addonOptions: products.addonOptions,
-					// actual new procedures
-					pricing: products.pricing,
-					customization: products.customization,
-					// ------------------------------------
+
+					// Basic pricing (will query separately for bundles)
+					pricingId: productPricing.id,
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
+					// Media
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
+
+					// Translations
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
-					fullDescription: productTranslations.fullDescription,
 				})
 				.from(products)
+				.leftJoin(
+					productPricing,
+					eq(productPricing.productId, products.id)
+				)
 				.leftJoin(
 					productTranslations,
 					and(
@@ -127,10 +140,21 @@ export const productRouter = createTRPCRouter({
 				)
 				.orderBy(products.sortOrder);
 
-			// Filter by market availability
-			const filteredProducts = results.filter(p =>
-				!p.excludedMarkets?.includes(input.userMarket)
-			);
+			// Check market exclusions
+			const productIds = results.map(p => p.id);
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, productIds),
+						eq(productMarketExclusions.market, input.userMarket)
+					)
+				);
+
+			const excludedProductIds = new Set(exclusions.map(e => e.productId));
+
+			const filteredProducts = results.filter(p => !excludedProductIds.has(p.id));
 
 			return {
 				products: filteredProducts,
@@ -139,15 +163,18 @@ export const productRouter = createTRPCRouter({
 			};
 		}),
 
-	// Get single product by slug with all details
+	// ============================================================================
+	// SINGLE PRODUCT (Full Details)
+	// ============================================================================
+
 	getBySlug: publicProcedure
 		.input(z.object({
 			slug: z.string(),
 			locale: z.string().default("en"),
-			userMarket: z.string().default("EU"),
+			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
-			// Get product with translation and category info
+			// Get product with translation and category
 			const [product] = await ctx.db
 				.select({
 					id: products.id,
@@ -156,33 +183,27 @@ export const productRouter = createTRPCRouter({
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
-					basePriceEurCents: products.basePriceEurCents,
-					priceNote: products.priceNote,
-					specifications: products.specifications,
-					variantOptions: products.variantOptions,
-					// 🎯 LEGACY NEW FIELDS added before refactor
-					addonOptions: products.addonOptions,
-					// actual new procedures
-					pricing: products.pricing,
-					customization: products.customization,
-					// ------------------------------------
-					customizationOptions: products.customizationOptions,
-					excludedMarkets: products.excludedMarkets,
 					stockStatus: products.stockStatus,
 					productType: products.productType,
-					variantType: products.variantType,
+
+					// Product details
+					material: products.material,
+					widthCm: products.widthCm,
+					heightCm: products.heightCm,
+					depthCm: products.depthCm,
+					weightGrams: products.weightGrams,
+					productionTime: products.productionTime,
+					technicalSpecs: products.technicalSpecs,
+
+					// Translations
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
-					fullDescription: productTranslations.fullDescription,
+					longDescription: productTranslations.longDescription,
 					metaTitle: productTranslations.metaTitle,
 					metaDescription: productTranslations.metaDescription,
-					specOverrides: productTranslations.specOverrides,
 				})
 				.from(products)
-				.leftJoin(
-					categories,
-					eq(categories.id, products.categoryId)
-				)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
 				.leftJoin(
 					productTranslations,
 					and(
@@ -193,16 +214,67 @@ export const productRouter = createTRPCRouter({
 				.where(eq(products.slug, input.slug))
 				.limit(1);
 
-			if (!product) {
-				return null;
+			if (!product) return null;
+
+			// Check market exclusion
+			const [exclusion] = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						eq(productMarketExclusions.productId, product.id),
+						eq(productMarketExclusions.market, input.userMarket)
+					)
+				)
+				.limit(1);
+
+			if (exclusion) return null;
+
+			// Get pricing config
+			const [pricing] = await ctx.db
+				.select()
+				.from(productPricing)
+				.where(eq(productPricing.productId, product.id))
+				.limit(1);
+
+			// Get bundles if pricing type is quantity_bundle
+			let bundles = null;
+			if (pricing && pricing.pricingType === "quantity_bundle") {
+				bundles = await ctx.db
+					.select()
+					.from(pricingBundles)
+					.where(eq(pricingBundles.pricingId, pricing.id))
+					.orderBy(pricingBundles.quantity);
 			}
 
-			// Check market availability
-			if (product.excludedMarkets?.includes(input.userMarket)) {
-				return null;
+			// Get addons
+			const addons = await ctx.db
+				.select()
+				.from(productAddons)
+				.where(eq(productAddons.productId, product.id))
+				.orderBy(productAddons.sortOrder);
+
+			// Get customization options
+			const customOptions = await ctx.db
+				.select()
+				.from(customizationOptions)
+				.where(eq(customizationOptions.productId, product.id))
+				.orderBy(customizationOptions.sortOrder);
+
+			// Get select options for each customization option
+			const selectOptionsByCustomOptionId: Record<string, any[]> = {};
+			for (const option of customOptions) {
+				if (option.type === "select") {
+					const opts = await ctx.db
+						.select()
+						.from(selectOptions)
+						.where(eq(selectOptions.customizationOptionId, option.id))
+						.orderBy(selectOptions.sortOrder);
+					selectOptionsByCustomOptionId[option.id] = opts;
+				}
 			}
 
-			// Get all images for this product (hero + gallery)
+			// Get all images
 			const images = await ctx.db
 				.select({
 					id: media.id,
@@ -224,53 +296,51 @@ export const productRouter = createTRPCRouter({
 
 			return {
 				...product,
+				pricing,
+				bundles,
+				addons,
+				customizationOptions: customOptions.map(opt => ({
+					...opt,
+					selectOptions: opt.type === "select" ? selectOptionsByCustomOptionId[opt.id] || [] : undefined,
+				})),
 				images,
 			};
 		}),
 
-	// Get multiple products by IDs (for cart/wishlist)
+	// ============================================================================
+	// MULTI-PRODUCT QUERIES (Cart, Wishlist)
+	// ============================================================================
+
 	getByIds: publicProcedure
 		.input(z.object({
 			ids: z.array(z.string()),
 			locale: z.string().default("en"),
-			userMarket: z.string().default("EU"),
+			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
-			if (!input.ids || input.ids.length === 0) {
-				return [];
-			}
+			if (!input.ids || input.ids.length === 0) return [];
 
-			// Get products with category info for routing
 			const results = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
-					basePriceEurCents: products.basePriceEurCents,
-					priceNote: products.priceNote,
 					stockStatus: products.stockStatus,
-					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
-					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
-					variantOptions: products.variantOptions,
-					addonOptions: products.addonOptions,
-					// actual new procedures
-					pricing: products.pricing,
-					customization: products.customization,
-					// ------------------------------------
+
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
-					fullDescription: productTranslations.fullDescription,
 				})
 				.from(products)
-				.leftJoin(
-					categories,
-					eq(categories.id, products.categoryId)
-				)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(productPricing, eq(productPricing.productId, products.id))
 				.leftJoin(
 					productTranslations,
 					and(
@@ -293,18 +363,30 @@ export const productRouter = createTRPCRouter({
 					)
 				);
 
-			// Filter by market availability
-			return results.filter(p =>
-				!p.excludedMarkets?.includes(input.userMarket)
-			);
+			// Filter by market
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, input.ids),
+						eq(productMarketExclusions.market, input.userMarket)
+					)
+				);
+
+			const excludedIds = new Set(exclusions.map(e => e.productId));
+			return results.filter(p => !excludedIds.has(p.id));
 		}),
 
-	// Get featured products for homepage
+	// ============================================================================
+	// FEATURED PRODUCTS
+	// ============================================================================
+
 	getFeatured: publicProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
 			limit: z.number().default(5),
-			userMarket: z.string().default("EU"),
+			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
 			const results = await ctx.db
@@ -312,29 +394,21 @@ export const productRouter = createTRPCRouter({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
-					priceNote: products.priceNote,
-					basePriceEurCents: products.basePriceEurCents,
-					excludedMarkets: products.excludedMarkets,
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
-					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS (Important for ProductCard on homepage)
-					variantOptions: products.variantOptions,
-					addonOptions: products.addonOptions,
-					// actual new procedures
-					pricing: products.pricing,
-					customization: products.customization,
-					// ------------------------------------
+
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
 					name: productTranslations.name,
-					fullDescription: productTranslations.fullDescription,
+					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
-				.leftJoin(
-					categories,
-					eq(categories.id, products.categoryId)
-				)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(productPricing, eq(productPricing.productId, products.id))
 				.leftJoin(
 					productTranslations,
 					and(
@@ -359,9 +433,53 @@ export const productRouter = createTRPCRouter({
 				.orderBy(products.sortOrder)
 				.limit(input.limit);
 
-			// Filter by market availability
-			return results.filter(p =>
-				!p.excludedMarkets?.includes(input.userMarket)
-			);
+			// Filter by market
+			const productIds = results.map(p => p.id);
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, productIds),
+						eq(productMarketExclusions.market, input.userMarket)
+					)
+				);
+
+			const excludedIds = new Set(exclusions.map(e => e.productId));
+			return results.filter(p => !excludedIds.has(p.id));
+		}),
+
+	// ============================================================================
+	// PRICING HELPERS (for calculator, cart)
+	// ============================================================================
+
+	getPricingForProduct: publicProcedure
+		.input(z.object({
+			productId: z.string(),
+			userMarket: z.string().default("ROW"),
+		}))
+		.query(async ({ ctx, input }) => {
+			const [pricing] = await ctx.db
+				.select()
+				.from(productPricing)
+				.where(eq(productPricing.productId, input.productId))
+				.limit(1);
+
+			if (!pricing) return null;
+
+			// Get bundles if applicable
+			let bundles = null;
+			if (pricing.pricingType === "quantity_bundle") {
+				bundles = await ctx.db
+					.select()
+					.from(pricingBundles)
+					.where(eq(pricingBundles.pricingId, pricing.id))
+					.orderBy(pricingBundles.quantity);
+			}
+
+			return {
+				...pricing,
+				bundles,
+			};
 		}),
 });

@@ -1,24 +1,24 @@
-// magical-items/media.ts
+// media.ts for magical-items test category
 
-export const media = [
+import type { MediaSeed } from "../../../../../schema";
+
+export const media: MediaSeed[] = [
 	{
 		productSlug: "magical-items",
 		categorySlug: "magical-items",
-		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-models-aquadecor.png",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-models-aquadecor.png", // Reuse existing
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-models-aquadecor.png",
-		storagePath: null,
 		altText: "Magical Items Category",
-		usageType: "category" as const,
+		usageType: "category",
 		sortOrder: 0,
 		tags: ["category-hero"],
 	},
 	{
 		productSlug: "enchanted-pebble",
-		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp", // Reuse
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-1-model-aquarium-plant.webp",
-		storagePath: null,
 		altText: "Enchanted Pebble",
-		usageType: "product" as const,
+		usageType: "product",
 		sortOrder: 0,
 		tags: ["hero-shot"],
 	},
@@ -26,9 +26,8 @@ export const media = [
 		productSlug: "fairy-dust-bundle",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-2-model-aquarium-plant.webp",
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-2-model-aquarium-plant.webp",
-		storagePath: null,
 		altText: "Fairy Dust Bundle",
-		usageType: "product" as const,
+		usageType: "product",
 		sortOrder: 0,
 		tags: ["hero-shot"],
 	},
@@ -36,9 +35,8 @@ export const media = [
 		productSlug: "wizard-wand-set",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-4-model-aquarium-plant.webp",
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-4-model-aquarium-plant.webp",
-		storagePath: null,
 		altText: "Wizard Wand Set",
-		usageType: "product" as const,
+		usageType: "product",
 		sortOrder: 0,
 		tags: ["hero-shot"],
 	},
@@ -46,9 +44,8 @@ export const media = [
 		productSlug: "custom-potion-kit",
 		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-5-model-aquarium-plant.webp",
 		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/z-5-model-aquarium-plant.webp",
-		storagePath: null,
 		altText: "Custom Potion Kit",
-		usageType: "product" as const,
+		usageType: "product",
 		sortOrder: 0,
 		tags: ["hero-shot"],
 	},
