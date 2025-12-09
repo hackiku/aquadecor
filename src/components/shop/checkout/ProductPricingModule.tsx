@@ -20,12 +20,32 @@ interface ProductPricingModuleProps {
 }
 
 export function ProductPricingModule({ product, isCustomOnly }: ProductPricingModuleProps) {
+	// Debug logging (remove after testing)
+	useEffect(() => {
+		console.log('[ProductPricingModule] Initialized', {
+			productId: product.id,
+			slug: product.slug,
+			isCustomOnly,
+			pricingType: product.pricing?.type,
+			stockStatus: product.stockStatus,
+			hasPricing: !!product.pricing,
+			hasLegacyPrice: !!product.basePriceEurCents,
+		});
+	}, [product, isCustomOnly]);
+
 	// Get pricing config (new or legacy)
 	const pricingConfig = product.pricing || legacyToPricing(product);
 	const customConfig = product.customization;
 
 	// State
-	const [selectedBundleIndex, setSelectedBundleIndex] = useState(0);
+	const [selectedBundleIndex, setSelectedBundleIndex] = useState(() => {
+		if (pricingConfig?.type === 'quantity_bundle') {
+			const defaultIndex = pricingConfig.bundles.findIndex(b => b.isDefault);
+			return defaultIndex !== -1 ? defaultIndex : 0;
+		}
+		return 0;
+	});
+
 	const [quantity, setQuantity] = useState(1);
 	const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());
 	const [inputValues, setInputValues] = useState<Record<string, string>>({});
@@ -56,17 +76,27 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 
 			if (value && input.type === 'number') {
 				const num = parseFloat(value);
-				if (input.validation?.min && num < input.validation.min) {
-					errors[input.id] = `Must be at least ${input.validation.min}`;
-				}
-				if (input.validation?.max && num > input.validation.max) {
-					errors[input.id] = `Must not exceed ${input.validation.max}`;
+				if (isNaN(num)) {
+					errors[input.id] = 'Must be a valid number';
+				} else {
+					if (input.validation?.min !== undefined && num < input.validation.min) {
+						errors[input.id] = `Must be at least ${input.validation.min}`;
+					}
+					if (input.validation?.max !== undefined && num > input.validation.max) {
+						errors[input.id] = `Must not exceed ${input.validation.max}`;
+					}
 				}
 			}
 		});
 
+		customConfig?.selects?.forEach(select => {
+			if (select.required && !selectValues[select.id]) {
+				errors[select.id] = `${select.label} is required`;
+			}
+		});
+
 		return { errors, isValid: Object.keys(errors).length === 0 };
-	}, [inputValues, customConfig]);
+	}, [inputValues, selectValues, customConfig]);
 
 	// Price calculation
 	const { totalPrice, breakdown } = useMemo(() => {
@@ -103,11 +133,14 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 			}
 		});
 
+		console.log('[Price Calculation]', { base, breakdown, pricingType: pricingConfig?.type });
+
 		return { totalPrice: base, breakdown };
 	}, [pricingConfig, selectedBundleIndex, quantity, selectedAddonIds, selectValues, customConfig]);
 
 	// Custom quote products
 	if (isCustomOnly || pricingConfig?.type === 'configuration') {
+		console.log('[Custom Only Mode]', { isCustomOnly, pricingType: pricingConfig?.type });
 		return (
 			<div className="space-y-6">
 				<CustomOnlyBadge variant="banner" showCalculatorLink />
@@ -121,7 +154,19 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 		);
 	}
 
+	// No pricing configured at all
+	if (!pricingConfig || totalPrice === 0) {
+		console.warn('[No Pricing]', { pricingConfig, totalPrice });
+		return (
+			<div className="space-y-4 text-center p-6 border-2 border-dashed rounded-xl">
+				<p className="text-sm text-muted-foreground">Pricing not configured for this product</p>
+			</div>
+		);
+	}
+
 	// Regular products
+	console.log('[Regular Product Mode]', { totalPrice, isValid, pricingType: pricingConfig.type });
+
 	return (
 		<div className="space-y-6">
 			{/* Bundle Selector */}
@@ -204,6 +249,12 @@ export function ProductPricingModule({ product, isCustomOnly }: ProductPricingMo
 				className="w-full rounded-full shadow-lg shadow-primary/20"
 				disabled={!isValid || totalPrice === 0}
 			/>
+
+			{!isValid && Object.keys(errors).length > 0 && (
+				<p className="text-xs text-center text-destructive font-display">
+					Please complete all required fields
+				</p>
+			)}
 		</div>
 	);
 }
@@ -238,6 +289,7 @@ function TrustSignals() {
 function legacyToPricing(product: Product): Product['pricing'] {
 	if (product.pricing) return product.pricing;
 
+	// Check for quantity bundles first
 	if (product.variantOptions?.quantity?.options) {
 		return {
 			type: 'quantity_bundle',
@@ -250,7 +302,8 @@ function legacyToPricing(product: Product): Product['pricing'] {
 		};
 	}
 
-	if (product.basePriceEurCents !== null) {
+	// Simple pricing
+	if (product.basePriceEurCents !== null && product.basePriceEurCents !== undefined) {
 		return {
 			type: 'simple',
 			unitPriceEurCents: product.basePriceEurCents,
@@ -258,6 +311,7 @@ function legacyToPricing(product: Product): Product['pricing'] {
 		};
 	}
 
+	// Fallback to configuration (custom quote)
 	return {
 		type: 'configuration',
 		requiresQuote: true,

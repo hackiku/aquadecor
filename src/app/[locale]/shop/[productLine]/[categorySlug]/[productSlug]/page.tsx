@@ -42,10 +42,21 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 	// ✅ FIXED: Properly determine if product requires custom quote
 	const isCustomOnly =
-		product.stockStatus === "requires_quote" ||
 		product.pricing?.type === 'configuration' ||
-		// Fallback: if no new pricing and no legacy pricing
+		product.stockStatus === "requires_quote" ||
+		// Legacy fallback: no pricing data at all
 		(!product.pricing && !product.basePriceEurCents && !product.variantOptions);
+
+	// Debug logging (remove after testing)
+	console.log('[Product Page] isCustomOnly check:', {
+		slug: productSlug,
+		isCustomOnly,
+		pricingType: product.pricing?.type,
+		stockStatus: product.stockStatus,
+		hasPricing: !!product.pricing,
+		hasBasePriceEurCents: !!product.basePriceEurCents,
+		hasVariantOptions: !!product.variantOptions,
+	});
 
 	// 4. Inject route params into the product object so buttons/links work
 	const productForButtons = {
@@ -75,8 +86,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		productLineSlug: productLine,
 		variantOptions: p.variantOptions,
 		addonOptions: p.addonOptions,
-		pricing: p.pricing, // ✅ Pass new pricing field
-		customization: p.customization, // ✅ Pass new customization field
+		pricing: p.pricing,
+		customization: p.customization,
 	}));
 
 

@@ -21,7 +21,8 @@ export function PricingCard({ productId, product, isCustomOnly }: PricingCardPro
 
 				<ProductPricingModule
 					product={product}
-					isCustomOnly={isCustomOnly}
+					// isCustomOnly={isCustomOnly}
+					isCustomOnly={false}
 				/>
 			</div>
 		</div>

@@ -140,12 +140,29 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 			categoryId,
 			slug: prod.slug,
 			sku: prod.sku,
+			productType: prod.productType,
+			stockStatus: prod.stockStatus,
+
+			// ✅ NEW PRICING SCHEMA
+			pricing: prod.pricing as any,
+			customization: prod.customization as any,
+
+			// Stripe fields
+			stripeProductId: prod.stripeProductId,
+			stripePriceId: prod.stripePriceId,
+			stripePrices: prod.stripePrices as any,
+
+			// Legacy fields (for backward compatibility)
 			basePriceEurCents: prod.basePriceEurCents,
 			priceNote: prod.priceNote,
+			variantType: prod.variantType,
+			variantOptions: prod.variantOptions as any,
+			addonOptions: prod.addonOptions as any,
+
+			// Other fields
 			specifications: prod.specifications as any,
 			customizationOptions: prod.customizationOptions as any,
 			excludedMarkets: prod.excludedMarkets,
-			stockStatus: prod.stockStatus,
 			isActive: prod.isActive,
 			isFeatured: prod.isFeatured,
 			sortOrder: prod.sortOrder,
@@ -154,7 +171,7 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 		if (inserted) {
 			productIdMap.set(prod.slug, inserted.id);
 			const sku = prod.sku || "no-sku";
-			console.log(`  ✓ ${sku} - ${prod.slug}`);
+			console.log(`  ✓ ${sku} - ${prod.slug} ${prod.pricing ? '(with pricing)' : '(legacy)'}`);
 		}
 	}
 

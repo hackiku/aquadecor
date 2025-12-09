@@ -9,6 +9,11 @@ export const categoryTranslations: TranslationSeed = {
 			description: "Whimsical test products for debugging all customization patterns",
 			model: "MAGIC",
 		},
+		de: {
+			name: "Magical Items",
+			description: "Whimsical test products for debugging all customization patterns",
+			model: "MAGIC",
+		},
 	},
 	"magnetic-rocks": {
 		en: {
