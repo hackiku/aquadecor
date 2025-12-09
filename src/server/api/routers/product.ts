@@ -93,6 +93,9 @@ export const productRouter = createTRPCRouter({
 					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
 					variantOptions: products.variantOptions,
 					addonOptions: products.addonOptions,
+					// actual new procedures
+					pricing: products.pricing,
+					customization: products.customization,
 					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
@@ -157,8 +160,11 @@ export const productRouter = createTRPCRouter({
 					priceNote: products.priceNote,
 					specifications: products.specifications,
 					variantOptions: products.variantOptions,
-					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
+					// 🎯 LEGACY NEW FIELDS added before refactor
 					addonOptions: products.addonOptions,
+					// actual new procedures
+					pricing: products.pricing,
+					customization: products.customization,
 					// ------------------------------------
 					customizationOptions: products.customizationOptions,
 					excludedMarkets: products.excludedMarkets,
@@ -250,6 +256,9 @@ export const productRouter = createTRPCRouter({
 					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS
 					variantOptions: products.variantOptions,
 					addonOptions: products.addonOptions,
+					// actual new procedures
+					pricing: products.pricing,
+					customization: products.customization,
 					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,
@@ -312,6 +321,9 @@ export const productRouter = createTRPCRouter({
 					// 🎯 NEW FIELDS FOR VARIANTS/ADDONS (Important for ProductCard on homepage)
 					variantOptions: products.variantOptions,
 					addonOptions: products.addonOptions,
+					// actual new procedures
+					pricing: products.pricing,
+					customization: products.customization,
 					// ------------------------------------
 					heroImageUrl: media.storageUrl,
 					heroImageAlt: media.altText,

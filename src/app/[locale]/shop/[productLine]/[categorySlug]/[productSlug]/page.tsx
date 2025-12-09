@@ -40,15 +40,19 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		notFound();
 	}
 
-	// 🎯 CRITICAL FIX: Base price can be null for variant products (like plants). 
-	// The only reliable indicator for a 'Custom Quote' product is the stock status.
-	const isCustomOnly = product.stockStatus === "requires_quote";
+	// ✅ FIXED: Properly determine if product requires custom quote
+	const isCustomOnly =
+		product.stockStatus === "requires_quote" ||
+		product.pricing?.type === 'configuration' ||
+		// Fallback: if no new pricing and no legacy pricing
+		(!product.pricing && !product.basePriceEurCents && !product.variantOptions);
 
 	// 4. Inject route params into the product object so buttons/links work
 	const productForButtons = {
 		...product,
 		categorySlug,
-		productLineSlug: productLine
+		productLineSlug: productLine,
+		name: product.name ?? "Product", // Ensure name exists
 	};
 
 	// 5. Prepare related products (filter out the current product)
@@ -69,8 +73,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		heroImageAlt: p.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		variantOptions: p.variantOptions, // Ensure these are passed
-		addonOptions: p.addonOptions,     // Ensure these are passed
+		variantOptions: p.variantOptions,
+		addonOptions: p.addonOptions,
+		pricing: p.pricing, // ✅ Pass new pricing field
+		customization: p.customization, // ✅ Pass new customization field
 	}));
 
 
@@ -100,9 +106,11 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 					<div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
 						<div className="max-w-7xl mx-auto space-y-3">
 							<div className="flex items-center gap-3 mb-4">
-								<Badge variant="secondary" className="font-display text-xs">
-									{product.sku}
-								</Badge>
+								{product.sku && (
+									<Badge variant="secondary" className="font-display text-xs">
+										{product.sku}
+									</Badge>
+								)}
 								{product.stockStatus === "in_stock" && (
 									<Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 text-xs">
 										In Stock
@@ -119,7 +127,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 								{product.name ?? "Product"}
 							</h1>
 							<p className="text-lg text-neutral-400/90 max-w-4xl font-display font-light leading-relaxed">
-								{product.shortDescription || product.shortDescription}
+								{product.shortDescription}
 							</p>
 						</div>
 					</div>
