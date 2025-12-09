@@ -4,7 +4,21 @@
 import type { CategorySeed } from "../../../../schema";
 
 export const categories: CategorySeed[] = [
-
+	{
+		slug: "magical-items",
+		productLine: "aquarium-decorations",
+		modelCode: "MAGIC",
+		sortOrder: 1, // Put at end
+		isActive: true,
+		contentBlocks: {
+			icon: "✨",
+			features: [
+				"Whimsical test products",
+				"All customization patterns",
+				"Debug-friendly data",
+			],
+		},
+	},
 	{
 		slug: "magnetic-rocks",
 		productLine: "aquarium-decorations",

@@ -3,7 +3,13 @@
 import type { TranslationSeed } from "../../../../schema";
 
 export const categoryTranslations: TranslationSeed = {
-
+	"magical-items": {
+		en: {
+			name: "Magical Items",
+			description: "Whimsical test products for debugging all customization patterns",
+			model: "MAGIC",
+		},
+	},
 	"magnetic-rocks": {
 		en: {
 			model: "M Models",

@@ -73,14 +73,89 @@ export const products = createTable(
 		sku: d.text(),
 
 		// Product type
-		productType: d.text().notNull().default("simple"), // 'simple' | 'variable'
+		productType: d.text().notNull().default("catalog"), // 'catalog' | 'configurable'
 
-		// Pricing (in EUR cents)
-		basePriceEurCents: d.integer(),
-		priceNote: d.text(), // "From €199" | "Custom quote"
+		// ============================================================================
+		// NEW PRICING STRUCTURE (v2)
+		// ============================================================================
+		pricing: jsonb().$type<
+			| {
+				type: 'simple';
+				unitPriceEurCents: number;
+				allowQuantity: boolean;
+				maxQuantity?: number;
+			}
+			| {
+				type: 'quantity_bundle';
+				bundles: Array<{
+					quantity: number;
+					totalPriceEurCents: number;
+					label?: string;
+					isDefault?: boolean;
+				}>;
+			}
+			| {
+				type: 'configuration';
+				baseRateEurPerSqM?: number;
+				calculatorUrl?: string;
+				requiresQuote: true;
+			}
+		>(),
 
-		// Variants (for quantity bundles)
-		variantType: d.text(), // 'quantity' | null
+		// ============================================================================
+		// NEW CUSTOMIZATION STRUCTURE (v2)
+		// ============================================================================
+		customization: jsonb().$type<{
+			addons?: Array<{
+				id: string;
+				name: string;
+				description?: string;
+				priceEurCents: number;
+				type: 'checkbox';
+				default?: boolean;
+			}>;
+			inputs?: Array<{
+				id: string;
+				label: string;
+				type: 'number' | 'text' | 'textarea';
+				required: boolean;
+				placeholder?: string;
+				validation?: {
+					min?: number;
+					max?: number;
+					maxLength?: number;
+					pattern?: string;
+				};
+			}>;
+			selects?: Array<{
+				id: string;
+				label: string;
+				required: boolean;
+				options: Array<{
+					value: string;
+					label: string;
+					priceEurCents?: number;
+					isDefault?: boolean;
+				}>;
+			}>;
+		}>(),
+
+		// ============================================================================
+		// STRIPE INTEGRATION
+		// ============================================================================
+		stripeProductId: d.text(), // Stripe Product ID
+		stripePriceId: d.text(), // Default Stripe Price ID (for simple products)
+		stripePrices: jsonb().$type<Array<{
+			quantity: number;
+			stripePriceId: string;
+		}>>(), // For quantity bundles
+
+		// ============================================================================
+		// OLD FIELDS (deprecated, keep for backward compatibility during migration)
+		// ============================================================================
+		basePriceEurCents: d.integer(), // DEPRECATED - use pricing.unitPriceEurCents
+		priceNote: d.text(), // DEPRECATED - use UI logic based on pricing.type
+		variantType: d.text(), // DEPRECATED - use pricing.type
 		variantOptions: jsonb().$type<{
 			quantity?: {
 				options: Array<{
@@ -89,19 +164,17 @@ export const products = createTable(
 					label?: string;
 				}>;
 			};
-		}>(),
-
-		addonOptions: jsonb().$type<{ // Changed name from productOptions to addonOptions for clarity
+		}>(), // DEPRECATED - use pricing.bundles
+		addonOptions: jsonb().$type<{
 			items?: Array<{
 				name: string;
 				description?: string;
 				type: "checkbox" | "select" | "input" | "textarea";
-				priceEurCents?: number; // Added to cart line item price
-				options?: string[]; // For select type
-				required?: boolean; // e.g. "Enter height" is required
+				priceEurCents?: number;
+				options?: string[];
+				required?: boolean;
 			}>;
-			// Add other keys for more complex option groups if needed
-		}>(),
+		}>(), // DEPRECATED - use customization
 
 		// Flexible specifications (STAYS TECHNICAL)
 		specifications: jsonb().$type<{
