@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { QuickShoutout } from "~/components/proof/QuickShoutout";
 import { HeroVideoWave } from "~/components/ui/water/hero-video-wave";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
+import { ShopButton } from "~/components/cta/ShopButton";
 
 export function HeroSection() {
 	const [isUnderlineVisible, setIsUnderlineVisible] = useState(false);
@@ -79,13 +80,7 @@ export function HeroSection() {
 						{/* CTAs */}
 						<div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
 							{/* Shop Now - primary button */}
-							<Link
-								href="/shop"
-								className="inline-flex items-center justify-center px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium text-base transition-all hover:scale-105 sm:w-auto"
-							>
-								Shop Now
-							</Link>
-
+							<ShopButton />
 							{/* Order Custom - outline button */}
 							<Link
 								href="/calculator"

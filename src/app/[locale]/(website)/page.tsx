@@ -6,9 +6,9 @@ import { useRef } from "react";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Hammer, Shield, Ruler } from "lucide-react";
 // db
-import { ProductSlider } from "~/components/shop/product/ProductSlider";
+import { FeaturedProductSlider } from "~/components/shop/product/FeaturedProductSlider";
 import { SocialLinks } from "~/components/social/SocialLinks";
 import { SocialGrid } from "~/components/social/SocialGrid";
 // components
@@ -21,6 +21,7 @@ import { MediaBlob } from "~/components/ui/water/media-blob";
 import { HeroSection } from "./_components/HeroSection";
 import { ComparisonTable } from "./_components/ComparisonTable";
 import { FeaturesLayout } from "./_components/FeaturesLayout";
+import { StickyShop } from "~/components/cta/StickyShop";
 
 // export async function generateMetadata(props: { params: Promise<{ locale: string }> }) {
 // 	const { locale } = await props.params; // ← Await params first
@@ -40,10 +41,13 @@ import { FeaturesLayout } from "./_components/FeaturesLayout";
 
 export default function LandingPage() {
 	const sliderRef = useRef<HTMLElement>(null);
+	const featuresRef = useRef<HTMLElement>(null);
+
 	const { scrollYProgress } = useScroll({
 		target: sliderRef,
 		offset: ["start end", "end start"],
 	});
+
 
 	// Parallax: Cards move slower than scroll (creates "sticky" effect)
 	const sliderY = useTransform(scrollYProgress, [0, 0.6], ["0%", "-10%"]);
@@ -78,31 +82,33 @@ export default function LandingPage() {
 
 					{/* Product slider - shows first, moves slower than scroll */}
 					<motion.div style={{ y: sliderY }} className="relative z-20">
-						<ProductSlider />
+						<FeaturedProductSlider />
 					</motion.div>
 
 				</div>
 
+				
 				{/* Trust Signals */}
 				<div className="mt-24 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto px-4">
 					<div className="text-center space-y-2">
-						<div className="text-4xl mb-2">🔬</div>
-						<h3 className="font-display font-medium">Laboratory Tested</h3>
+						<Hammer className="h-14 w-14 mx-auto mb-4 text-primary" strokeWidth={1}/>
+						<h3 className="font-display font-medium">Handcrafted</h3>
 					</div>
 					<div className="text-center space-y-2">
-						<div className="text-4xl mb-2">🌊</div>
-						<h3 className="font-display font-medium">100% Water-Safe</h3>
+						<Shield className="h-14 w-14 mx-auto mb-4 text-primary" strokeWidth={1} />
+						<h3 className="font-display font-medium">Lifetime warranty</h3>
 					</div>
 					<div className="text-center space-y-2">
-						<div className="text-4xl mb-2">♻️</div>
-						<h3 className="font-display font-medium">Eco-Conscious materials</h3>
+						<Ruler className="h-14 w-14 mx-auto mb-4 text-primary" strokeWidth={1} />
+						<h3 className="font-display font-medium">Perfect fit</h3>
 					</div>
 				</div>
 			</section>
 
 			{/* Features Section with Parallax Annotations */}
-			<section className="relative py-24 md:py-32 overflow-hidden">
-
+			<section ref={featuresRef} className="relative py-24 md:py-32 overflow-hidden">
+				
+				<StickyShop triggerRef={featuresRef} />
 				{/* Headline */}
 				<div className="text-center mb-16 px-4">
 					<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
@@ -121,8 +127,9 @@ export default function LandingPage() {
 
 			</section>
 
+
 			{/* Social Proof - Customer Content */}
-			<section className="relative py-24 md:py-36 bg-gradient-to-b from-card/80 to-transparent overflow-hidden">
+			<section className="relative py-24 md:py-36 bg-linear-to-b from-card/80 to-transparent overflow-hidden">
 				{/* Top Wave Divider */}
 				<WaveDivider position="top" color="currentColor" className="text-background" />
 
@@ -180,7 +187,7 @@ export default function LandingPage() {
 						{/* Headline - positioned to be inside the cyan wave */}
 						<div className="text-center mb-16">
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4 text-white">
-								Whatever you choose, you won't regret it!
+								Scape Your Way
 							</h2>
 							<p className="text-lg text-cyan-100/80 font-display font-light max-w-2xl mx-auto">
 								Standard dimensions for quick setup, or custom-made to fit your exact vision.

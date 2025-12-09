@@ -10,7 +10,7 @@ import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 
-export function ProductSlider() {
+export function FeaturedProductSlider() {
 	const { data: products, isLoading, isError, refetch } = api.product.getFeatured.useQuery(
 		{
 			locale: "en",
@@ -134,7 +134,7 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 					) : (
 						products.map((product) => (
 							
-							<ProductCard key={product.id} product={product} />
+							<FeaturedProductCard key={product.id} product={product} />
 						))
 					)}
 				</div>
@@ -151,7 +151,7 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 	);
 }
 
-function ProductCard({ product }: { product: FeaturedProduct }) {
+export function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
 	const hasPrice = product.basePriceEurCents !== null;
 	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
 	const displayName = product.name ?? product.slug;

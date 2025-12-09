@@ -1,6 +1,7 @@
 // src/app/(website)/_components/ComparisonTable.tsx
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import { Check, X } from "lucide-react";
 
@@ -30,6 +31,7 @@ export function ComparisonTable() {
 					ctaHref="/store"
 					ctaText="Shop now"
 					variant="secondary"
+					bgImage="/media/images/standard-tank.webp"
 				/>
 				<ComparisonCard
 					title="Custom dimensions"
@@ -39,6 +41,7 @@ export function ComparisonTable() {
 					ctaText="Order custom"
 					variant="default"
 					highlighted
+					bgImage="/media/images/custom-tank.webp"
 				/>
 			</div>
 
@@ -51,6 +54,7 @@ export function ComparisonTable() {
 					ctaHref="/store"
 					ctaText="Shop now"
 					variant="secondary"
+					bgImage="/media/images/standard-tank.webp"
 				/>
 				<ComparisonCard
 					title="Custom dimensions"
@@ -60,6 +64,7 @@ export function ComparisonTable() {
 					ctaText="Order custom"
 					variant="default"
 					highlighted
+					bgImage="/media/images/custom-tank.webp"
 				/>
 			</div>
 		</div>
@@ -74,6 +79,7 @@ interface ComparisonCardProps {
 	ctaText: string;
 	variant: "default" | "secondary";
 	highlighted?: boolean;
+	bgImage?: string;
 }
 
 function ComparisonCard({
@@ -83,61 +89,80 @@ function ComparisonCard({
 	ctaHref,
 	ctaText,
 	variant,
-	highlighted
+	highlighted,
+	bgImage
 }: ComparisonCardProps) {
 	return (
 		<div
 			className={`
-				rounded-2xl p-8 md:p-10 h-full flex flex-col
+				relative rounded-2xl p-8 md:p-10 h-full flex flex-col overflow-hidden
 				backdrop-blur-sm transition-all duration-300
 				${highlighted
-					? "bg-white/10 border-2 border-cyan-400 shadow-xl shadow-cyan-500/20"
-					: "bg-white/5 border border-white/10"
+					? "border-2 border-cyan-400 shadow-xl shadow-cyan-500/20"
+					: "border border-white/10"
 				}
 			`}
 		>
-			<div className="mb-8">
-				<h3 className={`font-display font-light text-3xl mb-3 ${highlighted ? "text-cyan-300" : "text-white"}`}>
-					{title}
-				</h3>
-				<p className="font-display text-base text-cyan-100/70">
-					{description}
-				</p>
-			</div>
+			{/* Background Image Layer */}
+			{bgImage && (
+				<>
+					<Image
+						src={bgImage}
+						alt=""
+						fill
+						className="object-cover z-0"
+						sizes="(max-width: 1024px) 100vw, 50vw"
+					/>
+					{/* Dark overlay gradient - stronger at bottom for text readability */}
+					<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/70 to-black/50 z-0" />
+				</>
+			)}
 
-			<div className="space-y-4 flex-grow mb-8">
-				{features.map((feature, index) => (
-					<div key={index} className="flex items-center gap-3">
-						{feature.included ? (
-							<div className="shrink-0 w-6 h-6 rounded-full bg-cyan-400/20 flex items-center justify-center">
-								<Check className="h-4 w-4 text-cyan-400" />
-							</div>
-						) : (
-							<div className="shrink-0 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center">
-								<X className="h-4 w-4 text-white/40" />
-							</div>
-						)}
-						<p className="text-base font-display font-normal text-white">
-							{feature.title}
-						</p>
-					</div>
-				))}
-			</div>
+			{/* Content - elevated above background */}
+			<div className="relative z-10 flex flex-col h-full">
+				<div className="mb-8">
+					<h3 className={`font-display font-thin text-4xl mb-3 ${highlighted ? "text-cyan-300" : "text-white"}`}>
+						{title}
+					</h3>
+					<p className="font-thin text-lg text-cyan-200/90">
+						{description}
+					</p>
+				</div>
 
-			<Button
-				asChild
-				variant={variant}
-				size="lg"
-				className={`
-					w-full rounded-full font-display
-					${variant === "default"
-						? "bg-cyan-400 hover:bg-cyan-300 text-cyan-950"
-						: "bg-white/10 hover:bg-white/20 text-white border-white/20"
-					}
-				`}
-			>
-				<Link href={ctaHref}>{ctaText}</Link>
-			</Button>
+				<div className="space-y-4 grow mb-8">
+					{features.map((feature, index) => (
+						<div key={index} className="flex items-center gap-3">
+							{feature.included ? (
+								<div className="shrink-0 w-6 h-6 rounded-full bg-cyan-400/30 backdrop-blur-sm flex items-center justify-center">
+									<Check className="h-4 w-4 text-cyan-300" />
+								</div>
+							) : (
+								<div className="shrink-0 w-6 h-6 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+									<X className="h-4 w-4 text-white/50" />
+								</div>
+							)}
+							<p className="text-base font-display font-thin text-white">
+								{feature.title}
+							</p>
+						</div>
+					))}
+				</div>
+
+				<Button
+					asChild
+					variant={variant}
+					size="lg"
+					className={`
+						w-full rounded-full font-display
+						${variant === "default"
+							? "bg-cyan-400 hover:bg-cyan-300 text-cyan-950"
+							: "bg-white/10 hover:bg-white/20 text-white border-white/20"
+						}
+					`}
+				>
+					<Link href={ctaHref}>{ctaText}</Link>
+				</Button>
+			</div>
 		</div>
 	);
 }
