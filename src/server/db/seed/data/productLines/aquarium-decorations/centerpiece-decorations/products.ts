@@ -4,7 +4,7 @@ export const products = [
 	{
 		"categorySlug": "centerpiece-decorations",
 		"slug": "v1-tree-trunk-centerpiece",
-		"sku": null,
+		"sku": "V1",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
@@ -18,7 +18,7 @@ export const products = [
 	{
 		"categorySlug": "centerpiece-decorations",
 		"slug": "v2-bamboo-centerpiece",
-		"sku": null,
+		"sku": "V2",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": true,

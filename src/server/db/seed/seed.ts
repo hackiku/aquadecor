@@ -6,47 +6,39 @@ import { eq } from "drizzle-orm";
 import postgres from "postgres";
 import {
 	users, addresses,
-	categories as categoriesTable,
-	categoryTranslations as categoryTranslationsTable,
-	productTranslations,
-	media as mediaTable,
+	categories, categoryTranslations,
+
+	// Core Product/Media/Content Tables
+	productTranslations, media,
 	reviews, faqs, faqTranslations,
 	shippingZones, countries,
-	orders, orderItems,
+
+	// Selling/Promo Tables
+	orders, orderItems, orderStatusHistory,
 	promoters, promoterCodes, sales,
-	products as productsTable,
+
+	// 🎯 V2 Relational Tables
+	products,
 	productPricing, pricingBundles,
 	productAddons,
-	customizationOptions as customizationOptionsTable,
-	selectOptions as selectOptionsTable,
+	customizationOptions, selectOptions,
 	productMarketExclusions,
+
 } from "../schema";
 
-// auth & admin
+// Auth & Admin
 import { usersSeedData, addressesSeedData } from "./data/seed-users";
 
-// NEW V2 Structure - Magical Items Test Data
-import { products as magicalProducts } from "./data/productLines/aquarium-decorations/magical-items/products";
-import {
-	pricing as magicalPricing,
-	bundles as magicalBundles,
-	addons as magicalAddons,
-	customizationOptions as magicalCustomOptions,
-	selectOptions as magicalSelectOptions,
-	marketExclusions as magicalMarketExclusions,
-} from "./data/productLines/aquarium-decorations/magical-items/pricing";
-import { media as magicalMedia } from "./data/productLines/aquarium-decorations/magical-items/media";
-import { translations as magicalTranslations } from "./data/productLines/aquarium-decorations/magical-items/translations";
+// 🎯 V2 PRODUCT LINES (Complete Import)
+import { productLine as aquariumDecorations } from "./data/productLines/aquarium-decorations";
+import { productLine as threeDBackgrounds } from "./data/productLines/3d-backgrounds";
 
-// Categories (seed data, not schema)
-import { categories as categoriesSeedData } from "./data/productLines/aquarium-decorations/categories";
-import { categoryTranslations as categoryTranslationsSeedData } from "./data/productLines/aquarium-decorations/category-translations";
-
-// selling
+// Selling
 import { ordersSeedData } from "./data/seed-orders";
 import { promotersSeedData } from "./data/seed-promoters";
 import { salesSeedData } from "./data/seed-sales";
-// content
+
+// Content
 import { reviewData } from "./data/seed-reviews";
 import { faqsSeedData } from "./data/seed-faqs";
 import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
@@ -60,6 +52,9 @@ if (!connectionString) {
 const client = postgres(connectionString);
 const db = drizzle(client);
 
+// ============================================================================
+// SEED FUNCTIONS
+// ============================================================================
 
 async function seedUsers() {
 	console.log("🌱 Seeding users and addresses...");
@@ -96,15 +91,25 @@ async function seedUsers() {
 	return userMap;
 }
 
-
 async function seedCategories() {
 	console.log("🌱 Seeding categories...");
 
 	const categoryIdMap = new Map<string, string>();
 
+	// Combine both product lines
+	const allCategories = [
+		...aquariumDecorations.categories,
+		...threeDBackgrounds.categories,
+	];
+
+	const allCategoryTranslations = {
+		...aquariumDecorations.categoryTranslations,
+		...threeDBackgrounds.categoryTranslations,
+	};
+
 	// 1. Insert Categories
-	for (const cat of categoriesSeedData) {
-		const [inserted] = await db.insert(categoriesTable).values({
+	for (const cat of allCategories) {
+		const [inserted] = await db.insert(categories).values({
 			slug: cat.slug,
 			productLine: cat.productLine,
 			modelCode: cat.modelCode,
@@ -119,31 +124,32 @@ async function seedCategories() {
 	}
 
 	// 2. Insert Translations
-	for (const [slug, translations] of Object.entries(categoryTranslationsSeedData)) {
+	for (const [slug, translations] of Object.entries(allCategoryTranslations)) {
 		const categoryId = categoryIdMap.get(slug);
 		if (!categoryId) {
 			console.warn(`  ⚠ No category ID found for translation slug: ${slug}`);
 			continue;
 		}
 
-		for (const [locale, trans] of Object.entries(translations as Record<string, any>)) {
-			await db.insert(categoryTranslationsTable).values({
+		for (const [locale, trans] of Object.entries(translations as any)) {
+			await db.insert(categoryTranslations).values({
 				categoryId,
 				locale,
 				name: trans.name,
 				description: trans.description,
-				metaTitle: trans.metaTitle || null,
-				metaDescription: trans.metaDescription || null,
+				metaTitle: trans.metaTitle,
+				metaDescription: trans.metaDescription,
 			});
 		}
 	}
 
-	console.log(`✅ Seeded ${categoriesSeedData.length} categories with translations\n`);
+	console.log(`✅ Seeded ${allCategories.length} categories with translations\n`);
 	return categoryIdMap;
 }
 
+// 🎯 CLEAN V2 seedProducts FUNCTION
 async function seedProducts(categoryIdMap: Map<string, string>) {
-	console.log("🌱 Seeding products (V2 Normalized Structure)...");
+	console.log("🌱 Seeding products (V2 Normalized)...");
 
 	const productIdMap = new Map<string, string>();
 	const pricingIdMap = new Map<string, string>();
@@ -154,61 +160,106 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 	let addonCount = 0;
 	let customOptionCount = 0;
 	let selectOptionCount = 0;
+	let exclusionCount = 0;
+
+	// Combine both product lines
+	const allProducts = [
+		...aquariumDecorations.products,
+		...threeDBackgrounds.products,
+	];
+
+	const allPricing = [
+		...aquariumDecorations.pricing,
+		...threeDBackgrounds.pricing,
+	];
+
+	const allBundles = [
+		...aquariumDecorations.bundles,
+		...threeDBackgrounds.bundles,
+	];
+
+	const allAddons = [
+		...aquariumDecorations.addons,
+		...threeDBackgrounds.addons,
+	];
+
+	const allCustomizationOptions = [
+		...(aquariumDecorations.customizationOptions || []),
+		// 3D backgrounds don't have customization yet
+	];
+
+	const allSelectOptions = [
+		...(aquariumDecorations.selectOptions || []),
+		// 3D backgrounds don't have select options yet
+	];
+
+	const allMarketExclusions = [
+		...aquariumDecorations.marketExclusions,
+		...threeDBackgrounds.marketExclusions,
+	];
+
+	const allTranslations = {
+		...aquariumDecorations.translations,
+		...threeDBackgrounds.translations,
+	};
 
 	// --- 1. Insert Core Products ---
-	for (const prod of magicalProducts) {
+	console.log(`  📦 Inserting ${allProducts.length} products...`);
+	for (const prod of allProducts) {
 		const categoryId = categoryIdMap.get(prod.categorySlug);
 		if (!categoryId) {
-			console.warn(`  ⚠ No category found for product slug: ${prod.slug}`);
+			console.warn(`  ⚠ No category found for product: ${prod.slug} (cat: ${prod.categorySlug})`);
 			continue;
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { categorySlug, ...coreProductData } = prod;
-		const [insertedProduct] = await db.insert(productsTable).values({
+		const [insertedProduct] = await db.insert(products).values({
 			...coreProductData,
-			categoryId,
+			categoryId
 		}).returning();
 
 		if (!insertedProduct) continue;
 
 		productIdMap.set(prod.slug, insertedProduct.id);
-		console.log(`  ✓ ${prod.sku} - ${prod.slug}`);
 	}
+	console.log(`  ✅ Inserted ${productIdMap.size} products`);
 
 	// --- 2. Insert Pricing and Bundles ---
-	for (const pricingItem of magicalPricing) {
-		const productId = productIdMap.get(pricingItem.productSlug);
+	console.log(`  💰 Inserting pricing...`);
+	for (const pricing of allPricing) {
+		const productId = productIdMap.get(pricing.productSlug);
 		if (!productId) continue;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { productSlug, slug, ...pricingDataInsert } = pricingItem;
+		const { productSlug, slug, ...pricingDataInsert } = pricing;
 
 		const [insertedPricing] = await db.insert(productPricing).values({
 			...pricingDataInsert,
-			productId,
+			productId
 		}).returning();
-
 		if (!insertedPricing) continue;
 
 		pricingIdMap.set(slug, insertedPricing.id);
 		pricingCount++;
 
 		// Insert Bundles (linked by pricing slug)
-		const relatedBundles = magicalBundles.filter(b => b.pricingSlug === slug);
-		for (const bundle of relatedBundles) {
+		const bundles = allBundles.filter(b => b.pricingSlug === pricing.slug);
+		for (const bundle of bundles) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { pricingSlug, ...bundleData } = bundle;
 			await db.insert(pricingBundles).values({
 				...bundleData,
-				pricingId: insertedPricing.id,
+				pricingId: insertedPricing.id
 			});
 			bundleCount++;
 		}
 	}
+	console.log(`  ✅ Inserted ${pricingCount} pricing configs, ${bundleCount} bundles`);
 
 	// --- 3. Insert Market Exclusions ---
-	for (const exclusion of magicalMarketExclusions) {
+	console.log(`  🌍 Inserting market exclusions...`);
+	for (const exclusion of allMarketExclusions) {
 		const productId = productIdMap.get(exclusion.productSlug);
 		if (!productId) continue;
 
@@ -216,12 +267,15 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 		const { productSlug, ...exclusionData } = exclusion;
 		await db.insert(productMarketExclusions).values({
 			...exclusionData,
-			productId,
+			productId
 		});
+		exclusionCount++;
 	}
+	console.log(`  ✅ Inserted ${exclusionCount} market exclusions`);
 
 	// --- 4. Insert Addons ---
-	for (const addon of magicalAddons) {
+	console.log(`  🎁 Inserting addons...`);
+	for (const addon of allAddons) {
 		const productId = productIdMap.get(addon.productSlug);
 		if (!productId) continue;
 
@@ -229,103 +283,109 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 		const { productSlug, ...addonData } = addon;
 		await db.insert(productAddons).values({
 			...addonData,
-			productId,
+			productId
 		});
 		addonCount++;
 	}
+	console.log(`  ✅ Inserted ${addonCount} addons`);
 
 	// --- 5. Insert Customization Options and Select Options ---
-	for (const option of magicalCustomOptions) {
+	console.log(`  ⚙️  Inserting customization options...`);
+	for (const option of allCustomizationOptions) {
 		const productId = productIdMap.get(option.productSlug);
 		if (!productId) continue;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { productSlug, slug, ...optionData } = option;
 
-		const [insertedOption] = await db.insert(customizationOptionsTable).values({
+		const [insertedOption] = await db.insert(customizationOptions).values({
 			...optionData,
-			productId,
+			productId
 		}).returning();
-
 		if (!insertedOption) continue;
 
 		customOptionIdMap.set(slug, insertedOption.id);
 		customOptionCount++;
 
 		// Insert Select Options (linked by option slug)
-		const relatedSelects = magicalSelectOptions.filter(s => s.customizationOptionSlug === slug);
-		for (const selectOption of relatedSelects) {
+		const selects = allSelectOptions.filter(s => s.customizationOptionSlug === slug);
+		for (const selectOption of selects) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { customizationOptionSlug, ...selectData } = selectOption;
-			await db.insert(selectOptionsTable).values({
+			await db.insert(selectOptions).values({
 				...selectData,
-				customizationOptionId: insertedOption.id,
+				customizationOptionId: insertedOption.id
 			});
 			selectOptionCount++;
 		}
 	}
+	console.log(`  ✅ Inserted ${customOptionCount} customization options, ${selectOptionCount} select options`);
 
 	// --- 6. Insert Translations ---
-	for (const [slug, translations] of Object.entries(magicalTranslations)) {
+	console.log(`  🌐 Inserting translations...`);
+	let translationCount = 0;
+	for (const [slug, translations] of Object.entries(allTranslations)) {
 		const productId = productIdMap.get(slug);
 		if (!productId) continue;
 
-		for (const [locale, trans] of Object.entries(translations)) {
+		for (const [locale, trans] of Object.entries(translations as any)) {
 			await db.insert(productTranslations).values({
 				productId,
 				locale,
 				name: trans.name,
 				shortDescription: trans.shortDescription,
-				longDescription: trans.fullDescription,
+				longDescription: trans.fullDescription || trans.description,
 				metaTitle: trans.metaTitle,
 				metaDescription: trans.metaDescription,
 			});
+			translationCount++;
 		}
 	}
+	console.log(`  ✅ Inserted ${translationCount} translations`);
 
-	console.log(`✅ Seeded ${productIdMap.size} products with:`);
-	console.log(`   - ${pricingCount} pricing configs`);
-	console.log(`   - ${bundleCount} pricing bundles`);
-	console.log(`   - ${addonCount} product addons`);
-	console.log(`   - ${customOptionCount} customization options`);
-	console.log(`   - ${selectOptionCount} select options`);
-	console.log(`\n`);
-
+	console.log(`\n✅ Product seeding complete!\n`);
 	return productIdMap;
 }
 
 async function seedMedia(productIdMap: Map<string, string>, categoryIdMap: Map<string, string>) {
 	console.log("🌱 Seeding media...");
 
+	// Combine both product lines
+	const allMedia = [
+		...aquariumDecorations.media,
+		...threeDBackgrounds.media,
+	];
+
 	let count = 0;
-	for (const mediaItem of magicalMedia) {
+	for (const mediaItem of allMedia) {
 		let productId = null;
 		let categoryId = null;
 
-		// Try to resolve Product ID
+		// Try to resolve Product ID first
 		if (mediaItem.productSlug && productIdMap.has(mediaItem.productSlug)) {
 			productId = productIdMap.get(mediaItem.productSlug)!;
 		}
-		// Try to resolve Category ID
+		// Try to resolve Category ID (using productSlug field as it contains the slug)
+		else if (mediaItem.productSlug && categoryIdMap.has(mediaItem.productSlug)) {
+			categoryId = categoryIdMap.get(mediaItem.productSlug)!;
+		}
+		// Explicit categorySlug check if provided
 		else if (mediaItem.categorySlug && categoryIdMap.has(mediaItem.categorySlug)) {
 			categoryId = categoryIdMap.get(mediaItem.categorySlug)!;
 		}
 
 		if (!productId && !categoryId) {
-			console.warn(`  ⚠ Orphan media: ${mediaItem.productSlug || mediaItem.categorySlug} (No parent found)`);
+			console.warn(`  ⚠ Orphan media: ${mediaItem.productSlug} (No parent found)`);
 			continue;
 		}
 
-		await db.insert(mediaTable).values({
-			productId,
-			categoryId,
-			storageUrl: mediaItem.storageUrl,
-			legacyCdnUrl: mediaItem.legacyCdnUrl,
-			storagePath: mediaItem.storagePath || null,
-			altText: mediaItem.altText,
-			usageType: mediaItem.usageType,
-			sortOrder: mediaItem.sortOrder,
-			tags: mediaItem.tags || [],
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { productSlug, categorySlug, ...mediaData } = mediaItem;
+
+		await db.insert(media).values({
+			...mediaData,
+			productId: productId || null,
+			categoryId: categoryId || null,
 		});
 		count++;
 	}
@@ -333,15 +393,126 @@ async function seedMedia(productIdMap: Map<string, string>, categoryIdMap: Map<s
 	console.log(`✅ Seeded ${count} media items\n`);
 }
 
-
-async function seedReviews() {
+async function seedReviews(productIdMap: Map<string, string>, userMap: Map<string, string>) {
 	console.log("🌱 Seeding reviews...");
+
+	let count = 0;
 	for (const review of reviewData) {
+		const productId = productIdMap.get(review.productSlug);
+		const userId = userMap.get(review.userEmail);
+		if (!productId || !userId) continue;
+
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { id, ...reviewWithoutId } = review;
-		await db.insert(reviews).values(reviewWithoutId);
+		const { productSlug, userEmail, ...reviewBody } = review;
+
+		await db.insert(reviews).values({
+			...reviewBody,
+			productId,
+			userId,
+		});
+		count++;
 	}
-	console.log(`✅ Seeded ${reviewData.length} reviews\n`);
+
+	console.log(`✅ Seeded ${count} reviews\n`);
+}
+
+async function seedFAQs() {
+	console.log("🌱 Seeding FAQs...");
+
+	const faqIdMap = new Map<string, string>();
+
+	for (const faq of faqsSeedData) {
+		const [inserted] = await db.insert(faqs).values({
+			category: faq.category,
+			sortOrder: faq.sortOrder,
+			isActive: faq.isActive,
+		}).returning();
+
+		if (inserted) {
+			faqIdMap.set(`${faq.category}-${faq.sortOrder}`, inserted.id);
+		}
+	}
+
+	for (const faq of faqsSeedData) {
+		const faqId = faqIdMap.get(`${faq.category}-${faq.sortOrder}`);
+		if (!faqId) continue;
+
+		for (const [locale, trans] of Object.entries(faq.translations)) {
+			await db.insert(faqTranslations).values({
+				faqId,
+				locale,
+				question: trans.question,
+				answer: trans.answer,
+			});
+		}
+	}
+
+	console.log(`✅ Seeded ${faqsSeedData.length} FAQs with translations\n`);
+}
+
+async function seedShippingAndCountries() {
+	console.log("🌱 Seeding shipping zones and countries...");
+
+	const zoneIdMap = new Map<string, string>();
+
+	for (const zone of shippingZonesSeedData) {
+		const [inserted] = await db.insert(shippingZones).values(zone).returning();
+		if (inserted) {
+			zoneIdMap.set(zone.name, inserted.id);
+		}
+	}
+
+	for (const country of countriesSeedData) {
+		const zoneId = zoneIdMap.get(country.zoneName);
+		if (!zoneId) continue;
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { zoneName, ...countryData } = country;
+
+		await db.insert(countries).values({
+			...countryData,
+			shippingZoneId: zoneId,
+		});
+	}
+
+	console.log(`✅ Seeded ${shippingZonesSeedData.length} shipping zones and ${countriesSeedData.length} countries\n`);
+}
+
+async function seedPromotersAndSales() {
+	console.log("🌱 Seeding promoters and sales...");
+
+	const promoterIdMap = new Map<string, string>();
+
+	for (const promoter of promotersSeedData) {
+		const [inserted] = await db.insert(promoters).values({
+			name: promoter.name,
+			email: promoter.email,
+			commissionRate: promoter.commissionRate,
+			isActive: promoter.isActive,
+		}).returning();
+
+		if (inserted) {
+			promoterIdMap.set(promoter.email, inserted.id);
+		}
+	}
+
+	for (const promoter of promotersSeedData) {
+		const promoterId = promoterIdMap.get(promoter.email);
+		if (!promoterId) continue;
+
+		for (const code of promoter.codes) {
+			await db.insert(promoterCodes).values({
+				...code,
+				promoterId,
+			});
+		}
+	}
+
+	for (const sale of salesSeedData) {
+		await db.insert(sales).values(sale);
+	}
+
+	console.log(`✅ Seeded ${promotersSeedData.length} promoters and ${salesSeedData.length} sales\n`);
 }
 
 async function seedOrders(productIdMap: Map<string, string>) {
@@ -349,167 +520,71 @@ async function seedOrders(productIdMap: Map<string, string>) {
 
 	for (const order of ordersSeedData) {
 		const [insertedOrder] = await db.insert(orders).values({
-			orderNumber: order.orderNumber,
 			email: order.email,
 			firstName: order.firstName,
 			lastName: order.lastName,
+			phone: order.phone,
+			totalAmountEurCents: order.totalAmountEurCents,
 			status: order.status,
-			paymentStatus: order.paymentStatus,
-			subtotal: order.subtotal,
-			discount: order.discount,
-			shipping: order.shipping,
-			tax: order.tax,
-			total: order.total,
-			currency: order.currency,
-			market: order.market,
-			countryCode: order.countryCode,
-			discountCode: order.discountCode || null,
-			customerNotes: order.customerNotes || null,
-			createdAt: order.createdAt,
-			paidAt: order.paidAt || null,
-			shippedAt: order.shippedAt || null,
+			paymentMethod: order.paymentMethod,
+			shippingAddress: order.shippingAddress,
+			billingAddress: order.billingAddress,
 		}).returning();
 
-		if (insertedOrder && order.items?.length) {
-			for (const item of order.items) {
-				// Map productSlug to actual productId
-				const actualProductId = productIdMap.get(item.productSlug);
-				if (!actualProductId) {
-					console.warn(`  ⚠ Product not found: ${item.productSlug}, skipping order item`);
-					continue;
-				}
+		if (!insertedOrder) continue;
 
-				await db.insert(orderItems).values({
+		// Insert order items
+		for (const item of order.items) {
+			const productId = productIdMap.get(item.productSlug);
+			if (!productId) continue;
+
+			await db.insert(orderItems).values({
+				orderId: insertedOrder.id,
+				productId,
+				quantity: item.quantity,
+				unitPriceEurCents: item.unitPriceEurCents,
+				pricingSnapshot: item.pricingSnapshot,
+			});
+		}
+
+		// Insert status history
+		if (order.statusHistory) {
+			for (const history of order.statusHistory) {
+				await db.insert(orderStatusHistory).values({
 					orderId: insertedOrder.id,
-					productId: actualProductId,
-					productName: item.productName,
-					sku: item.sku,
-					productSlug: item.productSlug,
-					quantity: item.quantity,
-					pricePerUnit: item.pricePerUnit,
-					subtotal: item.subtotal,
-					addonsTotal: item.addonsTotal,
-					customizationsTotal: item.customizationsTotal,
-					total: item.total,
-					isCustom: item.isCustom,
-					productionStatus: item.productionStatus || null,
-					pricingSnapshot: item.pricingSnapshot as any,
+					status: history.status,
+					notes: history.notes,
+					createdAt: history.createdAt,
 				});
 			}
 		}
 	}
+
 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
 }
 
-async function seedSales() {
-	console.log("🌱 Seeding sales...");
-	for (const sale of salesSeedData) {
-		await db.insert(sales).values(sale);
-	}
-	console.log(`✅ Seeded ${salesSeedData.length} sales\n`);
-}
-
-async function seedPromoters() {
-	console.log("🌱 Seeding promoters...");
-	for (const promoter of promotersSeedData) {
-		const { codes, ...promoterData } = promoter;
-		const [inserted] = await db.insert(promoters).values(promoterData).returning();
-
-		if (inserted && codes.length > 0) {
-			for (const code of codes) {
-				await db.insert(promoterCodes).values({
-					promoterId: inserted.id,
-					code: code.code,
-					discountPercent: code.discountPercent,
-					commissionPercent: code.commissionPercent,
-					isActive: code.isActive,
-					usageCount: code.usageCount,
-					createdAt: code.createdAt,
-				});
-			}
-		}
-	}
-	console.log(`✅ Seeded ${promotersSeedData.length} promoters\n`);
-}
-
-async function seedFAQs() {
-	console.log("🌱 Seeding FAQs...");
-	let totalFaqs = 0;
-	for (const [region, faqList] of Object.entries(faqsSeedData)) {
-		for (const faqItem of faqList) {
-			const [inserted] = await db.insert(faqs).values({
-				region,
-				sortOrder: faqItem.sortOrder,
-				isActive: true,
-			}).returning();
-
-			if (inserted) {
-				await db.insert(faqTranslations).values({
-					faqId: inserted.id,
-					locale: "en",
-					question: faqItem.question,
-					answer: faqItem.answer,
-				});
-				totalFaqs++;
-			}
-		}
-	}
-	console.log(`✅ Seeded ${totalFaqs} FAQs\n`);
-}
-
-export async function seedCountries() {
-	console.log("🌱 Seeding shipping zones and countries...");
-	const zoneMap = new Map<string, string>();
-
-	for (const zoneData of shippingZonesSeedData) {
-		const [zone] = await db.insert(shippingZones).values(zoneData).returning();
-		if (zone) zoneMap.set(zoneData.code, zone.id);
-	}
-
-	let countryCount = 0;
-	for (const countryData of countriesSeedData) {
-		const shippingZoneId = zoneMap.get(countryData.zone);
-		await db.insert(countries).values({
-			iso2: countryData.iso2,
-			iso3: countryData.iso3,
-			name: countryData.name,
-			localName: countryData.localName,
-			flagEmoji: countryData.flagEmoji,
-			shippingZoneId,
-			postOperatorCode: countryData.postOperatorCode,
-			postZone: countryData.postZone,
-			isShippingEnabled: countryData.isShippingEnabled ?? true,
-			isSuspended: countryData.isSuspended ?? false,
-			suspensionReason: countryData.suspensionReason,
-			requiresCustoms: countryData.requiresCustoms ?? false,
-			requiresPhoneNumber: countryData.requiresPhoneNumber ?? false,
-			notes: countryData.notes,
-		});
-		countryCount++;
-	}
-	console.log(`✅ Seeded ${countryCount} countries\n`);
-}
+// ============================================================================
+// MAIN SEED
+// ============================================================================
 
 async function main() {
-	try {
-		console.log("🚀 Starting seed...\n");
+	console.log("\n🚀 Starting database seed...\n");
 
+	try {
 		const userMap = await seedUsers();
 		const categoryIdMap = await seedCategories();
 		const productIdMap = await seedProducts(categoryIdMap);
+
 		await seedMedia(productIdMap, categoryIdMap);
-
-		await seedReviews();
-		await seedOrders(productIdMap); // Pass productIdMap instead of userMap
-		await seedSales();
-		await seedPromoters();
+		await seedReviews(productIdMap, userMap);
 		await seedFAQs();
-		await seedCountries();
+		await seedShippingAndCountries();
+		await seedPromotersAndSales();
+		await seedOrders(productIdMap);
 
-		console.log("✨ Seed complete!");
-		process.exit(0);
+		console.log("✨ Database seeding complete!\n");
 	} catch (error) {
-		console.error("❌ Seed failed:", error);
+		console.error("❌ Seeding failed:", error);
 		process.exit(1);
 	} finally {
 		await client.end();
