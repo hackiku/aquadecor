@@ -112,7 +112,7 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 				</div>
 				<Link
 					href={href}
-					className="hidden md:flex items-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
+					className="hidden mr-8 md:flex items-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
 				>
 					View all
 					<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -133,6 +133,7 @@ function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowPr
 						</div>
 					) : (
 						products.map((product) => (
+							
 							<ProductCard key={product.id} product={product} />
 						))
 					)}
@@ -158,41 +159,45 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 	return (
 		<Link
 			href={productUrl}
-			className="group block snap-start shrink-0 w-[260px] md:w-[300px]"
+			className="group block snap-start shrink-0 w-64 md:w-72"
 		>
-			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-card">
-				<div className="relative aspect-[4/3] bg-muted overflow-hidden">
+			<Card className="h-full overflow-hidden border-2 hover:border-primary/50 transition-all hover:shadow-xl bg-card p-0">
+				<div className="relative h-full min-h-[320px] bg-muted overflow-hidden">
+					{/* IMAGE */}
 					{product.heroImageUrl ? (
 						<Image
 							src={product.heroImageUrl}
 							alt={product.heroImageAlt || displayName}
 							fill
-							className="object-cover group-hover:scale-110 transition-transform duration-500"
+							className="object-cover object-top group-hover:scale-110 transition-transform duration-500"
 							sizes="300px"
 						/>
 					) : (
-						<div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+						<div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary/5 flex items-center justify-center">
 							<Package className="h-16 w-16 text-muted-foreground/20" />
 						</div>
 					)}
 
-					<div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/95 dark:to-black/90" />
+					{/* GRADIENT - Only bottom half */}
+					<div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-background/95 via-background/60 to-transparent dark:from-black/95 dark:via-black/60" />
 
+					{/* SKU BADGE */}
 					{product.sku && (
-						<div className="absolute top-3 left-3">
-							<Badge variant="secondary" className="font-display font-medium backdrop-blur-sm bg-background/90 dark:bg-black/90">
+						<div className="absolute top-3 left-3 z-10">
+							<Badge className="bg-neutral-500/30 group-hover:bg-primary/70 text-muted-background border-0 backdrop-blur-[1px] font-display font-light text-sm px-3 py-1 shadow-sm">
 								{product.sku}
 							</Badge>
 						</div>
 					)}
 
-					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-2">
+					{/* TEXT CONTENT - Bottom overlay */}
+					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-1.5 z-10">
 						<h4 className="font-display font-medium text-base line-clamp-2 text-foreground">
 							{displayName}
 						</h4>
 
 						{hasPrice ? (
-							<p className="text-lg font-display font-medium text-foreground">
+							<p className="text-lg font-display font-semibold text-foreground">
 								€{((product.basePriceEurCents ?? 0) / 100).toFixed(0)}
 							</p>
 						) : (
@@ -209,9 +214,9 @@ function ProductCard({ product }: { product: FeaturedProduct }) {
 
 function ProductCardSkeleton() {
 	return (
-		<div className="snap-start shrink-0 w-[260px] md:w-[300px]">
-			<Card className="h-full overflow-hidden">
-				<Skeleton className="aspect-[4/3] w-full" />
+		<div className="snap-start shrink-0 w-64 md:w-72">
+			<Card className="h-full overflow-hidden p-0">
+				<Skeleton className="h-[320px] w-full" />
 			</Card>
 		</div>
 	);

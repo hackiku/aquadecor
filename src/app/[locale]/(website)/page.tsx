@@ -3,6 +3,7 @@
 "use client";
 
 import { useRef } from "react";
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -20,6 +21,22 @@ import { MediaBlob } from "~/components/ui/water/media-blob";
 import { HeroSection } from "./_components/HeroSection";
 import { ComparisonTable } from "./_components/ComparisonTable";
 import { FeaturesLayout } from "./_components/FeaturesLayout";
+
+// export async function generateMetadata(props: { params: Promise<{ locale: string }> }) {
+// 	const { locale } = await props.params; // ← Await params first
+// 	const t = await getTranslations({ locale, namespace: 'home' });
+
+// 	return {
+// 		title: t('meta.title'),
+// 		description: t('meta.description'),
+// 	};
+// }
+
+
+
+// export default async function HomePage(props: { params: Promise<{ locale: string }> }) {
+// 	const { locale } = await props.params;
+// 	const t = await getTranslations({ locale, namespace: 'home' });
 
 export default function LandingPage() {
 	const sliderRef = useRef<HTMLElement>(null);
@@ -42,8 +59,8 @@ export default function LandingPage() {
 			<HeroSection />
 
 			{/* Tagline + Product Slider with Parallax Scrollytelling Effect */}
-			<section ref={sliderRef} className="relative overflow-hidden py-24">
-				<div className="px-4 max-w-7xl mx-auto">
+			<section ref={sliderRef} className="relative overflow-hidden py-24 bg-linear-to-b from-card/50 to-transparent">
+				<div className="pl-4 lg:pl-8 _max-w-7xl mx-auto">
 
 					{/* Headline emerges from behind as you scroll */}
 					<motion.div

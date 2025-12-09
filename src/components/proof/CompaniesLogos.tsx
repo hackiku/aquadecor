@@ -3,14 +3,16 @@
 import Image from "next/image";
 
 const COMPANIES = [
-	{ name: "Fluval", logo: "/logos/companies/logo-fluval.svg" },
+	{ name: "Fluval", logo: "/logos/companies/logo-fluval.svg", darkInvert: true },
 	{ name: "Eheim", logo: "/logos/companies/eheim_logo.png" },
 	{ name: "Tetra", logo: "/logos/companies/tetra_logo.svg" },
-	{ name: "Juwel", logo: "/logos/companies/juwel-logo.svg" },
+	{ name: "Juwel", logo: "/logos/companies/juwel-logo.svg", brighten: true },
 	{ name: "Aqueon", logo: "/logos/companies/aqueon_logo.png" },
-	{ name: "Marineland", logo: "/logos/companies/marineland_logo.png" },
-	{ name: "Oase", logo: "/logos/companies/oase_logo.svg" },
-	{ name: "Ultum Nature Systems", logo: "/logos/companies/ultum_logo.png" },
+	// { name: "Marineland", logo: "/logos/companies/marineland_logo.png" },
+	{ name: "Red Sea", logo: "/logos/companies/red-sea_logo.png", brighten: true },
+	// { name: "Oase", logo: "/logos/companies/oase_logo.svg", brighten: true },
+	{ name: "Oase", logo: "/logos/companies/oase_logo.svg", brighten: true, extraPadding: true },
+	{ name: "Ultum Nature Systems", logo: "/logos/companies/ultum_logo.png", darkInvert: true },
 ];
 
 interface CompaniesLogosProps {
@@ -31,7 +33,7 @@ export function CompaniesLogos({ grayscale = false, className = "" }: CompaniesL
 				{COMPANIES.map((company) => (
 					<div
 						key={company.name}
-						className="flex items-center justify-center h-12 md:h-16 relative"
+						className={`flex items-center justify-center h-12 md:h-16 relative ${company.extraPadding ? "p-2" : ""}`}
 					>
 						<Image
 							src={company.logo}
@@ -39,9 +41,14 @@ export function CompaniesLogos({ grayscale = false, className = "" }: CompaniesL
 							width={120}
 							height={60}
 							className={`
-									object-contain max-h-full w-auto
-									${grayscale ? "grayscale brightness-0 dark:brightness-200 opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300" : "opacity-80 hover:opacity-100 transition-opacity"}
-								`}
+								object-contain max-h-full w-auto
+								${company.darkInvert ? "dark:invert" : ""}
+								${company.brighten ? "brightness-150" : ""}
+								${grayscale
+									? "grayscale brightness-0 dark:brightness-200 opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-300"
+									: "opacity-80 hover:opacity-100 transition-opacity"
+								}
+							`}
 						/>
 					</div>
 				))}

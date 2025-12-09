@@ -1,0 +1,71 @@
+{
+	"home": {
+		"meta": {
+			"title": "Aquadecor - Premium 3D Aquarium Backgrounds",
+			"description": "Transform your aquarium with the most realistic 3D backgrounds and decorations. Handcrafted in Europe for 20+ years."
+		},
+		"hero": {
+			"badge": "Made in Europe",
+			"headline": "The Most Realistic 3D Aquarium Backgrounds",
+			"subheadline": "Handcrafted perfection that transforms your aquarium into a living masterpiece",
+			"cta": {
+				"primary": "Shop Backgrounds",
+				"secondary": "Try 3D Calculator"
+			}
+		},
+		"tagline": {
+			"headline": "Only Nature Can Copy Us",
+			"subheadline": "Handcrafted 3D backgrounds so realistic, even nature takes notes."
+		},
+		"trust": {
+			"tested": {
+				"emoji": "🔬",
+				"title": "Laboratory Tested"
+			},
+			"waterSafe": {
+				"emoji": "🌊",
+				"title": "100% Water-Safe"
+			},
+			"eco": {
+				"emoji": "♻️",
+				"title": "Eco-Conscious materials"
+			}
+		},
+		"features": {
+			"headline": "Built to Last Forever",
+			"subheadline": "(and Look the Part)",
+			"description": "Obsessively hyper-realistic replicas, made from polyurethane/resin blends. Non-toxic, temperature-resistant, and come with 20-year or lifetime warranties."
+		},
+		"social": {
+			"headline": "Trusted for 20+ years by 200K+ Tankheads",
+			"subheadline": "Real-as-rain setups from aquarium enthusiasts worldwide."
+		},
+		"stats": {
+			"years": {
+				"number": "20+",
+				"label": "Years in business"
+			},
+			"shipped": {
+				"number": "50K+",
+				"label": "Products shipped"
+			},
+			"designs": {
+				"number": "1000+",
+				"label": "Unique designs"
+			},
+			"countries": {
+				"number": "50+",
+				"label": "Countries served"
+			}
+		},
+		"comparison": {
+			"headline": "Whatever you choose, you won't regret it!",
+			"subheadline": "Standard dimensions for quick setup, or custom-made to fit your exact vision."
+		},
+		"calculator": {
+			"headline": "Design Your Perfect Background in 3D",
+			"description": "Our interactive 3D calculator lets you visualize and customize every detail before ordering.",
+			"cta": "Try the Calculator"
+		}
+	}
+}
