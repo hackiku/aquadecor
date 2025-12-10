@@ -515,30 +515,6 @@ async function seedShippingAndCountries() {
 	console.log(`✅ Seeded ${shippingZonesSeedData.length} shipping zones and ${countriesSeedData.length} countries\n`);
 }
 
-
-async function seedPromoters() {
-	console.log("🌱 Seeding promoters...");
-	for (const promoter of promotersSeedData) {
-		const { codes, ...promoterData } = promoter;
-		const [inserted] = await db.insert(promoters).values(promoterData).returning();
-
-		if (inserted && codes.length > 0) {
-			for (const code of codes) {
-				await db.insert(promoterCodes).values({
-					promoterId: inserted.id,
-					code: code.code,
-					discountPercent: code.discountPercent,
-					commissionPercent: code.commissionPercent,
-					isActive: code.isActive,
-					usageCount: code.usageCount,
-					createdAt: code.createdAt,
-				});
-			}
-		}
-	}
-	console.log(`✅ Seeded ${promotersSeedData.length} promoters\n`);
-}
-
 async function seedPromotersAndSales() {
 	console.log("🌱 Seeding promoters and sales...");
 
@@ -576,113 +552,57 @@ async function seedPromotersAndSales() {
 	console.log(`✅ Seeded ${promotersSeedData.length} promoters and ${salesSeedData.length} sales\n`);
 }
 
-// async function seedOrders(productIdMap: Map<string, string>) {
-// 	console.log("🌱 Seeding orders...");
-
-// 	for (const order of ordersSeedData) {
-// 		const [insertedOrder] = await db.insert(orders).values({
-// 			email: order.email,
-// 			firstName: order.firstName,
-// 			lastName: order.lastName,
-// 			phone: order.phone,
-// 			totalAmountEurCents: order.totalAmountEurCents,
-// 			status: order.status,
-// 			paymentMethod: order.paymentMethod,
-// 			shippingAddress: order.shippingAddress,
-// 			billingAddress: order.billingAddress,
-// 		}).returning();
-
-// 		if (!insertedOrder) continue;
-
-// 		// Insert order items
-// 		for (const item of order.items) {
-// 			const productId = productIdMap.get(item.productSlug);
-// 			if (!productId) continue;
-
-// 			await db.insert(orderItems).values({
-// 				orderId: insertedOrder.id,
-// 				productId,
-// 				quantity: item.quantity,
-// 				unitPriceEurCents: item.unitPriceEurCents,
-// 				pricingSnapshot: item.pricingSnapshot,
-// 			});
-// 		}
-
-// 		// Insert status history
-// 		if (order.statusHistory) {
-// 			for (const history of order.statusHistory) {
-// 				await db.insert(orderStatusHistory).values({
-// 					orderId: insertedOrder.id,
-// 					status: history.status,
-// 					notes: history.notes,
-// 					createdAt: history.createdAt,
-// 				});
-// 			}
-// 		}
-// 	}
-
-// 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
-// }
-
-// ============================================================================
-// MAIN SEED
-// ============================================================================
 async function seedOrders(productIdMap: Map<string, string>) {
 	console.log("🌱 Seeding orders...");
 
 	for (const order of ordersSeedData) {
 		const [insertedOrder] = await db.insert(orders).values({
-			orderNumber: order.orderNumber,
 			email: order.email,
 			firstName: order.firstName,
 			lastName: order.lastName,
+			phone: order.phone,
+			totalAmountEurCents: order.totalAmountEurCents,
 			status: order.status,
-			paymentStatus: order.paymentStatus,
-			subtotal: order.subtotal,
-			discount: order.discount,
-			shipping: order.shipping,
-			tax: order.tax,
-			total: order.total,
-			currency: order.currency,
-			market: order.market,
-			countryCode: order.countryCode,
-			discountCode: order.discountCode || null,
-			customerNotes: order.customerNotes || null,
-			createdAt: order.createdAt,
-			paidAt: order.paidAt || null,
-			shippedAt: order.shippedAt || null,
+			paymentMethod: order.paymentMethod,
+			shippingAddress: order.shippingAddress,
+			billingAddress: order.billingAddress,
 		}).returning();
 
-		if (insertedOrder && order.items?.length) {
-			for (const item of order.items) {
-				// Map productSlug to actual productId
-				const actualProductId = productIdMap.get(item.productSlug);
-				if (!actualProductId) {
-					console.warn(`  ⚠ Product not found: ${item.productSlug}, skipping order item`);
-					continue;
-				}
+		if (!insertedOrder) continue;
 
-				await db.insert(orderItems).values({
+		// Insert order items
+		for (const item of order.items) {
+			const productId = productIdMap.get(item.productSlug);
+			if (!productId) continue;
+
+			await db.insert(orderItems).values({
+				orderId: insertedOrder.id,
+				productId,
+				quantity: item.quantity,
+				unitPriceEurCents: item.unitPriceEurCents,
+				pricingSnapshot: item.pricingSnapshot,
+			});
+		}
+
+		// Insert status history
+		if (order.statusHistory) {
+			for (const history of order.statusHistory) {
+				await db.insert(orderStatusHistory).values({
 					orderId: insertedOrder.id,
-					productId: actualProductId,
-					productName: item.productName,
-					sku: item.sku,
-					productSlug: item.productSlug,
-					quantity: item.quantity,
-					pricePerUnit: item.pricePerUnit,
-					subtotal: item.subtotal,
-					addonsTotal: item.addonsTotal,
-					customizationsTotal: item.customizationsTotal,
-					total: item.total,
-					isCustom: item.isCustom,
-					productionStatus: item.productionStatus || null,
-					pricingSnapshot: item.pricingSnapshot as any,
+					status: history.status,
+					notes: history.notes,
+					createdAt: history.createdAt,
 				});
 			}
 		}
 	}
+
 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
 }
+
+// ============================================================================
+// MAIN SEED
+// ============================================================================
 
 async function main() {
 	console.log("\n🚀 Starting database seed...\n");
@@ -693,13 +613,11 @@ async function main() {
 		const productIdMap = await seedProducts(categoryIdMap);
 
 		await seedMedia(productIdMap, categoryIdMap);
-		await seedReviews();
+		await seedReviews(productIdMap, userMap);
 		await seedFAQs();
 		await seedShippingAndCountries();
+		await seedPromotersAndSales();
 		await seedOrders(productIdMap);
-		await seedPromoters();
-		// !! TODO: fix sales and promoters with new pricing logic
-		// await seedPromotersAndSales();
 
 		console.log("✨ Database seeding complete!\n");
 	} catch (error) {
