@@ -1,3 +1,4 @@
+// 
 // src/app/gallery/_components/GallerySidebar.tsx
 
 "use client";
@@ -70,7 +71,6 @@ export function GallerySidebar({
 						<span className="text-sm font-display font-medium">Active Filters</span>
 						<Button
 							variant="ghost"
-							size="xs"
 							onClick={() => onSelectCategory(undefined)}
 							className="h-6 px-2 text-xs hover:bg-destructive/10 hover:text-destructive"
 						>

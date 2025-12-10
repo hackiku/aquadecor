@@ -84,7 +84,7 @@ export const calculatorRouter = createTRPCRouter({
 			// Insert into database
 			const [quote] = await ctx.db.insert(quotes).values({
 				// Map input fields to schema columns
-				productSlug: input.modelCategory, // Using category as slug for now
+				// productSlug: input.modelCategory, // Using category as slug for now
 				email: input.email ?? "no-email@provided.com",
 				firstName: firstName,
 				lastName: lastName || undefined,

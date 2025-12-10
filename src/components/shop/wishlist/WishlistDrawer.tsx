@@ -153,15 +153,33 @@ export function WishlistDrawer({ isOpen, onClose }: WishlistDrawerProps) {
 					) : (
 						<>
 							{/* Wishlist Items */}
-							<div className="space-y-4">
-								{products?.map((product) => (
-									<WishlistItem
-										key={product.id}
-										product={product as ProductForWishlist}
-										onRemove={() => removeItem(product.id)}
-									/>
-								))}
-							</div>
+									<div className="space-y-4">
+										{products?.map((product) => {
+											// FIX: Explicitly map the fields
+											const productForWishlist: ProductForWishlist = {
+												id: product.id,
+												slug: product.slug,
+												name: product.name ?? null,
+												shortDescription: product.shortDescription ?? null,
+												heroImageUrl: product.heroImageUrl ?? null,
+												categorySlug: product.categorySlug ?? null,
+												productLineSlug: product.productLineSlug ?? null,
+
+												// Mapped pricing fields (The actual fix)
+												basePriceEurCents: (product as any).unitPriceEurCents ?? null, // Map from unitPriceEurCents
+												priceNote: null, // Set missing field to null/default
+											};
+
+											return (
+												<WishlistItem
+													key={product.id}
+													product={productForWishlist} // Pass the correctly mapped object
+													onRemove={() => removeItem(product.id)}
+												/>
+											);
+										})}
+									</div>
+
 
 							<SignupIncentive trigger="wishlist" />
 

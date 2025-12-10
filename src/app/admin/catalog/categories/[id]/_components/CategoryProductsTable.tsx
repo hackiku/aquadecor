@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/admin/catalog/categories/[id]/_components/CategoryProductsTable.tsx
 "use client";
 

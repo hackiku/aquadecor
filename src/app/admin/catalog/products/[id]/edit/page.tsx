@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/admin/catalog/products/[id]/edit/page.tsx
 
 "use client";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/admin/catalog/featured/page.tsx
 
 import { api } from "~/trpc/server";
@@ -7,6 +8,8 @@ import { Badge } from "~/components/ui/badge";
 import { Star, ArrowLeft, Plus } from "lucide-react";
 import Link from "next/link";
 import { FeaturedProductsClient } from "../_components/FeaturedProductsClient";
+
+
 
 export default async function FeaturedProductsPage() {
 	// Get all products

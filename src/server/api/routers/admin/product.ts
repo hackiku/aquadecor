@@ -15,6 +15,7 @@ import {
 	productAddons,
 } from "~/server/db/schema";
 import { eq, and, inArray, desc, asc, sql } from "drizzle-orm";
+import type { PricingBundle, SelectOption } from "~/server/db/schema/shop";
 
 // Zod schema for new/updated product translations
 const ProductTranslationSchema = z.object({
@@ -232,7 +233,7 @@ export const adminProductRouter = createTRPCRouter({
 				.filter(p => p.pricingType === "quantity_bundle")
 				.map(p => p.id);
 			
-			let bundles = [];
+			let bundles: PricingBundle[] = []; // <<< FIX: Explicit type annotation
 			if (bundlePricingIds.length > 0) {
 				bundles = await ctx.db
 					.select()
@@ -240,6 +241,7 @@ export const adminProductRouter = createTRPCRouter({
 					.where(inArray(pricingBundles.pricingId, bundlePricingIds))
 					.orderBy(pricingBundles.quantity);
 			}
+
 
 			// 4. Get addons
 			const addons = await ctx.db
@@ -256,7 +258,7 @@ export const adminProductRouter = createTRPCRouter({
 				.orderBy(customizationOptions.sortOrder);
 
 			// 6. Get select options for each customization option (for type='select')
-			const selectOptionsByCustomOptionId: Record<string, any[]> = {};
+			const selectOptionsByCustomOptionId = new Map<string, SelectOption[]>();
 			const selectOptionIds = customOptions.filter(opt => opt.type === "select").map(opt => opt.id);
 			
 			if (selectOptionIds.length > 0) {
@@ -267,10 +269,10 @@ export const adminProductRouter = createTRPCRouter({
 					.orderBy(selectOptions.sortOrder);
 				
 				for (const opt of allSelectOptions) {
-					if (!selectOptionsByCustomOptionId[opt.customizationOptionId]) {
-						selectOptionsByCustomOptionId[opt.customizationOptionId] = [];
-					}
-					selectOptionsByCustomOptionId[opt.customizationOptionId].push(opt);
+                    // FIX: Get or create the array in the map
+					const optionList = selectOptionsByCustomOptionId.get(opt.customizationOptionId) ?? [];
+                    optionList.push(opt);
+					selectOptionsByCustomOptionId.set(opt.customizationOptionId, optionList);
 				}
 			}
 
@@ -300,7 +302,7 @@ export const adminProductRouter = createTRPCRouter({
 				addons,
 				customizationOptions: customOptions.map(opt => ({
 					...opt,
-					selectOptions: opt.type === "select" ? selectOptionsByCustomOptionId[opt.id] || [] : undefined,
+					selectOptions: opt.type === "select" ? selectOptionsByCustomOptionId.get(opt.id) : undefined,
 				})),
 				marketExclusions,
 				images,
@@ -405,20 +407,35 @@ export const adminProductRouter = createTRPCRouter({
 		}))
 		.mutation(async ({ ctx, input }) => {
 			// 1. Insert product
+
 			const [product] = await ctx.db
 				.insert(products)
 				.values({
 					categoryId: input.categoryId,
 					slug: input.slug,
-					sku: input.sku,
+
+					// FIX: SKU must be a string (non-null)
+					sku: input.sku ?? "TEMP_SKU_" + crypto.randomUUID().slice(0, 8),
+
 					stockStatus: input.stockStatus,
 					isActive: input.isActive,
 					isFeatured: input.isFeatured,
 					sortOrder: input.sortOrder,
 					material: input.material,
-					widthCm: input.widthCm ? sql`${input.widthCm}::decimal` : undefined, // Cast needed for decimal columns
-					heightCm: input.heightCm ? sql`${input.heightCm}::decimal` : undefined,
-					depthCm: input.depthCm ? sql`${input.depthCm}::decimal` : undefined,
+
+					// FIX: Safely handle optional/nullable decimal fields without external object
+					widthCm: input.widthCm === undefined
+						? undefined
+						: (input.widthCm === null ? null : sql`${input.widthCm}::decimal`),
+
+					heightCm: input.heightCm === undefined
+						? undefined
+						: (input.heightCm === null ? null : sql`${input.heightCm}::decimal`),
+
+					depthCm: input.depthCm === undefined
+						? undefined
+						: (input.depthCm === null ? null : sql`${input.depthCm}::decimal`),
+
 					weightGrams: input.weightGrams,
 					productionTime: input.productionTime,
 					technicalSpecs: input.technicalSpecs,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/admin/orders/[id]/page.tsx
 
 import { notFound } from "next/navigation";

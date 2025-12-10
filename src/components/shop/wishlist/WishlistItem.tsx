@@ -8,12 +8,14 @@ import { Button } from "~/components/ui/button";
 import type { Product } from "~/server/db/schema/shop";
 
 // Type matches what WishlistDrawer passes (ProductForWishlist)
-type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
+type ProductForWishlist = Pick<Product, 'id' | 'slug' > & {
 	name: string | null;
 	shortDescription: string | null;
 	heroImageUrl: string | null; // UPDATED from featuredImageUrl
 	categorySlug: string | null;
 	productLineSlug: string | null;
+	basePriceEurCents: number | null;
+	priceNote: string | null;
 };
 
 interface WishlistItemProps {

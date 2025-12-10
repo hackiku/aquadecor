@@ -45,13 +45,31 @@ export function FeaturedProductSlider() {
 		);
 	}
 
-	const backgroundProducts = products?.filter(
+	const mappedProducts: FeaturedProduct[] = products
+		? products.map((product) => ({
+			// Map all the shared fields
+			...product,
+
+			// FIX: Map the unitPriceEurCents to basePriceEurCents
+			basePriceEurCents: product.unitPriceEurCents ?? null,
+
+			// FIX: Set missing fields with defaults/placeholders
+			priceNote: null, // Assuming no price note in featured for simplicity
+			excludedMarkets: null, // Assuming this is not needed or fetched in this query
+
+			// You may need to cast the tRPC result type to 'any' here 
+			// to access unitPriceEurCents if you haven't fixed the tRPC return type yet.
+		}))
+		: [];
+
+	const backgroundProducts = mappedProducts.filter(
 		(p) => p.productLineSlug === "3d-backgrounds"
 	).slice(0, 6) || [];
 
-	const decorationProducts = products?.filter(
+	const decorationProducts = mappedProducts.filter(
 		(p) => p.productLineSlug === "aquarium-decorations"
 	).slice(0, 6) || [];
+
 
 	return (
 		<div className="space-y-12">
