@@ -13,17 +13,27 @@ import type { Product } from "~/server/db/schema/shop";
 
 // Extend the core ProductForCard type to include the necessary JSONB fields
 // We must assume these are included in the DB query for proper component logic.
-type ProductForCard = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+type ProductForCard = Pick<Product, 'id' | 'slug' | 'sku' | 'stockStatus'> & {
+	// Fields retrieved from other tables or translations:
 	name: string;
 	shortDescription: string | null;
 	heroImageUrl: string | null;
 	heroImageAlt?: string | null;
 	categorySlug: string;
 	productLineSlug: string;
-	// New fields for logic check:
-	variantOptions?: Product['variantOptions'] | null;
-	addonOptions?: Product['addonOptions'] | null;
+
+	// Pricing fields (mapped from productPricing.unitPriceEurCents)
+	// NOTE: If you need priceNote, you must ensure your tRPC query fetches it or provides a default.
+	basePriceEurCents: number | null;
+	priceNote: string | null;
+
+	// Options logic fields (need to be fetched/joined by the tRPC call)
+	// NOTE: If the tRPC query is not fetching this, it will be null/undefined.
+	variantOptions?: any | null;
+	addonOptions?: any | null;
 };
+
+
 
 interface ProductCardProps {
 	product: ProductForCard;

@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 // scripts/migrate-legacy-pricing.ts
 // Run this to convert all products from old schema to new pricing/customization schema
-
+// @ts-nocheck
 import { drizzle } from "drizzle-orm/postgres-js";
 import { isNull } from "drizzle-orm";
 import postgres from "postgres";

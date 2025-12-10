@@ -394,6 +394,7 @@ export const productRouter = createTRPCRouter({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
+					stockStatus: products.stockStatus,
 					categoryId: products.categoryId,
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,

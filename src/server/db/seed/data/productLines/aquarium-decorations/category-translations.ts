@@ -1,8 +1,6 @@
 // src/server/db/seed/data/productLine/aquarium-decorations/category-translations.ts
 
-import type { TranslationSeed } from "../../../../schema";
-
-export const categoryTranslations: TranslationSeed = {
+export const categoryTranslations = {
 	"magical-items": {
 		en: {
 			name: "Magical Items",

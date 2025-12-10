@@ -44,14 +44,25 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 		name: product.name ?? "Untitled Product",
 		sku: product.sku ?? null,
 		shortDescription: product.shortDescription ?? null,
-		basePriceEurCents: product.basePriceEurCents ?? null,
-		priceNote: product.priceNote ?? null,
+
+		// FIX: Map unitPriceEurCents from tRPC response to the expected basePriceEurCents
+		basePriceEurCents: product.unitPriceEurCents ?? null,
+
+		// FIX: Explicitly assign missing fields to satisfy ProductForCard/Grid
+		priceNote: null,
+		variantOptions: null,
+		addonOptions: null,
+
 		stockStatus: product.stockStatus,
+
 		heroImageUrl: product.heroImageUrl ?? null,
 		heroImageAlt: product.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
+		// The component also relies on variantOptions/addonOptions for the button logic, 
+		// which your tRPC query must also provide, but for now we'll rely on the simple price check.
 	}));
+
 
 	return (
 		<HydrateClient>

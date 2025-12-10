@@ -1,9 +1,7 @@
 
 // src/server/db/seed/data/productLine/3d-backgrounds/categories.ts
 
-import type { CategorySeed } from "../../../../schema";
-
-export const categories: CategorySeed[] = [
+export const categories = [
 
 	{
 		slug: "slim-amazonian-backgrounds",

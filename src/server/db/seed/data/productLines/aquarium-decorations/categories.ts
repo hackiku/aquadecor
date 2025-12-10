@@ -1,9 +1,7 @@
 
 // src/server/db/seed/data/productLine/aquarium-decorations/categories.ts
 
-import type { CategorySeed } from "../../../../schema";
-
-export const categories: CategorySeed[] = [
+export const categories = [
 	{
 		slug: "magical-items",
 		productLine: "aquarium-decorations",

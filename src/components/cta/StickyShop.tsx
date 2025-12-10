@@ -14,7 +14,8 @@ const FEATURES = [
 
 interface StickyShopProps {
 	/** Optional: pass a ref to the section that should trigger visibility */
-	triggerRef?: React.RefObject<HTMLElement>;
+	triggerRef?: React.RefObject<HTMLElement | null>;
+
 }
 
 export function StickyShop({ triggerRef }: StickyShopProps) {

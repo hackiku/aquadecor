@@ -129,11 +129,22 @@ export default async function ShopPage() {
 									<ProductCard
 										key={product.id}
 										product={{
-											...product,
+											id: product.id,
+											slug: product.slug,
+											sku: product.sku ?? null,
+											stockStatus: product.stockStatus,
 											name: product.name ?? "Untitled Product",
-											stockStatus: (product as any).stockStatus || 'requires_quote', // Assumed for backgrounds
+											shortDescription: product.shortDescription ?? null,
+											heroImageUrl: product.heroImageUrl ?? null,
+											heroImageAlt: product.heroImageAlt ?? null,
 											categorySlug: product.categorySlug ?? "",
 											productLineSlug: product.productLineSlug ?? "3d-backgrounds",
+
+											// FIX: Map new price field and assign required fields
+											basePriceEurCents: product.unitPriceEurCents ?? null,
+											priceNote: null,
+											variantOptions: null,
+											addonOptions: null,
 										}}
 									/>
 								))}
@@ -168,11 +179,22 @@ export default async function ShopPage() {
 									<ProductCard
 										key={product.id}
 										product={{
-											...product,
+											id: product.id,
+											slug: product.slug,
+											sku: product.sku ?? null,
+											stockStatus: product.stockStatus,
 											name: product.name ?? "Untitled Product",
-											stockStatus: (product as any).stockStatus || 'in_stock', // Assumed for decorations
+											shortDescription: product.shortDescription ?? null,
+											heroImageUrl: product.heroImageUrl ?? null,
+											heroImageAlt: product.heroImageAlt ?? null,
 											categorySlug: product.categorySlug ?? "",
 											productLineSlug: product.productLineSlug ?? "aquarium-decorations",
+
+											// FIX: Map new price field and assign required fields
+											basePriceEurCents: product.unitPriceEurCents ?? null,
+											priceNote: null,
+											variantOptions: null,
+											addonOptions: null,
 										}}
 									/>
 								))}

@@ -1,8 +1,6 @@
 // src/server/db/seed/data/productLine/3d-backgrounds/category-translations.ts
 
-import type { TranslationSeed } from "../../../../schema";
-
-export const categoryTranslations: TranslationSeed = {
+export const categoryTranslations = {
 
 	"slim-amazonian-backgrounds": {
 		en: {

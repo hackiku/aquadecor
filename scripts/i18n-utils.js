@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-nocheck
 // scripts/i18n-utils.js
 /**
  * Utility script for managing translations

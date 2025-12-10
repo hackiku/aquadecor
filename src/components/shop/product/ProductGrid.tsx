@@ -9,14 +9,24 @@ import { cn } from "~/lib/utils";
 import type { Product } from "~/server/db/schema/shop";
 
 // Reuse the type definition
-type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+type ProductForGrid = Pick<Product, 'id' | 'slug' | 'sku' | 'stockStatus'> & {
+	// Fields retrieved from other tables or translations:
 	name: string;
 	shortDescription: string | null;
 	heroImageUrl: string | null;
 	heroImageAlt?: string | null;
 	categorySlug: string;
 	productLineSlug: string;
+
+	// Pricing fields (mapped from productPricing.unitPriceEurCents)
+	basePriceEurCents: number | null;
+	priceNote: string | null;
+
+	// Fields to satisfy the ProductCard which uses this type
+	variantOptions?: any | null;
+	addonOptions?: any | null;
 };
+
 
 interface ProductGridProps {
 	products: ProductForGrid[];
