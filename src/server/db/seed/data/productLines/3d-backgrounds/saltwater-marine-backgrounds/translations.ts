@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/saltwater-marine-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"k-1-marine-background": {
 		"en": {
 			"name": "Marine Background",

@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/juwel-aquarium-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"l-2-juwel-3d-aquarium-background": {
 		"en": {
 			"name": "Juwel 3D Aquarium Background",

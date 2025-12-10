@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/protective-rubber-mats/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"j-1-rubber-mat-for-aquarium": {
 		"en": {
 			"name": "Rubber Mat for Aquarium",

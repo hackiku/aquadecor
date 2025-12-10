@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/amazonian-tree-trunks/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"b-1-amazonian-tree-trunk": {
 		"en": {
 			"name": "Amazonian Tree Trunk",

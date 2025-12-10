@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/classic-rocky-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"a-1-classic-rocky-background": {
 		"en": {
 			"name": "Classic Rocky Background",

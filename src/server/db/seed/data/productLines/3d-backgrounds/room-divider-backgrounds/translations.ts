@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/room-divider-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"f-1-room-divider": {
 		"en": {
 			"name": "Room Divider",

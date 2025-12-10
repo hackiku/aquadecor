@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/aquarium-plants/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"z-1-model-aquarium-plant": {
 		"en": {
 			"name": "Aquarium Plant",

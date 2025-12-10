@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/massive-rocky-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"c-3-massive-rocky-background": {
 		"en": {
 			"name": "Massive Rocky Background",

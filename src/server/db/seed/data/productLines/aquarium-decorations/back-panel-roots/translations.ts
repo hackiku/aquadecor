@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/back-panel-roots/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"s-1-back-panel-roots": {
 		"en": {
 			"name": "Back panel roots",

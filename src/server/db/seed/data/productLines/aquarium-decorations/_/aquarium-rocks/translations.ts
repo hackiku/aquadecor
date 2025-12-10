@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/aquarium-rocks/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"d-5-model": {
 		"en": {
 			"name": "Natural Sinking River Rock",

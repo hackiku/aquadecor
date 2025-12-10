@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/artificial-reefs/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"h-1-reef": {
 		"en": {
 			"name": "Reef",

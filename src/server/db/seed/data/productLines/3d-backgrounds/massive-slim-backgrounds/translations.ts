@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/3d-backgrounds/massive-slim-backgrounds/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"n-1-massive-3d-slim-background": {
 		"en": {
 			"name": "Massive 3D Slim Background",

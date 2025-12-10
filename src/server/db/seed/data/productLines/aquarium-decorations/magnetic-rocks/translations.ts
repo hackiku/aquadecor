@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/magnetic-rocks/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"m-1-magnetic-rocks": {
 		"en": {
 			"name": "Gray Stone Magnetic Rocks",

@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/aquascaping-starter-sets/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"set-1": {
 		"en": {
 			"name": "Set 1",

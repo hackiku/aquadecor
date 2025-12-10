@@ -1,8 +1,7 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/centerpiece-decorations/translations.ts
 
-import type { TranslationSeed } from "../../../../../schema";
 
-export const translations: TranslationSeed = {
+export const translations = {
 	"v1-tree-trunk-centerpiece": {
 		"en": {
 			"name": "Realistic Tree Trunk Centerpiece",
