@@ -1,5 +1,70 @@
 {
-  "setup": {
-    "placeholder": "Translations for setup in nl"
-  }
+	"setup": {
+		"guideBadge": "Installatiegids",
+		"headline": "Uw 3D Achterwand Opzetten",
+		"subHeadline": "Professionele installatiegidsen voor elke aquariumconfiguratie. Van eenvoudige achterwanden tot complexe meerkamersystemen.",
+		"beforeYouStart": "Voordat U Begint",
+		"proTipHeadline": "Voordat U Begint",
+		"proTipText1": "Aquadecor achterwanden zijn gemaakt van lichtgewicht materiaal dat uw aquariumglas niet belast. De waterdruk betekent echter dat de achterwand stevig bevestigd moet worden met aquariumveilige siliconen.",
+		"proTipText2": "Pro tip: Controleer altijd de houdbaarheidsdatum van uw siliconen voordat u met de installatie begint.",
+		"configHeadline": "10 Opzetconfiguraties",
+		"configSubHeadline": "Kies de perfecte configuratie voor de plaatsing en uitrusting van uw aquarium",
+		"bestFor": "Het beste voor:",
+		"ctaHeadline": "Hulp Nodig Bij Het Kiezen?",
+		"ctaSubHeadline": "Weet u niet zeker welke opzet geschikt is voor uw aquarium? Ons team kan u helpen bij het ontwerpen van de perfecte configuratie.",
+		"ctaButton1": "Configureer Uw Achterwand",
+		"ctaButton2": "Producten Bekijken",
+		"examples": {
+			"1": {
+				"title": "Klassieke Enkele Wand Opzet",
+				"description": "De meest populaire configuratie - bedekt het achterste glas met één apparatuurkamer. Perfect voor standaard aquaria tegen een muur.",
+				"bestFor": "Standaard aquaria, beginners"
+			},
+			"2": {
+				"title": "Natuurlijke Scheur Ontwerp",
+				"description": "Til uw opzet naar een hoger niveau met natuurlijk geïntegreerde apparatuurverberging. Water komt binnen via realistische scheuren in het rotswerk.",
+				"bestFor": "Gevorderd aquascaping"
+			},
+			"3": {
+				"title": "L-vormige Hoekmontage",
+				"description": "Maximaliseer de aanwezigheid van uw aquarium door de achterwand plus één zijde te bedekken. Ideaal voor tanks die naast muren staan.",
+				"bestFor": "Hoekplaatsingen, tanks langs de zijkant"
+			},
+			"4": {
+				"title": "Volledige Rondom Immersion",
+				"description": "Transformeer uw aquarium in een kijkportaal. Bedekt de achterkant en beide zijkanten, waardoor een complete onderwaterwereld ontstaat.",
+				"bestFor": "Kamerverdelers, centrale tanks"
+			},
+			"5": {
+				"title": "Eiland Verdeler Opzet",
+				"description": "Plaats de achterwand in het midden als een natuurlijke verdeler met kamers of filters aan weerszijden.",
+				"bestFor": "Installaties tussen kamers"
+			},
+			"6": {
+				"title": "Diepte-illusie Ontwerp",
+				"description": "Creëer dramatische diepte door het gedeeltelijk bedekken van een zwart/marineblauw gefolieerd achterglas. De achterwand lijkt in de ruimte te zweven.",
+				"bestFor": "Maximaliseren van diepteperceptie"
+			},
+			"7": {
+				"title": "Meerwandige Diepte Ontwerp",
+				"description": "Breid de diepte-illusie uit naar één of beide zijden met gefolieerd glas. Creëert een ongelooflijk meeslepende kijkervaring.",
+				"bestFor": "Wandgemonteerde, ingebouwde tanks"
+			},
+			"8": {
+				"title": "Interne Filter Integratie",
+				"description": "Verberg elk intern filter, ongeacht de locatie. Aangepaste scheuren en ingangen passen bij uw specifieke filtertype.",
+				"bestFor": "Interne filters, overloopsystemen"
+			},
+			"9": {
+				"title": "Stromingspomp Afdekking",
+				"description": "Klassieke achterwandbedekking met bonus: verberg uw stromingspomp achter een afneembare rots.",
+				"bestFor": "Hoogdebiet systemen, golfmakers"
+			},
+			"10": {
+				"title": "Slank Biofilter Ontwerp",
+				"description": "Flexibele achterwand uit één stuk met ruimte voor biologische filtratie erachter. Vul de opening met bio-ballen of Siporax.",
+				"bestFor": "Biologische filtratie, cichliden tanks"
+			}
+		}
+	}
 }

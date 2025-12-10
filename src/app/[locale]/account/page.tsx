@@ -1,7 +1,7 @@
-// src/app/(account)/account/page.tsx
+// src/app/[locale]/account/page.tsx
 "use client";
 
-import { MobileAccountNav } from "../_components/MobileAccountNav";
+import { MobileAccountNav } from "./_components/MobileAccountNav";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Package, Heart, MapPin, Settings, Loader2 } from "lucide-react";

@@ -23,6 +23,25 @@ export const productRouter = createTRPCRouter({
 	// CATEGORIES
 	// ============================================================================
 
+	getCategoryMetadata: publicProcedure
+		.input(z.object({
+			categorySlug: z.string(),
+		}))
+		.query(async ({ ctx, input }) => {
+			const [category] = await ctx.db
+				.select({
+					slug: categories.slug,
+					productLine: categories.productLine,
+					modelCode: categories.modelCode,
+				})
+				.from(categories)
+				.where(eq(categories.slug, input.categorySlug))
+				.limit(1);
+
+			return category;
+		}),
+
+
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
 			productLineSlug: z.string(),

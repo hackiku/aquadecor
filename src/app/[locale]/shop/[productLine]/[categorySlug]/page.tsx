@@ -10,6 +10,8 @@ interface PageProps {
 	}>;
 }
 
+
+
 export default async function CategoryProductsPage({ params }: PageProps) {
 	const { productLine, categorySlug } = await params;
 

@@ -1,5 +1,71 @@
 {
-  "home": {
-    "placeholder": "Translations for home in de"
-  }
+	"home": {
+		"meta": {
+			"title": "Aquadecor - Premium 3D Aquarienrückwände",
+			"description": "Verwandeln Sie Ihr Aquarium mit den realistischsten 3D-Rückwänden und Dekorationen. Seit über 20 Jahren handgefertigt in Europa."
+		},
+		"hero": {
+			"badge": "Hergestellt in Europa",
+			"headline": "Die Realistischsten 3D Aquarienrückwände",
+			"subheadline": "Handgefertigte Perfektion, die Ihr Aquarium in ein lebendiges Meisterwerk verwandelt",
+			"cta": {
+				"primary": "Rückwände kaufen",
+				"secondary": "3D-Rechner testen"
+			}
+		},
+		"tagline": {
+			"headline": "Nur die Natur kann uns kopieren",
+			"subheadline": "Handgefertigte 3D-Rückwände, die so realistisch sind, dass sogar die Natur Notizen macht."
+		},
+		"trust": {
+			"tested": {
+				"emoji": "🔬",
+				"title": "Laborgetestet"
+			},
+			"waterSafe": {
+				"emoji": "🌊",
+				"title": "100% Wassersicher"
+			},
+			"eco": {
+				"emoji": "♻️",
+				"title": "Umweltbewusste Materialien"
+			}
+		},
+		"features": {
+			"headline": "Gebaut, um ewig zu halten",
+			"subheadline": "(und gut auszusehen)",
+			"description": "Zwanghaft hyperrealistische Repliken, hergestellt aus Polyurethan-/Harzmischungen. Ungiftig, temperaturbeständig und mit 20-Jahres- oder lebenslanger Garantie."
+		},
+		"social": {
+			"headline": "Seit über 20 Jahren von über 200.000 Tankheads vertraut",
+			"subheadline": "Echte Setups von Aquarien-Enthusiasten weltweit."
+		},
+		"stats": {
+			"years": {
+				"number": "20+",
+				"label": "Jahre im Geschäft"
+			},
+			"shipped": {
+				"number": "50K+",
+				"label": "Produkte versandt"
+			},
+			"designs": {
+				"number": "1000+",
+				"label": "Einzigartige Designs"
+			},
+			"countries": {
+				"number": "50+",
+				"label": "Länder bedient"
+			}
+		},
+		"comparison": {
+			"headline": "Was auch immer Sie wählen, Sie werden es nicht bereuen!",
+			"subheadline": "Standardmaße für eine schnelle Einrichtung oder maßgefertigt nach Ihrer genauen Vorstellung."
+		},
+		"calculator": {
+			"headline": "Gestalten Sie Ihre perfekte Rückwand in 3D",
+			"description": "Unser interaktiver 3D-Rechner lässt Sie jedes Detail visualisieren und anpassen, bevor Sie bestellen.",
+			"cta": "Rechner testen"
+		}
+	}
 }

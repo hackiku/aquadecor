@@ -9,6 +9,8 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AquariumDecorationsPage() {
 	// Load categories for aquarium decorations
 	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];

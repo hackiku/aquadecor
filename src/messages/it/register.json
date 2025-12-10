@@ -1,0 +1,14 @@
+{
+	"register": {
+		"headline": "Crea il tuo account",
+		"nameLabel": "Nome Completo",
+		"emailLabel": "E-mail",
+		"passwordLabel": "Password (Almeno 8 caratteri)",
+		"termsText": "Accetto i {termsLink} e l' {privacyLink}",
+		"termsLink": "Termini di Servizio",
+		"privacyLink": "Politica sulla Privacy",
+		"createButton": "Crea Account",
+		"loginText": "Hai già un account?",
+		"loginLink": "Accedi"
+	}
+}

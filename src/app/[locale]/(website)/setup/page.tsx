@@ -4,48 +4,43 @@ import { getTranslations } from 'next-intl/server';
 import Image from "next/image";
 import Link from 'next/link';
 
-// The setup examples with their image paths (NOT translated)
-const SETUP_IMAGES = [
-	'/media/images/setting-up-1.webp',
-	'/media/images/setting-up-2.webp',
-	'/media/images/setting-up-3.webp',
-	'/media/images/setting-up-4.webp',
-	'/media/images/setting-up-5.webp',
-	'/media/images/setting-up-6.webp',
-	'/media/images/setting-up-7.webp',
-	'/media/images/setting-up-8.webp',
-	'/media/images/setting-up-9.webp',
-	'/media/images/setting-up-10.webp',
-];
+type Props = {
+	params: Promise<{ locale: string }>;
+};
 
-// Generate metadata using translations
-// FIX 1: Await the props object before using params
-export async function generateMetadata(props: { params: { locale: string } }) {
-	const { params } = await props;
-	const { locale } = params;
-
-	const t = await getTranslations({ locale, namespace: 'metadata' });
+// SEO Metadata
+export async function generateMetadata({ params }: Props) {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'setup' });
 
 	return {
-		title: t('setup.title'),
-		description: t('setup.description'),
+		title: t('headline'),
+		description: t('subHeadline'),
 	};
 }
 
-
-export default async function SetupPage(props: { params: { locale: string } }) {
-	// FIX 2: Await the props object before using params
-	const { params } = await props;
-	const { locale } = params;
-
+export default async function SetupPage({ params }: Props) {
+	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'setup' });
-	// Note: getTranslations automatically returns a string if the key is missing,
-	// which prevents the app from crashing (the fallback you wanted).
+
+	// Setup examples with image paths
+	const setupExamples = [
+		{ number: 1, image: '/media/images/setup/setting-up-1.webp', imagePosition: 'left' as const },
+		{ number: 2, image: '/media/images/setup/setting-up-2.webp', imagePosition: 'right' as const },
+		{ number: 3, image: '/media/images/setup/setting-up-3.webp', imagePosition: 'left' as const },
+		{ number: 4, image: '/media/images/setup/setting-up-4.webp', imagePosition: 'right' as const },
+		{ number: 5, image: '/media/images/setup/setting-up-5.webp', imagePosition: 'left' as const },
+		{ number: 6, image: '/media/images/setup/setting-up-6.webp', imagePosition: 'right' as const },
+		{ number: 7, image: '/media/images/setup/setting-up-7.webp', imagePosition: 'left' as const },
+		{ number: 8, image: '/media/images/setup/setting-up-8.webp', imagePosition: 'right' as const },
+		{ number: 9, image: '/media/images/setup/setting-up-9.webp', imagePosition: 'left' as const },
+		{ number: 10, image: '/media/images/setup/setting-up-10.webp', imagePosition: 'right' as const },
+	];
 
 	return (
 		<main className="min-h-screen">
 			{/* Hero */}
-			<section className="relative pt-16 md:pt-24 pb-16 md:pb-24 bg-gradient-to-b from-muted/50 to-transparent overflow-hidden">
+			<section className="relative pt-16 md:pt-24 pb-16 md:pb-24 bg-linear-to-b from-muted/50 to-transparent overflow-hidden">
 				<div className="container px-4 max-w-5xl mx-auto">
 					<div className="text-center space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
@@ -73,17 +68,16 @@ export default async function SetupPage(props: { params: { locale: string } }) {
 						<div className="space-y-3 text-muted-foreground font-display font-light leading-relaxed">
 							<p>{t('proTipText1')}</p>
 							<p className="text-sm">
-								<strong className="text-foreground font-medium">
-									{/* NOTE: We removed t.rich() for simplicity, you can re-add it if needed */}
-									{t('proTipText2')}
-								</strong>
+								{t.rich('proTipText2', {
+									strong: (chunks) => <strong className="text-foreground font-medium">{chunks}</strong>
+								})}
 							</p>
 						</div>
 					</div>
 				</div>
 			</section>
 
-			{/* Setup Examples Grid */}
+			{/* Setup Examples */}
 			<section className="py-16 md:py-24 bg-accent/5">
 				<div className="container px-4 max-w-6xl mx-auto">
 					<div className="text-center mb-16">
@@ -96,61 +90,50 @@ export default async function SetupPage(props: { params: { locale: string } }) {
 					</div>
 
 					<div className="space-y-24">
-						{SETUP_IMAGES.map((image, index) => {
-							const number = index + 1;
-							const isEven = index % 2 === 0;
-
-							// Get translations for this specific setup using dot notation
-							// This relies on the 'examples.1.title' structure in your JSON
-							const title = t(`examples.${number}.title`);
-							const description = t(`examples.${number}.description`);
-							const bestFor = t(`examples.${number}.bestFor`);
-
-							return (
-								<div
-									key={number}
-									className={`flex flex-col gap-8 ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
-										} items-center`}
-								>
-									{/* Image */}
-									<div className="flex-1 w-full">
-										<div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border-2 border-border hover:border-primary/50 transition-colors">
-											<Image
-												src={image}
-												alt={`Setup example ${number}`}
-												fill
-												className="object-contain"
-												sizes="(max-width: 1024px) 100vw, 50vw"
-											/>
-										</div>
-									</div>
-
-									{/* Content */}
-									<div className="flex-1 space-y-4">
-										<div className="flex items-center gap-3">
-											<div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-												<span className="text-primary font-display font-medium">
-													{number}
-												</span>
-											</div>
-											<h3 className="text-2xl md:text-3xl font-display font-light">
-												{title}
-											</h3>
-										</div>
-
-										<p className="text-base md:text-lg text-muted-foreground font-display font-light leading-relaxed">
-											{description}
-										</p>
-
-										<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/5 rounded-full">
-											<span className="text-xs text-primary font-display font-medium">
-												{t('bestFor')} {bestFor}
-											</span>
-										</div>
+						{setupExamples.map((example) => (
+							<div
+								key={example.number}
+								className={`flex flex-col gap-8 ${example.imagePosition === "left" ? "lg:flex-row-reverse" : "lg:flex-row"
+									} items-center`}
+							>
+								{/* Image */}
+								<div className="flex-1 w-full">
+									<div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-muted border-2 border-border hover:border-primary/50 transition-colors">
+										<Image
+											src={example.image}
+											alt={t(`examples.${example.number}.title`)}
+											fill
+											className="object-contain"
+											sizes="(max-width: 1024px) 100vw, 50vw"
+										/>
 									</div>
 								</div>
-							);
-						})}
+
+								{/* Content */}
+								<div className="flex-1 space-y-4">
+									<div className="flex items-center gap-3">
+										<div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+											<span className="text-primary font-display font-medium">
+												{example.number}
+											</span>
+										</div>
+										<h3 className="text-2xl md:text-3xl font-display font-light">
+											{t(`examples.${example.number}.title`)}
+										</h3>
+									</div>
+
+									<p className="text-base md:text-lg text-muted-foreground font-display font-light leading-relaxed">
+										{t(`examples.${example.number}.description`)}
+									</p>
+
+									<div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/5 rounded-full">
+										<span className="text-xs text-primary font-display font-medium">
+											{t('bestFor')} {t(`examples.${example.number}.bestFor`)}
+										</span>
+									</div>
+								</div>
+							</div>
+						))}
 					</div>
 				</div>
 			</section>
@@ -166,7 +149,6 @@ export default async function SetupPage(props: { params: { locale: string } }) {
 							{t('ctaSubHeadline')}
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-							{/* FIX 3: Use the locale variable for Link components */}
 							<Link
 								href={`/${locale}/calculator`}
 								className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"

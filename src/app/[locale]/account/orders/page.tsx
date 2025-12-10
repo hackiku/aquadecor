@@ -1,5 +1,5 @@
-// src/app/(account)/account/orders/page.tsx
-import { MobileAccountNav } from "../../_components/MobileAccountNav";
+// src/app/[locale]/account/orders/page.tsx
+import { MobileAccountNav } from "../_components/MobileAccountNav";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {

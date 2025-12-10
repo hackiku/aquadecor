@@ -1,13 +1,13 @@
-// src/app/(account)/account/addresses/page.tsx
+// src/app/[locale]/account/addresses/page.tsx
 "use client";
 
 import { useState } from "react";
-import { MobileAccountNav } from "../../_components/MobileAccountNav";
+import { MobileAccountNav } from "../_components/MobileAccountNav";
 import { Button } from "~/components/ui/button";
 import { Plus, MapPin, Pencil, Trash2, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { EditAddress } from "../../_components/EditAddress";
+import { EditAddress } from "../_components/EditAddress";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
 import {

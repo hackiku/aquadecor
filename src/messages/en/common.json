@@ -1,20 +1,37 @@
 {
-	"nav": {
-		"shop": "Shop",
-		"calculator": "Calculator"
-	},
-	"buttons": {
-		"buyNow": "Buy Now",
-		"addToCart": "Add to Cart"
-	},
-	"forms": {
-		"email": "Email",
-		"submit": "Submit"
-	},
-	"errors": {
-		"required": "Required"
-	},
-	"scarcity": {
-		"peopleViewing": "{count} people viewing"
+	"common": {
+		"nav": {
+			"home": "Home",
+			"shop": "Shop",
+			"calculator": "Calculator",
+			"setup": "Setup Guide",
+			"about": "About",
+			"reviews": "Reviews"
+		},
+		"reviews": {
+			"title": "Customer Reviews | Aquadecor",
+			"description": "See what our customers are saying about Aquadecor 3D backgrounds",
+			"headline": "Customer Reviews",
+			"subheadline": "See what our customers are saying about Aquadecor products",
+			"totalReviews": "Total Reviews",
+			"avgRating": "Average Rating",
+			"fiveStarReviews": "5-Star Reviews",
+			"noReviews": "No reviews yet. Be the first to leave one!",
+			"ctaHeadline": "Ready to experience it yourself?",
+			"ctaSubheadline": "Join {count}+ satisfied customers who transformed their aquariums"
+		},
+		"footer": {
+			"description": "Premium 3D aquarium backgrounds handcrafted in Serbia",
+			"shop": "Shop",
+			"company": "Company",
+			"support": "Support",
+			"legal": "Legal",
+			"newsletter": {
+				"title": "Newsletter",
+				"description": "Get updates on new products and special offers",
+				"placeholder": "Enter your email",
+				"button": "Subscribe"
+			}
+		}
 	}
 }

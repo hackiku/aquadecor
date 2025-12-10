@@ -1,0 +1,14 @@
+{
+	"register": {
+		"headline": "Maak uw account aan",
+		"nameLabel": "Volledige Naam",
+		"emailLabel": "E-mailadres",
+		"passwordLabel": "Wachtwoord (Minimaal 8 tekens)",
+		"termsText": "Ik ga akkoord met de {termsLink} en het {privacyLink}",
+		"termsLink": "Algemene Voorwaarden",
+		"privacyLink": "Privacybeleid",
+		"createButton": "Account aanmaken",
+		"loginText": "Heeft u al een account?",
+		"loginLink": "Inloggen"
+	}
+}

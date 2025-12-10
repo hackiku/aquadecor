@@ -131,14 +131,22 @@ async function seedCategories() {
 			continue;
 		}
 
-		for (const [locale, trans] of Object.entries(translations as any)) {
+		for (const [locale, trans] of Object.entries(translations)) {
+			// Type assertion for translation object
+			const translation = trans as {
+				name: string;
+				description?: string;
+				metaTitle?: string;
+				metaDescription?: string;
+			};
+
 			await db.insert(categoryTranslations).values({
 				categoryId,
 				locale,
-				name: trans.name,
-				description: trans.description,
-				metaTitle: trans.metaTitle,
-				metaDescription: trans.metaDescription,
+				name: translation.name,
+				description: translation.description,
+				metaTitle: translation.metaTitle,
+				metaDescription: translation.metaDescription,
 			});
 		}
 	}
@@ -289,7 +297,7 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 	}
 	console.log(`  ✅ Inserted ${addonCount} addons`);
 
-	// --- 5. Insert Customization Options and Select Options ---
+	// --- 5. Insert Customization Options ---
 	console.log(`  ⚙️  Inserting customization options...`);
 	for (const option of allCustomizationOptions) {
 		const productId = productIdMap.get(option.productSlug);
@@ -297,135 +305,115 @@ async function seedProducts(categoryIdMap: Map<string, string>) {
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { productSlug, slug, ...optionData } = option;
-
 		const [insertedOption] = await db.insert(customizationOptions).values({
 			...optionData,
 			productId
 		}).returning();
-		if (!insertedOption) continue;
 
-		customOptionIdMap.set(slug, insertedOption.id);
-		customOptionCount++;
-
-		// Insert Select Options (linked by option slug)
-		const selects = allSelectOptions.filter(s => s.customizationOptionSlug === slug);
-		for (const selectOption of selects) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { customizationOptionSlug, ...selectData } = selectOption;
-			await db.insert(selectOptions).values({
-				...selectData,
-				customizationOptionId: insertedOption.id
-			});
-			selectOptionCount++;
+		if (insertedOption) {
+			customOptionIdMap.set(slug, insertedOption.id);
+			customOptionCount++;
 		}
 	}
-	console.log(`  ✅ Inserted ${customOptionCount} customization options, ${selectOptionCount} select options`);
+	console.log(`  ✅ Inserted ${customOptionCount} customization options`);
 
-	// --- 6. Insert Translations ---
-	console.log(`  🌐 Inserting translations...`);
+	// --- 6. Insert Select Options ---
+	console.log(`  📋 Inserting select options...`);
+	for (const selectOpt of allSelectOptions) {
+		const customOptionId = customOptionIdMap.get(selectOpt.customizationOptionSlug);
+		if (!customOptionId) continue;
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { customizationOptionSlug, ...selectData } = selectOpt;
+		await db.insert(selectOptions).values({
+			...selectData,
+			customizationOptionId: customOptionId
+		});
+		selectOptionCount++;
+	}
+	console.log(`  ✅ Inserted ${selectOptionCount} select options`);
+
+	// --- 7. Insert Product Translations ---
+	console.log(`  🌐 Inserting product translations...`);
 	let translationCount = 0;
 	for (const [slug, translations] of Object.entries(allTranslations)) {
 		const productId = productIdMap.get(slug);
-		if (!productId) continue;
+		if (!productId) {
+			console.warn(`  ⚠ No product ID found for translation slug: ${slug}`);
+			continue;
+		}
 
-		for (const [locale, trans] of Object.entries(translations as any)) {
+		for (const [locale, trans] of Object.entries(translations)) {
+			// Type assertion for translation object
+			const translation = trans as {
+				name: string;
+				shortDescription?: string;
+				fullDescription?: string;
+				description?: string;
+				metaTitle?: string;
+				metaDescription?: string;
+			};
+
 			await db.insert(productTranslations).values({
 				productId,
 				locale,
-				name: trans.name,
-				shortDescription: trans.shortDescription,
-				longDescription: trans.fullDescription || trans.description,
-				metaTitle: trans.metaTitle,
-				metaDescription: trans.metaDescription,
+				name: translation.name,
+				shortDescription: translation.shortDescription,
+				longDescription: translation.fullDescription || translation.description,
+				metaTitle: translation.metaTitle,
+				metaDescription: translation.metaDescription,
 			});
 			translationCount++;
 		}
 	}
-	console.log(`  ✅ Inserted ${translationCount} translations`);
+	console.log(`  ✅ Inserted ${translationCount} product translations`);
 
-	console.log(`\n✅ Product seeding complete!\n`);
+	console.log(`\n✅ Product seeding complete!`);
+	console.log(`   Products: ${productIdMap.size}`);
+	console.log(`   Pricing: ${pricingCount}, Bundles: ${bundleCount}`);
+	console.log(`   Addons: ${addonCount}`);
+	console.log(`   Customization: ${customOptionCount} options, ${selectOptionCount} select options`);
+	console.log(`   Market Exclusions: ${exclusionCount}`);
+	console.log(`   Translations: ${translationCount}\n`);
+
 	return productIdMap;
 }
 
 async function seedMedia(productIdMap: Map<string, string>, categoryIdMap: Map<string, string>) {
 	console.log("🌱 Seeding media...");
+	let count = 0;
 
-	// Combine both product lines
 	const allMedia = [
 		...aquariumDecorations.media,
 		...threeDBackgrounds.media,
 	];
 
-	let count = 0;
 	for (const mediaItem of allMedia) {
-		let productId = null;
-		let categoryId = null;
-
-		// Try to resolve Product ID first
-		if (mediaItem.productSlug && productIdMap.has(mediaItem.productSlug)) {
-			productId = productIdMap.get(mediaItem.productSlug)!;
-		}
-		// Try to resolve Category ID (using productSlug field as it contains the slug)
-		else if (mediaItem.productSlug && categoryIdMap.has(mediaItem.productSlug)) {
-			categoryId = categoryIdMap.get(mediaItem.productSlug)!;
-		}
-		// Explicit categorySlug check if provided
-		else if (mediaItem.categorySlug && categoryIdMap.has(mediaItem.categorySlug)) {
-			categoryId = categoryIdMap.get(mediaItem.categorySlug)!;
-		}
-
-		if (!productId && !categoryId) {
-			console.warn(`  ⚠ Orphan media: ${mediaItem.productSlug} (No parent found)`);
-			continue;
-		}
+		const productId = mediaItem.productSlug ? productIdMap.get(mediaItem.productSlug) : null;
+		const categoryId = mediaItem.categorySlug ? categoryIdMap.get(mediaItem.categorySlug) : null;
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { productSlug, categorySlug, ...mediaData } = mediaItem;
 
 		await db.insert(media).values({
 			...mediaData,
-			productId: productId || null,
-			categoryId: categoryId || null,
+			productId,
+			categoryId,
 		});
 		count++;
 	}
-
 	console.log(`✅ Seeded ${count} media items\n`);
 }
 
-
 async function seedReviews() {
 	console.log("🌱 Seeding reviews...");
+
 	for (const review of reviewData) {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { id, ...reviewWithoutId } = review;
-		await db.insert(reviews).values(reviewWithoutId);
+		await db.insert(reviews).values(review);
 	}
+
 	console.log(`✅ Seeded ${reviewData.length} reviews\n`);
 }
-
-// async function seedReviews(productIdMap: Map<string, string>, userMap: Map<string, string>) {
-// 	console.log("🌱 Seeding reviews...");
-
-// 	let count = 0;
-// 	for (const review of reviewData) {
-// 		const productId = productIdMap.get(review.productSlug);
-// 		const userId = userMap.get(review.userEmail);
-// 		if (!productId || !userId) continue;
-
-// 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// 		const { productSlug, userEmail, ...reviewBody } = review;
-
-// 		await db.insert(reviews).values({
-// 			...reviewBody,
-// 			productId,
-// 			userId,
-// 		});
-// 		count++;
-// 	}
-
-// 	console.log(`✅ Seeded ${count} reviews\n`);
-// }
 
 async function seedFAQs() {
 	console.log("🌱 Seeding FAQs...");
@@ -452,41 +440,6 @@ async function seedFAQs() {
 	console.log(`✅ Seeded ${totalFaqs} FAQs\n`);
 }
 
-
-// async function seedFAQs() {
-// 	console.log("🌱 Seeding FAQs...");
-
-// 	const faqIdMap = new Map<string, string>();
-
-// 	for (const faq of faqsSeedData) {
-// 		const [inserted] = await db.insert(faqs).values({
-// 			category: faq.category,
-// 			sortOrder: faq.sortOrder,
-// 			isActive: faq.isActive,
-// 		}).returning();
-
-// 		if (inserted) {
-// 			faqIdMap.set(`${faq.category}-${faq.sortOrder}`, inserted.id);
-// 		}
-// 	}
-
-// 	for (const faq of faqsSeedData) {
-// 		const faqId = faqIdMap.get(`${faq.category}-${faq.sortOrder}`);
-// 		if (!faqId) continue;
-
-// 		for (const [locale, trans] of Object.entries(faq.translations)) {
-// 			await db.insert(faqTranslations).values({
-// 				faqId,
-// 				locale,
-// 				question: trans.question,
-// 				answer: trans.answer,
-// 			});
-// 		}
-// 	}
-
-// 	console.log(`✅ Seeded ${faqsSeedData.length} FAQs with translations\n`);
-// }
-
 async function seedShippingAndCountries() {
 	console.log("🌱 Seeding shipping zones and countries...");
 
@@ -500,11 +453,17 @@ async function seedShippingAndCountries() {
 	}
 
 	for (const country of countriesSeedData) {
-		const zoneId = zoneIdMap.get(country.zoneName);
-		if (!zoneId) continue;
+		// Type assertion for country data with zoneName
+		const countryWithZone = country as typeof country & { zoneName?: string };
+		const zoneId = countryWithZone.zoneName ? zoneIdMap.get(countryWithZone.zoneName) : null;
+
+		if (!zoneId) {
+			console.warn(`  ⚠ No zone found for country: ${country.name}`);
+			continue;
+		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { zoneName, ...countryData } = country;
+		const { zoneName, ...countryData } = countryWithZone;
 
 		await db.insert(countries).values({
 			...countryData,
@@ -515,9 +474,9 @@ async function seedShippingAndCountries() {
 	console.log(`✅ Seeded ${shippingZonesSeedData.length} shipping zones and ${countriesSeedData.length} countries\n`);
 }
 
-
 async function seedPromoters() {
 	console.log("🌱 Seeding promoters...");
+
 	for (const promoter of promotersSeedData) {
 		const { codes, ...promoterData } = promoter;
 		const [inserted] = await db.insert(promoters).values(promoterData).returning();
@@ -539,94 +498,6 @@ async function seedPromoters() {
 	console.log(`✅ Seeded ${promotersSeedData.length} promoters\n`);
 }
 
-async function seedPromotersAndSales() {
-	console.log("🌱 Seeding promoters and sales...");
-
-	const promoterIdMap = new Map<string, string>();
-
-	for (const promoter of promotersSeedData) {
-		const [inserted] = await db.insert(promoters).values({
-			name: promoter.name,
-			email: promoter.email,
-			commissionRate: promoter.commissionRate,
-			isActive: promoter.isActive,
-		}).returning();
-
-		if (inserted) {
-			promoterIdMap.set(promoter.email, inserted.id);
-		}
-	}
-
-	for (const promoter of promotersSeedData) {
-		const promoterId = promoterIdMap.get(promoter.email);
-		if (!promoterId) continue;
-
-		for (const code of promoter.codes) {
-			await db.insert(promoterCodes).values({
-				...code,
-				promoterId,
-			});
-		}
-	}
-
-	for (const sale of salesSeedData) {
-		await db.insert(sales).values(sale);
-	}
-
-	console.log(`✅ Seeded ${promotersSeedData.length} promoters and ${salesSeedData.length} sales\n`);
-}
-
-// async function seedOrders(productIdMap: Map<string, string>) {
-// 	console.log("🌱 Seeding orders...");
-
-// 	for (const order of ordersSeedData) {
-// 		const [insertedOrder] = await db.insert(orders).values({
-// 			email: order.email,
-// 			firstName: order.firstName,
-// 			lastName: order.lastName,
-// 			phone: order.phone,
-// 			totalAmountEurCents: order.totalAmountEurCents,
-// 			status: order.status,
-// 			paymentMethod: order.paymentMethod,
-// 			shippingAddress: order.shippingAddress,
-// 			billingAddress: order.billingAddress,
-// 		}).returning();
-
-// 		if (!insertedOrder) continue;
-
-// 		// Insert order items
-// 		for (const item of order.items) {
-// 			const productId = productIdMap.get(item.productSlug);
-// 			if (!productId) continue;
-
-// 			await db.insert(orderItems).values({
-// 				orderId: insertedOrder.id,
-// 				productId,
-// 				quantity: item.quantity,
-// 				unitPriceEurCents: item.unitPriceEurCents,
-// 				pricingSnapshot: item.pricingSnapshot,
-// 			});
-// 		}
-
-// 		// Insert status history
-// 		if (order.statusHistory) {
-// 			for (const history of order.statusHistory) {
-// 				await db.insert(orderStatusHistory).values({
-// 					orderId: insertedOrder.id,
-// 					status: history.status,
-// 					notes: history.notes,
-// 					createdAt: history.createdAt,
-// 				});
-// 			}
-// 		}
-// 	}
-
-// 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
-// }
-
-// ============================================================================
-// MAIN SEED
-// ============================================================================
 async function seedOrders(productIdMap: Map<string, string>) {
 	console.log("🌱 Seeding orders...");
 
@@ -698,8 +569,6 @@ async function main() {
 		await seedShippingAndCountries();
 		await seedOrders(productIdMap);
 		await seedPromoters();
-		// !! TODO: fix sales and promoters with new pricing logic
-		// await seedPromotersAndSales();
 
 		console.log("✨ Database seeding complete!\n");
 	} catch (error) {

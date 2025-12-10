@@ -1,7 +1,7 @@
-// src/app/(account)/account/wishlist/page.tsx
+// src/app/[locale]/account/wishlist/page.tsx
 "use client";
 import { useEffect, useState } from "react";
-import { MobileAccountNav } from "../../_components/MobileAccountNav";
+import { MobileAccountNav } from "../_components/MobileAccountNav";
 import { WishlistItem } from "~/components/shop/wishlist/WishlistItem";
 import { api } from "~/trpc/react";
 import { Loader2, Heart } from "lucide-react";

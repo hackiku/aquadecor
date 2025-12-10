@@ -1,5 +1,70 @@
 {
-  "setup": {
-    "placeholder": "Translations for setup in de"
-  }
+	"setup": {
+		"guideBadge": "Installationsanleitung",
+		"headline": "Einrichten Ihrer 3D-Rückwand",
+		"subHeadline": "Professionelle Installationsanleitungen für jede Aquarienkonfiguration. Von einfachen Rückwänden bis hin zu komplexen Mehrkammersystemen.",
+		"beforeYouStart": "Bevor Sie beginnen",
+		"proTipHeadline": "Bevor Sie beginnen",
+		"proTipText1": "Aquadecor-Rückwände bestehen aus leichtem Material, das Ihr Aquarienglas nicht belastet. Der Wasserdruck erfordert jedoch, dass die Rückwand mit aquariensicherem Silikon fest befestigt wird.",
+		"proTipText2": "Profi-Tipp: Überprüfen Sie immer das Verfallsdatum Ihres Silikons, bevor Sie mit der Installation beginnen.",
+		"configHeadline": "10 Einrichtungs-Konfigurationen",
+		"configSubHeadline": "Wählen Sie die perfekte Konfiguration für die Platzierung und Ausrüstung Ihres Aquariums",
+		"bestFor": "Am besten geeignet für:",
+		"ctaHeadline": "Brauchen Sie Hilfe bei der Auswahl?",
+		"ctaSubHeadline": "Sie sind sich nicht sicher, welche Einrichtung für Ihr Aquarium die richtige ist? Unser Team kann Ihnen helfen, die perfekte Konfiguration zu entwerfen.",
+		"ctaButton1": "Konfigurieren Sie Ihre Rückwand",
+		"ctaButton2": "Produkte durchsuchen",
+		"examples": {
+			"1": {
+				"title": "Klassische Einzelwand-Einrichtung",
+				"description": "Die beliebteste Konfiguration - bedeckt das hintere Glas mit einer Geräte-Kammer. Perfekt für Standard-Aquarien, die an einer Wand stehen.",
+				"bestFor": "Standard-Aquarien, Anfänger"
+			},
+			"2": {
+				"title": "Natürliches Riss-Design",
+				"description": "Werten Sie Ihre Einrichtung mit natürlich integrierter Geräteversteckung auf. Wasser tritt durch realistische Risse im Felswerk ein.",
+				"bestFor": "Fortgeschrittenes Aquascaping"
+			},
+			"3": {
+				"title": "L-förmige Eckmontage",
+				"description": "Maximieren Sie die Präsenz Ihres Aquariums, indem Sie die Rückwand plus eine Seite abdecken. Ideal für Becken, die neben Wänden positioniert sind.",
+				"bestFor": "Eckplatzierungen, Seitenwand-Becken"
+			},
+			"4": {
+				"title": "Vollständige Rundum-Immersion",
+				"description": "Verwandeln Sie Ihr Aquarium in ein Sichtportal. Bedeckt die Rückseite und beide Seiten und schafft eine komplette Unterwasserwelt.",
+				"bestFor": "Raumteiler, zentrale Becken"
+			},
+			"5": {
+				"title": "Inselteiler-Einrichtung",
+				"description": "Platzieren Sie die Rückwand in der Mitte als natürlichen Teiler mit Kammern oder Filtern auf beiden Seiten.",
+				"bestFor": "Installationen zwischen Räumen"
+			},
+			"6": {
+				"title": "Tiefenillusions-Design",
+				"description": "Erzeugen Sie dramatische Tiefe, indem Sie teilweise ein schwarz/marineblau foliertes hinteres Glas abdecken. Die Rückwand scheint im Raum zu schweben.",
+				"bestFor": "Maximierung der Tiefenwahrnehmung"
+			},
+			"7": {
+				"title": "Mehrwand-Tiefen-Design",
+				"description": "Erweitern Sie die Tiefenillusion auf eine oder beide Seiten mit foliertem Glas. Schafft ein unglaublich immersives Seherlebnis.",
+				"bestFor": "Wandmontierte, eingebaute Becken"
+			},
+			"8": {
+				"title": "Interne Filterintegration",
+				"description": "Verstecken Sie jeden Innenfilter, unabhängig von seinem Standort. Kundenspezifische Risse und Eingänge passen zu Ihrem spezifischen Filtertyp.",
+				"bestFor": "Innenfilter, Überlauf-Systeme"
+			},
+			"9": {
+				"title": "Strömungspumpen-Abdeckung",
+				"description": "Klassische Rückwandabdeckung mit Bonus: Verstecken Sie Ihre Strömungspumpe hinter einem abnehmbaren Felsen.",
+				"bestFor": "Hochflusssysteme, Wellenmacher"
+			},
+			"10": {
+				"title": "Schlankes Biofilter-Design",
+				"description": "Flexible einteilige Rückwand mit Platz für biologische Filterung dahinter. Füllen Sie den Spalt mit Bio-Bällen oder Siporax.",
+				"bestFor": "Biologische Filterung, Cichlidenbecken"
+			}
+		}
+	}
 }

@@ -7,6 +7,8 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { AlertCircle, ArrowRight, Package } from "lucide-react"; // 🎯 Added ArrowRight, Package for new section
 import Image from "next/image"; // 🎯 Added Image for new section
 
+export const dynamic = 'force-dynamic';
+
 // Re-structuring the page to use static, stacked sections for performance
 
 export default async function ShopPage() {

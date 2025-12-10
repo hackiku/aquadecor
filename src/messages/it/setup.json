@@ -1,5 +1,70 @@
 {
-  "setup": {
-    "placeholder": "Translations for setup in it"
-  }
+	"setup": {
+		"guideBadge": "Guida all'Installazione",
+		"headline": "Configurazione del Vostro Sfondo 3D",
+		"subHeadline": "Guide di installazione professionali per ogni configurazione di acquario. Da semplici pareti posteriori a complessi sistemi a più camere.",
+		"beforeYouStart": "Prima di Iniziare",
+		"proTipHeadline": "Prima di Iniziare",
+		"proTipText1": "Gli sfondi Aquadecor sono realizzati in materiale leggero che non stressa il vetro del vostro acquario. Tuttavia, la pressione dell'acqua implica che lo sfondo debba essere fissato saldamente utilizzando silicone sicuro per acquari.",
+		"proTipText2": "Consiglio Pro: Controllate sempre la data di scadenza del vostro silicone prima di iniziare l'installazione.",
+		"configHeadline": "10 Configurazioni di Allestimento",
+		"configSubHeadline": "Scegliete la configurazione perfetta per la collocazione e l'attrezzatura del vostro acquario",
+		"bestFor": "Ideale per:",
+		"ctaHeadline": "Serve Aiuto nella Scelta?",
+		"ctaSubHeadline": "Non siete sicuri di quale allestimento sia giusto per il vostro acquario? Il nostro team può aiutarvi a progettare la configurazione perfetta.",
+		"ctaButton1": "Configura il Tuo Sfondo",
+		"ctaButton2": "Sfoglia Prodotti",
+		"examples": {
+			"1": {
+				"title": "Configurazione Classica a Parete Singola",
+				"description": "La configurazione più popolare - copre il vetro posteriore con una camera per l'attrezzatura. Perfetta per acquari standard posizionati contro un muro.",
+				"bestFor": "Acquari standard, principianti"
+			},
+			"2": {
+				"title": "Design a Fessura Naturale",
+				"description": "Migliorate il vostro allestimento con l'occultamento dell'attrezzatura integrato naturalmente. L'acqua entra attraverso fessure realistiche nella roccia.",
+				"bestFor": "Aquascaping avanzato"
+			},
+			"3": {
+				"title": "Montaggio Angolare a L",
+				"description": "Massimizzate la presenza del vostro acquario coprendo la parete posteriore più un lato. Ideale per vasche posizionate accanto ai muri.",
+				"bestFor": "Posizionamenti angolari, vasche a parete laterale"
+			},
+			"4": {
+				"title": "Immersione Totale Circondata",
+				"description": "Trasformate il vostro acquario in un portale di osservazione. Copre la parte posteriore ed entrambi i lati, creando un mondo sottomarino completo.",
+				"bestFor": "Divisori per stanze, vasche centrali"
+			},
+			"5": {
+				"title": "Configurazione Divisorio a Isola",
+				"description": "Posizionate lo sfondo al centro come divisorio naturale con camere o filtri su entrambi i lati.",
+				"bestFor": "Installazioni tra stanze"
+			},
+			"6": {
+				"title": "Design Illusione di Profondità",
+				"description": "Create una profondità drammatica coprendo parzialmente un vetro posteriore rivestito in nero/blu navy. Lo sfondo sembra fluttuare nello spazio.",
+				"bestFor": "Massimizzare la percezione della profondità"
+			},
+			"7": {
+				"title": "Design di Profondità a Pareti Multiple",
+				"description": "Estendete l'illusione di profondità a uno o entrambi i lati con vetro rivestito. Crea un'esperienza visiva incredibilmente immersiva.",
+				"bestFor": "Vasche a muro, vasche incassate"
+			},
+			"8": {
+				"title": "Integrazione Filtro Interno",
+				"description": "Nascondete qualsiasi filtro interno indipendentemente dalla posizione. Fessure e aperture personalizzate si abbinano al vostro specifico tipo di filtro.",
+				"bestFor": "Filtri interni, sistemi di troppopieno"
+			},
+			"9": {
+				"title": "Copertura Pompa di Corrente",
+				"description": "Copertura classica della parete posteriore con un bonus: nascondete la vostra pompa di corrente dietro una roccia rimovibile.",
+				"bestFor": "Sistemi ad alto flusso, generatori di onde"
+			},
+			"10": {
+				"title": "Design Bio-Filtro Sottile",
+				"description": "Sfondo flessibile in un unico pezzo con spazio per la filtrazione biologica dietro di esso. Riempite lo spazio con bio-balls o Siporax.",
+				"bestFor": "Filtrazione biologica, vasche per ciclidi"
+			}
+		}
+	}
 }

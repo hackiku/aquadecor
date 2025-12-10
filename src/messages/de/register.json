@@ -1,0 +1,14 @@
+{
+	"register": {
+		"headline": "Konto erstellen",
+		"nameLabel": "Vollständiger Name",
+		"emailLabel": "E-Mail",
+		"passwordLabel": "Passwort (Mindestens 8 Zeichen)",
+		"termsText": "Ich stimme den {termsLink} und der {privacyLink} zu",
+		"termsLink": "Nutzungsbedingungen",
+		"privacyLink": "Datenschutzerklärung",
+		"createButton": "Konto erstellen",
+		"loginText": "Sie haben bereits ein Konto?",
+		"loginLink": "Anmelden"
+	}
+}

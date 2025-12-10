@@ -2,20 +2,20 @@
 	"home": {
 		"meta": {
 			"title": "Aquadecor - Sfondi 3D Premium per Acquari",
-			"description": "Trasforma il tuo acquario con gli sfondi 3D più realistici e decorazioni. Fatto a mano in Europa da oltre 20 anni."
+			"description": "Trasforma il tuo acquario con gli sfondi e le decorazioni 3D più realistici. Realizzati a mano in Europa da oltre 20 anni."
 		},
 		"hero": {
-			"badge": "Fatto in Europa",
+			"badge": "Prodotto in Europa",
 			"headline": "Gli Sfondi 3D per Acquari Più Realistici",
 			"subheadline": "Perfezione artigianale che trasforma il tuo acquario in un capolavoro vivente",
 			"cta": {
 				"primary": "Acquista Sfondi",
-				"secondary": "Prova Calcolatore 3D"
+				"secondary": "Prova il Calcolatore 3D"
 			}
 		},
 		"tagline": {
-			"headline": "Solo la Natura Può Copiarci",
-			"subheadline": "Sfondi 3D artigianali così realistici che persino la natura prende appunti."
+			"headline": "Solo la natura può copiarci",
+			"subheadline": "Sfondi 3D artigianali così realistici che anche la natura prende appunti."
 		},
 		"trust": {
 			"tested": {
@@ -33,12 +33,12 @@
 		},
 		"features": {
 			"headline": "Costruito per Durare per Sempre",
-			"subheadline": "(e Avere un Bell'Aspetto)",
-			"description": "Repliche ossessivamente iper-realistiche, realizzate con miscele di poliuretano/resina. Non tossico, resistente alla temperatura e con garanzie di 20 anni o a vita."
+			"subheadline": "(e per Essere Bello)",
+			"description": "Repliche ossessivamente iper-realistiche, realizzate con miscele di poliuretano/resina. Non tossiche, resistenti alla temperatura e dotate di garanzie di 20 anni o a vita."
 		},
 		"social": {
-			"headline": "Fidato da oltre 20 anni da 200K+ Appassionati",
-			"subheadline": "Allestimenti autentici da appassionati di acquari in tutto il mondo."
+			"headline": "Scelto da oltre 20 anni da più di 200.000 Appassionati di Acquari",
+			"subheadline": "Allestimenti reali da appassionati di acquari di tutto il mondo."
 		},
 		"stats": {
 			"years": {
@@ -59,12 +59,12 @@
 			}
 		},
 		"comparison": {
-			"headline": "Qualunque cosa tu scelga, non te ne pentirai!",
-			"subheadline": "Dimensioni standard per un'installazione rapida, o realizzato su misura per adattarsi alla tua visione esatta."
+			"headline": "Qualunque cosa scegliate, non ve ne pentirete!",
+			"subheadline": "Dimensioni standard per una configurazione rapida, o realizzati su misura per adattarsi alla vostra visione esatta."
 		},
 		"calculator": {
 			"headline": "Progetta il Tuo Sfondo Perfetto in 3D",
-			"description": "Il nostro calcolatore 3D interattivo ti permette di visualizzare e personalizzare ogni dettaglio prima di ordinare.",
+			"description": "Il nostro calcolatore 3D interattivo ti consente di visualizzare e personalizzare ogni dettaglio prima di ordinare.",
 			"cta": "Prova il Calcolatore"
 		}
 	}
