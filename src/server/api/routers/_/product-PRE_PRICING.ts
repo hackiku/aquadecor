@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/server/api/routers/product.ts
 
 import { z } from "zod";

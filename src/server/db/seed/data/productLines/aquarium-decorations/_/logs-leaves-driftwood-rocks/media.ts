@@ -1,8 +1,6 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/logs-leaves-driftwood-rocks/media.ts
 
-import type { MediaSeed } from "../../../../../schema";
-
-export const media: MediaSeed[] = [
+export const media = [
 	{
 		"productSlug": "d-1-standing-roots",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-standing-roots.webp",

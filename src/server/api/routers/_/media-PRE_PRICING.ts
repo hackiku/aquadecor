@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/server/api/routers/media.ts
 
 import { z } from "zod";

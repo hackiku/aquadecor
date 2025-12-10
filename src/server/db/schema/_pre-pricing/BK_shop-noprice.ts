@@ -1,3 +1,4 @@
+// @ts-nocheck
 // OLD SHOP SCHEMA WITH MORE JSONB
 // src/server/db/schema/shop.ts
 import { relations } from "drizzle-orm";

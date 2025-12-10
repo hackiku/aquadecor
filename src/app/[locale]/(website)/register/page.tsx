@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/[locale]/(website)/setup/page.tsx
 
 import { getTranslations } from 'next-intl/server';

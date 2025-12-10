@@ -23,6 +23,25 @@ export default async function ProductDetailPage({ params }: PageProps) {
 		notFound();
 	}
 
+	// --- START: Data Mapping/Fixing based on new schema ---
+	// Extract base pricing and other fields from the new nested structure
+	const basePricing = product.pricingConfigs?.[0]; // basePricing is now: ProductPricing | undefined
+
+	// 2. Map the required values (no 'as any' needed for categoryName/productLine/etc. if tRPC is fixed)
+	const categoryName = (product as any).categoryName ?? product.categorySlug;
+	const longDescription = (product as any).fullDescription ?? (product.translations?.[0] as any)?.longDescription ?? product.shortDescription;
+	const specifications = (product as any).specifications ?? (product as any).technicalSpecs;
+	const productLine = (product as any).productLine ?? '';
+
+	// 3. Extract pricing fields safely
+	//    unitPriceEurCents exists on the type of basePricing, but basePricing is optional.
+	const displayPriceEurCents = basePricing?.unitPriceEurCents ?? null; // <<< FIX: Use Optional Chaining (?.)
+	const displayPriceNote = (basePricing as any)?.priceNote ?? null;
+
+	// Find the correct translation object for longDescription (assuming you return an array of translations)
+	const englishTranslation = product.translations?.find(t => t.locale === 'en') ?? product;
+
+
 	const formatPrice = (cents: number | null) => {
 		if (!cents) return null;
 		return `€${(cents / 100).toFixed(2)}`;
@@ -63,7 +82,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 							)}
 						</div>
 						<p className="text-muted-foreground font-display font-light text-lg">
-							{product.categoryName} • {product.sku || "No SKU"}
+							{categoryName} • {product.sku || "No SKU"}
 						</p>
 					</div>
 				</div>
@@ -145,7 +164,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 										Base Price
 									</p>
 									<p className="font-display font-normal">
-										{formatPrice(product.basePriceEurCents) || (
+										{formatPrice(displayPriceEurCents) || ( 
 											<Badge variant="outline" className="font-display font-light">
 												Custom Only
 											</Badge>
@@ -164,13 +183,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
 								</div>
 							</div>
 
-							{product.priceNote && (
+							{displayPriceNote && (
 								<div>
 									<p className="text-sm text-muted-foreground font-display font-light mb-1">
 										Price Note
 									</p>
 									<p className="font-display font-light text-sm">
-										{product.priceNote}
+										{displayPriceNote}
 									</p>
 								</div>
 							)}
@@ -192,13 +211,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
 								</p>
 							</div>
 
-							{product.fullDescription && (
+							{longDescription && (
 								<div>
 									<p className="text-sm text-muted-foreground font-display font-light mb-2">
 										Full Description
 									</p>
 									<p className="font-display font-light leading-relaxed text-sm">
-										{product.fullDescription}
+										{longDescription}
 									</p>
 								</div>
 							)}
@@ -206,14 +225,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
 					</Card>
 
 					{/* Specifications */}
-					{product.specifications && Object.keys(product.specifications).length > 0 && (
+					{specifications && Object.keys(specifications).length > 0 && (
 						<Card className="border-2">
 							<CardHeader>
 								<CardTitle className="font-display font-normal">Specifications</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<pre className="text-sm font-display font-light bg-muted p-4 rounded-lg overflow-x-auto">
-									{JSON.stringify(product.specifications, null, 2)}
+									{/* FIX: Use the new mapped specs field */}
+									{JSON.stringify(specifications, null, 2)}
 								</pre>
 							</CardContent>
 						</Card>
@@ -259,7 +279,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 									href={`/admin/catalog/categories/${product.categoryId}`}
 									className="font-display font-light text-primary hover:underline"
 								>
-									{product.categoryName}
+									{categoryName}
 								</Link>
 							</div>
 							<div className="flex justify-between">

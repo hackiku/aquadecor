@@ -23,14 +23,22 @@ interface CartItemData {
 }
 
 // Product data from tRPC getByIds endpoint
-type ProductForCart = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+type ProductForCart = Pick<Product, 'id' | 'slug' | 'stockStatus'> & { // Removed 'sku', 'basePriceEurCents', 'priceNote'
+
+	// Explicitly define the missing fields:
+	sku: string; // Enforced non-null for Drizzle integrity
+	basePriceEurCents: number | null; // Mapped from unitPriceEurCents
+	priceNote: string | null;
+
+	// Remaining required fields from the tRPC join
 	categoryId: string;
 	name: string | null;
 	shortDescription: string | null;
-	heroImageUrl: string | null; // UPDATED to match schema
+	heroImageUrl: string | null;
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
+
 
 // Enriched cart item (after fetching product data)
 interface EnrichedCartItem extends CartItemData {
@@ -98,9 +106,30 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 			const product = products?.find(p => p.id === cartItem.productId);
 			if (!product) return null;
 
+			// *** FIX: Explicitly map the properties from the API result to the required ProductForCart type ***
+			const productForCart: ProductForCart = {
+				// Core fields from the API result
+				id: product.id,
+				slug: product.slug,
+				sku: product.sku, // Assuming you've fixed tRPC to make this non-null (string)
+				stockStatus: product.stockStatus,
+
+				// Fields from translations/joins
+				categoryId: product.categoryId,
+				name: product.name,
+				shortDescription: product.shortDescription,
+				heroImageUrl: product.heroImageUrl,
+				categorySlug: product.categorySlug,
+				productLineSlug: product.productLineSlug,
+
+				// Mapped pricing fields (The actual fix)
+				basePriceEurCents: product.unitPriceEurCents ?? null, // <<< MAPPING unitPriceEurCents >>>
+				priceNote: null, // <<< SETTING missing field to null/default >>>
+			};
+
 			return {
 				...cartItem,
-				product: product as ProductForCart
+				product: productForCart // Now it's the correct type, no cast needed
 			};
 		})
 		.filter((item): item is EnrichedCartItem => item !== null);

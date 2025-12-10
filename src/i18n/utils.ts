@@ -1,6 +1,6 @@
 // src/i18n/utils.ts
 import { headers } from 'next/headers';
-import { type Locale, locales, defaultLocale, isUSMarket } from '~/i18n.config';
+import { type Locale, locales, defaultLocale, isUSMarket } from './config';
 
 /**
  * Get the current locale from headers (set by middleware)

@@ -14,13 +14,20 @@ import type { Product } from "~/server/db/schema/shop";
 // ============================================================================
 
 // Product data from tRPC getByIds endpoint
-type ProductForWishlist = Pick<Product, 'id' | 'slug' | 'basePriceEurCents' | 'priceNote'> & {
+type ProductForWishlist = Pick<Product, 'id' | 'slug'> & { // Removed 'basePriceEurCents', 'priceNote'
+
+	// Explicitly define the missing fields:
+	basePriceEurCents: number | null;
+	priceNote: string | null;
+
+	// Remaining required fields from the tRPC join
 	name: string | null;
 	shortDescription: string | null;
-	heroImageUrl: string | null; // UPDATED from featuredImageUrl
+	heroImageUrl: string | null;
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
+
 
 // ============================================================================
 // COMPONENT

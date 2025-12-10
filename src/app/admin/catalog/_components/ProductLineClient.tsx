@@ -11,7 +11,7 @@ import Link from "next/link";
 export type ProductRow = {
 	id: string;
 	slug: string;
-	sku: string | null;
+	sku: string;
 	name: string | null;
 	basePriceEurCents: number | null;
 	stockStatus: string | null;

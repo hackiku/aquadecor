@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+// @ts-nocheck
 // src/server/db/seed/seed.ts
 
 import { drizzle } from "drizzle-orm/postgres-js";

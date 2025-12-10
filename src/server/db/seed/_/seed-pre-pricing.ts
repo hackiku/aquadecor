@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+// @ts-nocheck
 // before pricing tables addition
 // src/server/db/seed/seed.ts
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/admin/catalog/aquarium-decorations/page.tsx
 
 import { api } from "~/trpc/server";

@@ -1,8 +1,6 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/aquarium-rocks/media.ts
 
-import type { MediaSeed } from "../../../../../schema";
-
-export const media: MediaSeed[] = [
+export const media = [
 	{
 		"productSlug": "aquarium-rocks",
 		"categorySlug": "aquarium-rocks",

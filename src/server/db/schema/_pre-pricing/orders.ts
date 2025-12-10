@@ -1,3 +1,4 @@
+// @ts-nocheck
 // OLD ORDERS SCHEMA WITHOUT CRAZE
 // src/server/db/schema/orders.ts
 import { relations } from "drizzle-orm";

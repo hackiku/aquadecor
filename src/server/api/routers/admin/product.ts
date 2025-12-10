@@ -1,3 +1,4 @@
+// src/server/api/routers/admin/product.ts
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
 import {

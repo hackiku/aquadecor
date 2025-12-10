@@ -8,11 +8,18 @@ import { Button } from "~/components/ui/button";
 import type { Product } from "~/server/db/schema/shop";
 
 // Type matches what CartDrawer passes (ProductForCart)
-type ProductForCart = Pick<Product, 'id' | 'slug' | 'sku' | 'basePriceEurCents' | 'priceNote' | 'stockStatus'> & {
+type ProductForCart = Pick<Product, 'id' | 'slug' | 'stockStatus'> & { // Removed 'sku', 'basePriceEurCents', 'priceNote'
+
+	// Explicitly define the missing fields:
+	sku: string; // Enforced non-null for Drizzle integrity
+	basePriceEurCents: number | null;
+	priceNote: string | null;
+
+	// Remaining required fields from the tRPC join
 	categoryId: string;
 	name: string | null;
 	shortDescription: string | null;
-	heroImageUrl: string | null; // UPDATED from featuredImageUrl
+	heroImageUrl: string | null;
 	categorySlug: string | null;
 	productLineSlug: string | null;
 };
