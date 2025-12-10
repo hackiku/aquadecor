@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { locales } from '~/i18n/config';
 import { Geist } from 'next/font/google';
-import { ThemeProvider } from '~/components/theme-provider';
+// import { ThemeProvider } from '~/components/theme-provider';
 import { TRPCReactProvider } from '~/trpc/react';
 import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
@@ -33,18 +33,18 @@ export default async function LocaleLayout({
 		// <html className={geist.variable} lang={locale} suppressHydrationWarning>
 			// <body>
 				<TRPCReactProvider>
-					<ThemeProvider
+					{/* <ThemeProvider
 						attribute="class"
 						defaultTheme="system"
 						enableSystem
 						disableTransitionOnChange
-					>
+					> */}
 						<NextIntlClientProvider messages={messages}>
 							<ConditionalNav navContent={<NavWithBanner />}>
 								{children}
 							</ConditionalNav>
 						</NextIntlClientProvider>
-					</ThemeProvider>
+					{/* </ThemeProvider> */}
 				</TRPCReactProvider>
 			// </body>
 		// </html>

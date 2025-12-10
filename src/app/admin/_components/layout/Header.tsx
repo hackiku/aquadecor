@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Bell, Globe, Globe2, Settings, WholeWord } from "lucide-react";
 import { ModeToggle } from "~/components/ui/mode-toggle";
-import { getAdminPage } from "~/app/admin/_data/admin-pages";
+import { getAdminPage } from "../../_data/admin-pages";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
