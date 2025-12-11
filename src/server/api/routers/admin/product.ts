@@ -14,7 +14,7 @@ import {
 	pricingBundles,
 	productAddons,
 } from "~/server/db/schema";
-import { eq, and, inArray, desc, asc, sql } from "drizzle-orm";
+import { eq, and, inArray, desc, asc, sql, isNull, isNotNull } from "drizzle-orm";
 import type { PricingBundle, SelectOption } from "~/server/db/schema/shop";
 
 // Zod schema for new/updated product translations
@@ -60,6 +60,7 @@ export const adminProductRouter = createTRPCRouter({
 			}
 			if (input?.productLine) {
 				conditions.push(eq(categories.productLine, input.productLine));
+				conditions.push(isNull(products.deletedAt));
 			}
 
 			// Subquery/Join to get the primary pricing for the product list (ROW/EUR)
@@ -217,7 +218,14 @@ export const adminProductRouter = createTRPCRouter({
 						eq(productTranslations.locale, input.locale)
 					)
 				)
-				.where(eq(products.id, input.id))
+				// .where(eq(products.id, input.id))
+				.where(
+					and(
+						eq(products.id, input.id),
+						isNull(products.deletedAt) // Don't fetch deleted products
+					)
+				)
+
 				.limit(1);
 
 			if (!product) return null;
@@ -380,6 +388,210 @@ export const adminProductRouter = createTRPCRouter({
 			};
 		}),
 
+	getAllByMarket: adminProcedure
+		.input(z.object({
+			market: z.enum(['US', 'ROW', 'CA', 'UK']),
+			locale: z.string().default("en"),
+			categoryId: z.string().optional(),
+			productLine: z.string().optional(),
+			isActive: z.boolean().optional(),
+			sortBy: z.enum(["name", "sku", "price", "created"]).default("created"),
+			sortOrder: z.enum(["asc", "desc"]).default("desc"),
+		}))
+		.query(async ({ ctx, input }) => {
+			const conditions = [];
+
+			if (input.categoryId) {
+				conditions.push(eq(products.categoryId, input.categoryId));
+			}
+			if (input.productLine) {
+				conditions.push(eq(categories.productLine, input.productLine));
+			}
+			if (input.isActive !== undefined) {
+				conditions.push(eq(products.isActive, input.isActive));
+			}
+
+			// Only show non-deleted products
+			conditions.push(isNull(products.deletedAt));
+
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					categoryId: products.categoryId,
+					categoryName: categoryTranslations.name,
+					categorySlug: categories.slug,
+					productLine: categories.productLine,
+
+					// Pricing from specified market
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+					pricingType: productPricing.pricingType,
+					pricingMarket: productPricing.market,
+
+					stockStatus: products.stockStatus,
+					isActive: products.isActive,
+					isFeatured: products.isFeatured,
+					sortOrder: products.sortOrder,
+
+					createdAt: products.createdAt,
+					updatedAt: products.updatedAt,
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+					heroImageUrl: media.storageUrl,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(
+					categoryTranslations,
+					and(
+						eq(categoryTranslations.categoryId, categories.id),
+						eq(categoryTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				// Join pricing for specified market only
+				.innerJoin(
+					productPricing,
+					and(
+						eq(productPricing.productId, products.id),
+						eq(productPricing.market, input.market),
+						eq(productPricing.isActive, true)
+					)
+				)
+				// Exclude products blocked from this market
+				.leftJoin(
+					productMarketExclusions,
+					and(
+						eq(productMarketExclusions.productId, products.id),
+						eq(productMarketExclusions.market, input.market)
+					)
+				)
+				.where(
+					and(
+						...conditions,
+						isNull(productMarketExclusions.id) // Not excluded
+					)
+				);
+
+			// Apply sorting
+			let sorted = results;
+			switch (input.sortBy) {
+				case "name":
+					sorted.sort((a, b) =>
+						input.sortOrder === "asc"
+							? (a.name || "").localeCompare(b.name || "")
+							: (b.name || "").localeCompare(a.name || "")
+					);
+					break;
+				case "sku":
+					sorted.sort((a, b) =>
+						input.sortOrder === "asc"
+							? (a.sku || "").localeCompare(b.sku || "")
+							: (b.sku || "").localeCompare(a.sku || "")
+					);
+					break;
+				case "price":
+					sorted.sort((a, b) =>
+						input.sortOrder === "asc"
+							? (a.unitPriceEurCents || 0) - (b.unitPriceEurCents || 0)
+							: (b.unitPriceEurCents || 0) - (a.unitPriceEurCents || 0)
+					);
+					break;
+				case "created":
+				default:
+					sorted.sort((a, b) =>
+						input.sortOrder === "asc"
+							? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+							: new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					);
+			}
+
+			return sorted;
+		}),
+
+	// Get market-specific stats
+	getStatsByMarket: adminProcedure
+		.input(z.object({
+			market: z.enum(['US', 'ROW', 'CA', 'UK']),
+		}))
+		.query(async ({ ctx, input }) => {
+			// Get all products that have pricing for this market
+			const productsInMarket = await ctx.db
+				.select({ productId: productPricing.productId })
+				.from(productPricing)
+				.where(
+					and(
+						eq(productPricing.market, input.market),
+						eq(productPricing.isActive, true)
+					)
+				);
+
+			const productIds = productsInMarket.map(p => p.productId);
+
+			// Get exclusions for this market
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(eq(productMarketExclusions.market, input.market));
+
+			const excludedIds = exclusions.map(e => e.productId);
+			const availableProductIds = productIds.filter(id => !excludedIds.includes(id));
+
+			// Get product details
+			const availableProducts = await ctx.db
+				.select({
+					id: products.id,
+					isActive: products.isActive,
+					isFeatured: products.isFeatured,
+					stockStatus: products.stockStatus,
+				})
+				.from(products)
+				.where(
+					and(
+						inArray(products.id, availableProductIds),
+						isNull(products.deletedAt)
+					)
+				);
+
+			const total = availableProducts.length;
+			const active = availableProducts.filter(p => p.isActive).length;
+			const inactive = total - active;
+			const featured = availableProducts.filter(p => p.isFeatured).length;
+
+			const stockBreakdown = {
+				in_stock: availableProducts.filter(p => p.stockStatus === 'in_stock').length,
+				made_to_order: availableProducts.filter(p => p.stockStatus === 'made_to_order').length,
+				requires_quote: availableProducts.filter(p => p.stockStatus === 'requires_quote').length,
+				out_of_stock: availableProducts.filter(p => p.stockStatus === 'out_of_stock').length,
+			};
+
+			return {
+				market: input.market,
+				total,
+				active,
+				inactive,
+				featured,
+				excluded: excludedIds.length,
+				stockBreakdown,
+			};
+		}),
+
+
 	// ============================================================================
 	// CREATE
 	// ============================================================================
@@ -529,6 +741,192 @@ export const adminProductRouter = createTRPCRouter({
 
 			return updated;
 		}),
+
+
+	// ============================================================================
+	// SOFT DELETE & TRASH OPERATIONS
+	// ADD AFTER delete PROCEDURE (around line 544)
+	// ============================================================================
+
+	// Soft delete (move to trash)
+	softDelete: adminProcedure
+		.input(z.object({
+			id: z.string(),
+			deletedBy: z.string().optional(), // Admin email (optional until auth is hooked up)
+		}))
+		.mutation(async ({ ctx, input }) => {
+			const [deleted] = await ctx.db
+				.update(products)
+				.set({
+					deletedAt: new Date(),
+					deletedBy: input.deletedBy,
+					isActive: false, // Also deactivate
+				})
+				.where(eq(products.id, input.id))
+				.returning();
+
+			return deleted;
+		}),
+
+	// Restore from trash
+	restore: adminProcedure
+		.input(z.object({
+			id: z.string(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			const [restored] = await ctx.db
+				.update(products)
+				.set({
+					deletedAt: null,
+					deletedBy: null,
+					// Don't auto-activate - let them do that manually
+				})
+				.where(eq(products.id, input.id))
+				.returning();
+
+			return restored;
+		}),
+
+	// Get trash (soft-deleted products)
+	getTrash: adminProcedure
+		.input(z.object({
+			locale: z.string().default("en"),
+			sortBy: z.enum(["deleted", "name", "sku"]).default("deleted"),
+			sortOrder: z.enum(["asc", "desc"]).default("desc"),
+		}).optional())
+		.query(async ({ ctx, input }) => {
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					name: productTranslations.name,
+					categoryName: categoryTranslations.name,
+					deletedAt: products.deletedAt,
+					deletedBy: products.deletedBy,
+					heroImageUrl: media.storageUrl,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(
+					categoryTranslations,
+					and(
+						eq(categoryTranslations.categoryId, categories.id),
+						eq(categoryTranslations.locale, input?.locale ?? "en")
+					)
+				)
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input?.locale ?? "en")
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(isNotNull(products.deletedAt));
+
+			// Apply sorting
+			let sorted = results;
+			switch (input?.sortBy) {
+				case "name":
+					sorted.sort((a, b) =>
+						input?.sortOrder === "asc"
+							? (a.name || "").localeCompare(b.name || "")
+							: (b.name || "").localeCompare(a.name || "")
+					);
+					break;
+				case "sku":
+					sorted.sort((a, b) =>
+						input?.sortOrder === "asc"
+							? (a.sku || "").localeCompare(b.sku || "")
+							: (b.sku || "").localeCompare(a.sku || "")
+					);
+					break;
+				case "deleted":
+				default:
+					sorted.sort((a, b) =>
+						input?.sortOrder === "asc"
+							? new Date(a.deletedAt!).getTime() - new Date(b.deletedAt!).getTime()
+							: new Date(b.deletedAt!).getTime() - new Date(a.deletedAt!).getTime()
+					);
+			}
+
+			return sorted;
+		}),
+
+	// Permanently delete (hard delete) - admin only
+	permanentlyDelete: adminProcedure
+		.input(z.object({
+			id: z.string(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			// Cascade deletes via FK: translations, pricing, media, etc.
+			await ctx.db.delete(products).where(eq(products.id, input.id));
+			return { success: true };
+		}),
+
+	// Bulk soft delete
+	bulkSoftDelete: adminProcedure
+		.input(z.object({
+			productIds: z.array(z.string()),
+			deletedBy: z.string().optional(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.update(products)
+				.set({
+					deletedAt: new Date(),
+					deletedBy: input.deletedBy,
+					isActive: false,
+				})
+				.where(inArray(products.id, input.productIds));
+
+			return { success: true, deleted: input.productIds.length };
+		}),
+
+	// Bulk restore
+	bulkRestore: adminProcedure
+		.input(z.object({
+			productIds: z.array(z.string()),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.update(products)
+				.set({
+					deletedAt: null,
+					deletedBy: null,
+				})
+				.where(inArray(products.id, input.productIds));
+
+			return { success: true, restored: input.productIds.length };
+		}),
+
+	// Empty trash (permanently delete all soft-deleted products)
+	emptyTrash: adminProcedure
+		.mutation(async ({ ctx }) => {
+			const trashed = await ctx.db
+				.select({ id: products.id })
+				.from(products)
+				.where(isNotNull(products.deletedAt));
+
+			const trashedIds = trashed.map(p => p.id);
+
+			if (trashedIds.length > 0) {
+				await ctx.db
+					.delete(products)
+					.where(inArray(products.id, trashedIds));
+			}
+
+			return { success: true, deleted: trashedIds.length };
+		}),
+
 
 	// ============================================================================
 	// DELETE

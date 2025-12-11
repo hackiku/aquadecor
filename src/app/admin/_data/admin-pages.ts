@@ -7,6 +7,7 @@ import {
 	Calculator,
 	Percent,
 	Pin,
+	Trash,
 	Users,
 	Image,
 	HelpCircle,
@@ -62,6 +63,11 @@ export const adminPages: AdminPage[] = [
 				title: "Categories",
 				href: "/admin/catalog/categories",
 				icon: Layers,
+			},
+			{
+				title: "Trash",
+				href: "/admin/catalog/trash",
+				icon: Trash,
 			},
 			{
 				title: "Featured",

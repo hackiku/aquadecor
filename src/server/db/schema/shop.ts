@@ -94,6 +94,8 @@ export const products = createTable(
 
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+		deletedAt: d.timestamp({ withTimezone: true }),
+		deletedBy: d.text(), // Admin email who deleted it (optional until auth is hooked)
 	}),
 	(t) => [
 		index("product_category_idx").on(t.categoryId),
@@ -101,6 +103,7 @@ export const products = createTable(
 		index("product_sku_idx").on(t.sku),
 		index("product_featured_idx").on(t.isFeatured),
 		index("product_stock_status_idx").on(t.stockStatus),
+		index("product_deleted_at_idx").on(t.deletedAt),
 	],
 );
 

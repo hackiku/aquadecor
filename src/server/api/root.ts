@@ -9,8 +9,9 @@ import { countryRouter, publicCountryRouter } from "./routers/admin/country";
 import { mediaRouter } from "./routers/media";
 import { adminMediaRouter } from "./routers/admin/media";
 // admin
-import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
+import { adminProductRouter } from "~/server/api/routers/admin/product";
+import { adminPricingRouter } from "./routers/admin/pricing";
 import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
@@ -34,6 +35,7 @@ export const appRouter = createTRPCRouter({
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
+		pricing: adminPricingRouter,
 		media: adminMediaRouter, // Admin media (old CDN)
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
