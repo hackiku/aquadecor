@@ -1,76 +1,81 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { api, HydrateClient } from "~/trpc/server";
-import { Badge } from "~/components/ui/badge";
-import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
-import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
-import { SpecificationsGrid } from "~/components/shop/product/SpecificationsGrid";
-import { PricingCard } from "~/components/shop/checkout/PricingCard";
-import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
-import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
-import { ProductGrid } from "~/components/shop/product/ProductGrid";
+import { notFound } from "next/navigation"
+import Image from "next/image"
+import { api, HydrateClient } from "~/trpc/server"
+import { Badge } from "~/components/ui/badge"
+import { Package, Shield, Zap, CheckCircle2 } from "lucide-react"
+import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge"
+import { PricingCard } from "~/components/shop/checkout/PricingCard"
+import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection"
+import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal"
+import { ProductGrid } from "~/components/shop/product/ProductGrid"
 
 interface ProductDetailPageProps {
 	params: Promise<{
-		productLine: string;
-		categorySlug: string;
-		productSlug: string;
-	}>;
+		productLine: string
+		categorySlug: string
+		productSlug: string
+	}>
+	searchParams: Promise<{
+		market?: string
+	}>
 }
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-	// 1. Await params properly for Next.js 15
-	const { productLine, categorySlug, productSlug } = await params;
-	const locale = "en"; // Hardcoded for now
+export default async function ProductDetailPage({ params, searchParams }: ProductDetailPageProps) {
+	// Await params properly for Next.js 15
+	const { productLine, categorySlug, productSlug } = await params
+	const { market = "ROW" } = await searchParams // Read market from URL param
+	const locale = "en" // Hardcoded for now
 
-	// 2. Fetch product using just the slug
-	const productPromise = api.product.getBySlug({ slug: productSlug, locale });
+	const productPromise = api.product.getBySlug({
+		slug: productSlug,
+		locale,
+		userMarket: market, // Pass market to get correct pricing
+	})
 
-	// 3. Fetch related products in the same category
-	const relatedProductsPromise = api.product.getByCategory({ categorySlug, locale });
+	const relatedProductsPromise = api.product.getByCategory({
+		categorySlug,
+		locale,
+		userMarket: market, // Pass market to avoid duplicates
+	})
 
-	const [product, relatedProductsResult] = await Promise.all([
-		productPromise,
-		relatedProductsPromise,
-	]);
+	const [product, relatedProductsResult] = await Promise.all([productPromise, relatedProductsPromise])
 
 	if (!product) {
-		notFound();
+		notFound()
 	}
 
-	// ✅ FIXED: Properly determine if product requires custom quote
+	// Properly determine if product requires custom quote
 	const isCustomOnly =
-		product.pricing?.pricingType === 'configured' ||
-		product.stockStatus === "requires_quote" ||
-		// No pricing config at all
-		!product.pricing;
+		product.pricing?.pricingType === "configured" || product.stockStatus === "requires_quote" || !product.pricing
 
 	// Debug logging
-	console.log('[Product Page] Data:', {
+	console.log("[Product Page] Data:", {
 		slug: productSlug,
+		market,
 		isCustomOnly,
 		pricingType: product.pricing?.pricingType,
 		hasBundles: !!product.bundles,
 		hasAddons: !!product.addons,
 		hasCustomOptions: !!product.customizationOptions,
-	});
+	})
 
-	// 4. Inject route params into the product object so buttons/links work
+	// Inject route params into the product object so buttons/links work
 	const productForButtons = {
 		...product,
 		categorySlug,
 		productLineSlug: productLine,
 		name: product.name ?? "Product",
-	};
+	}
 
-	// 5. Prepare related products (filter out the current product)
-	const relatedProducts = "products" in relatedProductsResult
-		? relatedProductsResult.products.filter(p => p.slug !== productSlug).slice(0, 4)
-		: [];
+	// Prepare related products (filter out the current product)
+	const relatedProducts =
+		"products" in relatedProductsResult
+			? relatedProductsResult.products.filter((p) => p.slug !== productSlug).slice(0, 4)
+			: []
 
-	const productsForGrid = relatedProducts.map(p => ({
+	const productsForGrid = relatedProducts.map((p) => ({
 		id: p.id,
 		slug: p.slug,
 		name: p.name ?? "Untitled Product",
@@ -84,8 +89,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 		// V2 pricing fields
 		pricingType: p.pricingType,
 		unitPriceEurCents: p.unitPriceEurCents,
-	}));
-
+	}))
 
 	return (
 		<HydrateClient>
@@ -94,7 +98,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 				<section className="relative h-[40vh] md:h-[50vh] border-b bg-black">
 					{product.images && product.images[0] ? (
 						<Image
-							src={product.images[0].storageUrl}
+							src={product.images[0].storageUrl || "/placeholder.svg"}
 							alt={product.images[0].altText ?? product.name ?? "Product"}
 							fill
 							className="object-cover"
@@ -144,14 +148,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 				<section className="py-12 md:py-16">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
 							{/* Left Column - Info */}
 							<div className="lg:col-span-2 space-y-8">
-
-								<ImageSliderWithModal
-									images={product.images || []}
-									productName={product.name ?? "Product"}
-								/>
+								<ImageSliderWithModal images={product.images || []} productName={product.name ?? "Product"} />
 
 								{/* Short Description */}
 								<div className="space-y-4">
@@ -245,7 +244,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 													className="relative aspect-square rounded-xl overflow-hidden border-2 border-border cursor-pointer hover:border-primary transition-colors"
 												>
 													<Image
-														src={image.storageUrl}
+														src={image.storageUrl || "/placeholder.svg"}
 														alt={image.altText || `${product.name} ${idx + 2}`}
 														fill
 														className="object-cover"
@@ -259,13 +258,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
 							{/* Right Column - Sticky Pricing Card */}
 							<div className="lg:col-span-1">
-								<PricingCard
-									productId={product.id}
-									product={productForButtons as any}
-									isCustomOnly={isCustomOnly}
-								/>
+								<PricingCard productId={product.id} product={productForButtons as any} isCustomOnly={isCustomOnly} />
 							</div>
-
 						</div>
 					</div>
 				</section>
@@ -275,17 +269,17 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 					<section className="py-12 md:py-16 bg-muted/10">
 						<div className="px-4 max-w-7xl mx-auto space-y-8">
 							<h2 className="text-3xl font-display font-normal text-center">
-								More from {categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+								More from{" "}
+								{categorySlug
+									.split("-")
+									.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+									.join(" ")}
 							</h2>
-							<ProductGrid
-								products={productsForGrid as any}
-								initialColumns="4"
-								showControls={false}
-							/>
+							<ProductGrid products={productsForGrid as any} initialColumns="4" showControls={false} />
 						</div>
 					</section>
 				)}
 			</main>
 		</HydrateClient>
-	);
+	)
 }

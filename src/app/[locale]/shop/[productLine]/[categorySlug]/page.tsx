@@ -1,46 +1,54 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
-import { notFound } from "next/navigation";
-import { ProductGrid } from "~/components/shop/product/ProductGrid";
-import { api, HydrateClient } from "~/trpc/server";
+import { notFound } from "next/navigation"
+import { ProductGrid } from "~/components/shop/product/ProductGrid"
+import { api, HydrateClient } from "~/trpc/server"
 
 interface PageProps {
 	params: Promise<{
-		productLine: string;
-		categorySlug: string;
-	}>;
+		productLine: string
+		categorySlug: string
+	}>
+	searchParams: Promise<{
+		market?: string
+	}>
 }
 
+export default async function CategoryProductsPage({ params, searchParams }: PageProps) {
+	const { productLine, categorySlug } = await params
+	const { market = "ROW" } = await searchParams // Read market from URL param, default to ROW
 
-
-export default async function CategoryProductsPage({ params }: PageProps) {
-	const { productLine, categorySlug } = await params;
-
-	// Fetch products using the category slug
+	// Fetch products using the category slug AND market
 	const result = await api.product.getByCategory({
 		categorySlug: categorySlug,
 		locale: "en",
-	});
+		userMarket: market, // Pass market to router to filter pricing
+	})
 
 	if (!result || !("products" in result)) {
-		notFound();
+		notFound()
 	}
 
-	const { products } = result;
+	const { products } = result
 
 	// Fetch full category list to get metadata (name, description, etc)
 	const categories = await api.product.getCategoriesForProductLine({
 		productLineSlug: productLine,
 		locale: "en",
-	});
+	})
 
-	const currentCategory = categories.find(c => c.slug === categorySlug);
+	const currentCategory = categories.find((c) => c.slug === categorySlug)
 
 	// Text formatting
-	const productLineName = productLine === "3d-backgrounds" ? "3D Backgrounds" : "Aquarium Decorations";
-	const categoryName = currentCategory?.name ?? categorySlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+	const productLineName = productLine === "3d-backgrounds" ? "3D Backgrounds" : "Aquarium Decorations"
+	const categoryName =
+		currentCategory?.name ??
+		categorySlug
+			.split("-")
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+			.join(" ")
 
 	// Transform data for the grid
-	const productsForGrid = products.map(product => ({
+	const productsForGrid = products.map((product) => ({
 		id: product.id,
 		slug: product.slug,
 		name: product.name ?? "Untitled Product",
@@ -61,10 +69,9 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 		heroImageAlt: product.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		// The component also relies on variantOptions/addonOptions for the button logic, 
+		// The component also relies on variantOptions/addonOptions for the button logic,
 		// which your tRPC query must also provide, but for now we'll rely on the simple price check.
-	}));
-
+	}))
 
 	return (
 		<HydrateClient>
@@ -74,9 +81,7 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="max-w-4xl mx-auto text-center space-y-6">
 							<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
-								<span className="text-sm text-primary font-display font-medium">
-									{productLineName}
-								</span>
+								<span className="text-sm text-primary font-display font-medium">{productLineName}</span>
 							</div>
 
 							{currentCategory?.modelCode && (
@@ -106,7 +111,10 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 						{currentCategory?.contentBlocks?.features && (
 							<div className="mt-8 flex flex-wrap justify-center gap-3">
 								{currentCategory.contentBlocks.features.map((feature, idx) => (
-									<div key={idx} className="inline-flex items-center gap-2 px-3 py-1 bg-background border rounded-full text-xs text-muted-foreground">
+									<div
+										key={idx}
+										className="inline-flex items-center gap-2 px-3 py-1 bg-background border rounded-full text-xs text-muted-foreground"
+									>
 										<span>✓</span>
 										<span>{feature}</span>
 									</div>
@@ -119,11 +127,7 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 				{/* Products Grid */}
 				<section className="pb-12 md:pb-16">
 					<div className="px-4 max-w-7xl mx-auto">
-						<ProductGrid
-							products={productsForGrid}
-							initialColumns="4"
-							showControls={true}
-						/>
+						<ProductGrid products={productsForGrid} initialColumns="4" showControls={true} />
 					</div>
 				</section>
 
@@ -152,5 +156,5 @@ export default async function CategoryProductsPage({ params }: PageProps) {
 				</section>
 			</main>
 		</HydrateClient>
-	);
+	)
 }

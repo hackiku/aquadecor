@@ -92,21 +92,21 @@ export const productRouter = createTRPCRouter({
 	// ============================================================================
 
 	getByCategory: publicProcedure
-		.input(z.object({
-			categorySlug: z.string(),
-			locale: z.string().default("en"),
-			userMarket: z.string().default("ROW"), // 'ROW' | 'US' | 'CA' | 'UK'
-		}))
+		.input(
+			z.object({
+				categorySlug: z.string(),
+				locale: z.string().default("en"),
+				userMarket: z.string().default("ROW"), // 'ROW' | 'US' | 'CA' | 'UK'
+			}),
+		)
 		.query(async ({ ctx, input }) => {
+			const resolvedMarket = input.userMarket === "EU" ? "ROW" : input.userMarket
+
 			// Find category
-			const [category] = await ctx.db
-				.select()
-				.from(categories)
-				.where(eq(categories.slug, input.categorySlug))
-				.limit(1);
+			const [category] = await ctx.db.select().from(categories).where(eq(categories.slug, input.categorySlug)).limit(1)
 
 			if (!category) {
-				return { products: [], categorySlug: input.categorySlug, productLineSlug: null };
+				return { products: [], categorySlug: input.categorySlug, productLineSlug: null }
 			}
 
 			// Get products with basic pricing info
@@ -134,52 +134,37 @@ export const productRouter = createTRPCRouter({
 				.from(products)
 				.leftJoin(
 					productPricing,
-					eq(productPricing.productId, products.id)
+					and(eq(productPricing.productId, products.id), eq(productPricing.market, resolvedMarket)),
 				)
 				.leftJoin(
 					productTranslations,
-					and(
-						eq(productTranslations.productId, products.id),
-						eq(productTranslations.locale, input.locale)
-					)
+					and(eq(productTranslations.productId, products.id), eq(productTranslations.locale, input.locale)),
 				)
-				.leftJoin(
-					media,
-					and(
-						eq(media.productId, products.id),
-						eq(media.usageType, "product"),
-						eq(media.sortOrder, 0)
-					)
-				)
-				.where(
-					and(
-						eq(products.categoryId, category.id),
-						eq(products.isActive, true)
-					)
-				)
-				.orderBy(products.sortOrder);
+				.leftJoin(media, and(eq(media.productId, products.id), eq(media.usageType, "product"), eq(media.sortOrder, 0)))
+				.where(and(eq(products.categoryId, category.id), eq(products.isActive, true)))
+				.orderBy(products.sortOrder)
 
 			// Check market exclusions
-			const productIds = results.map(p => p.id);
+			const productIds = results.map((p) => p.id)
 			const exclusions = await ctx.db
 				.select()
 				.from(productMarketExclusions)
 				.where(
 					and(
 						inArray(productMarketExclusions.productId, productIds),
-						eq(productMarketExclusions.market, input.userMarket)
-					)
-				);
+						eq(productMarketExclusions.market, input.userMarket),
+					),
+				)
 
-			const excludedProductIds = new Set(exclusions.map(e => e.productId));
+			const excludedProductIds = new Set(exclusions.map((e) => e.productId))
 
-			const filteredProducts = results.filter(p => !excludedProductIds.has(p.id));
+			const filteredProducts = results.filter((p) => !excludedProductIds.has(p.id))
 
 			return {
 				products: filteredProducts,
 				categorySlug: category.slug,
 				productLineSlug: category.productLine,
-			};
+			}
 		}),
 
 	// ============================================================================
@@ -473,74 +458,6 @@ export const productRouter = createTRPCRouter({
 					and(
 						inArray(productMarketExclusions.productId, productIds),
 						eq(productMarketExclusions.market, input.userMarket)  // Note: Uses original input.userMarket, not resolved
-					)
-				);
-
-			const excludedIds = new Set(exclusions.map(e => e.productId));
-			return results.filter(p => !excludedIds.has(p.id));
-		}),
-		
-	OLDgetFeatured: publicProcedure
-		.input(z.object({
-			locale: z.string().default("en"),
-			limit: z.number().default(5),
-			userMarket: z.string().default("ROW"),
-		}))
-		.query(async ({ ctx, input }) => {
-			const results = await ctx.db
-				.select({
-					id: products.id,
-					slug: products.slug,
-					sku: products.sku,
-					stockStatus: products.stockStatus,
-					categoryId: products.categoryId,
-					categorySlug: categories.slug,
-					productLineSlug: categories.productLine,
-
-					pricingType: productPricing.pricingType,
-					unitPriceEurCents: productPricing.unitPriceEurCents,
-
-					heroImageUrl: media.storageUrl,
-					heroImageAlt: media.altText,
-					name: productTranslations.name,
-					shortDescription: productTranslations.shortDescription,
-				})
-				.from(products)
-				.leftJoin(categories, eq(categories.id, products.categoryId))
-				.leftJoin(productPricing, eq(productPricing.productId, products.id))
-				.leftJoin(
-					productTranslations,
-					and(
-						eq(productTranslations.productId, products.id),
-						eq(productTranslations.locale, input.locale)
-					)
-				)
-				.leftJoin(
-					media,
-					and(
-						eq(media.productId, products.id),
-						eq(media.usageType, "product"),
-						eq(media.sortOrder, 0)
-					)
-				)
-				.where(
-					and(
-						eq(products.isFeatured, true),
-						eq(products.isActive, true)
-					)
-				)
-				.orderBy(products.sortOrder)
-				.limit(input.limit);
-
-			// Filter by market
-			const productIds = results.map(p => p.id);
-			const exclusions = await ctx.db
-				.select()
-				.from(productMarketExclusions)
-				.where(
-					and(
-						inArray(productMarketExclusions.productId, productIds),
-						eq(productMarketExclusions.market, input.userMarket)
 					)
 				);
 
