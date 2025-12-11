@@ -1,61 +1,58 @@
 // src/app/admin/catalog/products/page.tsx
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "~/trpc/react";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "~/components/ui/select";
-import { AdminTable, type Column } from "~/app/admin/_components/primitives/AdminTable";
-import { Plus, Package, Eye, Trash2, Star } from "lucide-react";
-import Link from "next/link";
-import Image from "next/image";
-import { MarketSelector, useMarketPreference } from "../_components/MarketSelector";
-import { MarketBadge } from "../_components/MarketBadge";
-import { toast } from "sonner";
+import { Suspense } from "react"
+import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { api } from "~/trpc/react"
+import { Badge } from "~/components/ui/badge"
+import { Button } from "~/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
+import { AdminTable, type Column } from "~/app/admin/_components/primitives/AdminTable"
+import { Plus, Package, Eye, Trash2, Star } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { MarketSelector, useMarketPreference } from "../_components/MarketSelector"
+import { MarketBadge } from "../_components/MarketBadge"
+import { toast } from "sonner"
+
+export const dynamic = "force-dynamic"
 
 type ProductRow = {
-	id: string;
-	slug: string;
-	sku: string | null;
-	name: string | null;
-	categoryName: string | null;
-	categorySlug: string | null;
-	productLine: string | null;
-	unitPriceEurCents: number | null;
-	pricingType: string | null;
-	pricingMarket: string | null;
-	stockStatus: string | null;
-	isActive: boolean;
-	isFeatured: boolean;
-	heroImageUrl: string | null;
-};
+	id: string
+	slug: string
+	sku: string | null
+	name: string | null
+	categoryName: string | null
+	categorySlug: string | null
+	productLine: string | null
+	unitPriceEurCents: number | null
+	pricingType: string | null
+	pricingMarket: string | null
+	stockStatus: string | null
+	isActive: boolean
+	isFeatured: boolean
+	heroImageUrl: string | null
+}
 
-export default function ProductsListPage() {
-	const router = useRouter();
-	const searchParams = useSearchParams();
-	const market = useMarketPreference();
+function ProductsListContent() {
+	const router = useRouter()
+	const searchParams = useSearchParams()
+	const market = useMarketPreference()
 
-	const [categoryFilter, setCategoryFilter] = useState<string | undefined>();
+	const [categoryFilter, setCategoryFilter] = useState<string | undefined>()
 	const [productLineFilter, setProductLineFilter] = useState<string | undefined>(
-		searchParams.get('productLine') || undefined
-	);
-	const [stockFilter, setStockFilter] = useState<string | undefined>();
-	const [activeFilter, setActiveFilter] = useState<boolean | undefined>();
+		searchParams.get("productLine") || undefined,
+	)
+	const [stockFilter, setStockFilter] = useState<string | undefined>()
+	const [activeFilter, setActiveFilter] = useState<boolean | undefined>()
 	const [featuredFilter, setFeaturedFilter] = useState<boolean | undefined>(
-		searchParams.get('featured') === 'true' ? true : undefined
-	);
-	const [sortBy, setSortBy] = useState<"name" | "sku" | "price" | "created">("created");
-	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+		searchParams.get("featured") === "true" ? true : undefined,
+	)
+	const [sortBy, setSortBy] = useState<"name" | "sku" | "price" | "created">("created")
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
 
-	const { data: categories } = api.admin.category.getAll.useQuery();
+	const { data: categories } = api.admin.category.getAll.useQuery()
 	const { data: products, isLoading } = api.admin.product.getAllByMarket.useQuery({
 		market,
 		categoryId: categoryFilter,
@@ -63,28 +60,28 @@ export default function ProductsListPage() {
 		isActive: activeFilter,
 		sortBy,
 		sortOrder,
-	});
+	})
 
 	const softDelete = api.admin.product.softDelete.useMutation({
 		onSuccess: () => {
-			toast.success('Product moved to trash');
-			router.refresh();
+			toast.success("Product moved to trash")
+			router.refresh()
 		},
 		onError: (error) => {
-			toast.error(`Failed to delete: ${error.message}`);
+			toast.error(`Failed to delete: ${error.message}`)
 		},
-	});
+	})
 
 	// Filter featured client-side (since it's not in getAllByMarket yet)
-	const filteredProducts = products?.filter(p => {
-		if (featuredFilter !== undefined && p.isFeatured !== featuredFilter) return false;
-		return true;
-	});
+	const filteredProducts = products?.filter((p) => {
+		if (featuredFilter !== undefined && p.isFeatured !== featuredFilter) return false
+		return true
+	})
 
 	const formatPrice = (cents: number | null) => {
-		if (!cents) return "Custom";
-		return `€${(cents / 100).toFixed(2)}`;
-	};
+		if (!cents) return "Custom"
+		return `€${(cents / 100).toFixed(2)}`
+	}
 
 	const columns: Column<ProductRow>[] = [
 		{
@@ -94,7 +91,7 @@ export default function ProductsListPage() {
 				<div className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted">
 					{row.heroImageUrl ? (
 						<Image
-							src={row.heroImageUrl}
+							src={row.heroImageUrl || "/placeholder.svg"}
 							alt={row.name || "Product"}
 							fill
 							className="object-cover"
@@ -111,9 +108,7 @@ export default function ProductsListPage() {
 			header: "SKU",
 			accessorKey: "sku",
 			cell: (row) => (
-				<span className="font-mono text-sm">
-					{row.sku || <span className="text-muted-foreground">—</span>}
-				</span>
+				<span className="font-mono text-sm">{row.sku || <span className="text-muted-foreground">—</span>}</span>
 			),
 		},
 		{
@@ -122,16 +117,10 @@ export default function ProductsListPage() {
 			cell: (row) => (
 				<div className="space-y-1">
 					<div className="flex items-center gap-2">
-						<p className="font-display font-normal">
-							{row.name || "Untitled"}
-						</p>
-						{row.isFeatured && (
-							<Star className="h-3.5 w-3.5 text-primary fill-primary" />
-						)}
+						<p className="font-display font-normal">{row.name || "Untitled"}</p>
+						{row.isFeatured && <Star className="h-3.5 w-3.5 text-primary fill-primary" />}
 					</div>
-					<p className="text-xs text-muted-foreground font-display font-light">
-						{row.categoryName}
-					</p>
+					<p className="text-xs text-muted-foreground font-display font-light">{row.categoryName}</p>
 				</div>
 			),
 		},
@@ -140,9 +129,7 @@ export default function ProductsListPage() {
 			accessorKey: "unitPriceEurCents",
 			cell: (row) => (
 				<div className="space-y-1">
-					<span className="font-display font-normal">
-						{formatPrice(row.unitPriceEurCents)}
-					</span>
+					<span className="font-display font-normal">{formatPrice(row.unitPriceEurCents)}</span>
 					{row.pricingType && (
 						<Badge variant="outline" className="text-xs font-display font-light block w-fit">
 							{row.pricingType}
@@ -160,25 +147,22 @@ export default function ProductsListPage() {
 					made_to_order: { label: "Made to Order", variant: "secondary" as const },
 					requires_quote: { label: "Custom Quote", variant: "outline" as const },
 					out_of_stock: { label: "Out of Stock", variant: "destructive" as const },
-				};
-				const status = row.stockStatus ? statusMap[row.stockStatus as keyof typeof statusMap] : null;
+				}
+				const status = row.stockStatus ? statusMap[row.stockStatus as keyof typeof statusMap] : null
 				return status ? (
 					<Badge variant={status.variant} className="font-display font-light text-xs">
 						{status.label}
 					</Badge>
 				) : (
 					<span className="text-muted-foreground">—</span>
-				);
+				)
 			},
 		},
 		{
 			header: "Status",
 			accessorKey: "isActive",
 			cell: (row) => (
-				<Badge
-					variant={row.isActive ? "default" : "secondary"}
-					className="font-display font-light text-xs"
-				>
+				<Badge variant={row.isActive ? "default" : "secondary"} className="font-display font-light text-xs">
 					{row.isActive ? "Active" : "Inactive"}
 				</Badge>
 			),
@@ -193,8 +177,8 @@ export default function ProductsListPage() {
 						variant="ghost"
 						className="h-8 rounded-full"
 						onClick={(e) => {
-							e.stopPropagation();
-							window.open(`/admin/catalog/products/${row.id}`, "_blank");
+							e.stopPropagation()
+							window.open(`/admin/catalog/products/${row.id}`, "_blank")
 						}}
 					>
 						<Eye className="h-4 w-4" />
@@ -204,9 +188,9 @@ export default function ProductsListPage() {
 						variant="ghost"
 						className="h-8 rounded-full text-destructive hover:text-destructive"
 						onClick={(e) => {
-							e.stopPropagation();
+							e.stopPropagation()
 							if (confirm(`Move "${row.name}" to trash?`)) {
-								softDelete.mutate({ id: row.id });
+								softDelete.mutate({ id: row.id })
 							}
 						}}
 					>
@@ -215,7 +199,7 @@ export default function ProductsListPage() {
 				</div>
 			),
 		},
-	];
+	]
 
 	if (isLoading) {
 		return (
@@ -223,7 +207,7 @@ export default function ProductsListPage() {
 				<h1 className="text-4xl font-display font-extralight">Products</h1>
 				<p className="text-muted-foreground font-display font-light">Loading products...</p>
 			</div>
-		);
+		)
 	}
 
 	return (
@@ -253,10 +237,7 @@ export default function ProductsListPage() {
 
 			{/* Filters */}
 			<div className="flex flex-wrap gap-4">
-				<Select
-					value={categoryFilter}
-					onValueChange={(val) => setCategoryFilter(val === "all" ? undefined : val)}
-				>
+				<Select value={categoryFilter} onValueChange={(val) => setCategoryFilter(val === "all" ? undefined : val)}>
 					<SelectTrigger className="w-[250px] font-display font-light">
 						<SelectValue placeholder="All Categories" />
 					</SelectTrigger>
@@ -292,10 +273,7 @@ export default function ProductsListPage() {
 					</SelectContent>
 				</Select>
 
-				<Select
-					value={stockFilter}
-					onValueChange={(val) => setStockFilter(val === "all" ? undefined : val)}
-				>
+				<Select value={stockFilter} onValueChange={(val) => setStockFilter(val === "all" ? undefined : val)}>
 					<SelectTrigger className="w-[200px] font-display font-light">
 						<SelectValue placeholder="All Stock Status" />
 					</SelectTrigger>
@@ -361,10 +339,7 @@ export default function ProductsListPage() {
 					</SelectContent>
 				</Select>
 
-				<Select
-					value={sortBy}
-					onValueChange={(val) => setSortBy(val as any)}
-				>
+				<Select value={sortBy} onValueChange={(val) => setSortBy(val as any)}>
 					<SelectTrigger className="w-[200px] font-display font-light">
 						<SelectValue placeholder="Sort By" />
 					</SelectTrigger>
@@ -384,10 +359,7 @@ export default function ProductsListPage() {
 					</SelectContent>
 				</Select>
 
-				<Select
-					value={sortOrder}
-					onValueChange={(val) => setSortOrder(val as any)}
-				>
+				<Select value={sortOrder} onValueChange={(val) => setSortOrder(val as any)}>
 					<SelectTrigger className="w-[150px] font-display font-light">
 						<SelectValue />
 					</SelectTrigger>
@@ -405,7 +377,8 @@ export default function ProductsListPage() {
 			{/* Stats Summary */}
 			<div className="flex items-center gap-4 text-sm text-muted-foreground font-display font-light">
 				<span>
-					Showing {filteredProducts?.length || 0} products in <MarketBadge market={market} showIcon={false} className="inline-flex" />
+					Showing {filteredProducts?.length || 0} products in{" "}
+					<MarketBadge market={market} showIcon={false} className="inline-flex" />
 				</span>
 				{featuredFilter && (
 					<Badge variant="outline" className="font-display font-light">
@@ -426,9 +399,7 @@ export default function ProductsListPage() {
 
 			{(!filteredProducts || filteredProducts.length === 0) && (
 				<div className="py-16 text-center space-y-4">
-					<p className="text-lg text-muted-foreground font-display font-light">
-						No products found in {market} market
-					</p>
+					<p className="text-lg text-muted-foreground font-display font-light">No products found in {market} market</p>
 					<Button asChild className="rounded-full">
 						<Link href="/admin/catalog/products/new">
 							<Plus className="mr-2 h-4 w-4" />
@@ -438,5 +409,19 @@ export default function ProductsListPage() {
 				</div>
 			)}
 		</div>
-	);
+	)
+}
+
+export default function ProductsListPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex items-center justify-center py-20">
+					<p className="text-lg text-muted-foreground font-display font-light">Loading products...</p>
+				</div>
+			}
+		>
+			<ProductsListContent />
+		</Suspense>
+	)
 }

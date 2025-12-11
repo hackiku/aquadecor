@@ -74,10 +74,14 @@ export function PromoterDetailClient({ promoter: initialPromoter }: PromoterDeta
 
 	const updateCode = api.admin.promoter.updateCode.useMutation({
 		onSuccess: (updatedCode) => {
+			if (!updatedCode) return; // Guard
+
 			toast.success("Code updated");
 			setPromoter({
 				...promoter,
-				codes: promoter.codes.map((c: any) => c.id === updatedCode.id ? updatedCode : c),
+				codes: promoter.codes.map((c: any) =>
+					c.id === updatedCode.id ? updatedCode : c
+				),
 			});
 			setEditingCodeId(null);
 			router.refresh();

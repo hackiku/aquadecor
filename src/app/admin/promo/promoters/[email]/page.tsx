@@ -6,16 +6,16 @@ import { notFound } from "next/navigation";
 import { PromoterDetailClient } from "../_components/PromoterDetailClient";
 
 interface PromoterDetailPageProps {
-	params: {
+	params: Promise<{
 		email: string;
-	};
+	}>;
 }
 
 export default async function PromoterDetailPage({ params }: PromoterDetailPageProps) {
-	const email = decodeURIComponent(params.email);
+	const { email } = await params;
+	const decodedEmail = decodeURIComponent(email);
 
-	// CORRECT WAY IN SERVER COMPONENT
-	const promoter = await api.admin.promoter.getByEmail({ email });
+	const promoter = await api.admin.promoter.getByEmail({ email: decodedEmail });
 
 	if (!promoter) {
 		notFound();

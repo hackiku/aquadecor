@@ -37,13 +37,19 @@ export function InvitePromoterModal({ open, onOpenChange, onInviteSuccess }: Inv
 	const [lastName, setLastName] = useState("");
 	const [codes, setCodes] = useState<PromoCodeInput[]>([]); // Array for multiple codes
 
+	// src/app/admin/promo/promoters/_components/InvitePromoterModal.tsx
+
 	const createPromoter = api.admin.promoter.create.useMutation({
 		onSuccess: (newPromoter) => {
+			if (!newPromoter) return; // Safety guard
+
 			toast.success("Promoter invited successfully!");
 			onOpenChange(false);
-			onInviteSuccess(); // Refetch list
-			// Redirect to detail page for further editing
+			onInviteSuccess();
+
+			// Now safe — newPromoter is guaranteed to exist
 			router.push(`/admin/promo/promoters/${encodeURIComponent(newPromoter.email)}`);
+
 			// Reset form
 			setEmail("");
 			setFirstName("");
@@ -65,7 +71,16 @@ export function InvitePromoterModal({ open, onOpenChange, onInviteSuccess }: Inv
 
 	const handleCodeChange = (index: number, field: keyof PromoCodeInput, value: string | number) => {
 		const newCodes = [...codes];
-		newCodes[index][field] = value as never; // Type assertion for simplicity
+		// newCodes[index][field] = value as never; // Type assertion for simplicity
+		const handleCodeChange = (index: number, field: keyof PromoCodeInput, value: string | number) => {
+			setCodes(prev =>
+				prev.map((code, i) =>
+					i === index
+						? { ...code, [field]: value }
+						: code
+				)
+			);
+		};
 		setCodes(newCodes);
 	};
 
