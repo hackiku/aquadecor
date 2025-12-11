@@ -675,6 +675,7 @@ export const adminProductRouter = createTRPCRouter({
 			return product;
 		}),
 
+
 	// ============================================================================
 	// UPDATE
 	// ============================================================================
@@ -741,6 +742,32 @@ export const adminProductRouter = createTRPCRouter({
 
 			return updated;
 		}),
+
+	updateProductTranslation: adminProcedure
+		.input(
+			z.object({
+				translationId: z.string(),
+				name: z.string().optional(),
+				shortDescription: z.string().optional().nullable(),
+				longDescription: z.string().optional().nullable(),
+				metaTitle: z.string().optional().nullable(),
+				metaDescription: z.string().optional().nullable(),
+				materialTranslated: z.string().optional().nullable(),
+				productionTimeTranslated: z.string().optional().nullable(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { translationId, ...updateData } = input
+
+			const [updated] = await ctx.db
+				.update(productTranslations)
+				.set(updateData)
+				.where(eq(productTranslations.id, translationId))
+				.returning()
+
+			return updated
+		}),
+
 
 
 	// ============================================================================
@@ -987,16 +1014,16 @@ export const adminProductRouter = createTRPCRouter({
 		}),
 
 	bulkUpdateStatus: adminProcedure
-		.input(z.object({
-			productIds: z.array(z.string()),
-			isActive: z.boolean(),
-		}))
+		.input(
+			z.object({
+				productIds: z.array(z.string()),
+				isActive: z.boolean(),
+			}),
+		)
 		.mutation(async ({ ctx, input }) => {
-			await ctx.db
-				.update(products)
-				.set({ isActive: input.isActive })
-				.where(inArray(products.id, input.productIds));
+			await ctx.db.update(products).set({ isActive: input.isActive }).where(inArray(products.id, input.productIds))
 
-			return { success: true, updated: input.productIds.length };
+			return { success: true, updated: input.productIds.length }
 		}),
+
 });
