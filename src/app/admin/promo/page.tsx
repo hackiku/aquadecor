@@ -1,34 +1,39 @@
 // src/app/admin/promo/page.tsx
-
 "use client";
 
 import { Suspense } from "react";
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Percent, Users, ArrowRight, TrendingUp, Calendar } from "lucide-react";
+import { Percent, Users, ArrowRight, TrendingUp } from "lucide-react";
 import { AdminChart } from "../_components/primitives/AdminChart";
 import { Badge } from "~/components/ui/badge";
 
 function PromoStats() {
-	const { data: promoterStats } = api.admin.promoter.getStats.useQuery();
+	// Query the new promoter stats endpoint
+	const { data: promoterStats, isLoading: isStatsLoading } = api.admin.promoter.getStats.useQuery();
 
 	const formatPrice = (cents: number) => `€${(cents / 100).toFixed(2)}`;
 
-	// Sample chart data - replace with real data
+	// --- MOCK CHART DATA ---
+	// Real time-series data requires a separate endpoint, keeping this for chart visualization.
 	const revenueData = [
-		{ name: "Jan", revenue: 450, commission: 45 },
-		{ name: "Feb", revenue: 680, commission: 68 },
-		{ name: "Mar", revenue: 920, commission: 92 },
-		{ name: "Apr", revenue: 1150, commission: 115 },
-		{ name: "May", revenue: 1380, commission: 138 },
-		{ name: "Jun", revenue: 1620, commission: 162 },
+		{ name: "Jan", revenue: 45000, commission: 4500 },
+		{ name: "Feb", revenue: 68000, commission: 6800 },
+		{ name: "Mar", revenue: 92000, commission: 9200 },
+		{ name: "Apr", revenue: 115000, commission: 11500 },
+		{ name: "May", revenue: 138000, commission: 13800 },
+		{ name: "Jun", revenue: 162000, commission: 16200 },
+	];
+	// --- END MOCK DATA ---
+
+	const activePromoters = promoterStats?.active || 0;
+	const inactivePromoters = (promoterStats?.total || 0) - activePromoters;
+	const promoterDistribution = [
+		{ name: "Active", value: activePromoters },
+		{ name: "Inactive", value: inactivePromoters },
 	];
 
-	const promoterDistribution = [
-		{ name: "Active", value: promoterStats?.active || 0 },
-		{ name: "Inactive", value: (promoterStats?.total || 0) - (promoterStats?.active || 0) },
-	];
 
 	return (
 		<div className="space-y-8">
@@ -51,9 +56,9 @@ function PromoStats() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<p className="text-3xl font-display font-light">{promoterStats?.active || 0}</p>
+						<p className="text-3xl font-display font-light">{isStatsLoading ? '...' : promoterStats?.active || 0}</p>
 						<p className="text-xs text-muted-foreground font-display font-light mt-2">
-							{promoterStats?.total || 0} total
+							{isStatsLoading ? '...' : promoterStats?.total || 0} total
 						</p>
 					</CardContent>
 				</Card>
@@ -64,7 +69,7 @@ function PromoStats() {
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<p className="text-3xl font-display font-light">{promoterStats?.totalOrders || 0}</p>
+						<p className="text-3xl font-display font-light">{isStatsLoading ? '...' : promoterStats?.totalOrders || 0}</p>
 						<p className="text-xs text-green-600 font-display font-light mt-2 flex items-center gap-1">
 							<TrendingUp className="h-3 w-3" />
 							From promoter codes
@@ -79,10 +84,10 @@ function PromoStats() {
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light">
-							{formatPrice(promoterStats?.totalCommission || 0)}
+							{isStatsLoading ? '...' : formatPrice(promoterStats?.totalCommission || 0)}
 						</p>
 						<p className="text-xs text-muted-foreground font-display font-light mt-2">
-							Revenue: {formatPrice(promoterStats?.totalRevenue || 0)}
+							Revenue: {isStatsLoading ? '...' : formatPrice(promoterStats?.totalRevenue || 0)}
 						</p>
 					</CardContent>
 				</Card>
@@ -97,7 +102,11 @@ function PromoStats() {
 					<CardContent>
 						<AdminChart
 							type="line"
-							data={revenueData}
+							data={revenueData.map(d => ({ // Convert mock cents to display currency
+								name: d.name,
+								revenue: d.revenue / 100,
+								commission: d.commission / 100
+							}))}
 							dataKeys={["revenue", "commission"]}
 							colors={["hsl(var(--primary))", "hsl(var(--chart-2))"]}
 						/>
@@ -147,20 +156,20 @@ function PromoStats() {
 									<span className="text-muted-foreground font-display font-light">
 										Active promoters
 									</span>
-									<span className="font-display font-normal">{promoterStats?.active || 0}</span>
+									<span className="font-display font-normal">{isStatsLoading ? '...' : promoterStats?.active || 0}</span>
 								</div>
 								<div className="flex justify-between text-sm">
 									<span className="text-muted-foreground font-display font-light">
 										Total orders
 									</span>
-									<span className="font-display font-normal">{promoterStats?.totalOrders || 0}</span>
+									<span className="font-display font-normal">{isStatsLoading ? '...' : promoterStats?.totalOrders || 0}</span>
 								</div>
 								<div className="flex justify-between text-sm">
 									<span className="text-muted-foreground font-display font-light">
 										Total commission
 									</span>
 									<span className="font-display font-normal">
-										{formatPrice(promoterStats?.totalCommission || 0)}
+										{isStatsLoading ? '...' : formatPrice(promoterStats?.totalCommission || 0)}
 									</span>
 								</div>
 							</div>
@@ -169,7 +178,7 @@ function PromoStats() {
 				</Link>
 
 				{/* Discounts */}
-				<Link href="/admin/promo/discounts">
+				<Link href="/admin/promo/sales">
 					<Card className="border-2 hover:border-primary/50 hover:shadow-lg transition-all group h-full">
 						<CardHeader className="space-y-4">
 							<div className="flex items-start justify-between">
@@ -179,11 +188,11 @@ function PromoStats() {
 											<Percent className="h-6 w-6 text-primary" />
 										</div>
 										<h3 className="text-2xl font-display font-light group-hover:text-primary transition-colors">
-											Discounts
+											Discounts & Sales
 										</h3>
 									</div>
 									<p className="text-muted-foreground font-display font-light">
-										Create and manage discount codes for your shop
+										Create and manage sales campaigns and discount codes
 									</p>
 								</div>
 								<ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
@@ -193,21 +202,21 @@ function PromoStats() {
 							<div className="space-y-2">
 								<div className="flex justify-between text-sm">
 									<span className="text-muted-foreground font-display font-light">
-										Active codes
+										Active Campaigns
 									</span>
-									<span className="font-display font-normal">Coming soon</span>
+									<span className="font-display font-normal">{isStatsLoading ? '...' : 'TBD'}</span>
 								</div>
 								<div className="flex justify-between text-sm">
 									<span className="text-muted-foreground font-display font-light">
-										Total usage
+										Total Usage
 									</span>
-									<span className="font-display font-normal">Coming soon</span>
+									<span className="font-display font-normal">{isStatsLoading ? '...' : 'TBD'}</span>
 								</div>
 								<div className="flex justify-between text-sm">
 									<span className="text-muted-foreground font-display font-light">
-										Total savings
+										Total Revenue from Sales
 									</span>
-									<span className="font-display font-normal">Coming soon</span>
+									<span className="font-display font-normal">{isStatsLoading ? '...' : 'TBD'}</span>
 								</div>
 							</div>
 						</CardContent>

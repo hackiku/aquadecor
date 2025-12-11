@@ -3,58 +3,60 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus, Calendar, Code, TrendingUp, Eye, Trash2 } from "lucide-react";
 import { api } from "~/trpc/react";
+import type { Sale } from "~/server/db/schema/sales"; // Import the Sale type
 
 type StatusFilter = "all" | "active" | "upcoming" | "expired";
 
+// Helper function to get sale status from the client (for badge color)
+const getSaleStatus = (sale: Sale): StatusFilter | "inactive" => {
+	const now = new Date();
+	const starts = new Date(sale.startsAt);
+	const ends = new Date(sale.endsAt);
+
+	if (!sale.isActive) return "inactive";
+	if (now < starts) return "upcoming";
+	if (now > ends) return "expired";
+	return "active";
+};
+
 export default function SalesPage() {
-	const router = useRouter();
 	const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
 	// Fetch sales and stats
-	const { data: sales, refetch } = api.admin.sale.getAll.useQuery({
+	const { data: sales, refetch, isLoading: isSalesLoading } = api.admin.sale.getAll.useQuery({
 		status: statusFilter,
-		sortBy: "created",
+		sortBy: "ends",
 		sortOrder: "desc",
 	});
 
-	const { data: stats } = api.admin.sale.getStats.useQuery();
+	const { data: stats, isLoading: isStatsLoading } = api.admin.sale.getStats.useQuery();
 
 	const deleteSale = api.admin.sale.delete.useMutation({
 		onSuccess: () => {
 			refetch();
 		},
+		onError: (error) => {
+			alert(`Error deleting sale: ${error.message}`);
+		}
 	});
 
 	const handleDelete = async (id: string, name: string) => {
-		if (confirm(`Are you sure you want to delete "${name}"?`)) {
+		if (confirm(`Are you sure you want to delete the sale "${name}"? This action cannot be undone.`)) {
 			await deleteSale.mutateAsync({ id });
 		}
 	};
 
-	// Helper to determine sale status
-	const getSaleStatus = (sale: any) => {
-		const now = new Date();
-		const starts = new Date(sale.startsAt);
-		const ends = new Date(sale.endsAt);
-
-		if (!sale.isActive) return "inactive";
-		if (now < starts) return "upcoming";
-		if (now > ends) return "expired";
-		return "active";
-	};
-
-	const getStatusBadge = (status: string) => {
+	const getStatusBadge = (status: StatusFilter | "inactive") => {
 		switch (status) {
 			case "active":
-				return <Badge variant="default" className="font-display font-light">Active</Badge>;
+				return <Badge variant="default" className="font-display font-light bg-green-500/10 text-green-700 hover:bg-green-500/10">Active</Badge>;
 			case "upcoming":
-				return <Badge variant="secondary" className="font-display font-light bg-blue-500/10 text-blue-700">Upcoming</Badge>;
+				return <Badge variant="secondary" className="font-display font-light bg-blue-500/10 text-blue-700 hover:bg-blue-500/10">Upcoming</Badge>;
 			case "expired":
 				return <Badge variant="secondary" className="font-display font-light">Expired</Badge>;
 			case "inactive":
@@ -69,7 +71,8 @@ export default function SalesPage() {
 	};
 
 	const formatDate = (date: Date | string) => {
-		return new Date(date).toLocaleDateString("en-US", {
+		const d = typeof date === 'string' ? new Date(date) : date;
+		return d.toLocaleDateString("en-US", {
 			month: "short",
 			day: "numeric",
 			year: "numeric",
@@ -106,7 +109,7 @@ export default function SalesPage() {
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light">
-							{stats?.total ?? 0}
+							{isStatsLoading ? '...' : stats?.total ?? 0}
 						</p>
 					</CardContent>
 				</Card>
@@ -118,7 +121,7 @@ export default function SalesPage() {
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light text-green-600">
-							{stats?.active ?? 0}
+							{isStatsLoading ? '...' : stats?.active ?? 0}
 						</p>
 					</CardContent>
 				</Card>
@@ -130,7 +133,7 @@ export default function SalesPage() {
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light">
-							{stats?.totalUsage ?? 0}
+							{isStatsLoading ? '...' : stats?.totalUsage ?? 0}
 						</p>
 					</CardContent>
 				</Card>
@@ -142,7 +145,7 @@ export default function SalesPage() {
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light">
-							{formatCurrency(stats?.totalRevenue ?? 0)}
+							{isStatsLoading ? '...' : formatCurrency(stats?.totalRevenue ?? 0)}
 						</p>
 					</CardContent>
 				</Card>
@@ -156,6 +159,7 @@ export default function SalesPage() {
 						variant={statusFilter === filter ? "default" : "outline"}
 						onClick={() => setStatusFilter(filter)}
 						className="rounded-full font-display font-light capitalize"
+						disabled={isSalesLoading}
 					>
 						{filter}
 					</Button>
@@ -164,8 +168,18 @@ export default function SalesPage() {
 
 			{/* Sales List */}
 			<div className="space-y-4">
-				{sales?.map((sale) => {
-					const status = getSaleStatus(sale);
+				{isSalesLoading && (
+					<Card className="border-2 border-dashed">
+						<CardContent className="pt-6 text-center py-12">
+							<p className="text-muted-foreground font-display font-light">
+								Loading sales...
+							</p>
+						</CardContent>
+					</Card>
+				)}
+
+				{!isSalesLoading && sales && sales.length > 0 && sales.map((sale) => {
+					const status = getSaleStatus(sale as Sale);
 
 					return (
 						<Card key={sale.id} className="border-2 hover:border-primary/30 transition-colors">
@@ -203,7 +217,8 @@ export default function SalesPage() {
 												</div>
 												<div className="flex items-center gap-2 font-display font-light">
 													<Eye className="h-4 w-4" />
-													<span className="text-muted-foreground">Visible on:</span> {sale.visibleOn.join(", ")}
+													{/* visibleOn is string[] in DB but sometimes comes as JSONB from Drizzle query */}
+													<span className="text-muted-foreground">Visible on:</span> {(sale.visibleOn as string[]).join(", ")}
 												</div>
 											</div>
 										</div>
@@ -225,6 +240,7 @@ export default function SalesPage() {
 											size="sm"
 											className="font-display font-light text-destructive hover:text-destructive"
 											onClick={() => handleDelete(sale.id, sale.name)}
+											disabled={deleteSale.isPending}
 										>
 											<Trash2 className="h-4 w-4" />
 										</Button>
@@ -235,7 +251,7 @@ export default function SalesPage() {
 					);
 				})}
 
-				{(!sales || sales.length === 0) && (
+				{!isSalesLoading && (!sales || sales.length === 0) && (
 					<Card className="border-2 border-dashed">
 						<CardContent className="pt-6 text-center py-12">
 							<p className="text-muted-foreground font-display font-light">

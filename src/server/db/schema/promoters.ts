@@ -1,5 +1,5 @@
 // src/server/db/schema/promoters.ts
-import { relations } from "drizzle-orm";
+import { relations, type InferSelectModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 import { orders } from "./orders";
@@ -84,3 +84,6 @@ export const promoterCodesRelations = relations(promoterCodes, ({ one }) => ({
 		references: [promoters.id],
 	}),
 }));
+
+export type Promoter = InferSelectModel<typeof promoters>;
+export type PromoterCode = InferSelectModel<typeof promoterCodes>;

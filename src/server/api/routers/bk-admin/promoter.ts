@@ -1,13 +1,13 @@
 // src/server/api/routers/admin/promoter.ts
 
 import { z } from "zod";
-import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { promoters, promoterCodes } from "~/server/db/schema";
 import { eq, desc, asc, sql } from "drizzle-orm";
 
 export const adminPromoterRouter = createTRPCRouter({
 	// Get all promoters with their codes
-	getAll: adminProcedure
+	getAll: publicProcedure
 		.input(z.object({
 			isActive: z.boolean().optional(),
 			sortBy: z.enum(["name", "orders", "revenue", "created"]).default("created"),
@@ -66,35 +66,8 @@ export const adminPromoterRouter = createTRPCRouter({
 			return promotersWithCodes;
 		}),
 
-	// ============================================================================
-	// GET BY EMAIL (Detail View) - NEW PROCEDURE
-	// ============================================================================
-	getByEmail: adminProcedure
-		.input(z.object({
-			email: z.string().email(),
-		}))
-		.query(async ({ ctx, input }) => {
-			const promoterData = await ctx.db.query.promoters.findFirst({
-				where: eq(promoters.email, input.email),
-				with: {
-					codes: true,
-					orders: {
-						orderBy: (orders, { desc }) => desc(orders.createdAt),
-						limit: 10, // Show last 10 orders on the detail page
-					}
-				}
-			});
-
-			// if (!promoterData) {
-			// 	throw new TRPCError({ code: "NOT_FOUND", message: "Promoter not found" });
-			// }
-
-			return promoterData;
-		}),
-
-
 	// Get single promoter with full details
-	getById: adminProcedure
+	getById: publicProcedure
 		.input(z.object({
 			id: z.string(),
 		}))
@@ -122,7 +95,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Get promoter stats for dashboard
-	getStats: adminProcedure
+	getStats: publicProcedure
 		.query(async ({ ctx }) => {
 			const allPromoters = await ctx.db
 				.select({
@@ -150,7 +123,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Create/invite new promoter
-	create: adminProcedure
+	create: publicProcedure
 		.input(z.object({
 			firstName: z.string(),
 			lastName: z.string(),
@@ -173,7 +146,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Update promoter
-	update: adminProcedure
+	update: publicProcedure
 		.input(z.object({
 			id: z.string(),
 			firstName: z.string().optional(),
@@ -194,7 +167,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Delete promoter
-	delete: adminProcedure
+	delete: publicProcedure
 		.input(z.object({
 			id: z.string(),
 		}))
@@ -208,7 +181,7 @@ export const adminPromoterRouter = createTRPCRouter({
 	// ========================================
 
 	// Add code to promoter
-	addCode: adminProcedure
+	addCode: publicProcedure
 		.input(z.object({
 			promoterId: z.string(),
 			code: z.string(),
@@ -231,7 +204,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Update code
-	updateCode: adminProcedure
+	updateCode: publicProcedure
 		.input(z.object({
 			id: z.string(),
 			code: z.string().optional(),
@@ -256,7 +229,7 @@ export const adminPromoterRouter = createTRPCRouter({
 		}),
 
 	// Delete code
-	deleteCode: adminProcedure
+	deleteCode: publicProcedure
 		.input(z.object({
 			id: z.string(),
 		}))

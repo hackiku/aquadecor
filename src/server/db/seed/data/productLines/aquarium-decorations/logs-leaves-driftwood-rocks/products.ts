@@ -78,7 +78,7 @@ export const products = [
 		"sku": "D7SLIM",
 		"stockStatus": "in_stock",
 		"isActive": true,
-		"isFeatured": false,
+		"isFeatured": true,
 		"sortOrder": 10,
 		"material": "Safe aquarium decoration",
 		"productionTime": "Ready to ship"

@@ -19,9 +19,10 @@ import { toast } from "sonner";
 interface InvitePromoterModalProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	onInviteSuccess: () => void; // Added for refetching the list
 }
 
-export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalProps) {
+export function InvitePromoterModal({ open, onOpenChange, onInviteSuccess }: InvitePromoterModalProps) {
 	const [email, setEmail] = useState("");
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -30,6 +31,7 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 		onSuccess: () => {
 			toast.success("Promoter invited successfully!");
 			onOpenChange(false);
+			onInviteSuccess(); // Call refetch function
 			// Reset form
 			setEmail("");
 			setFirstName("");
@@ -120,7 +122,7 @@ export function InvitePromoterModal({ open, onOpenChange }: InvitePromoterModalP
 						</Button>
 						<Button
 							type="submit"
-							disabled={createPromoter.isPending}
+							disabled={createPromoter.isPending || !email || !firstName || !lastName}
 							className="rounded-full font-display font-light"
 						>
 							{createPromoter.isPending ? "Sending..." : "Send Invite"}

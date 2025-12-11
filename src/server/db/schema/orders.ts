@@ -1,6 +1,5 @@
 // src/server/db/schema/orders.ts
-import { relations } from "drizzle-orm";
-import type { InferSelectModel } from "drizzle-orm";
+import { relations, type InferSelectModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 import { products } from "./shop";

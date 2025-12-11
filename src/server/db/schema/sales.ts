@@ -1,5 +1,5 @@
 // src/server/db/schema/sales.ts
-import { relations } from "drizzle-orm";
+import { relations, type InferSelectModel } from "drizzle-orm";
 import { index, text, integer, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createTable } from "./_utils";
 import { orders } from "./orders";
@@ -69,3 +69,5 @@ export const sales = createTable(
 export const salesRelations = relations(sales, ({ many }) => ({
 	orders: many(orders),
 }));
+
+export type Sale = InferSelectModel<typeof sales>;

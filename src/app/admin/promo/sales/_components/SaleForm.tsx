@@ -25,11 +25,12 @@ import { CountdownBanner } from "~/components/cta/sale/CountdownBanner";
 import { FlashSaleBanner } from "~/components/cta/sale/FlashSaleBanner";
 import { MinimalBanner } from "~/components/cta/sale/MinimalBanner";
 import { TimeSelector } from "./TimeSelector";
+import type { Sale } from "~/server/db/schema/sales"; 
 
 type BannerType = "SaleBanner" | "CountdownBanner" | "FlashSaleBanner" | "MinimalBanner";
 
 interface SaleFormProps {
-	sale?: any;
+	sale?: Sale;
 }
 
 export function SaleForm({ sale }: SaleFormProps) {
