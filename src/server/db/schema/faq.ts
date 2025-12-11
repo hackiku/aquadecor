@@ -110,3 +110,7 @@ export const faqTranslationsRelations = relations(faqTranslations, ({ one }) => 
 		references: [faqs.id],
 	}),
 }));
+
+export type FaqItem = InferSelectModel<typeof faqs>;
+export type FaqCategory = InferSelectModel<typeof faqCategories>;
+export type FaqTranslation = InferSelectModel<typeof faqTranslations>;

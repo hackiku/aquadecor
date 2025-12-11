@@ -1,10 +1,10 @@
 // src/app/admin/content/page.tsx
+
 "use client";
 
 import Link from "next/link";
 import { api } from "~/trpc/react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import {
 	Image,
@@ -17,8 +17,17 @@ import {
 
 export default function ContentOverviewPage() {
 	// Get stats for content sections
-	const { data: galleryStats } = api.admin.media.getStats.useQuery(); 
-	const { data: faqs } = api.admin.faq.getAll.useQuery();
+	const { data: galleryStats } = api.admin.media.getStats.useQuery();
+
+	// We use getFullStructure now. We'll just fetch ROW as a reference for count.
+	// (Or you could create a specific getStats endpoint in admin router, but this is fine for now)
+	const { data: faqStructure } = api.admin.faq.getFullStructure.useQuery({
+		region: "ROW",
+		locale: "en"
+	});
+
+	// Calculate total FAQs across all categories
+	const totalFaqs = faqStructure?.reduce((acc, cat) => acc + cat.items.length, 0) ?? 0;
 
 	const contentSections = [
 		{
@@ -38,8 +47,8 @@ export default function ContentOverviewPage() {
 			icon: HelpCircle,
 			href: "/admin/content/faq",
 			stats: [
-				{ label: "Questions", value: faqs?.length ?? 0 },
-				{ label: "Regions", value: 2 }, // ROW + US
+				{ label: "Questions", value: totalFaqs },
+				{ label: "Categories", value: faqStructure?.length ?? 0 },
 			],
 			color: "text-green-500",
 		},
@@ -98,12 +107,12 @@ export default function ContentOverviewPage() {
 				<Card className="border-2">
 					<CardHeader>
 						<CardTitle className="font-display font-normal text-sm text-muted-foreground">
-							FAQ Items
+							FAQ Items (ROW)
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<p className="text-3xl font-display font-light">
-							{faqs?.length ?? 0}
+							{totalFaqs}
 						</p>
 					</CardContent>
 				</Card>
@@ -131,8 +140,8 @@ export default function ContentOverviewPage() {
 					>
 						<Card
 							className={`border-2 transition-all h-full ${section.disabled
-									? "opacity-50 cursor-not-allowed"
-									: "hover:border-primary/50 hover:shadow-lg group"
+								? "opacity-50 cursor-not-allowed"
+								: "hover:border-primary/50 hover:shadow-lg group"
 								}`}
 						>
 							<CardHeader className="space-y-4">

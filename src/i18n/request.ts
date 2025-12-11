@@ -20,6 +20,7 @@ const NAMESPACES = [
 	'blog',
 	'legal',
 	'register',
+	'faq',
 ] as const;
 
 export type Namespace = (typeof NAMESPACES)[number];

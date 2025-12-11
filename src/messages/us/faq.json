@@ -1,0 +1,15 @@
+{
+	"faq": {
+		"badge": "Support Center",
+		"headline": "Frequently Asked Questions",
+		"subHeadline": "Everything you need to know about ordering, installation, and shipping to the United States. We are working very hard to serve & support amidst current trade regulation challenges.",
+		"searchPlaceholder": "Search for answers...",
+		"allCategories": "All Categories",
+		"noResultsTitle": "No results found",
+		"noResultsText": "Try adjusting your search or filter to find what you're looking for",
+		"contactTitle": "Still have questions?",
+		"contactText": "Can't find the answer you're looking for? Please get in touch with our friendly team.",
+		"contactButton": "Contact Support",
+		"loading": "Loading FAQs..."
+	}
+}

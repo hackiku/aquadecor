@@ -5,7 +5,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Plus, Pencil, Trash, Settings2, Folder, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash, Settings2, Folder, Loader2, Globe } from "lucide-react";
 import {
 	Select,
 	SelectContent,
@@ -30,26 +30,33 @@ import { Textarea } from "~/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "~/components/ui/separator";
 
-// New Components
 import { SortableList } from "./_components/SortableList";
 import { CategoryManager } from "./_components/CategoryManager";
 
 type Region = "ROW" | "US";
+type Locale = "en" | "de"; // Add more as needed
+
+const LOCALES: { code: Locale; label: string; flag: string }[] = [
+	{ code: "en", label: "English", flag: "🇺🇸" },
+	{ code: "de", label: "German", flag: "🇩🇪" },
+];
 
 export default function FAQPage() {
 	const [region, setRegion] = useState<Region>("ROW");
+	const [locale, setLocale] = useState<Locale>("en"); // New State
 	const [editingFaq, setEditingFaq] = useState<any>(null);
 	const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
 	const [isCatModalOpen, setIsCatModalOpen] = useState(false);
 
+	// Fetch structure based on BOTH Region (Filter) and Locale (Content)
 	const { data: categories, isLoading, refetch } = api.admin.faq.getFullStructure.useQuery({
 		region,
-		locale: "en",
+		locale,
 	});
 
 	const upsertFaq = api.admin.faq.upsertFaq.useMutation({
 		onSuccess: () => {
-			toast.success("FAQ saved");
+			toast.success(`Saved (${locale.toUpperCase()})`);
 			setIsFaqModalOpen(false);
 			setEditingFaq(null);
 			refetch();
@@ -66,13 +73,9 @@ export default function FAQPage() {
 
 	const reorderFaqs = api.admin.faq.reorderFaqs.useMutation({
 		onSuccess: () => toast.success("Order saved"),
-		onError: () => toast.error("Failed to save order")
 	});
 
-	// Handlers
 	const handleReorderFaqs = (newItems: any[]) => {
-		// Optimistically update logic would go here if we had local state
-		// For now, we just fire the mutation
 		reorderFaqs.mutate({
 			items: newItems.map((item, index) => ({ id: item.id, sortOrder: index }))
 		});
@@ -108,12 +111,14 @@ export default function FAQPage() {
 				</div>
 			</div>
 
-			{/* Toolbar */}
-			<div className="flex items-center gap-4 p-4 border rounded-xl bg-card shadow-sm">
+			{/* Filter Toolbar */}
+			<div className="flex flex-wrap items-center gap-4 p-4 border rounded-xl bg-card shadow-sm">
+
+				{/* Region Filter */}
 				<div className="flex items-center gap-2">
-					<Label className="font-display font-normal">Region:</Label>
+					<Label className="font-display font-normal text-muted-foreground text-xs uppercase tracking-wider">Region</Label>
 					<Select value={region} onValueChange={(val: any) => setRegion(val)}>
-						<SelectTrigger className="w-[180px]">
+						<SelectTrigger className="w-[180px] bg-background">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
@@ -122,18 +127,42 @@ export default function FAQPage() {
 						</SelectContent>
 					</Select>
 				</div>
-				<Separator orientation="vertical" className="h-6" />
-				<span className="text-sm text-muted-foreground font-display font-light">
-					{totalFaqs} Questions
-				</span>
-				{reorderFaqs.isPending && (
-					<span className="flex items-center gap-2 text-xs text-muted-foreground animate-pulse ml-auto">
-						<Loader2 className="w-3 h-3 animate-spin" /> Saving order...
+
+				<Separator orientation="vertical" className="h-8 hidden sm:block" />
+
+				{/* Locale Selector */}
+				<div className="flex items-center gap-2">
+					<Label className="font-display font-normal text-muted-foreground text-xs uppercase tracking-wider">Editing Language</Label>
+					<Select value={locale} onValueChange={(val: any) => setLocale(val)}>
+						<SelectTrigger className="w-[140px] bg-background">
+							<div className="flex items-center gap-2">
+								<Globe className="w-3 h-3 text-muted-foreground" />
+								<SelectValue />
+							</div>
+						</SelectTrigger>
+						<SelectContent>
+							{LOCALES.map((l) => (
+								<SelectItem key={l.code} value={l.code}>
+									<span className="mr-2">{l.flag}</span> {l.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+
+				<div className="ml-auto flex items-center gap-4">
+					<span className="text-sm text-muted-foreground font-display font-light hidden sm:inline-block">
+						{totalFaqs} Questions
 					</span>
-				)}
+					{reorderFaqs.isPending && (
+						<span className="flex items-center gap-2 text-xs text-muted-foreground animate-pulse">
+							<Loader2 className="w-3 h-3 animate-spin" /> Saving order...
+						</span>
+					)}
+				</div>
 			</div>
 
-			{/* Content */}
+			{/* Content Area */}
 			{isLoading ? (
 				<div className="text-center py-20">
 					<Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground/30" />
@@ -144,7 +173,7 @@ export default function FAQPage() {
 						<div key={category.id} className="space-y-4">
 							<div className="flex items-center gap-3 border-b pb-2">
 								<h2 className="text-xl font-display font-normal text-foreground/80">
-									{category.name}
+									{category.name || <span className="text-muted-foreground italic">{category.slug} (Untranslated)</span>}
 								</h2>
 								<Badge variant="secondary" className="font-mono text-xs rounded-full px-2">
 									{category.items.length}
@@ -153,7 +182,7 @@ export default function FAQPage() {
 
 							{category.items.length === 0 ? (
 								<div className="p-8 border border-dashed rounded-xl text-center text-muted-foreground/50 text-sm">
-									No FAQs in this category.
+									No FAQs in this category for {region}.
 								</div>
 							) : (
 								<SortableList
@@ -165,10 +194,10 @@ export default function FAQPage() {
 											<CardContent className="p-4 flex gap-4 items-start">
 												<div className="flex-1 space-y-1 pt-1">
 													<h3 className="font-medium font-display text-base">
-														{faq.question || "Untitled Question"}
+														{faq.question || <span className="text-muted-foreground italic">Untitled in {locale}</span>}
 													</h3>
 													<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
-														{faq.answer || "No answer provided."}
+														{faq.answer || <span className="text-muted-foreground/50 italic">No translation available for this language.</span>}
 													</p>
 												</div>
 												<div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -188,7 +217,9 @@ export default function FAQPage() {
 														size="icon"
 														className="h-8 w-8 text-destructive hover:text-destructive"
 														onClick={() => {
-															if (confirm("Delete this FAQ?")) deleteFaq.mutate({ id: faq.id });
+															if (confirm("Delete this FAQ entirely? This will remove all translations.")) {
+																deleteFaq.mutate({ id: faq.id });
+															}
 														}}
 													>
 														<Trash className="h-4 w-4" />
@@ -201,16 +232,6 @@ export default function FAQPage() {
 							)}
 						</div>
 					))}
-
-					{categories?.length === 0 && (
-						<div className="text-center py-20">
-							<Folder className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-							<h3 className="text-xl font-display font-light mb-2">No Categories</h3>
-							<Button onClick={() => setIsCatModalOpen(true)} variant="outline">
-								Create Category
-							</Button>
-						</div>
-					)}
 				</div>
 			)}
 
@@ -221,9 +242,12 @@ export default function FAQPage() {
 				faq={editingFaq}
 				categories={categories || []}
 				region={region}
-				onSubmit={(data) => upsertFaq.mutate(data)}
+				locale={locale}
+				// Add ": any" here to shut the compiler up
+				onSubmit={(data: any) => upsertFaq.mutate(data)}
 				isSubmitting={upsertFaq.isPending}
 			/>
+
 
 			<CategoryManager
 				open={isCatModalOpen}
@@ -234,17 +258,17 @@ export default function FAQPage() {
 	);
 }
 
-// Keeping the FaqDialog here for simplicity, or move to _components if you prefer
+// Updated Dialog to accept Locale
 function FaqDialog({
 	open,
 	onOpenChange,
 	faq,
 	categories,
 	region,
+	locale, // New Prop
 	onSubmit,
 	isSubmitting
 }: any) {
-	// ... (Same implementation as before, just ensured types or `any` for quick fix) ...
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
@@ -255,17 +279,21 @@ function FaqDialog({
 			question: formData.get("question") as string,
 			answer: formData.get("answer") as string,
 			sortOrder: parseInt(formData.get("sortOrder") as string) || 0,
-			locale: "en",
+			locale: locale, // Submit for current locale
 		});
 	};
+
+	const currentLocaleLabel = LOCALES.find(l => l.code === locale)?.label;
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[600px]">
 				<DialogHeader>
 					<DialogTitle>{faq ? "Edit FAQ" : "New FAQ"}</DialogTitle>
-					<DialogDescription>
-						{region === "US" ? "United States" : "Rest of World"} Region
+					<DialogDescription className="flex items-center gap-2">
+						<Badge variant="outline">{region}</Badge>
+						<span>•</span>
+						<span>Editing in <strong>{currentLocaleLabel}</strong></span>
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} className="space-y-5 pt-2">
@@ -278,7 +306,7 @@ function FaqDialog({
 								</SelectTrigger>
 								<SelectContent>
 									{categories.filter((c: any) => c.id !== "uncategorized").map((c: any) => (
-										<SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+										<SelectItem key={c.id} value={c.id}>{c.name || c.slug}</SelectItem>
 									))}
 								</SelectContent>
 							</Select>
@@ -288,17 +316,27 @@ function FaqDialog({
 							<Input name="sortOrder" type="number" defaultValue={faq?.sortOrder ?? 0} />
 						</div>
 					</div>
-					<div className="space-y-2">
-						<Label>Question</Label>
-						<Input name="question" defaultValue={faq?.question || ""} required />
+
+					{/* Translation Fields */}
+					<div className="p-4 bg-muted/30 rounded-lg space-y-4 border border-border/50">
+						<div className="space-y-2">
+							<Label className="flex items-center justify-between">
+								<span>Question ({locale.toUpperCase()})</span>
+								{faq && !faq.question && <span className="text-xs text-amber-500">Not translated yet</span>}
+							</Label>
+							<Input name="question" defaultValue={faq?.question || ""} required placeholder="Enter question..." />
+						</div>
+						<div className="space-y-2">
+							<Label>Answer ({locale.toUpperCase()})</Label>
+							<Textarea name="answer" defaultValue={faq?.answer || ""} required rows={5} placeholder="Enter answer..." />
+						</div>
 					</div>
-					<div className="space-y-2">
-						<Label>Answer</Label>
-						<Textarea name="answer" defaultValue={faq?.answer || ""} required rows={5} />
-					</div>
+
 					<div className="flex justify-end gap-3 pt-4">
 						<Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-						<Button type="submit" disabled={isSubmitting}>{faq ? "Save Changes" : "Create FAQ"}</Button>
+						<Button type="submit" disabled={isSubmitting}>
+							{faq ? "Save Translation" : "Create FAQ"}
+						</Button>
 					</div>
 				</form>
 			</DialogContent>

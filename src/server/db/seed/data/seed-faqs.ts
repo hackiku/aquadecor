@@ -1,29 +1,55 @@
 // src/server/db/seed/data/seed-faqs.ts
 
-type FaqTranslation = {
-	question: string;
-	answer: string;
-};
+// import type { FaqItem } from "../../schema";
+// import type { FaqCategory } from "../../schema";
+import type { FaqTranslation } from "../../schema";
+
+type FaqContent = Pick<FaqTranslation, "question" | "answer">;
+
 
 type FaqItem = {
 	region: "ROW" | "US";
 	sortOrder: number;
 	translations: {
-		en: FaqTranslation;
-		de: FaqTranslation; // Placeholder German
+		en: FaqContent;      // English is required
+		de?: FaqContent;     // <--- The "?" makes German optional
 	};
 };
 
 type FaqCategory = {
 	slug: string;
-	icon: string; // Lucide icon name
+	icon: string;
 	sortOrder: number;
 	translations: {
 		en: { name: string };
-		de: { name: string };
+		de?: { name: string };
 	};
 	items: FaqItem[];
 };
+
+
+// type FaqItem = {
+// 	region: "ROW" | "US";
+// 	sortOrder: number;
+// 	translations: {
+// 		en: FaqTranslation;
+// 		de: FaqTranslation | undefined; // Placeholder German
+// 	};
+// };
+
+// type FaqCategory = {
+// 	slug: string;
+// 	icon: string; // Lucide icon name
+// 	sortOrder: number;
+// 	translations: {
+// 		en: { name: string };
+// 		de: { name: string };
+// 	};
+// 	items: FaqItem[];
+// };
+
+// src/server/db/seed/data/seed-faqs.ts
+
 
 export const faqsSeedData: FaqCategory[] = [
 	{
@@ -50,16 +76,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 1,
 				translations: {
 					en: {
 						question: "How do I place an order?",
 						answer: "First make sure to take accurate measurements of your aquarium; then choose your favorite model in the appropriate size.",
-					},
-					de: {
-						question: "[DE] Wie gebe ich eine Bestellung auf?",
-						answer: "[DE] Messen Sie zuerst Ihr Aquarium genau aus und wählen Sie dann Ihr Lieblingsmodell.",
 					},
 				},
 			},
@@ -78,16 +100,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 2,
 				translations: {
 					en: {
 						question: "What payment methods do you take?",
 						answer: "We take PayPal and Credit Cards.",
-					},
-					de: {
-						question: "[DE] Welche Zahlungsmethoden akzeptieren Sie?",
-						answer: "[DE] Wir akzeptieren PayPal und Kreditkarten.",
 					},
 				},
 			},
@@ -131,16 +149,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 1,
 				translations: {
 					en: {
 						question: "How much is shipping?",
 						answer: "All products on our website have shipping included in the price or come with free shipping.",
-					},
-					de: {
-						question: "[DE] Wie hoch sind die Versandkosten?",
-						answer: "[DE] Alle Produkte auf unserer Website beinhalten den Versand im Preis.",
 					},
 				},
 			},
@@ -159,16 +173,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 2,
 				translations: {
 					en: {
 						question: "How long does shipping take?",
 						answer: "We ship with DHL and shipping usually takes 3-5 business days.",
-					},
-					de: {
-						question: "[DE] Wie lange dauert der Versand?",
-						answer: "[DE] Wir versenden mit DHL und der Versand dauert in der Regel 3-5 Werktage.",
 					},
 				},
 			},
@@ -212,16 +222,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 1,
 				translations: {
 					en: {
 						question: "How do I install a background?",
 						answer: "Our Ultra Flex backgrounds come with vacuum cups and can be installed in a full tank. Just place the background in the tank, attach the vacuum cups and that's it.",
-					},
-					de: {
-						question: "[DE] Wie installiere ich einen Hintergrund?",
-						answer: "[DE] Unsere Ultra Flex Hintergründe kommen mit Saugnäpfen und können in einem vollen Tank installiert werden.",
 					},
 				},
 			},
@@ -293,16 +299,12 @@ export const faqsSeedData: FaqCategory[] = [
 				},
 			},
 			{
-				region: "US",
+				region: "US", // US Item -> English Only
 				sortOrder: 2,
 				translations: {
 					en: {
 						question: "Are Aquadecor Backgrounds safe for Marine tanks?",
 						answer: "You can safely use our products in saltwater/marine tanks.",
-					},
-					de: {
-						question: "[DE] Sind Aquadecor-Hintergründe sicher für Meerwasseraquarien?",
-						answer: "[DE] Sie können unsere Produkte sicher in Salzwasseraquarien verwenden.",
 					},
 				},
 			},

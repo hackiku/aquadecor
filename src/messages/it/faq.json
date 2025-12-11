@@ -1,0 +1,15 @@
+{
+	"faq": {
+		"badge": "Centro Assistenza",
+		"headline": "Domande Frequenti",
+		"subHeadline": "Tutto quello che c'è da sapere su ordini, installazione e spedizione.",
+		"searchPlaceholder": "Cerca risposte...",
+		"allCategories": "Tutte le Categorie",
+		"noResultsTitle": "Nessun risultato trovato",
+		"noResultsText": "Prova a modificare la ricerca o i filtri per trovare quello che cerchi.",
+		"contactTitle": "Hai ancora domande?",
+		"contactText": "Non trovi la risposta che cerchi? Contatta il nostro team.",
+		"contactButton": "Contatta il Supporto",
+		"loading": "Caricamento FAQ..."
+	}
+}

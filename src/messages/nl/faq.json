@@ -1,0 +1,15 @@
+{
+	"faq": {
+		"badge": "Support Center",
+		"headline": "Veelgestelde Vragen",
+		"subHeadline": "Alles wat u moet weten over bestellen, installatie en verzending.",
+		"searchPlaceholder": "Zoek naar antwoorden...",
+		"allCategories": "Alle Categorieën",
+		"noResultsTitle": "Geen resultaten gevonden",
+		"noResultsText": "Probeer uw zoekopdracht of filter aan te passen.",
+		"contactTitle": "Heeft u nog vragen?",
+		"contactText": "Kunt u het antwoord niet vinden? Neem gerust contact op met ons team.",
+		"contactButton": "Contacteer Support",
+		"loading": "FAQs laden..."
+	}
+}

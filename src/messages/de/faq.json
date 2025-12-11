@@ -1,0 +1,15 @@
+{
+	"faq": {
+		"badge": "Hilfe-Center",
+		"headline": "Häufig gestellte Fragen",
+		"subHeadline": "Alles, was Sie über Bestellung, Installation und Versand wissen müssen.",
+		"searchPlaceholder": "Suche nach Antworten...",
+		"allCategories": "Alle Kategorien",
+		"noResultsTitle": "Keine Ergebnisse gefunden",
+		"noResultsText": "Versuchen Sie, Ihre Suchbegriffe oder Filter anzupassen.",
+		"contactTitle": "Haben Sie noch Fragen?",
+		"contactText": "Finden Sie die Antwort nicht? Bitte kontaktieren Sie unser freundliches Team.",
+		"contactButton": "Support kontaktieren",
+		"loading": "Lade FAQs..."
+	}
+}
