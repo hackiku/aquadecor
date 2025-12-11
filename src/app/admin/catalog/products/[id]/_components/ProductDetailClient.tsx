@@ -18,11 +18,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
-// import { MarketBadge } from "../../../_components/MarketBadge";
-// import { PricingEditorV2 } from "../../../_components/PricingEditorV2";
-// import { BundleTierEditor } from "../../../_components/BundleTierEditor";
-// import { AddPricingButton } from "./AddPricingButton"
-// import { CopyPricingButton } from "./CopyPricingButton"
 
 // new pricing components
 import { MarketPricingManager } from "../../_components/pricing/MarketPricingManager";

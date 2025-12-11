@@ -1,12 +1,11 @@
 // src/app/admin/content/faq/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Plus, Pencil, Trash } from "lucide-react";
+import { Plus, Pencil, Trash, Settings2, Folder, Loader2 } from "lucide-react";
 import {
 	Select,
 	SelectContent,
@@ -21,305 +20,288 @@ import {
 	DialogTitle,
 	DialogDescription,
 } from "~/components/ui/dialog";
+import {
+	Card,
+	CardContent,
+} from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { toast } from "sonner";
+import { Separator } from "~/components/ui/separator";
+
+// New Components
+import { SortableList } from "./_components/SortableList";
+import { CategoryManager } from "./_components/CategoryManager";
+
+type Region = "ROW" | "US";
 
 export default function FAQPage() {
-	const [region, setRegion] = useState<"ROW" | "US">("ROW");
+	const [region, setRegion] = useState<Region>("ROW");
 	const [editingFaq, setEditingFaq] = useState<any>(null);
-	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+	const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
+	const [isCatModalOpen, setIsCatModalOpen] = useState(false);
 
-	const { data: faqs, isLoading, refetch } = api.admin.faq.getAll.useQuery({
+	const { data: categories, isLoading, refetch } = api.admin.faq.getFullStructure.useQuery({
 		region,
+		locale: "en",
 	});
 
-	const createFaq = api.admin.faq.create.useMutation({
+	const upsertFaq = api.admin.faq.upsertFaq.useMutation({
 		onSuccess: () => {
-			toast.success("FAQ created successfully!");
-			setIsCreateModalOpen(false);
-			refetch();
-		},
-		onError: (error) => {
-			toast.error(error.message || "Failed to create FAQ");
-		},
-	});
-
-	const updateFaq = api.admin.faq.update.useMutation({
-		onSuccess: () => {
-			toast.success("FAQ updated successfully!");
+			toast.success("FAQ saved");
+			setIsFaqModalOpen(false);
 			setEditingFaq(null);
 			refetch();
 		},
-		onError: (error) => {
-			toast.error(error.message || "Failed to update FAQ");
-		},
+		onError: (err) => toast.error(err.message),
 	});
 
-	const deleteFaq = api.admin.faq.delete.useMutation({
+	const deleteFaq = api.admin.faq.deleteFaq.useMutation({
 		onSuccess: () => {
-			toast.success("FAQ deleted successfully!");
+			toast.success("Deleted successfully");
 			refetch();
 		},
-		onError: (error) => {
-			toast.error(error.message || "Failed to delete FAQ");
-		},
 	});
 
-	const handleCreate = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		createFaq.mutate({
-			region,
-			question: formData.get("question") as string,
-			answer: formData.get("answer") as string,
-			sortOrder: parseInt(formData.get("sortOrder") as string) || 0,
+	const reorderFaqs = api.admin.faq.reorderFaqs.useMutation({
+		onSuccess: () => toast.success("Order saved"),
+		onError: () => toast.error("Failed to save order")
+	});
+
+	// Handlers
+	const handleReorderFaqs = (newItems: any[]) => {
+		// Optimistically update logic would go here if we had local state
+		// For now, we just fire the mutation
+		reorderFaqs.mutate({
+			items: newItems.map((item, index) => ({ id: item.id, sortOrder: index }))
 		});
 	};
 
-	const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		updateFaq.mutate({
-			id: editingFaq.id,
-			question: formData.get("question") as string,
-			answer: formData.get("answer") as string,
-			sortOrder: parseInt(formData.get("sortOrder") as string),
-		});
-	};
+	const totalFaqs = categories?.reduce((acc, cat) => acc + cat.items.length, 0) || 0;
 
 	return (
-		<div className="space-y-8">
+		<div className="space-y-8 pb-20">
 			{/* Header */}
-			<div className="flex items-start justify-between">
+			<div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
 				<div className="space-y-2">
 					<h1 className="text-4xl font-display font-extralight tracking-tight">
 						FAQ Management
 					</h1>
 					<p className="text-muted-foreground font-display font-light text-lg">
-						Manage frequently asked questions for different regions
+						Manage frequently asked questions
 					</p>
 				</div>
-				<Button onClick={() => setIsCreateModalOpen(true)} className="rounded-full">
-					<Plus className="mr-2 h-4 w-4" />
-					Add FAQ
-				</Button>
+				<div className="flex items-center gap-2">
+					<Button
+						variant="outline"
+						onClick={() => setIsCatModalOpen(true)}
+						className="rounded-full font-display font-light"
+					>
+						<Settings2 className="mr-2 h-4 w-4" />
+						Categories
+					</Button>
+					<Button onClick={() => { setEditingFaq(null); setIsFaqModalOpen(true); }} className="rounded-full">
+						<Plus className="mr-2 h-4 w-4" />
+						Add FAQ
+					</Button>
+				</div>
 			</div>
 
-			{/* Region Filter */}
-			<div className="flex items-center gap-4">
-				<Label className="font-display font-normal">Region:</Label>
-				<Select value={region} onValueChange={(val: any) => setRegion(val)}>
-					<SelectTrigger className="w-[200px] font-display font-light">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="ROW" className="font-display font-light">
-							🌍 Rest of World
-						</SelectItem>
-						<SelectItem value="US" className="font-display font-light">
-							🇺🇸 United States
-						</SelectItem>
-					</SelectContent>
-				</Select>
+			{/* Toolbar */}
+			<div className="flex items-center gap-4 p-4 border rounded-xl bg-card shadow-sm">
+				<div className="flex items-center gap-2">
+					<Label className="font-display font-normal">Region:</Label>
+					<Select value={region} onValueChange={(val: any) => setRegion(val)}>
+						<SelectTrigger className="w-[180px]">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="ROW">🌍 Rest of World</SelectItem>
+							<SelectItem value="US">🇺🇸 United States</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<Separator orientation="vertical" className="h-6" />
 				<span className="text-sm text-muted-foreground font-display font-light">
-					{faqs?.length || 0} FAQs
+					{totalFaqs} Questions
 				</span>
+				{reorderFaqs.isPending && (
+					<span className="flex items-center gap-2 text-xs text-muted-foreground animate-pulse ml-auto">
+						<Loader2 className="w-3 h-3 animate-spin" /> Saving order...
+					</span>
+				)}
 			</div>
 
-			{/* FAQ List */}
+			{/* Content */}
 			{isLoading ? (
-				<p className="text-muted-foreground font-display font-light">Loading FAQs...</p>
+				<div className="text-center py-20">
+					<Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground/30" />
+				</div>
 			) : (
-				<div className="space-y-4">
-					{faqs?.map((faq) => (
-						<div
-							key={faq.id}
-							className="p-6 rounded-xl border-2 border-border hover:border-primary/30 transition-colors"
-						>
-							<div className="flex items-start justify-between gap-4">
-								<div className="flex-1 space-y-3">
-									<div className="flex items-start gap-3">
-										<Badge variant="outline" className="font-display font-light mt-1">
-											#{faq.sortOrder}
-										</Badge>
-										<div className="flex-1">
-											<h3 className="font-display font-normal text-lg mb-2">
-												{faq.question || "Untitled"}
-											</h3>
-											<p className="text-sm text-muted-foreground font-display font-light">
-												{faq.answer || "No answer"}
-											</p>
-										</div>
-									</div>
-								</div>
-								<div className="flex items-center gap-2">
-									<Button
-										variant="ghost"
-										size="icon"
-										onClick={() => setEditingFaq(faq)}
-										className="rounded-full"
-									>
-										<Pencil className="h-4 w-4" />
-									</Button>
-									<Button
-										variant="ghost"
-										size="icon"
-										onClick={() => {
-											if (confirm("Delete this FAQ?")) {
-												deleteFaq.mutate({ id: faq.id });
-											}
-										}}
-										className="rounded-full text-destructive"
-									>
-										<Trash className="h-4 w-4" />
-									</Button>
-								</div>
+				<div className="space-y-8">
+					{categories?.map((category) => (
+						<div key={category.id} className="space-y-4">
+							<div className="flex items-center gap-3 border-b pb-2">
+								<h2 className="text-xl font-display font-normal text-foreground/80">
+									{category.name}
+								</h2>
+								<Badge variant="secondary" className="font-mono text-xs rounded-full px-2">
+									{category.items.length}
+								</Badge>
 							</div>
+
+							{category.items.length === 0 ? (
+								<div className="p-8 border border-dashed rounded-xl text-center text-muted-foreground/50 text-sm">
+									No FAQs in this category.
+								</div>
+							) : (
+								<SortableList
+									items={category.items}
+									keyExtractor={(item) => item.id}
+									onReorder={handleReorderFaqs}
+									renderItem={(faq) => (
+										<Card className="group hover:border-primary/20 transition-all duration-200">
+											<CardContent className="p-4 flex gap-4 items-start">
+												<div className="flex-1 space-y-1 pt-1">
+													<h3 className="font-medium font-display text-base">
+														{faq.question || "Untitled Question"}
+													</h3>
+													<p className="text-sm text-muted-foreground font-display font-light line-clamp-2">
+														{faq.answer || "No answer provided."}
+													</p>
+												</div>
+												<div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+													<Button
+														variant="ghost"
+														size="icon"
+														className="h-8 w-8"
+														onClick={() => {
+															setEditingFaq(faq);
+															setIsFaqModalOpen(true);
+														}}
+													>
+														<Pencil className="h-4 w-4" />
+													</Button>
+													<Button
+														variant="ghost"
+														size="icon"
+														className="h-8 w-8 text-destructive hover:text-destructive"
+														onClick={() => {
+															if (confirm("Delete this FAQ?")) deleteFaq.mutate({ id: faq.id });
+														}}
+													>
+														<Trash className="h-4 w-4" />
+													</Button>
+												</div>
+											</CardContent>
+										</Card>
+									)}
+								/>
+							)}
 						</div>
 					))}
 
-					{faqs?.length === 0 && (
-						<div className="text-center py-12">
-							<p className="text-muted-foreground font-display font-light">
-								No FAQs found for this region. Add your first one!
-							</p>
+					{categories?.length === 0 && (
+						<div className="text-center py-20">
+							<Folder className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+							<h3 className="text-xl font-display font-light mb-2">No Categories</h3>
+							<Button onClick={() => setIsCatModalOpen(true)} variant="outline">
+								Create Category
+							</Button>
 						</div>
 					)}
 				</div>
 			)}
 
-			{/* Create Modal */}
-			<Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-				<DialogContent className="sm:max-w-[600px]">
-					<DialogHeader>
-						<DialogTitle className="font-display font-normal text-2xl">
-							Add New FAQ
-						</DialogTitle>
-						<DialogDescription className="font-display font-light">
-							Create a new frequently asked question for {region}
-						</DialogDescription>
-					</DialogHeader>
-					<form onSubmit={handleCreate} className="space-y-6 pt-4">
-						<div className="space-y-2">
-							<Label htmlFor="question" className="font-display font-normal">
-								Question
-							</Label>
-							<Input
-								id="question"
-								name="question"
-								placeholder="How do I place an order?"
-								required
-								className="font-display font-light"
-							/>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="answer" className="font-display font-normal">
-								Answer
-							</Label>
-							<Textarea
-								id="answer"
-								name="answer"
-								placeholder="First make sure to take accurate measurements..."
-								rows={6}
-								required
-								className="font-display font-light"
-							/>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="sortOrder" className="font-display font-normal">
-								Sort Order
-							</Label>
-							<Input
-								id="sortOrder"
-								name="sortOrder"
-								type="number"
-								defaultValue={0}
-								className="font-display font-light"
-							/>
-						</div>
-						<div className="flex justify-end gap-3">
-							<Button
-								type="button"
-								variant="outline"
-								onClick={() => setIsCreateModalOpen(false)}
-								className="rounded-full font-display font-light"
-							>
-								Cancel
-							</Button>
-							<Button type="submit" className="rounded-full font-display font-light">
-								Create FAQ
-							</Button>
-						</div>
-					</form>
-				</DialogContent>
-			</Dialog>
+			{/* Modals */}
+			<FaqDialog
+				open={isFaqModalOpen}
+				onOpenChange={setIsFaqModalOpen}
+				faq={editingFaq}
+				categories={categories || []}
+				region={region}
+				onSubmit={(data) => upsertFaq.mutate(data)}
+				isSubmitting={upsertFaq.isPending}
+			/>
 
-			{/* Edit Modal */}
-			<Dialog open={!!editingFaq} onOpenChange={() => setEditingFaq(null)}>
-				<DialogContent className="sm:max-w-[600px]">
-					<DialogHeader>
-						<DialogTitle className="font-display font-normal text-2xl">
-							Edit FAQ
-						</DialogTitle>
-					</DialogHeader>
-					{editingFaq && (
-						<form onSubmit={handleUpdate} className="space-y-6 pt-4">
-							<div className="space-y-2">
-								<Label htmlFor="edit-question" className="font-display font-normal">
-									Question
-								</Label>
-								<Input
-									id="edit-question"
-									name="question"
-									defaultValue={editingFaq.question}
-									required
-									className="font-display font-light"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="edit-answer" className="font-display font-normal">
-									Answer
-								</Label>
-								<Textarea
-									id="edit-answer"
-									name="answer"
-									defaultValue={editingFaq.answer}
-									rows={6}
-									required
-									className="font-display font-light"
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="edit-sortOrder" className="font-display font-normal">
-									Sort Order
-								</Label>
-								<Input
-									id="edit-sortOrder"
-									name="sortOrder"
-									type="number"
-									defaultValue={editingFaq.sortOrder}
-									className="font-display font-light"
-								/>
-							</div>
-							<div className="flex justify-end gap-3">
-								<Button
-									type="button"
-									variant="outline"
-									onClick={() => setEditingFaq(null)}
-									className="rounded-full font-display font-light"
-								>
-									Cancel
-								</Button>
-								<Button type="submit" className="rounded-full font-display font-light">
-									Update FAQ
-								</Button>
-							</div>
-						</form>
-					)}
-				</DialogContent>
-			</Dialog>
+			<CategoryManager
+				open={isCatModalOpen}
+				onOpenChange={setIsCatModalOpen}
+				onUpdate={() => refetch()}
+			/>
 		</div>
+	);
+}
+
+// Keeping the FaqDialog here for simplicity, or move to _components if you prefer
+function FaqDialog({
+	open,
+	onOpenChange,
+	faq,
+	categories,
+	region,
+	onSubmit,
+	isSubmitting
+}: any) {
+	// ... (Same implementation as before, just ensured types or `any` for quick fix) ...
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		const formData = new FormData(e.currentTarget);
+		onSubmit({
+			id: faq?.id,
+			categoryId: formData.get("categoryId") as string,
+			region,
+			question: formData.get("question") as string,
+			answer: formData.get("answer") as string,
+			sortOrder: parseInt(formData.get("sortOrder") as string) || 0,
+			locale: "en",
+		});
+	};
+
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent className="sm:max-w-[600px]">
+				<DialogHeader>
+					<DialogTitle>{faq ? "Edit FAQ" : "New FAQ"}</DialogTitle>
+					<DialogDescription>
+						{region === "US" ? "United States" : "Rest of World"} Region
+					</DialogDescription>
+				</DialogHeader>
+				<form onSubmit={handleSubmit} className="space-y-5 pt-2">
+					<div className="grid grid-cols-2 gap-4">
+						<div className="space-y-2">
+							<Label>Category</Label>
+							<Select name="categoryId" defaultValue={faq?.categoryId || ""}>
+								<SelectTrigger>
+									<SelectValue placeholder="Select..." />
+								</SelectTrigger>
+								<SelectContent>
+									{categories.filter((c: any) => c.id !== "uncategorized").map((c: any) => (
+										<SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+						<div className="space-y-2">
+							<Label>Order Priority</Label>
+							<Input name="sortOrder" type="number" defaultValue={faq?.sortOrder ?? 0} />
+						</div>
+					</div>
+					<div className="space-y-2">
+						<Label>Question</Label>
+						<Input name="question" defaultValue={faq?.question || ""} required />
+					</div>
+					<div className="space-y-2">
+						<Label>Answer</Label>
+						<Textarea name="answer" defaultValue={faq?.answer || ""} required rows={5} />
+					</div>
+					<div className="flex justify-end gap-3 pt-4">
+						<Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+						<Button type="submit" disabled={isSubmitting}>{faq ? "Save Changes" : "Create FAQ"}</Button>
+					</div>
+				</form>
+			</DialogContent>
+		</Dialog>
 	);
 }

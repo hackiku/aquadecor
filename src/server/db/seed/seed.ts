@@ -10,8 +10,10 @@ import {
 
 	// Core Product/Media/Content Tables
 	productTranslations, media,
-	reviews, faqs, faqTranslations,
+	reviews,
 	shippingZones, countries,
+
+	faqs, faqCategories, faqCategoryTranslations, faqTranslations,
 
 	// Selling/Promo Tables
 	orders, orderItems, orderStatusHistory,
@@ -415,29 +417,57 @@ async function seedReviews() {
 	console.log(`✅ Seeded ${reviewData.length} reviews\n`);
 }
 
+
 async function seedFAQs() {
-	console.log("🌱 Seeding FAQs...");
+	console.log("🌱 Seeding FAQs with Categories...");
+	let totalCategories = 0;
 	let totalFaqs = 0;
-	for (const [region, faqList] of Object.entries(faqsSeedData)) {
-		for (const faqItem of faqList) {
-			const [inserted] = await db.insert(faqs).values({
-				region,
-				sortOrder: faqItem.sortOrder,
+
+	for (const catData of faqsSeedData) {
+		// 1. Create Category
+		const [category] = await db.insert(faqCategories).values({
+			slug: catData.slug,
+			icon: catData.icon,
+			sortOrder: catData.sortOrder,
+			isActive: true,
+		}).returning();
+
+		if (!category) continue;
+		totalCategories++;
+
+		// 2. Create Category Translations
+		for (const [locale, trans] of Object.entries(catData.translations)) {
+			await db.insert(faqCategoryTranslations).values({
+				categoryId: category.id,
+				locale,
+				name: trans.name,
+			});
+		}
+
+		// 3. Create FAQs and Translations
+		for (const item of catData.items) {
+			const [faq] = await db.insert(faqs).values({
+				categoryId: category.id,
+				region: item.region,
+				sortOrder: item.sortOrder,
 				isActive: true,
 			}).returning();
 
-			if (inserted) {
+			if (!faq) continue;
+			totalFaqs++;
+
+			// Insert translations for this FAQ (en, de)
+			for (const [locale, trans] of Object.entries(item.translations)) {
 				await db.insert(faqTranslations).values({
-					faqId: inserted.id,
-					locale: "en",
-					question: faqItem.question,
-					answer: faqItem.answer,
+					faqId: faq.id,
+					locale,
+					question: trans.question,
+					answer: trans.answer,
 				});
-				totalFaqs++;
 			}
 		}
 	}
-	console.log(`✅ Seeded ${totalFaqs} FAQs\n`);
+	console.log(`✅ Seeded ${totalCategories} categories and ${totalFaqs} FAQs (with translations)\n`);
 }
 
 async function seedShippingAndCountries() {

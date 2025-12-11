@@ -2,78 +2,55 @@
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { faqs, faqTranslations } from "~/server/db/schema";
-import { eq, and, desc, asc } from "drizzle-orm";
+import {
+	faqs,
+	faqTranslations,
+	faqCategories,
+	faqCategoryTranslations
+} from "~/server/db/schema/faq";
+import { eq, and, asc, desc } from "drizzle-orm";
 
 export const adminFaqRouter = createTRPCRouter({
-	// Get all FAQs with translations
-	getAll: publicProcedure
+	// ========================================================================
+	// DASHBOARD DATA
+	// ========================================================================
+
+	getFullStructure: publicProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
 			region: z.enum(["ROW", "US"]).optional(),
-			category: z.string().optional(),
-			isActive: z.boolean().optional(),
-		}).optional())
-		.query(async ({ ctx, input }) => {
-			const conditions = [];
-
-			if (input?.region) {
-				conditions.push(eq(faqs.region, input.region));
-			}
-
-			if (input?.category) {
-				conditions.push(eq(faqs.category, input.category));
-			}
-
-			if (input?.isActive !== undefined) {
-				conditions.push(eq(faqs.isActive, input.isActive));
-			}
-
-			let query = ctx.db
-				.select({
-					id: faqs.id,
-					region: faqs.region,
-					category: faqs.category,
-					sortOrder: faqs.sortOrder,
-					isActive: faqs.isActive,
-					createdAt: faqs.createdAt,
-					updatedAt: faqs.updatedAt,
-					question: faqTranslations.question,
-					answer: faqTranslations.answer,
-				})
-				.from(faqs)
-				.leftJoin(
-					faqTranslations,
-					and(
-						eq(faqTranslations.faqId, faqs.id),
-						eq(faqTranslations.locale, input?.locale ?? "en")
-					)
-				)
-				.orderBy(asc(faqs.sortOrder), asc(faqs.createdAt));
-
-			if (conditions.length > 0) {
-				query = query.where(and(...conditions)) as any;
-			}
-
-			return await query;
-		}),
-
-	// Get single FAQ with all translations
-	getById: publicProcedure
-		.input(z.object({
-			id: z.string(),
-			locale: z.string().default("en"),
 		}))
 		.query(async ({ ctx, input }) => {
-			const [faq] = await ctx.db
+			// 1. Get Categories
+			const categoriesData = await ctx.db
+				.select({
+					id: faqCategories.id,
+					slug: faqCategories.slug,
+					sortOrder: faqCategories.sortOrder,
+					name: faqCategoryTranslations.name,
+				})
+				.from(faqCategories)
+				.leftJoin(
+					faqCategoryTranslations,
+					and(
+						eq(faqCategoryTranslations.categoryId, faqCategories.id),
+						eq(faqCategoryTranslations.locale, input.locale)
+					)
+				)
+				.orderBy(asc(faqCategories.sortOrder));
+
+			// 2. Get FAQs
+			const faqConditions = [eq(faqs.isActive, true)];
+			if (input.region) {
+				faqConditions.push(eq(faqs.region, input.region));
+			}
+
+			const faqsData = await ctx.db
 				.select({
 					id: faqs.id,
-					region: faqs.region,
-					category: faqs.category,
+					categoryId: faqs.categoryId,
 					sortOrder: faqs.sortOrder,
-					isActive: faqs.isActive,
-					createdAt: faqs.createdAt,
-					updatedAt: faqs.updatedAt,
+					region: faqs.region,
 					question: faqTranslations.question,
 					answer: faqTranslations.answer,
 				})
@@ -85,131 +62,238 @@ export const adminFaqRouter = createTRPCRouter({
 						eq(faqTranslations.locale, input.locale)
 					)
 				)
-				.where(eq(faqs.id, input.id))
-				.limit(1);
+				.where(and(...faqConditions))
+				.orderBy(asc(faqs.sortOrder));
 
-			if (!faq) {
-				return null;
+			// 3. Nest FAQs into Categories
+			const result = categoriesData.map(cat => ({
+				...cat,
+				name: cat.name || cat.slug, // Fallback to slug if translation missing
+				items: faqsData.filter(f => f.categoryId === cat.id)
+			}));
+
+			// 4. Handle "Uncategorized" if any
+			const uncategorized = faqsData.filter(f => !f.categoryId);
+			if (uncategorized.length > 0) {
+				result.push({
+					id: "uncategorized",
+					slug: "uncategorized",
+					sortOrder: 9999,
+					name: "Uncategorized",
+					items: uncategorized
+				});
 			}
 
-			// Get all translations
-			const translations = await ctx.db
+			return result;
+		}),
+
+	// ========================================================================
+	// CATEGORY MANAGEMENT
+	// ========================================================================
+
+	getAllCategories: publicProcedure
+		.input(z.object({ locale: z.string().default("en") }).optional())
+		.query(async ({ ctx, input }) => {
+			return await ctx.db
+				.select({
+					id: faqCategories.id,
+					slug: faqCategories.slug,
+					sortOrder: faqCategories.sortOrder,
+					name: faqCategoryTranslations.name,
+				})
+				.from(faqCategories)
+				.leftJoin(
+					faqCategoryTranslations,
+					and(
+						eq(faqCategoryTranslations.categoryId, faqCategories.id),
+						eq(faqCategoryTranslations.locale, input?.locale ?? "en")
+					)
+				)
+				.orderBy(asc(faqCategories.sortOrder));
+		}),
+
+	upsertCategory: publicProcedure
+		.input(z.object({
+			id: z.string().optional(),
+			slug: z.string().min(1),
+			name: z.string().min(1), // EN name
+			sortOrder: z.number().default(0),
+			locale: z.string().default("en"),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			let categoryId = input.id;
+
+			if (categoryId) {
+				// Update existing category
+				await ctx.db
+					.update(faqCategories)
+					.set({
+						slug: input.slug,
+						sortOrder: input.sortOrder,
+						updatedAt: new Date(),
+					})
+					.where(eq(faqCategories.id, categoryId));
+			} else {
+				// Create new
+				const [newCat] = await ctx.db
+					.insert(faqCategories)
+					.values({
+						slug: input.slug,
+						sortOrder: input.sortOrder,
+					})
+					.returning();
+				categoryId = newCat!.id;
+			}
+
+			// Upsert Translation
+			const [existingTrans] = await ctx.db
+				.select()
+				.from(faqCategoryTranslations)
+				.where(and(
+					eq(faqCategoryTranslations.categoryId, categoryId!),
+					eq(faqCategoryTranslations.locale, input.locale)
+				));
+
+			if (existingTrans) {
+				await ctx.db
+					.update(faqCategoryTranslations)
+					.set({ name: input.name })
+					.where(eq(faqCategoryTranslations.id, existingTrans.id));
+			} else {
+				await ctx.db
+					.insert(faqCategoryTranslations)
+					.values({
+						categoryId: categoryId!,
+						locale: input.locale,
+						name: input.name,
+					});
+			}
+
+			return { success: true, id: categoryId };
+		}),
+
+
+	reorderCategories: publicProcedure
+		.input(z.object({
+			items: z.array(z.object({
+				id: z.string(),
+				sortOrder: z.number(),
+			})),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db.transaction(async (tx) => {
+				for (const item of input.items) {
+					await tx
+						.update(faqCategories)
+						.set({ sortOrder: item.sortOrder })
+						.where(eq(faqCategories.id, item.id));
+				}
+			});
+			return { success: true };
+		}),
+
+	// New: Reorder FAQs
+	reorderFaqs: publicProcedure
+		.input(z.object({
+			items: z.array(z.object({
+				id: z.string(),
+				sortOrder: z.number(),
+			})),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db.transaction(async (tx) => {
+				for (const item of input.items) {
+					await tx
+						.update(faqs)
+						.set({ sortOrder: item.sortOrder })
+						.where(eq(faqs.id, item.id));
+				}
+			});
+			return { success: true };
+		}),
+
+
+	deleteCategory: publicProcedure
+		.input(z.object({ id: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db.delete(faqCategories).where(eq(faqCategories.id, input.id));
+			return { success: true };
+		}),
+
+	// ========================================================================
+	// FAQ ITEMS MANAGEMENT
+	// ========================================================================
+
+	upsertFaq: publicProcedure
+		.input(z.object({
+			id: z.string().optional(),
+			categoryId: z.string().optional().nullable(),
+			region: z.enum(["ROW", "US"]),
+			question: z.string().min(1),
+			answer: z.string().min(1),
+			sortOrder: z.number().default(0),
+			locale: z.string().default("en"),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			let faqId = input.id;
+
+			if (faqId) {
+				// Update
+				await ctx.db
+					.update(faqs)
+					.set({
+						categoryId: input.categoryId,
+						region: input.region,
+						sortOrder: input.sortOrder,
+						updatedAt: new Date(),
+					})
+					.where(eq(faqs.id, faqId));
+			} else {
+				// Create
+				const [newFaq] = await ctx.db
+					.insert(faqs)
+					.values({
+						categoryId: input.categoryId,
+						region: input.region,
+						sortOrder: input.sortOrder,
+					})
+					.returning();
+				faqId = newFaq!.id;
+			}
+
+			// Upsert Translation
+			const [existingTrans] = await ctx.db
 				.select()
 				.from(faqTranslations)
-				.where(eq(faqTranslations.faqId, input.id));
+				.where(and(
+					eq(faqTranslations.faqId, faqId!),
+					eq(faqTranslations.locale, input.locale)
+				));
 
-			return {
-				...faq,
-				translations,
-			};
-		}),
-
-	// Get FAQ stats for dashboard
-	getStats: publicProcedure
-		.query(async ({ ctx }) => {
-			const allFaqs = await ctx.db
-				.select({
-					id: faqs.id,
-					region: faqs.region,
-					isActive: faqs.isActive,
-				})
-				.from(faqs);
-
-			const total = allFaqs.length;
-			const active = allFaqs.filter(f => f.isActive).length;
-			const byRegion = {
-				ROW: allFaqs.filter(f => f.region === "ROW").length,
-				US: allFaqs.filter(f => f.region === "US").length,
-			};
-
-			return {
-				total,
-				active,
-				byRegion,
-			};
-		}),
-
-	// Create new FAQ
-	create: publicProcedure
-		.input(z.object({
-			region: z.enum(["ROW", "US"]),
-			category: z.string().optional(),
-			sortOrder: z.number().default(0),
-			isActive: z.boolean().default(true),
-			// English translation required
-			question: z.string(),
-			answer: z.string(),
-		}))
-		.mutation(async ({ ctx, input }) => {
-			// Insert FAQ
-			const [faq] = await ctx.db
-				.insert(faqs)
-				.values({
-					region: input.region,
-					category: input.category,
-					sortOrder: input.sortOrder,
-					isActive: input.isActive,
-				})
-				.returning();
-
-			// Insert English translation
-			await ctx.db.insert(faqTranslations).values({
-				faqId: faq!.id,
-				locale: "en",
-				question: input.question,
-				answer: input.answer,
-			});
-
-			return faq;
-		}),
-
-	// Update FAQ
-	update: publicProcedure
-		.input(z.object({
-			id: z.string(),
-			region: z.enum(["ROW", "US"]).optional(),
-			category: z.string().optional().nullable(),
-			sortOrder: z.number().optional(),
-			isActive: z.boolean().optional(),
-			// Translation update
-			question: z.string().optional(),
-			answer: z.string().optional(),
-		}))
-		.mutation(async ({ ctx, input }) => {
-			const { id, question, answer, ...faqData } = input;
-
-			// Update FAQ
-			const [updated] = await ctx.db
-				.update(faqs)
-				.set(faqData)
-				.where(eq(faqs.id, id))
-				.returning();
-
-			// Update English translation if provided
-			if (question || answer) {
-				const translationData: any = {};
-				if (question) translationData.question = question;
-				if (answer) translationData.answer = answer;
-
+			if (existingTrans) {
 				await ctx.db
 					.update(faqTranslations)
-					.set(translationData)
-					.where(
-						and(
-							eq(faqTranslations.faqId, id),
-							eq(faqTranslations.locale, "en")
-						)
-					);
+					.set({
+						question: input.question,
+						answer: input.answer
+					})
+					.where(eq(faqTranslations.id, existingTrans.id));
+			} else {
+				await ctx.db
+					.insert(faqTranslations)
+					.values({
+						faqId: faqId!,
+						locale: input.locale,
+						question: input.question,
+						answer: input.answer,
+					});
 			}
 
-			return updated;
+			return { success: true, id: faqId };
 		}),
 
-	// Delete FAQ
-	delete: publicProcedure
-		.input(z.object({
-			id: z.string(),
-		}))
+	deleteFaq: publicProcedure
+		.input(z.object({ id: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db.delete(faqs).where(eq(faqs.id, input.id));
 			return { success: true };
