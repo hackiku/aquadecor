@@ -96,7 +96,7 @@ export const productRouter = createTRPCRouter({
 			z.object({
 				categorySlug: z.string(),
 				locale: z.string().default("en"),
-				userMarket: z.string().default("ROW"), // 'ROW' | 'US' | 'CA' | 'UK'
+				userMarket: z.string().default("ROW"), // 'ROW' | 'US'
 			}),
 		)
 		.query(async ({ ctx, input }) => {
@@ -310,6 +310,25 @@ export const productRouter = createTRPCRouter({
 				images,
 			};
 		}),
+
+	getMarketAvailability: publicProcedure
+		.input(z.object({ productId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(eq(productMarketExclusions.productId, input.productId));
+
+			const allMarkets = ['US', 'ROW'] as const;
+			const excludedMarkets = exclusions.map(e => e.market);
+
+			return {
+				available: allMarkets.filter(m => !excludedMarkets.includes(m)),
+				excluded: excludedMarkets,
+			};
+		}),
+
+
 
 	// ============================================================================
 	// MULTI-PRODUCT QUERIES (Cart, Wishlist)

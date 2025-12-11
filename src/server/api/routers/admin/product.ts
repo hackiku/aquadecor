@@ -405,6 +405,32 @@ export const adminProductRouter = createTRPCRouter({
 			};
 		}),
 
+	setMarketAvailability: adminProcedure
+		.input(z.object({
+			productId: z.string(),
+			markets: z.array(z.enum(['US', 'ROW', 'CA', 'UK'])),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			// Clear existing exclusions for this product
+			await ctx.db
+				.delete(productMarketExclusions)
+				.where(eq(productMarketExclusions.productId, input.productId));
+
+			// Add exclusions for markets NOT in the list
+			const allMarkets = ['US', 'ROW', 'CA', 'UK'] as const;
+			const excluded = allMarkets.filter(m => !input.markets.includes(m));
+
+			if (excluded.length > 0) {
+				await ctx.db.insert(productMarketExclusions).values(
+					excluded.map(market => ({
+						productId: input.productId,
+						market,
+					}))
+				);
+			}
+
+			return { success: true };
+		}),
 
 	getAllByMarket: adminProcedure
 		.input(z.object({

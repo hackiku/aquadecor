@@ -403,8 +403,8 @@ export const adminPricingRouter = createTRPCRouter({
 			const byMarket = {
 				US: allPricing.filter(p => p.market === 'US').length,
 				ROW: allPricing.filter(p => p.market === 'ROW').length,
-				CA: allPricing.filter(p => p.market === 'CA').length,
-				UK: allPricing.filter(p => p.market === 'UK').length,
+				// CA: allPricing.filter(p => p.market === 'CA').length,
+				// UK: allPricing.filter(p => p.market === 'UK').length,
 			};
 
 			const byType = {

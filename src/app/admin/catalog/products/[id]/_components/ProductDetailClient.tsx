@@ -11,7 +11,6 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { Switch } from "~/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import {
 	Pencil, ArrowLeft, Save, Trash2, Plus, Eye, Loader2, Package, Star,
 	Globe, ChevronLeft, ChevronRight
@@ -19,11 +18,15 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "sonner";
-import { MarketBadge } from "../../../_components/MarketBadge";
-import { PricingEditorV2 } from "../../../_components/PricingEditorV2";
-import { BundleTierEditor } from "../../../_components/BundleTierEditor";
-import { AddPricingButton } from "./AddPricingButton"
-import { CopyPricingButton } from "./CopyPricingButton"
+// import { MarketBadge } from "../../../_components/MarketBadge";
+// import { PricingEditorV2 } from "../../../_components/PricingEditorV2";
+// import { BundleTierEditor } from "../../../_components/BundleTierEditor";
+// import { AddPricingButton } from "./AddPricingButton"
+// import { CopyPricingButton } from "./CopyPricingButton"
+
+// new pricing components
+import { MarketPricingManager } from "../../_components/pricing/MarketPricingManager";
+import { BundleTierManager } from "../../_components/pricing/BundleTierManager";
 
 
 interface ProductDetailClientProps {
@@ -32,8 +35,10 @@ interface ProductDetailClientProps {
 }
 
 export function ProductDetailClient({ product, initialMarket }: ProductDetailClientProps) {
+	const [market, setMarket] = useState(initialMarket);
+
+
 	const router = useRouter();
-	const [selectedMarket, setSelectedMarket] = useState<'US' | 'ROW'>(initialMarket);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 	const [isEditingBasic, setIsEditingBasic] = useState(false);
 
@@ -107,9 +112,14 @@ export function ProductDetailClient({ product, initialMarket }: ProductDetailCli
 	const stockBadge = product.stockStatus ? stockStatusConfig[product.stockStatus] : undefined;
 
 	// Get pricing for both markets
-	const pricingConfigs = product.pricingConfigs || []
-	const rowPricing = pricingConfigs.find((p: any) => p.market === "ROW")
-	const usPricing = pricingConfigs.find((p: any) => p.market === "US")
+	// const pricingConfigs = product.pricingConfigs || []
+
+	const { data: pricingConfigs } = api.admin.pricing.getByProduct.useQuery({
+		productId: product.id
+	});
+
+	// const rowPricing = pricingConfigs.find((p: any) => p.market === "ROW")
+	// const usPricing = pricingConfigs.find((p: any) => p.market === "US")
 
 
 	return (
@@ -406,114 +416,21 @@ export function ProductDetailClient({ product, initialMarket }: ProductDetailCli
 			</div>
 
 			{/* FULL WIDTH: Pricing Section */}
-			<Card className="border-2">
-				<CardHeader>
-					<div className="flex items-center justify-between">
-						<CardTitle className="font-display font-normal">Pricing & Markets</CardTitle>
-						<div className="flex gap-2">
-							<Button
-								variant={selectedMarket === "ROW" ? "default" : "outline"}
-								size="sm"
-								onClick={() => setSelectedMarket("ROW")}
-								className="rounded-full"
-							>
-								<MarketBadge market="ROW" showIcon />
-							</Button>
-							<Button
-								variant={selectedMarket === "US" ? "default" : "outline"}
-								size="sm"
-								onClick={() => setSelectedMarket("US")}
-								className="rounded-full"
-							>
-								<MarketBadge market="US" showIcon />
-							</Button>
-						</div>
-					</div>
-				</CardHeader>
-				<CardContent>
-					<div className="space-y-6">
-						{/* ROW Market Pricing */}
-						{selectedMarket === "ROW" && (
-							<>
-								{rowPricing ? (
-									<div className="space-y-6">
-										<PricingEditorV2
-											pricing={rowPricing}
-											onSaved={() => router.refresh()}
-											onDeleted={() => router.refresh()}
-										/>
+			<div className="space-y-6">
+				<MarketPricingManager
+					productId={product.id}
+					productLine={product.productLine}
+				/>
 
-										{/* Bundle Tiers (only for bundle pricing type) */}
-										{rowPricing.pricingType === "quantity_bundle" && (
-											<BundleTierEditor
-												pricingId={rowPricing.id}
-												bundles={product.bundles?.filter((b: any) => b.pricingId === rowPricing.id) || []}
-												onUpdate={() => router.refresh()}
-											/>
-										)}
-									</div>
-								) : (
-									<div className="py-12 text-center">
-										<p className="text-muted-foreground font-display font-light mb-4">
-											No pricing configured for ROW market
-										</p>
-										<AddPricingButton
-											productId={product.id}
-											market="ROW"
-											sourcePricing={usPricing}
-											onSuccess={() => router.refresh()}
-										/>
-									</div>
-								)}
-							</>
-						)}
-
-						{/* US Market Pricing */}
-						{selectedMarket === "US" && (
-							<>
-								{usPricing ? (
-									<div className="space-y-6">
-										<PricingEditorV2
-											pricing={usPricing}
-											onSaved={() => router.refresh()}
-											onDeleted={() => router.refresh()}
-										/>
-
-										{/* Bundle Tiers (only for bundle pricing type) */}
-										{usPricing.pricingType === "quantity_bundle" && (
-											<BundleTierEditor
-												pricingId={usPricing.id}
-												bundles={product.bundles?.filter((b: any) => b.pricingId === usPricing.id) || []}
-												onUpdate={() => router.refresh()}
-											/>
-										)}
-									</div>
-								) : (
-									<div className="py-12 text-center">
-										<p className="text-muted-foreground font-display font-light mb-4">
-											No pricing configured for US market
-										</p>
-										{rowPricing ? (
-											<CopyPricingButton
-												sourcePricingId={rowPricing.id}
-												targetMarket="US"
-												onSuccess={() => router.refresh()}
-											/>
-										) : (
-											<AddPricingButton
-												productId={product.id}
-												market="US"
-												sourcePricing={undefined}
-												onSuccess={() => router.refresh()}
-											/>
-										)}
-									</div>
-								)}
-							</>
-						)}
-					</div>
-				</CardContent>
-			</Card>
+				{/* Show bundle manager if ANY pricing is bundle type */}
+				{pricingConfigs?.some(p => p.pricingType === "quantity_bundle") && (
+					<BundleTierManager
+						pricingId={pricingConfigs.find(p => p.pricingType === "quantity_bundle")!.id}
+						productId={product.id}
+						bundles={pricingConfigs.find(p => p.pricingType === "quantity_bundle")?.bundles}
+					/>
+				)}
+			</div>
 
 			{/* Translations Section */}
 			{product.translations && product.translations.length > 1 && (
