@@ -1,3 +1,4 @@
+// OLD FAQ
 // src/server/db/seed/data/seed-faqs.ts
 
 export const faqsSeedData = {
