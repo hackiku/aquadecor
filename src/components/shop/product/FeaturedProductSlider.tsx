@@ -15,7 +15,7 @@ export function FeaturedProductSlider() {
 		{
 			locale: "en",
 			limit: 12,
-			userMarket: "EU",
+			userMarket: "ROW",
 		},
 		{
 			staleTime: 5 * 60 * 1000,

@@ -401,7 +401,86 @@ export const productRouter = createTRPCRouter({
 	// FEATURED PRODUCTS
 	// ============================================================================
 
+	// In src/server/api/routers/product.ts, under productRouter
+
 	getFeatured: publicProcedure
+		.input(z.object({
+			locale: z.string().default("en"),
+			limit: z.number().default(5),
+			userMarket: z.string().default("ROW"),
+		}))
+		.query(async ({ ctx, input }) => {
+			// Map "EU" to "ROW" for pricing/market resolution
+			const resolvedMarket = input.userMarket === "EU" ? "ROW" : input.userMarket;
+
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					stockStatus: products.stockStatus,
+					categoryId: products.categoryId,
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
+					heroImageUrl: media.storageUrl,
+					heroImageAlt: media.altText,
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(
+					productPricing,
+					and(
+						eq(productPricing.productId, products.id),
+						eq(productPricing.market, resolvedMarket)  // <-- Add this to filter by market
+					)
+				)
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(
+					and(
+						eq(products.isFeatured, true),
+						eq(products.isActive, true)
+					)
+				)
+				.orderBy(products.sortOrder)
+				.limit(input.limit);
+
+			// Filter by market (exclusions logic remains the same)
+			const productIds = results.map(p => p.id);
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, productIds),
+						eq(productMarketExclusions.market, input.userMarket)  // Note: Uses original input.userMarket, not resolved
+					)
+				);
+
+			const excludedIds = new Set(exclusions.map(e => e.productId));
+			return results.filter(p => !excludedIds.has(p.id));
+		}),
+		
+	OLDgetFeatured: publicProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
 			limit: z.number().default(5),

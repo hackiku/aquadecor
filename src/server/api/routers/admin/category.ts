@@ -288,4 +288,82 @@ export const adminCategoryRouter = createTRPCRouter({
 			await ctx.db.delete(categories).where(eq(categories.id, input.id));
 			return { success: true };
 		}),
+
+	// Add translation
+	addTranslation: adminProcedure
+		.input(z.object({
+			categoryId: z.string(),
+			locale: z.string(),
+			name: z.string(),
+			description: z.string().optional(),
+			metaTitle: z.string().optional(),
+			metaDescription: z.string().optional(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			const [translation] = await ctx.db
+				.insert(categoryTranslations)
+				.values({
+					categoryId: input.categoryId,
+					locale: input.locale,
+					name: input.name,
+					description: input.description,
+					metaTitle: input.metaTitle,
+					metaDescription: input.metaDescription,
+				})
+				.returning();
+
+			return translation;
+		}),
+
+	// Update translation
+	updateTranslation: adminProcedure
+		.input(z.object({
+			translationId: z.string(),
+			name: z.string().optional(),
+			description: z.string().optional().nullable(),
+			metaTitle: z.string().optional().nullable(),
+			metaDescription: z.string().optional().nullable(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			const { translationId, ...updateData } = input;
+
+			const [updated] = await ctx.db
+				.update(categoryTranslations)
+				.set(updateData)
+				.where(eq(categoryTranslations.id, translationId))
+				.returning();
+
+			return updated;
+		}),
+
+	// Delete translation
+	deleteTranslation: adminProcedure
+		.input(z.object({
+			translationId: z.string(),
+		}))
+		.mutation(async ({ ctx, input }) => {
+			// Check if this is the last translation
+			const translation = await ctx.db.query.categoryTranslations.findFirst({
+				where: eq(categoryTranslations.id, input.translationId),
+			});
+
+			if (!translation) {
+				throw new Error("Translation not found");
+			}
+
+			const remainingTranslations = await ctx.db
+				.select({ count: sql<number>`COUNT(*)::int` })
+				.from(categoryTranslations)
+				.where(eq(categoryTranslations.categoryId, translation.categoryId));
+
+			if (remainingTranslations[0]?.count && remainingTranslations[0].count <= 1) {
+				throw new Error("Cannot delete the last translation");
+			}
+
+			await ctx.db
+				.delete(categoryTranslations)
+				.where(eq(categoryTranslations.id, input.translationId));
+
+			return { success: true };
+		}),
 });

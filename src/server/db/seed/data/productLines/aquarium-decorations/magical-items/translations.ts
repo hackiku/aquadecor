@@ -1,6 +1,7 @@
 // magical-items/translations.ts
 
-
+// ivan.karaman@gmail.com
+// BZJLD!2mXthXQ56
 export const translations = {
 	"enchanted-pebble": {
 		en: {
