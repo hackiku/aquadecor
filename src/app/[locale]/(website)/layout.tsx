@@ -2,7 +2,6 @@
 
 import { getTranslations } from 'next-intl/server';
 import { Footer } from "~/components/navigation/Footer";
-import { FooterAlternative } from '~/components/navigation/FooterAlternative';
 
 type Props = {
 	children: React.ReactNode;

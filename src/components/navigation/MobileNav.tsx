@@ -2,9 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronDown, Search } from "lucide-react";
+import { useTranslations } from 'next-intl';
+import { Link } from '~/i18n/navigation';
 import { enabledNavLinks, resourceLinks } from "~/data/navigation";
+import { useNavigationTranslations } from '~/i18n/useNavigationTranslations';
 import { ModeToggle } from "../ui/mode-toggle";
 
 interface MobileNavProps {
@@ -16,10 +18,14 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 	const [shopOpen, setShopOpen] = useState(false);
 	const [resourcesOpen, setResourcesOpen] = useState(false);
 
+	const t = useTranslations('common.nav');
+	const { translateNavLink } = useNavigationTranslations();
+
 	if (!isOpen) return null;
 
-	// Filter out Shop from regular links
-	const regularLinks = enabledNavLinks.filter(link => link.label !== "Shop");
+	// Translate and filter nav links
+	const translatedLinks = enabledNavLinks.map(translateNavLink);
+	const regularLinks = translatedLinks.filter(link => link.labelKey !== "shop");
 
 	return (
 		<div className="md:hidden fixed top-16 left-0 right-0 bottom-0 bg-zinc-900 border-b border-white/10 shadow-lg overflow-y-auto z-40">
@@ -30,7 +36,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 						onClick={() => setShopOpen(!shopOpen)}
 						className="flex items-center justify-between w-full py-2 text-base font-normal transition-colors hover:text-blue-400 text-white font-display"
 					>
-						Shop
+						{t('shop')}
 						<ChevronDown
 							className={`h-4 w-4 transition-transform ${shopOpen ? "rotate-180" : ""}`}
 						/>
@@ -44,7 +50,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 								className="block py-2"
 							>
 								<span className="text-sm font-display font-normal text-white">
-									3D Backgrounds
+									{t('backgrounds')}
 								</span>
 								<span className="block text-xs text-gray-400 font-display font-light mt-0.5">
 									Custom-made realistic backgrounds
@@ -56,7 +62,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 								className="block py-2"
 							>
 								<span className="text-sm font-display font-normal text-white">
-									Aquarium Decorations
+									{t('decorations')}
 								</span>
 								<span className="block text-xs text-gray-400 font-display font-light mt-0.5">
 									Plants, rocks & driftwood
@@ -74,7 +80,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 								onClick={onClose}
 								className="block py-2 text-sm text-blue-400 font-display font-normal"
 							>
-								✨ Custom Designer
+								✨ {t('calculator')}
 							</Link>
 						</div>
 					)}
@@ -84,7 +90,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 				{regularLinks.map((link) => (
 					<Link
 						key={link.href}
-						href={link.href}
+						href={link.href as any}
 						onClick={onClose}
 						className="block py-2 text-base font-normal transition-colors hover:text-blue-400 text-white font-display"
 					>
@@ -110,7 +116,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 						onClick={() => setResourcesOpen(!resourcesOpen)}
 						className="flex items-center justify-between w-full py-2 text-base font-normal transition-colors hover:text-blue-400 text-white font-display"
 					>
-						Resources
+						{t('resources')}
 						<ChevronDown
 							className={`h-4 w-4 transition-transform ${resourcesOpen ? "rotate-180" : ""}`}
 						/>
@@ -121,15 +127,15 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 							{resourceLinks.map((resource) => (
 								<Link
 									key={resource.href}
-									href={resource.href}
+									href={resource.href as any}
 									onClick={onClose}
 									className="block py-2"
 								>
 									<span className="text-sm font-display font-normal text-white">
-										{resource.label}
+										{t(resource.labelKey)}
 									</span>
 									<span className="block text-xs text-gray-400 font-display font-light mt-0.5">
-										{resource.description}
+										{t(resource.descriptionKey)}
 									</span>
 								</Link>
 							))}
