@@ -5,13 +5,13 @@
 // ============================================================================
 export const pricing = [
 	{
-		"productSlug": "b-1-amazonian-tree-trunk",
-		"slug": "b-1-amazonian-tree-trunk-pricing",
+		"productSlug": "b-1-earth-tone-amazonian-tree-trunk",
+		"slug": "b-1-earth-tone-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	},
 	{
-		"productSlug": "b-2-amazonian-tree-trunk",
-		"slug": "b-2-amazonian-tree-trunk-pricing",
+		"productSlug": "b-2-dark-stone-amazonian-tree-trunk",
+		"slug": "b-2-dark-stone-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	},
 	{
@@ -20,23 +20,23 @@ export const pricing = [
 		"pricingType": "configured"
 	},
 	{
-		"productSlug": "b-4-amazonian-tree-trunk",
-		"slug": "b-4-amazonian-tree-trunk-pricing",
+		"productSlug": "b-4-cliffside-amazonian-tree-trunk",
+		"slug": "b-4-cliffside-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	},
 	{
-		"productSlug": "b-6-amazonian-tree-trunk",
-		"slug": "b-6-amazonian-tree-trunk-pricing",
+		"productSlug": "b-6-lianas-amazonian-tree-trunk",
+		"slug": "b-6-lianas-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	},
 	{
-		"productSlug": "b-8-amazonian-tree-trunk",
-		"slug": "b-8-amazonian-tree-trunk-pricing",
+		"productSlug": "b-8-cracked-stone-amazonian-tree-trunk",
+		"slug": "b-8-cracked-stone-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	},
 	{
-		"productSlug": "b-10-amazonian-tree-trunk",
-		"slug": "b-10-amazonian-tree-trunk-pricing",
+		"productSlug": "b-10-bark-amazonian-tree-trunk",
+		"slug": "b-10-bark-amazonian-tree-trunk-pricing",
 		"pricingType": "configured"
 	}
 ];
@@ -56,11 +56,11 @@ export const addons = [];
 // ============================================================================
 export const marketExclusions = [
 	{
-		"productSlug": "b-1-amazonian-tree-trunk",
+		"productSlug": "b-1-earth-tone-amazonian-tree-trunk",
 		"market": "US"
 	},
 	{
-		"productSlug": "b-2-amazonian-tree-trunk",
+		"productSlug": "b-2-dark-stone-amazonian-tree-trunk",
 		"market": "US"
 	},
 	{
@@ -68,19 +68,19 @@ export const marketExclusions = [
 		"market": "US"
 	},
 	{
-		"productSlug": "b-4-amazonian-tree-trunk",
+		"productSlug": "b-4-cliffside-amazonian-tree-trunk",
 		"market": "US"
 	},
 	{
-		"productSlug": "b-6-amazonian-tree-trunk",
+		"productSlug": "b-6-lianas-amazonian-tree-trunk",
 		"market": "US"
 	},
 	{
-		"productSlug": "b-8-amazonian-tree-trunk",
+		"productSlug": "b-8-cracked-stone-amazonian-tree-trunk",
 		"market": "US"
 	},
 	{
-		"productSlug": "b-10-amazonian-tree-trunk",
+		"productSlug": "b-10-bark-amazonian-tree-trunk",
 		"market": "US"
 	}
 ];

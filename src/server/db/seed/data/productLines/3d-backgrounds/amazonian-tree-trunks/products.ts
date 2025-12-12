@@ -3,7 +3,7 @@
 export const products = [
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-1-amazonian-tree-trunk",
+		"slug": "b-1-earth-tone-amazonian-tree-trunk",
 		"sku": "B1",
 		"stockStatus": "requires_quote",
 		"isActive": true,
@@ -14,7 +14,7 @@ export const products = [
 	},
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-2-amazonian-tree-trunk",
+		"slug": "b-2-dark-stone-amazonian-tree-trunk",
 		"sku": "B2",
 		"stockStatus": "requires_quote",
 		"isActive": true,
@@ -36,7 +36,7 @@ export const products = [
 	},
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-4-amazonian-tree-trunk",
+		"slug": "b-4-cliffside-amazonian-tree-trunk",
 		"sku": "B4",
 		"stockStatus": "requires_quote",
 		"isActive": true,
@@ -47,7 +47,7 @@ export const products = [
 	},
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-6-amazonian-tree-trunk",
+		"slug": "b-6-lianas-amazonian-tree-trunk",
 		"sku": "B6",
 		"stockStatus": "requires_quote",
 		"isActive": true,
@@ -58,7 +58,7 @@ export const products = [
 	},
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-8-amazonian-tree-trunk",
+		"slug": "b-8-cracked-stone-amazonian-tree-trunk",
 		"sku": "B8",
 		"stockStatus": "requires_quote",
 		"isActive": true,
@@ -69,7 +69,7 @@ export const products = [
 	},
 	{
 		"categorySlug": "amazonian-tree-trunks",
-		"slug": "b-10-amazonian-tree-trunk",
+		"slug": "b-10-bark-amazonian-tree-trunk",
 		"sku": "B10",
 		"stockStatus": "requires_quote",
 		"isActive": true,

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Package, AlertCircle } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
@@ -11,7 +12,34 @@ import { Button } from "~/components/ui/button";
 
 export const dynamic = 'force-dynamic';
 
-export default async function AquariumDecorationsPage() {
+type Props = {
+	params: Promise<{ locale: string }>;
+};
+
+// Generate metadata
+export async function generateMetadata({ params }: Props) {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'shop' });
+
+	return {
+		title: t('metadata.decorations.title'),
+		description: t('metadata.decorations.description'),
+		openGraph: {
+			title: t('metadata.decorations.title'),
+			description: t('metadata.decorations.description'),
+			images: ['/media/images/additional-items_500px.webp'],
+			type: 'website',
+		},
+	};
+}
+
+export default async function AquariumDecorationsPage({ params }: Props) {
+	const { locale } = await params;
+	setRequestLocale(locale);
+
+	const t = await getTranslations('shop');
+	const dbLocale = locale === 'us' ? 'en' : locale;
+
 	// Load categories for aquarium decorations
 	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];
 	let error = false;
@@ -19,7 +47,7 @@ export default async function AquariumDecorationsPage() {
 	try {
 		categories = await api.product.getCategoriesForProductLine({
 			productLineSlug: "aquarium-decorations",
-			locale: "en",
+			locale: dbLocale,
 		});
 	} catch (err) {
 		console.error('Failed to load categories:', err);
@@ -47,28 +75,28 @@ export default async function AquariumDecorationsPage() {
 									<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
 										<Package className="h-4 w-4 text-primary" />
 										<span className="text-sm text-primary font-display font-medium">
-											Complete Your Aquascape
+											{t('hero.decorations.badge')}
 										</span>
 									</div>
 									<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight text-white tracking-tight">
-										Aquarium Decorations
+										{t('hero.decorations.title')}
 									</h1>
 									<p className="text-lg md:text-xl text-white/90 font-display font-light leading-relaxed max-w-2xl">
-										Realistic plants, rocks, driftwood, and accessories crafted from neutral materials for unlimited lifespan and zero water chemistry impact.
+										{t('hero.decorations.subtitle')}
 									</p>
 									<div className="flex flex-wrap gap-3">
 										<Link
 											href="#categories"
 											className="inline-flex text-white items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 rounded-full font-display font-medium transition-all hover:scale-105"
 										>
-											Browse Collection
+											{t('hero.decorations.ctaPrimary')}
 											<ArrowRight className="h-4 w-4" />
 										</Link>
 										<Link
 											href="/shop/3d-backgrounds"
 											className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full font-display font-medium transition-colors border border-white/20"
 										>
-											View 3D Backgrounds
+											{t('hero.decorations.ctaSecondary')}
 										</Link>
 									</div>
 								</div>
@@ -77,36 +105,27 @@ export default async function AquariumDecorationsPage() {
 					</div>
 				</section>
 
-				{/* Categories Slider - Double Row */}
+				{/* Categories Section */}
 				<section id="categories" className="relative md:pt-6 pb-24 bg-linear-to-b from-muted/30 to-background">
-					<WaveDivider position="top" color="black" className="" />
+					<WaveDivider position="top" color="black" />
 					<div className="px-4 max-w-7xl mx-auto">
-						{/* <div className="mb-12">
-							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
-								Browse by Category
-							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light">
-								Select from our full range of aquarium decorations and accessories
-							</p>
-						</div> */}
-
 						{/* Error State */}
 						{error ? (
 							<div className="py-16 text-center space-y-4">
 								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
 								<div className="space-y-2">
 									<p className="text-lg font-display font-normal">
-										Unable to load categories
+										{t('error.loadFailed')}
 									</p>
 									<p className="text-muted-foreground font-display font-light">
-										Please try refreshing the page
+										{t('error.tryAgain')}
 									</p>
 								</div>
 							</div>
 						) : categories.length === 0 ? (
 							<div className="py-16 text-center">
 								<p className="text-muted-foreground font-display font-light">
-									No categories available yet
+									{t('productGrid.noProducts')}
 								</p>
 							</div>
 						) : (
@@ -120,10 +139,10 @@ export default async function AquariumDecorationsPage() {
 				</section>
 
 				<div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
-					<WaveDivider position="bottom" color="black" className="" />
+					<WaveDivider position="bottom" color="black" />
 				</div>
 
-				{/* Safe for All Species - Enhanced with gradient background */}
+				{/* Safe for All Species */}
 				<section className="relative py-16 md:py-20 overflow-hidden">
 					{/* Gradient orb background */}
 					<div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
@@ -142,42 +161,50 @@ export default async function AquariumDecorationsPage() {
 							</div>
 							<div className="space-y-6 order-1 md:order-2">
 								<h2 className="text-3xl md:text-4xl font-display font-light">
-									Safe for All Species
+									{t('sections.safeForAllSpecies')}
 								</h2>
 								<div className="space-y-4">
 									<div className="flex items-start gap-3">
 										<span className="text-primary text-lg">✓</span>
 										<div>
-											<p className="font-display font-medium">Neutral Water Chemistry</p>
+											<p className="font-display font-medium">
+												{t('features.neutralChemistry.title')}
+											</p>
 											<p className="text-sm text-muted-foreground font-display font-light">
-												Won't affect pH, hardness, or release tannins into your water
+												{t('features.neutralChemistry.description')}
 											</p>
 										</div>
 									</div>
 									<div className="flex items-start gap-3">
 										<span className="text-primary text-lg">✓</span>
 										<div>
-											<p className="font-display font-medium">Fish-Safe Materials</p>
+											<p className="font-display font-medium">
+												{t('features.fishSafe.title')}
+											</p>
 											<p className="text-sm text-muted-foreground font-display font-light">
-												Non-toxic, won't be picked at or damaged by aggressive species
+												{t('features.fishSafe.description')}
 											</p>
 										</div>
 									</div>
 									<div className="flex items-start gap-3">
 										<span className="text-primary text-lg">✓</span>
 										<div>
-											<p className="font-display font-medium">Easy to Clean</p>
+											<p className="font-display font-medium">
+												{t('features.easyClean.title')}
+											</p>
 											<p className="text-sm text-muted-foreground font-display font-light">
-												Algae scrubs off easily - safe to use plastic brushes
+												{t('features.easyClean.description')}
 											</p>
 										</div>
 									</div>
 									<div className="flex items-start gap-3">
 										<span className="text-primary text-lg">✓</span>
 										<div>
-											<p className="font-display font-medium">Unlimited Lifespan</p>
+											<p className="font-display font-medium">
+												{t('features.unlimited.title')}
+											</p>
 											<p className="text-sm text-muted-foreground font-display font-light">
-												Unlike natural materials, these never decay, rot, or need replacement
+												{t('features.unlimited.description')}
 											</p>
 										</div>
 									</div>
@@ -187,13 +214,13 @@ export default async function AquariumDecorationsPage() {
 					</div>
 				</section>
 
-				{/* Mix & Match CTA with Wave Container */}
+				{/* Mix & Match CTA */}
 				<WaveContainer className="relative mt-16 py-12">
 					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
 						<div className="text-center space-y-8 mb-12">
 							<div className="max-w-2xl mx-auto space-y-4">
 								<h2 className="text-3xl md:text-4xl font-display font-light text-white">
-									Pair with our legendary 3D Backgrounds
+									{t('sections.mixAndMatch')}
 								</h2>
 								<p className="text-lg text-cyan-100/80 font-display font-light">
 									Create a complete ecosystem by combining decorations with our custom 3D backgrounds for a truly immersive aquascape
@@ -206,25 +233,25 @@ export default async function AquariumDecorationsPage() {
 								className="bg-white hover:bg-white/90 text-cyan-900 rounded-full font-display font-medium text-base px-8 py-6"
 							>
 								<Link href="/shop/3d-backgrounds" className="inline-flex items-center gap-2">
-									Explore 3D Backgrounds
+									{t('ctas.exploreBackgrounds')}
 									<ArrowRight className="h-4 w-4" />
 								</Link>
 							</Button>
 						</div>
 
-						{/* Trust signals inside wave */}
+						{/* Trust signals */}
 						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
-								<span>Free Worldwide Shipping</span>
+								<span>{t('trustSignals.freeShipping')}</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
-								<span>In Stock & Ready to Ship</span>
+								<span>{t('trustSignals.inStock')}</span>
 							</div>
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
-								<span>Lifetime Warranty</span>
+								<span>{t('trustSignals.lifetimeWarranty')}</span>
 							</div>
 						</div>
 					</div>
