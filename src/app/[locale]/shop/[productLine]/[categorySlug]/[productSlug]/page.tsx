@@ -1,79 +1,114 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
-import { notFound } from "next/navigation"
-import Image from "next/image"
-import { api, HydrateClient } from "~/trpc/server"
-import { Badge } from "~/components/ui/badge"
-import { Package, Shield, Zap, CheckCircle2 } from "lucide-react"
-import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge"
-import { PricingCard } from "~/components/shop/checkout/PricingCard"
-import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection"
-import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal"
-import { ProductGrid } from "~/components/shop/product/ProductGrid"
+import { notFound } from "next/navigation";
+import Image from "next/image";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { api, HydrateClient } from "~/trpc/server";
+import { Badge } from "~/components/ui/badge";
+import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
+// components
+import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
+import { PricingCard } from "~/components/shop/checkout/PricingCard";
+import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
+import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
+import { ProductGrid } from "~/components/shop/product/ProductGrid";
 
 interface ProductDetailPageProps {
 	params: Promise<{
-		productLine: string
-		categorySlug: string
-		productSlug: string
-	}>
+		locale: string;  // ← CRITICAL: Must include locale!
+		productLine: string;
+		categorySlug: string;
+		productSlug: string;
+	}>;
 	searchParams: Promise<{
-		market?: string
-	}>
+		market?: string;
+	}>;
+}
+
+// Generate metadata from DB
+export async function generateMetadata({ params }: ProductDetailPageProps) {
+	const { locale, productSlug } = await params;
+	const dbLocale = locale === 'us' ? 'en' : locale;
+
+	// Fetch product metadata
+	const productMeta = await api.product.getProductMetadataBySlug({
+		productSlug,
+		locale: dbLocale,
+	});
+
+	if (!productMeta) {
+		return {
+			title: 'Product Not Found',
+		};
+	}
+
+	// Use DB translations for SEO
+	// ✅ FIXED: Using metaTitle/metaDescription (not seoTitle/seoDescription)
+	const title = productMeta.metaTitle || productMeta.name || productSlug;
+	const description = productMeta.metaDescription || productMeta.shortDescription || '';
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			images: productMeta.heroImageUrl ? [productMeta.heroImageUrl] : [],
+			type: 'website', // ✅ Next.js only supports 'website', 'article', 'book', etc.
+		},
+		alternates: {
+			canonical: `/${locale}/shop/${productMeta.productLineSlug}/${productMeta.categorySlug}/${productSlug}`,
+		},
+	};
 }
 
 export default async function ProductDetailPage({ params, searchParams }: ProductDetailPageProps) {
-	// Await params properly for Next.js 15
-	const { productLine, categorySlug, productSlug } = await params
-	const { market = "ROW" } = await searchParams // Read market from URL param
-	const locale = "en" // Hardcoded for now
+	const { locale, productLine, categorySlug, productSlug } = await params;
+	const { market = "ROW" } = await searchParams;
+
+	// Enable static rendering
+	setRequestLocale(locale);
+
+	const t = await getTranslations('shop.productDetail');
+	const dbLocale = locale === 'us' ? 'en' : locale;
 
 	const productPromise = api.product.getBySlug({
 		slug: productSlug,
-		locale,
-		userMarket: market, // Pass market to get correct pricing
-	})
+		locale: dbLocale,
+		userMarket: market,
+	});
 
 	const relatedProductsPromise = api.product.getByCategory({
 		categorySlug,
-		locale,
-		userMarket: market, // Pass market to avoid duplicates
-	})
+		locale: dbLocale,
+		userMarket: market,
+	});
 
-	const [product, relatedProductsResult] = await Promise.all([productPromise, relatedProductsPromise])
+	const [product, relatedProductsResult] = await Promise.all([productPromise, relatedProductsPromise]);
 
 	if (!product) {
-		notFound()
+		notFound();
 	}
 
-	// Properly determine if product requires custom quote
+	// Determine if product requires custom quote
 	const isCustomOnly =
-		product.pricing?.pricingType === "configured" || product.stockStatus === "requires_quote" || !product.pricing
+		product.pricing?.pricingType === "configured" ||
+		product.stockStatus === "requires_quote" ||
+		!product.pricing;
 
-	// Debug logging
-	console.log("[Product Page] Data:", {
-		slug: productSlug,
-		market,
-		isCustomOnly,
-		pricingType: product.pricing?.pricingType,
-		hasBundles: !!product.bundles,
-		hasAddons: !!product.addons,
-		hasCustomOptions: !!product.customizationOptions,
-	})
-
-	// Inject route params into the product object so buttons/links work
+	// Inject route params into the product object
 	const productForButtons = {
 		...product,
 		categorySlug,
 		productLineSlug: productLine,
 		name: product.name ?? "Product",
-	}
+	};
 
-	// Prepare related products (filter out the current product)
+	// Prepare related products (filter out current)
 	const relatedProducts =
 		"products" in relatedProductsResult
 			? relatedProductsResult.products.filter((p) => p.slug !== productSlug).slice(0, 4)
-			: []
+			: [];
 
 	const productsForGrid = relatedProducts.map((p) => ({
 		id: p.id,
@@ -86,10 +121,17 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		heroImageAlt: p.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		// V2 pricing fields
-		pricingType: p.pricingType,
-		unitPriceEurCents: p.unitPriceEurCents,
-	}))
+		basePriceEurCents: p.unitPriceEurCents ?? null,
+		priceNote: null,
+		variantOptions: null,
+		addonOptions: null,
+	}));
+
+	// Format category name for "More from X" section
+	const categoryDisplayName = categorySlug
+		.split("-")
+		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+		.join(" ");
 
 	return (
 		<HydrateClient>
@@ -124,12 +166,12 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 								)}
 								{product.stockStatus === "in_stock" && (
 									<Badge className="bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20 text-xs">
-										In Stock
+										{t('badges.inStock')}
 									</Badge>
 								)}
 								{product.stockStatus === "made_to_order" && (
 									<Badge className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20 text-xs">
-										Made to Order
+										{t('badges.madeToOrder')}
 									</Badge>
 								)}
 								{isCustomOnly && <CustomOnlyBadge variant="inline" />}
@@ -150,40 +192,55 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 						<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 							{/* Left Column - Info */}
 							<div className="lg:col-span-2 space-y-8">
-								<ImageSliderWithModal images={product.images || []} productName={product.name ?? "Product"} />
+								<ImageSliderWithModal
+									images={product.images || []}
+									productName={product.name ?? "Product"}
+								/>
 
-								{/* Short Description */}
+								{/* Description */}
 								<div className="space-y-4">
-									<h2 className="text-2xl font-display font-normal">Product Details</h2>
+									<h2 className="text-2xl font-display font-normal">
+										{t('sections.productDetails')}
+									</h2>
 									<LongDescriptionSection longDescription={product.longDescription} />
 								</div>
 
 								{/* Specifications */}
 								{product.material && (
 									<div className="space-y-4">
-										<h2 className="text-2xl font-display font-normal">Specifications</h2>
+										<h2 className="text-2xl font-display font-normal">
+											{t('sections.specifications')}
+										</h2>
 										<div className="grid gap-3">
 											{product.material && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">Material</span>
+													<span className="text-muted-foreground">
+														{t('specs.material')}
+													</span>
 													<span className="font-medium">{product.material}</span>
 												</div>
 											)}
 											{product.widthCm && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">Width</span>
+													<span className="text-muted-foreground">
+														{t('specs.width')}
+													</span>
 													<span className="font-medium">{product.widthCm} cm</span>
 												</div>
 											)}
 											{product.heightCm && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">Height</span>
+													<span className="text-muted-foreground">
+														{t('specs.height')}
+													</span>
 													<span className="font-medium">{product.heightCm} cm</span>
 												</div>
 											)}
 											{product.productionTime && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">Production Time</span>
+													<span className="text-muted-foreground">
+														{t('specs.productionTime')}
+													</span>
 													<span className="font-medium">{product.productionTime}</span>
 												</div>
 											)}
@@ -191,16 +248,20 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 									</div>
 								)}
 
-								{/* Key Features */}
+								{/* Key Features - Keep in English for now as requested */}
 								<div className="space-y-4">
-									<h2 className="text-2xl font-display font-normal">Key Features</h2>
+									<h2 className="text-2xl font-display font-normal">
+										{t('sections.keyFeatures')}
+									</h2>
 									<div className="grid gap-4">
 										<div className="flex items-start gap-4 p-4 rounded-xl border bg-card">
 											<div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
 												<Shield className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">Lifetime Warranty</h3>
+												<h3 className="font-display font-medium">
+													Lifetime Warranty
+												</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Chemical-resistant materials that never leach or affect water chemistry
 												</p>
@@ -212,7 +273,9 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 												<Zap className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">Easy Installation</h3>
+												<h3 className="font-display font-medium">
+													Easy Installation
+												</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Modular design with numbered sections for seamless assembly
 												</p>
@@ -224,7 +287,9 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 												<CheckCircle2 className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">Maintenance Free</h3>
+												<h3 className="font-display font-medium">
+													Maintenance Free
+												</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Scrub-safe surface - algae wipes off easily without damage
 												</p>
@@ -236,7 +301,9 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 								{/* Image Gallery */}
 								{product.images && product.images.length > 1 && (
 									<div className="space-y-4">
-										<h2 className="text-2xl font-display font-normal">Product Gallery</h2>
+										<h2 className="text-2xl font-display font-normal">
+											{t('sections.productGallery')}
+										</h2>
 										<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 											{product.images.slice(1).map((image, idx) => (
 												<div
@@ -258,7 +325,11 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 
 							{/* Right Column - Sticky Pricing Card */}
 							<div className="lg:col-span-1">
-								<PricingCard productId={product.id} product={productForButtons as any} isCustomOnly={isCustomOnly} />
+								<PricingCard
+									productId={product.id}
+									product={productForButtons as any}
+									isCustomOnly={isCustomOnly}
+								/>
 							</div>
 						</div>
 					</div>
@@ -269,17 +340,17 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 					<section className="py-12 md:py-16 bg-muted/10">
 						<div className="px-4 max-w-7xl mx-auto space-y-8">
 							<h2 className="text-3xl font-display font-normal text-center">
-								More from{" "}
-								{categorySlug
-									.split("-")
-									.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-									.join(" ")}
+								{t('sections.moreFrom', { category: categoryDisplayName })}
 							</h2>
-							<ProductGrid products={productsForGrid as any} initialColumns="4" showControls={false} />
+							<ProductGrid
+								products={productsForGrid as any}
+								initialColumns="4"
+								showControls={false}
+							/>
 						</div>
 					</section>
 				)}
 			</main>
 		</HydrateClient>
-	)
+	);
 }

@@ -1,51 +1,61 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
-import { notFound } from "next/navigation"
-import { ProductGrid } from "~/components/shop/product/ProductGrid"
-import { api, HydrateClient } from "~/trpc/server"
+import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { ProductGrid } from "~/components/shop/product/ProductGrid";
+import { api, HydrateClient } from "~/trpc/server";
 
 interface PageProps {
 	params: Promise<{
-		productLine: string
-		categorySlug: string
-	}>
+		locale: string;  // ← CRITICAL: Must include locale!
+		productLine: string;
+		categorySlug: string;
+	}>;
 	searchParams: Promise<{
-		market?: string
-	}>
+		market?: string;
+	}>;
 }
 
 export default async function CategoryProductsPage({ params, searchParams }: PageProps) {
-	const { productLine, categorySlug } = await params
-	const { market = "ROW" } = await searchParams // Read market from URL param, default to ROW
+	const { locale, productLine, categorySlug } = await params;
+	const { market = "ROW" } = await searchParams;
+
+	// Enable static rendering for this locale
+	setRequestLocale(locale);
+
+	// Map US locale to English for DB
+	// const dbLocale = locale === 'us' ? 'en' : locale;
 
 	// Fetch products using the category slug AND market
 	const result = await api.product.getByCategory({
 		categorySlug: categorySlug,
-		locale: "en",
-		userMarket: market, // Pass market to router to filter pricing
-	})
+		// locale: dbLocale,  // ← Use dbLocale, not hardcoded "en"
+		locale: locale,  // ← Use dbLocale, not hardcoded "en"
+		userMarket: market,
+	});
 
 	if (!result || !("products" in result)) {
-		notFound()
+		notFound();
 	}
 
-	const { products } = result
+	const { products } = result;
 
 	// Fetch full category list to get metadata (name, description, etc)
 	const categories = await api.product.getCategoriesForProductLine({
 		productLineSlug: productLine,
-		locale: "en",
-	})
+		// locale: dbLocale,  // ← Use dbLocale
+		locale: locale,  // ← Use dbLocale
+	});
 
-	const currentCategory = categories.find((c) => c.slug === categorySlug)
+	const currentCategory = categories.find((c) => c.slug === categorySlug);
 
 	// Text formatting
-	const productLineName = productLine === "3d-backgrounds" ? "3D Backgrounds" : "Aquarium Decorations"
+	const productLineName = productLine === "3d-backgrounds" ? "3D Backgrounds" : "Aquarium Decorations";
 	const categoryName =
 		currentCategory?.name ??
 		categorySlug
 			.split("-")
 			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-			.join(" ")
+			.join(" ");
 
 	// Transform data for the grid
 	const productsForGrid = products.map((product) => ({
@@ -54,24 +64,17 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 		name: product.name ?? "Untitled Product",
 		sku: product.sku ?? null,
 		shortDescription: product.shortDescription ?? null,
-
-		// FIX: Map unitPriceEurCents from tRPC response to the expected basePriceEurCents
-		basePriceEurCents: product.unitPriceEurCents ?? null,
-
-		// FIX: Explicitly assign missing fields to satisfy ProductForCard/Grid
-		priceNote: null,
-		variantOptions: null,
-		addonOptions: null,
-
 		stockStatus: product.stockStatus,
-
 		heroImageUrl: product.heroImageUrl ?? null,
 		heroImageAlt: product.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		// The component also relies on variantOptions/addonOptions for the button logic,
-		// which your tRPC query must also provide, but for now we'll rely on the simple price check.
-	}))
+		// V2 pricing fields
+		basePriceEurCents: product.unitPriceEurCents ?? null,
+		priceNote: null,
+		variantOptions: null,
+		addonOptions: null,
+	}));
 
 	return (
 		<HydrateClient>
@@ -156,5 +159,5 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 				</section>
 			</main>
 		</HydrateClient>
-	)
+	);
 }

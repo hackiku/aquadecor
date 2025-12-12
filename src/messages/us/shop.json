@@ -1,5 +1,171 @@
 {
-  "shop": {
-    "placeholder": "Translations for shop in us"
-  }
+	"shop": {
+		"metadata": {
+			"shopHome": {
+				"title": "Shop Aquarium Products | Aquadecor",
+				"description": "Explore our complete range of 3D backgrounds and decorations. Handcrafted by expert artisans, trusted by 50,000+ aquascapers worldwide."
+			},
+			"backgrounds": {
+				"title": "3D Aquarium Backgrounds | Custom Made | Aquadecor",
+				"description": "Realistic 3D aquarium backgrounds custom-made to your tank specifications. Over 50 designs available."
+			},
+			"decorations": {
+				"title": "Aquarium Decorations | Lifelike Plants & Rocks | Aquadecor",
+				"description": "Realistic plants, rocks, driftwood, and accessories crafted from neutral materials for unlimited lifespan."
+			}
+		},
+		"hero": {
+			"shopHome": {
+				"title": "Shop Aquarium Products",
+				"subtitle": "Explore our complete range of 3D backgrounds and decorations. Handcrafted by expert artisans, trusted by 50,000+ aquascapers worldwide."
+			},
+			"backgrounds": {
+				"badge": "Custom Made",
+				"title": "3D Aquarium Backgrounds",
+				"subtitle": "Transform your aquarium with ultra-realistic 3D backgrounds. Each piece is custom-made to your exact tank dimensions using our proprietary molding technique.",
+				"ctaPrimary": "Browse Collection",
+				"ctaSecondary": "View Decorations"
+			},
+			"decorations": {
+				"badge": "Complete Your Aquascape",
+				"title": "Aquarium Decorations",
+				"subtitle": "Realistic plants, rocks, driftwood, and accessories crafted from neutral materials for unlimited lifespan and zero water chemistry impact.",
+				"ctaPrimary": "Browse Collection",
+				"ctaSecondary": "View 3D Backgrounds"
+			}
+		},
+		"sections": {
+			"featured": "Featured",
+			"browseByCategory": "Browse by Category",
+			"safeForAllSpecies": "Safe for All Species",
+			"mixAndMatch": "Pair with our legendary 3D Backgrounds"
+		},
+		"features": {
+			"neutralChemistry": {
+				"title": "Neutral Water Chemistry",
+				"description": "Won't affect pH, hardness, or release tannins into your water"
+			},
+			"fishSafe": {
+				"title": "Fish-Safe Materials",
+				"description": "Non-toxic, won't be picked at or damaged by aggressive species"
+			},
+			"easyClean": {
+				"title": "Easy to Clean",
+				"description": "Algae scrubs off easily - safe to use plastic brushes"
+			},
+			"unlimited": {
+				"title": "Unlimited Lifespan",
+				"description": "Unlike natural materials, these never decay, rot, or need replacement"
+			}
+		},
+		"ctas": {
+			"viewAll": "View All",
+			"viewAllBackgrounds": "View All Backgrounds",
+			"viewAllDecorations": "View All Decorations",
+			"exploreBackgrounds": "Explore 3D Backgrounds",
+			"exploreDecorations": "Explore Decorations",
+			"learnMore": "Learn More",
+			"customizeOrder": "Customize Your Order"
+		},
+		"productCard": {
+			"addToCart": "Add to Cart",
+			"requestQuote": "Request Quote",
+			"customize": "Customize",
+			"viewDetails": "View Details",
+			"outOfStock": "Out of Stock",
+			"inStock": "In Stock",
+			"madeToOrder": "Made to Order",
+			"freeShipping": "Free Shipping",
+			"from": "From"
+		},
+		"filters": {
+			"sortBy": "Sort by",
+			"priceRange": "Price Range",
+			"availability": "Availability",
+			"material": "Material",
+			"size": "Size",
+			"allCategories": "All Categories",
+			"showFilters": "Show Filters",
+			"hideFilters": "Hide Filters",
+			"clearAll": "Clear All"
+		},
+		"productGrid": {
+			"showing": "Showing {{count}} products",
+			"noProducts": "No products found",
+			"noProductsDescription": "Try adjusting your filters or search terms"
+		},
+		"categoryPage": {
+			"productsAvailable": "{{count}} product available",
+			"productsAvailable_plural": "{{count}} products available"
+		},
+		"trustSignals": {
+			"freeShipping": "Free Worldwide Shipping",
+			"madeToOrder": "Made to Order",
+			"customSizes": "Custom Sizes Available",
+			"experience": "20+ Years Experience",
+			"inStock": "In Stock & Ready to Ship",
+			"lifetimeWarranty": "Lifetime Warranty"
+		},
+		"usTariffNotice": {
+			"badge": "Important Notice for US Customers",
+			"title": "We're Here for You",
+			"message": "Despite recent tariff changes affecting Serbian imports, we remain committed to serving our US customers. We're working on solutions to minimize price impacts.",
+			"learnMore": "Learn More About Our US Service"
+		},
+		"badges": {
+			"new": "New",
+			"featured": "Featured",
+			"bestSeller": "Best Seller",
+			"customMade": "Custom Made",
+			"inStock": "In Stock"
+		},
+		"loading": "Loading products...",
+		"error": {
+			"loadFailed": "Unable to load products",
+			"tryAgain": "Please try refreshing the page"
+		},
+		"productDetail": {
+			"badges": {
+				"inStock": "In Stock",
+				"madeToOrder": "Made to Order",
+				"customSizesOnly": "Custom sizes only"
+			},
+			"customOnlyBanner": {
+				"title": "Custom Sizing Required",
+				"description": "This model can only be ordered in custom dimensions to fit your exact aquarium specifications.",
+				"calculatorLink": "Use Price Calculator →"
+			},
+			"sections": {
+				"productDetails": "Product Details",
+				"specifications": "Specifications",
+				"keyFeatures": "Key Features",
+				"productGallery": "Product Gallery",
+				"moreFrom": "More from {category}"
+			},
+			"specs": {
+				"material": "Material",
+				"width": "Width",
+				"height": "Height",
+				"productionTime": "Production Time"
+			},
+			"features": {
+				"lifetimeWarranty": {
+					"title": "Lifetime Warranty",
+					"description": "Chemical-resistant materials that never leach or affect water chemistry"
+				},
+				"easyInstallation": {
+					"title": "Easy Installation",
+					"description": "Modular design with numbered sections for seamless assembly"
+				},
+				"maintenanceFree": {
+					"title": "Maintenance Free",
+					"description": "Scrub-safe surface - algae wipes off easily without damage"
+				}
+			},
+			"description": {
+				"readMore": "Read more",
+				"showLess": "Show less"
+			}
+		}
+	}
 }

@@ -1,5 +1,171 @@
 {
-  "shop": {
-    "placeholder": "Translations for shop in de"
-  }
+	"shop": {
+		"metadata": {
+			"shopHome": {
+				"title": "Aquarium-Produkte kaufen | Aquadecor",
+				"description": "Entdecken Sie unser komplettes Sortiment an 3D-Rückwänden und Dekorationen. Handgefertigt von Experten, vertraut von über 50.000 Aquascapern weltweit."
+			},
+			"backgrounds": {
+				"title": "3D-Aquarium-Rückwände | Maßanfertigung | Aquadecor",
+				"description": "Realistische 3D-Aquarium-Rückwände, maßgefertigt für Ihr Becken. Über 50 Designs verfügbar."
+			},
+			"decorations": {
+				"title": "Aquarium-Dekorationen | Naturgetreue Pflanzen & Steine | Aquadecor",
+				"description": "Realistische Pflanzen, Steine, Wurzeln und Zubehör aus neutralen Materialien für unbegrenzte Lebensdauer."
+			}
+		},
+		"hero": {
+			"shopHome": {
+				"title": "Aquarium-Produkte kaufen",
+				"subtitle": "Entdecken Sie unser komplettes Sortiment an 3D-Rückwänden und Dekorationen. Handgefertigt von Experten, vertraut von über 50.000 Aquascapern weltweit."
+			},
+			"backgrounds": {
+				"badge": "Maßanfertigung",
+				"title": "3D-Aquarium-Rückwände",
+				"subtitle": "Verwandeln Sie Ihr Aquarium mit ultra-realistischen 3D-Rückwänden. Jedes Stück wird mit unserer proprietären Formtechnik exakt nach Ihren Beckenmaßen gefertigt.",
+				"ctaPrimary": "Kollektion ansehen",
+				"ctaSecondary": "Dekorationen ansehen"
+			},
+			"decorations": {
+				"badge": "Vervollständigen Sie Ihr Aquascape",
+				"title": "Aquarium-Dekorationen",
+				"subtitle": "Realistische Pflanzen, Steine, Wurzeln und Zubehör aus neutralen Materialien für unbegrenzte Lebensdauer und null Einfluss auf die Wasserchemie.",
+				"ctaPrimary": "Kollektion ansehen",
+				"ctaSecondary": "3D-Rückwände ansehen"
+			}
+		},
+		"sections": {
+			"featured": "Empfohlen",
+			"browseByCategory": "Nach Kategorie durchsuchen",
+			"safeForAllSpecies": "Sicher für alle Arten",
+			"mixAndMatch": "Kombinieren Sie mit unseren legendären 3D-Rückwänden"
+		},
+		"features": {
+			"neutralChemistry": {
+				"title": "Neutrale Wasserchemie",
+				"description": "Beeinflusst weder pH-Wert noch Härte und gibt keine Tannine ins Wasser ab"
+			},
+			"fishSafe": {
+				"title": "Fischsichere Materialien",
+				"description": "Ungiftig, wird von aggressiven Arten nicht angeknabbert oder beschädigt"
+			},
+			"easyClean": {
+				"title": "Leicht zu reinigen",
+				"description": "Algen lassen sich leicht abschrubben - sicher für Kunststoffbürsten"
+			},
+			"unlimited": {
+				"title": "Unbegrenzte Lebensdauer",
+				"description": "Im Gegensatz zu natürlichen Materialien verrotten oder zerfallen diese nie"
+			}
+		},
+		"ctas": {
+			"viewAll": "Alle ansehen",
+			"viewAllBackgrounds": "Alle Rückwände ansehen",
+			"viewAllDecorations": "Alle Dekorationen ansehen",
+			"exploreBackgrounds": "3D-Rückwände entdecken",
+			"exploreDecorations": "Dekorationen entdecken",
+			"learnMore": "Mehr erfahren",
+			"customizeOrder": "Bestellung anpassen"
+		},
+		"productCard": {
+			"addToCart": "In den Warenkorb",
+			"requestQuote": "Angebot anfordern",
+			"customize": "Konfigurieren",
+			"viewDetails": "Details ansehen",
+			"outOfStock": "Nicht vorrätig",
+			"inStock": "Auf Lager",
+			"madeToOrder": "Auf Bestellung gefertigt",
+			"freeShipping": "Kostenloser Versand",
+			"from": "Ab"
+		},
+		"filters": {
+			"sortBy": "Sortieren nach",
+			"priceRange": "Preisspanne",
+			"availability": "Verfügbarkeit",
+			"material": "Material",
+			"size": "Größe",
+			"allCategories": "Alle Kategorien",
+			"showFilters": "Filter anzeigen",
+			"hideFilters": "Filter ausblenden",
+			"clearAll": "Alles löschen"
+		},
+		"productGrid": {
+			"showing": "Zeige {{count}} Produkte",
+			"noProducts": "Keine Produkte gefunden",
+			"noProductsDescription": "Versuchen Sie, Ihre Filter oder Suchbegriffe anzupassen"
+		},
+		"categoryPage": {
+			"productsAvailable": "{{count}} Produkt verfügbar",
+			"productsAvailable_plural": "{{count}} Produkte verfügbar"
+		},
+		"trustSignals": {
+			"freeShipping": "Kostenloser weltweiter Versand",
+			"madeToOrder": "Auf Bestellung gefertigt",
+			"customSizes": "Sondergrößen verfügbar",
+			"experience": "20+ Jahre Erfahrung",
+			"inStock": "Auf Lager & versandfertig",
+			"lifetimeWarranty": "Lebenslange Garantie"
+		},
+		"usTariffNotice": {
+			"badge": "Wichtiger Hinweis für US-Kunden",
+			"title": "Wir sind für Sie da",
+			"message": "Trotz der jüngsten Zolländerungen für serbische Importe bleiben wir unseren US-Kunden verpflichtet. Wir arbeiten an Lösungen, um Preisauswirkungen zu minimieren.",
+			"learnMore": "Mehr über unseren US-Service erfahren"
+		},
+		"badges": {
+			"new": "Neu",
+			"featured": "Empfohlen",
+			"bestSeller": "Bestseller",
+			"customMade": "Maßgefertigt",
+			"inStock": "Auf Lager"
+		},
+		"loading": "Produkte werden geladen...",
+		"error": {
+			"loadFailed": "Produkte konnten nicht geladen werden",
+			"tryAgain": "Bitte versuchen Sie, die Seite neu zu laden"
+		},
+		"productDetail": {
+			"badges": {
+				"inStock": "Auf Lager",
+				"madeToOrder": "Auf Bestellung gefertigt",
+				"customSizesOnly": "Nur Sondergrößen"
+			},
+			"customOnlyBanner": {
+				"title": "Maßanfertigung erforderlich",
+				"description": "Dieses Modell kann nur in individuellen Abmessungen bestellt werden, um exakt in Ihr Aquarium zu passen.",
+				"calculatorLink": "Preisrechner verwenden →"
+			},
+			"sections": {
+				"productDetails": "Produktdetails",
+				"specifications": "Spezifikationen",
+				"keyFeatures": "Hauptmerkmale",
+				"productGallery": "Produktgalerie",
+				"moreFrom": "Mehr aus {category}"
+			},
+			"specs": {
+				"material": "Material",
+				"width": "Breite",
+				"height": "Höhe",
+				"productionTime": "Produktionszeit"
+			},
+			"features": {
+				"lifetimeWarranty": {
+					"title": "Lebenslange Garantie",
+					"description": "Chemikalienbeständige Materialien, die nie auslaugen oder die Wasserchemie beeinflussen"
+				},
+				"easyInstallation": {
+					"title": "Einfache Installation",
+					"description": "Modulares Design mit nummerierten Abschnitten für nahtlosen Zusammenbau"
+				},
+				"maintenanceFree": {
+					"title": "Wartungsfrei",
+					"description": "Scheuerfeste Oberfläche - Algen lassen sich leicht und ohne Beschädigung abwischen"
+				}
+			},
+			"description": {
+				"readMore": "Mehr lesen",
+				"showLess": "Weniger anzeigen"
+			}
+		}
+	}
 }

@@ -16,7 +16,7 @@ export default function ShopLayout({
 				style={{ top: 'calc(var(--nav-height) - 64px)' }}
 			>
 				<div className="px-8 mx-auto py-3 bg-black">
-					<Breadcrumbs darkMode />
+					<Breadcrumbs />
 				</div>
 			</div>
 

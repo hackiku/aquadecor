@@ -57,10 +57,14 @@ export const routing = defineRouting({
 		},
 
 		// Shop - ENGLISH SLUGS (consistent across locales)
+		// Static product line pages
 		'/shop': '/shop',
-		'/shop/[category]': '/shop/[category]',
-		'/shop/[category]/[subcategory]': '/shop/[category]/[subcategory]',
-		'/shop/[category]/[subcategory]/[product]': '/shop/[category]/[subcategory]/[product]',
+		'/shop/3d-backgrounds': '/shop/3d-backgrounds',
+		'/shop/aquarium-decorations': '/shop/aquarium-decorations',
+
+		// Dynamic category & product pages (MUST match your actual folder structure)
+		'/shop/[productLine]/[categorySlug]': '/shop/[productLine]/[categorySlug]',
+		'/shop/[productLine]/[categorySlug]/[productSlug]': '/shop/[productLine]/[categorySlug]/[productSlug]',
 
 		// Distributors
 		'/distributors': {
@@ -85,12 +89,11 @@ export const routing = defineRouting({
 		// Blog
 		'/blog': '/blog',
 
-		// Legal - Nested under /legal
-		'/legal': '/legal',
-		'/legal/terms': '/legal/terms',
-		'/legal/privacy': '/legal/privacy',
-		'/legal/shipping': '/legal/shipping',
-		'/legal/refund': '/legal/refund',
+		// Legal pages (NO /legal prefix needed)
+		'/terms': '/terms',
+		'/privacy': '/privacy',
+		'/shipping': '/shipping',
+		'/refund': '/refund',
 	}
 });
 

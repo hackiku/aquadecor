@@ -1,23 +1,49 @@
 // src/app/[locale]/shop/page.tsx
 import Link from "next/link";
-// import { ProductLineSplitHero } from "~/components/shop/product/ProductLineSplitHero"; // ❌ REMOVED
-import { ProductCard } from "~/components/shop/product/ProductCard";
+import Image from "next/image";
+import { ArrowRight, Package } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
+import { ProductCard } from "~/components/shop/product/ProductCard";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
-import { AlertCircle, ArrowRight, Package } from "lucide-react"; // 🎯 Added ArrowRight, Package for new section
-import Image from "next/image"; // 🎯 Added Image for new section
+import { getLocale } from "~/i18n/utils";
+import type { Locale } from "~/i18n/routing";
 
 export const dynamic = 'force-dynamic';
 
-// Re-structuring the page to use static, stacked sections for performance
+type Props = {
+	params: Promise<{ locale: string }>;
+};
 
-export default async function ShopPage() {
+// Generate metadata
+export async function generateMetadata({ params }: Props) {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'shop' });
+
+	return {
+		title: t('metadata.shopHome.title'),
+		description: t('metadata.shopHome.description'),
+		openGraph: {
+			title: t('metadata.shopHome.title'),
+			description: t('metadata.shopHome.description'),
+			type: 'website',
+		},
+	};
+}
+
+export default async function ShopPage({ params }: Props) {
+	const { locale } = await params;
+	setRequestLocale(locale);
+
+	const t = await getTranslations('shop');
+	const dbLocale = locale === 'us' ? 'en' : locale; // US uses English content
+
 	let featuredProducts: Awaited<ReturnType<typeof api.product.getFeatured>> = [];
 	let error = false;
 
 	try {
 		featuredProducts = await api.product.getFeatured({
-			locale: "en",
+			locale: dbLocale,
 			limit: 6,
 		});
 	} catch (err) {
@@ -36,26 +62,24 @@ export default async function ShopPage() {
 	return (
 		<HydrateClient>
 			<main className="min-h-screen">
-
-				{/* Global Hero Section - STAYS THE SAME */}
+				{/* Hero Section */}
 				<section className="relative py-16 md:py-24 bg-black">
 					<div className="px-14 max-w-5xl mx-auto text-center space-y-6">
 						<h1 className="text-4xl text-white md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
-							Shop Aquarium Products
+							{t('hero.shopHome.title')}
 						</h1>
 						<p className="text-xl text-muted-foreground font-display font-light max-w-3xl mx-auto">
-							Explore our complete range of 3D backgrounds and decorations. Handcrafted by expert artisans, trusted by 50,000+ aquascapers worldwide.
+							{t('hero.shopHome.subtitle')}
 						</p>
 					</div>
-				{/* </section> */}
 
-				{/* 🎯 NEW: Product Line Teaser / Split Link Section (Static, CSS-only) */}
-				{/* <section className="py-16 md:py-24 bg-card/50"> */}
+					{/* Product Line Teaser Cards */}
 					<div className="py-12 px-4 max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
 						{/* 3D Backgrounds Card */}
 						<Link
-							href="/shop/3d-backgrounds" 
-							className="group border border-neutral-500/50 hover:border-neutral-500 relative block rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow aspect-video bg-black">
+							href="/shop/3d-backgrounds"
+							className="group border border-neutral-500/50 hover:border-neutral-500 relative block rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow aspect-video bg-black"
+						>
 							<Image
 								src="/media/images/3d-backgrounds_500px.webp"
 								alt="3D Backgrounds"
@@ -63,18 +87,24 @@ export default async function ShopPage() {
 								className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-80"
 							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end">
-								<h2 className="text-3xl font-display font-light text-white mb-2">3D Backgrounds</h2>
-								<p className="text-sm text-gray-300">Custom-made realism, built to your tank specs.</p>
+								<h2 className="text-3xl font-display font-light text-white mb-2">
+									3D Backgrounds
+								</h2>
+								<p className="text-sm text-gray-300">
+									Custom-made realism, built to your tank specs.
+								</p>
 								<div className="mt-4 inline-flex items-center gap-2 text-primary font-display font-medium">
-									Browse Collection <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+									{t('ctas.exploreBackgrounds')}
+									<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
 								</div>
 							</div>
 						</Link>
 
 						{/* Decorations Card */}
 						<Link
-							href="/shop/aquarium-decorations" 
-							className="group relative border border-neutral-500/50 hover:border-neutral-500 block rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow aspect-video bg-black">
+							href="/shop/aquarium-decorations"
+							className="group relative border border-neutral-500/50 hover:border-neutral-500 block rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow aspect-video bg-black"
+						>
 							<Image
 								src="/media/images/additional-items_500px.webp"
 								alt="Aquarium Decorations"
@@ -82,27 +112,30 @@ export default async function ShopPage() {
 								className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-80"
 							/>
 							<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end">
-								<h2 className="text-3xl font-display font-light text-white mb-2">Aquarium Decorations</h2>
-								<p className="text-sm text-gray-300">Plants, rocks, and driftwood that last forever.</p>
+								<h2 className="text-3xl font-display font-light text-white mb-2">
+									Aquarium Decorations
+								</h2>
+								<p className="text-sm text-gray-300">
+									Plants, rocks, and driftwood that last forever.
+								</p>
 								<div className="mt-4 inline-flex items-center gap-2 text-primary font-display font-medium">
-									Browse Collection <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+									{t('ctas.exploreDecorations')}
+									<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
 								</div>
 							</div>
 						</Link>
 					</div>
 				</section>
 
-
-				{/* 3D Backgrounds Section - STACKED VIEW */}
+				{/* 3D Backgrounds Featured Section */}
 				<section id="3d-backgrounds" className="relative py-24 md:py-32 bg-card">
 					<WaveDivider position="top" color="black" className="text-muted/30" />
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						{/* 🎯 New Header for this section */}
 						<div className="text-center space-y-4">
 							<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
 								<Package className="h-4 w-4 text-primary" />
 								<span className="text-sm text-primary font-display font-medium">
-									Featured
+									{t('sections.featured')}
 								</span>
 							</div>
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-extralight tracking-tight">
@@ -112,18 +145,6 @@ export default async function ShopPage() {
 								See our most popular custom designs and get a quote.
 							</p>
 						</div>
-
-
-						{error && (
-							<div className="py-12 text-center space-y-4">
-								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
-								<div className="space-y-2">
-									<p className="text-lg font-display font-normal">
-										Unable to load products
-									</p>
-								</div>
-							</div>
-						)}
 
 						{!error && backgroundProducts.length > 0 && (
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -141,8 +162,6 @@ export default async function ShopPage() {
 											heroImageAlt: product.heroImageAlt ?? null,
 											categorySlug: product.categorySlug ?? "",
 											productLineSlug: product.productLineSlug ?? "3d-backgrounds",
-
-											// FIX: Map new price field and assign required fields
 											basePriceEurCents: product.unitPriceEurCents ?? null,
 											priceNote: null,
 											variantOptions: null,
@@ -153,17 +172,19 @@ export default async function ShopPage() {
 							</div>
 						)}
 
-						{/* View All Button */}
 						<div className="text-center pt-6">
-							<Link href="/shop/3d-backgrounds" className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all">
-								View All Backgrounds
+							<Link
+								href="/shop/3d-backgrounds"
+								className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all"
+							>
+								{t('ctas.viewAllBackgrounds')}
 								<ArrowRight className="h-4 w-4" />
 							</Link>
 						</div>
 					</div>
 				</section>
 
-				{/* Aquarium Decorations Section - STACKED VIEW */}
+				{/* Decorations Featured Section */}
 				<section id="aquarium-decorations" className="relative py-24 md:py-32 bg-linear-to-b from-muted/20 to-transparent">
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
 						<div className="text-center space-y-4">
@@ -191,8 +212,6 @@ export default async function ShopPage() {
 											heroImageAlt: product.heroImageAlt ?? null,
 											categorySlug: product.categorySlug ?? "",
 											productLineSlug: product.productLineSlug ?? "aquarium-decorations",
-
-											// FIX: Map new price field and assign required fields
 											basePriceEurCents: product.unitPriceEurCents ?? null,
 											priceNote: null,
 											variantOptions: null,
@@ -203,10 +222,12 @@ export default async function ShopPage() {
 							</div>
 						)}
 
-						{/* View All Button */}
 						<div className="text-center pt-6">
-							<Link href="/shop/aquarium-decorations" className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all">
-								View All Decorations
+							<Link
+								href="/shop/aquarium-decorations"
+								className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full font-display font-medium transition-all"
+							>
+								{t('ctas.viewAllDecorations')}
 								<ArrowRight className="h-4 w-4" />
 							</Link>
 						</div>

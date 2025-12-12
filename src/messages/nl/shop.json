@@ -1,5 +1,171 @@
 {
-  "shop": {
-    "placeholder": "Translations for shop in nl"
-  }
+	"shop": {
+		"metadata": {
+			"shopHome": {
+				"title": "Shop Aquarium Producten | Aquadecor",
+				"description": "Ontdek ons complete assortiment 3D-achterwanden en decoraties. Handgemaakt door experts, vertrouwd door meer dan 50.000 aquascapers wereldwijd."
+			},
+			"backgrounds": {
+				"title": "3D Aquarium Achterwanden | Op Maat Gemaakt | Aquadecor",
+				"description": "Realistische 3D-aquariumachterwanden op maat gemaakt voor uw specificaties. Meer dan 50 ontwerpen beschikbaar."
+			},
+			"decorations": {
+				"title": "Aquarium Decoraties | Levensechte Planten & Rotsen | Aquadecor",
+				"description": "Realistische planten, rotsen, drijfhout en accessoires gemaakt van neutrale materialen voor een onbeperkte levensduur."
+			}
+		},
+		"hero": {
+			"shopHome": {
+				"title": "Shop Aquarium Producten",
+				"subtitle": "Ontdek ons complete assortiment 3D-achterwanden en decoraties. Handgemaakt door experts, vertrouwd door meer dan 50.000 aquascapers wereldwijd."
+			},
+			"backgrounds": {
+				"badge": "Op Maat Gemaakt",
+				"title": "3D Aquarium Achterwanden",
+				"subtitle": "Transformeer uw aquarium met ultra-realistische 3D-achterwanden. Elk stuk wordt op maat gemaakt voor uw exacte afmetingen met onze unieke giettechniek.",
+				"ctaPrimary": "Bekijk Collectie",
+				"ctaSecondary": "Bekijk Decoraties"
+			},
+			"decorations": {
+				"badge": "Maak uw Aquascape Compleet",
+				"title": "Aquarium Decoraties",
+				"subtitle": "Realistische planten, rotsen, drijfhout en accessoires gemaakt van neutrale materialen voor een onbeperkte levensduur en geen impact op de waterchemie.",
+				"ctaPrimary": "Bekijk Collectie",
+				"ctaSecondary": "Bekijk 3D Achterwanden"
+			}
+		},
+		"sections": {
+			"featured": "Uitgelicht",
+			"browseByCategory": "Blader per Categorie",
+			"safeForAllSpecies": "Veilig voor alle soorten",
+			"mixAndMatch": "Combineer met onze legendarische 3D-achterwanden"
+		},
+		"features": {
+			"neutralChemistry": {
+				"title": "Neutrale Waterchemie",
+				"description": "Geen invloed op pH, hardheid en geeft geen tannines af in het water"
+			},
+			"fishSafe": {
+				"title": "Visveilige Materialen",
+				"description": "Niet-giftig, wordt niet aangevreten of beschadigd door agressieve soorten"
+			},
+			"easyClean": {
+				"title": "Makkelijk schoon te maken",
+				"description": "Algen zijn eenvoudig te verwijderen - veilig voor kunststof borstels"
+			},
+			"unlimited": {
+				"title": "Onbeperkte Levensduur",
+				"description": "In tegenstelling tot natuurlijke materialen zullen deze nooit rotten of vergaan"
+			}
+		},
+		"ctas": {
+			"viewAll": "Alles bekijken",
+			"viewAllBackgrounds": "Alle achterwanden bekijken",
+			"viewAllDecorations": "Alle decoraties bekijken",
+			"exploreBackgrounds": "Ontdek 3D-achterwanden",
+			"exploreDecorations": "Ontdek Decoraties",
+			"learnMore": "Meer weten",
+			"customizeOrder": "Bestelling aanpassen"
+		},
+		"productCard": {
+			"addToCart": "In winkelwagen",
+			"requestQuote": "Offerte aanvragen",
+			"customize": "Aanpassen",
+			"viewDetails": "Details bekijken",
+			"outOfStock": "Niet op voorraad",
+			"inStock": "Op voorraad",
+			"madeToOrder": "Op bestelling gemaakt",
+			"freeShipping": "Gratis verzending",
+			"from": "Vanaf"
+		},
+		"filters": {
+			"sortBy": "Sorteer op",
+			"priceRange": "Prijsklasse",
+			"availability": "Beschikbaarheid",
+			"material": "Materiaal",
+			"size": "Afmeting",
+			"allCategories": "Alle categorieën",
+			"showFilters": "Toon filters",
+			"hideFilters": "Verberg filters",
+			"clearAll": "Alles wissen"
+		},
+		"productGrid": {
+			"showing": "Toont {{count}} producten",
+			"noProducts": "Geen producten gevonden",
+			"noProductsDescription": "Probeer uw filters of zoektermen aan te passen"
+		},
+		"categoryPage": {
+			"productsAvailable": "{{count}} product beschikbaar",
+			"productsAvailable_plural": "{{count}} producten beschikbaar"
+		},
+		"trustSignals": {
+			"freeShipping": "Gratis wereldwijde verzending",
+			"madeToOrder": "Op bestelling gemaakt",
+			"customSizes": "Aangepaste maten beschikbaar",
+			"experience": "20+ jaar ervaring",
+			"inStock": "Op voorraad & klaar voor verzending",
+			"lifetimeWarranty": "Levenslange garantie"
+		},
+		"usTariffNotice": {
+			"badge": "Belangrijk bericht voor klanten in de VS",
+			"title": "Wij staan voor u klaar",
+			"message": "Ondanks recente tariefwijzigingen voor Servische import, blijven we toegewijd aan onze klanten in de VS. We werken aan oplossingen om de prijsimpact te minimaliseren.",
+			"learnMore": "Meer over onze VS-service"
+		},
+		"badges": {
+			"new": "Nieuw",
+			"featured": "Uitgelicht",
+			"bestSeller": "Bestseller",
+			"customMade": "Op maat gemaakt",
+			"inStock": "Op voorraad"
+		},
+		"loading": "Producten laden...",
+		"error": {
+			"loadFailed": "Kan producten niet laden",
+			"tryAgain": "Probeer de pagina te verversen"
+		},
+		"productDetail": {
+			"badges": {
+				"inStock": "Op voorraad",
+				"madeToOrder": "Op bestelling gemaakt",
+				"customSizesOnly": "Alleen maatwerk"
+			},
+			"customOnlyBanner": {
+				"title": "Maatwerk vereist",
+				"description": "Dit model kan alleen in aangepaste afmetingen worden besteld om precies in uw aquarium te passen.",
+				"calculatorLink": "Gebruik Prijscalculator →"
+			},
+			"sections": {
+				"productDetails": "Productdetails",
+				"specifications": "Specificaties",
+				"keyFeatures": "Belangrijkste kenmerken",
+				"productGallery": "Productgalerij",
+				"moreFrom": "Meer van {category}"
+			},
+			"specs": {
+				"material": "Materiaal",
+				"width": "Breedte",
+				"height": "Hoogte",
+				"productionTime": "Productietijd"
+			},
+			"features": {
+				"lifetimeWarranty": {
+					"title": "Levenslange garantie",
+					"description": "Chemicaliënbestendige materialen die nooit uitlogen of de waterchemie beïnvloeden"
+				},
+				"easyInstallation": {
+					"title": "Eenvoudige installatie",
+					"description": "Modulair ontwerp met genummerde secties voor naadloze montage"
+				},
+				"maintenanceFree": {
+					"title": "Onderhoudsvrij",
+					"description": "Schrobvast oppervlak - algen zijn gemakkelijk te verwijderen zonder schade"
+				}
+			},
+			"description": {
+				"readMore": "Lees meer",
+				"showLess": "Toon minder"
+			}
+		}
+	}
 }

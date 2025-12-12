@@ -42,6 +42,7 @@ export const productRouter = createTRPCRouter({
 		}),
 
 
+
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
 			productLineSlug: z.string(),
@@ -405,8 +406,6 @@ export const productRouter = createTRPCRouter({
 	// FEATURED PRODUCTS
 	// ============================================================================
 
-	// In src/server/api/routers/product.ts, under productRouter
-
 	getFeatured: publicProcedure
 		.input(z.object({
 			locale: z.string().default("en"),
@@ -517,4 +516,111 @@ export const productRouter = createTRPCRouter({
 				bundles,
 			};
 		}),
+
+
+	// ============================================================================
+	// SEO 
+	// ============================================================================
+
+
+	getCategoryMetadataBySlug: publicProcedure
+		.input(z.object({
+			categorySlug: z.string(),
+			locale: z.string().default("en"),
+		}))
+		.query(async ({ ctx, input }) => {
+			const [result] = await ctx.db
+				.select({
+					// Category basics
+					id: categories.id,
+					slug: categories.slug,
+					productLine: categories.productLine,
+					modelCode: categories.modelCode,
+
+					// Translation fields
+					name: categoryTranslations.name,
+					description: categoryTranslations.description,
+
+					// SEO fields - ✅ FIXED: Using metaTitle/metaDescription
+					metaTitle: categoryTranslations.metaTitle,
+					metaDescription: categoryTranslations.metaDescription,
+
+					// Image for OG tags
+					heroImageUrl: media.storageUrl,
+				})
+				.from(categories)
+				.leftJoin(
+					categoryTranslations,
+					and(
+						eq(categoryTranslations.categoryId, categories.id),
+						eq(categoryTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.categoryId, categories.id),
+						eq(media.usageType, "category"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(eq(categories.slug, input.categorySlug))
+				.limit(1);
+
+			return result || null;
+		}),
+
+	getProductMetadataBySlug: publicProcedure
+		.input(z.object({
+			productSlug: z.string(),
+			locale: z.string().default("en"),
+		}))
+		.query(async ({ ctx, input }) => {
+			const [result] = await ctx.db
+				.select({
+					// Product basics
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+
+					// Category for breadcrumbs/context
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+
+					// Translation fields
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+
+					// SEO fields - ✅ ALREADY CORRECT in your router
+					metaTitle: productTranslations.metaTitle,
+					metaDescription: productTranslations.metaDescription,
+
+					// Image for OG tags
+					heroImageUrl: media.storageUrl,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(eq(products.slug, input.productSlug))
+				.limit(1);
+
+			return result || null;
+		}),
+
+
+
 });

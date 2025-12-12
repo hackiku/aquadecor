@@ -3,12 +3,14 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface LongDescriptionSectionProps {
 	longDescription?: string | null;
 }
 
 export function LongDescriptionSection({ longDescription }: LongDescriptionSectionProps) {
+	const t = useTranslations('shop.productDetail.description');
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	if (!longDescription) {
@@ -77,7 +79,7 @@ export function LongDescriptionSection({ longDescription }: LongDescriptionSecti
 					onClick={() => setIsExpanded(!isExpanded)}
 					className="group inline-flex items-center gap-2 text-sm font-display font-medium text-primary hover:text-primary/80 transition-colors"
 				>
-					{isExpanded ? 'Show less' : 'Read more'}
+					{isExpanded ? t('showLess') : t('readMore')}
 					<ChevronDown
 						className={`h-4 w-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
 					/>

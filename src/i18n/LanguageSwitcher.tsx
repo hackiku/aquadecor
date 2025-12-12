@@ -1,9 +1,10 @@
-// src/components/i18n/LanguageSwitcher.tsx
+// src/i18n/LanguageSwitcher.tsx
 'use client';
 
 import { useLocale } from '~/i18n/hooks';
 import { localeNames, type Locale } from '~/i18n/routing';
 import { useRouter, usePathname } from '~/i18n/navigation';
+import { useParams } from 'next/navigation';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,10 +18,30 @@ export function LanguageSwitcher() {
 	const locale = useLocale();
 	const pathname = usePathname();
 	const router = useRouter();
+	const params = useParams();
 
 	const switchLocale = (newLocale: Locale) => {
-		// The router from next-intl/navigation handles pathname translation automatically
-		router.replace(pathname, { locale: newLocale });
+		try {
+			// For dynamic routes, we need to pass the params
+			// next-intl will use them to reconstruct the URL
+			if (params && Object.keys(params).length > 0) {
+				// Filter out 'locale' from params since next-intl handles that
+				const { locale: _, ...routeParams } = params as Record<string, string>;
+				router.replace(
+					// @ts-expect-error - next-intl typing is complex with dynamic routes
+					{ pathname, params: routeParams },
+					{ locale: newLocale }
+				);
+			} else {
+				// Static route - simple replace
+				router.replace(pathname, { locale: newLocale });
+			}
+		} catch (error) {
+			// Fallback: hard navigation if next-intl routing fails
+			console.warn('Language switch failed, using hard navigation:', error);
+			const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
+			window.location.href = `/${newLocale}${newPath}`;
+		}
 	};
 
 	return (

@@ -1,5 +1,171 @@
 {
-  "shop": {
-    "placeholder": "Translations for shop in it"
-  }
+	"shop": {
+		"metadata": {
+			"shopHome": {
+				"title": "Acquista Prodotti per Acquario | Aquadecor",
+				"description": "Esplora la nostra gamma completa di sfondi 3D e decorazioni. Realizzati a mano da esperti artigiani, scelti da oltre 50.000 acquariofili in tutto il mondo."
+			},
+			"backgrounds": {
+				"title": "Sfondi 3D per Acquario | Su Misura | Aquadecor",
+				"description": "Sfondi realistici per acquari 3D realizzati su misura per le specifiche del tuo acquario. Oltre 50 design disponibili."
+			},
+			"decorations": {
+				"title": "Decorazioni per Acquari | Piante e Rocce Realistiche | Aquadecor",
+				"description": "Piante, rocce, legni e accessori realistici realizzati con materiali neutri per una durata illimitata."
+			}
+		},
+		"hero": {
+			"shopHome": {
+				"title": "Acquista Prodotti per Acquario",
+				"subtitle": "Esplora la nostra gamma completa di sfondi 3D e decorazioni. Realizzati a mano da esperti artigiani, scelti da oltre 50.000 acquariofili in tutto il mondo."
+			},
+			"backgrounds": {
+				"badge": "Realizzato su Misura",
+				"title": "Sfondi 3D per Acquario",
+				"subtitle": "Trasforma il tuo acquario con sfondi 3D ultra-realistici. Ogni pezzo è realizzato su misura per le dimensioni esatte della tua vasca utilizzando la nostra tecnica di stampaggio proprietaria.",
+				"ctaPrimary": "Sfoglia la Collezione",
+				"ctaSecondary": "Vedi Decorazioni"
+			},
+			"decorations": {
+				"badge": "Completa il tuo Aquascape",
+				"title": "Decorazioni per Acquari",
+				"subtitle": "Piante, rocce, legni e accessori realistici realizzati con materiali neutri per una durata illimitata e zero impatto sulla chimica dell'acqua.",
+				"ctaPrimary": "Sfoglia la Collezione",
+				"ctaSecondary": "Vedi Sfondi 3D"
+			}
+		},
+		"sections": {
+			"featured": "In Evidenza",
+			"browseByCategory": "Sfoglia per Categoria",
+			"safeForAllSpecies": "Sicuro per tutte le specie",
+			"mixAndMatch": "Abbina con i nostri leggendari Sfondi 3D"
+		},
+		"features": {
+			"neutralChemistry": {
+				"title": "Chimica dell'Acqua Neutra",
+				"description": "Non altera il pH, la durezza e non rilascia tannini nell'acqua"
+			},
+			"fishSafe": {
+				"title": "Materiali Sicuri per i Pesci",
+				"description": "Non tossici, non vengono morsi o danneggiati da specie aggressive"
+			},
+			"easyClean": {
+				"title": "Facile da Pulire",
+				"description": "Le alghe si rimuovono facilmente - sicuro l'uso di spazzole in plastica"
+			},
+			"unlimited": {
+				"title": "Durata Illimitata",
+				"description": "A differenza dei materiali naturali, questi non marciscono, non si decompongono e non necessitano di sostituzione"
+			}
+		},
+		"ctas": {
+			"viewAll": "Vedi Tutto",
+			"viewAllBackgrounds": "Vedi Tutti gli Sfondi",
+			"viewAllDecorations": "Vedi Tutte le Decorazioni",
+			"exploreBackgrounds": "Esplora Sfondi 3D",
+			"exploreDecorations": "Esplora Decorazioni",
+			"learnMore": "Scopri di più",
+			"customizeOrder": "Personalizza il tuo Ordine"
+		},
+		"productCard": {
+			"addToCart": "Aggiungi al Carrello",
+			"requestQuote": "Richiedi Preventivo",
+			"customize": "Personalizza",
+			"viewDetails": "Vedi Dettagli",
+			"outOfStock": "Esaurito",
+			"inStock": "Disponibile",
+			"madeToOrder": "Realizzato su Ordinazione",
+			"freeShipping": "Spedizione Gratuita",
+			"from": "Da"
+		},
+		"filters": {
+			"sortBy": "Ordina per",
+			"priceRange": "Fascia di Prezzo",
+			"availability": "Disponibilità",
+			"material": "Materiale",
+			"size": "Dimensione",
+			"allCategories": "Tutte le Categorie",
+			"showFilters": "Mostra Filtri",
+			"hideFilters": "Nascondi Filtri",
+			"clearAll": "Cancella Tutto"
+		},
+		"productGrid": {
+			"showing": "Mostrando {{count}} prodotti",
+			"noProducts": "Nessun prodotto trovato",
+			"noProductsDescription": "Prova a modificare i filtri o i termini di ricerca"
+		},
+		"categoryPage": {
+			"productsAvailable": "{{count}} prodotto disponibile",
+			"productsAvailable_plural": "{{count}} prodotti disponibili"
+		},
+		"trustSignals": {
+			"freeShipping": "Spedizione Gratuita in Tutto il Mondo",
+			"madeToOrder": "Realizzato su Ordinazione",
+			"customSizes": "Dimensioni Personalizzate Disponibili",
+			"experience": "20+ Anni di Esperienza",
+			"inStock": "Disponibile e Pronto per la Spedizione",
+			"lifetimeWarranty": "Garanzia a Vita"
+		},
+		"usTariffNotice": {
+			"badge": "Avviso Importante per i Clienti USA",
+			"title": "Siamo qui per te",
+			"message": "Nonostante le recenti modifiche tariffarie sulle importazioni serbe, rimaniamo impegnati a servire i nostri clienti statunitensi. Stiamo lavorando a soluzioni per ridurre al minimo l'impatto sui prezzi.",
+			"learnMore": "Scopri di più sul nostro servizio USA"
+		},
+		"badges": {
+			"new": "Nuovo",
+			"featured": "In Evidenza",
+			"bestSeller": "Best Seller",
+			"customMade": "Su Misura",
+			"inStock": "Disponibile"
+		},
+		"loading": "Caricamento prodotti...",
+		"error": {
+			"loadFailed": "Impossibile caricare i prodotti",
+			"tryAgain": "Si prega di provare ad aggiornare la pagina"
+		},
+		"productDetail": {
+			"badges": {
+				"inStock": "Disponibile",
+				"madeToOrder": "Realizzato su ordinazione",
+				"customSizesOnly": "Solo dimensioni personalizzate"
+			},
+			"customOnlyBanner": {
+				"title": "Dimensioni personalizzate richieste",
+				"description": "Questo modello può essere ordinato solo in dimensioni personalizzate per adattarsi esattamente al tuo acquario.",
+				"calculatorLink": "Usa il Calcolatore Prezzi →"
+			},
+			"sections": {
+				"productDetails": "Dettagli del prodotto",
+				"specifications": "Specifiche",
+				"keyFeatures": "Caratteristiche principali",
+				"productGallery": "Galleria prodotti",
+				"moreFrom": "Altro da {category}"
+			},
+			"specs": {
+				"material": "Materiale",
+				"width": "Larghezza",
+				"height": "Altezza",
+				"productionTime": "Tempo di produzione"
+			},
+			"features": {
+				"lifetimeWarranty": {
+					"title": "Garanzia a vita",
+					"description": "Materiali resistenti agli agenti chimici che non rilasciano sostanze o alterano la chimica dell'acqua"
+				},
+				"easyInstallation": {
+					"title": "Installazione facile",
+					"description": "Design modulare con sezioni numerate per un assemblaggio senza giunture"
+				},
+				"maintenanceFree": {
+					"title": "Senza manutenzione",
+					"description": "Superficie lavabile - le alghe si rimuovono facilmente senza danni"
+				}
+			},
+			"description": {
+				"readMore": "Leggi di più",
+				"showLess": "Mostra meno"
+			}
+		}
+	}
 }
