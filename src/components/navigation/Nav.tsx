@@ -116,7 +116,6 @@ export function Nav() {
 							>
 								<Search className="h-4 w-4" />
 							</button>
-
 							<Link
 								href="/account"
 								className="flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"

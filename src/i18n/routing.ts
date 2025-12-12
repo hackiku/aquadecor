@@ -78,6 +78,7 @@ export const routing = defineRouting({
 		// Auth pages - NO TRANSLATION (functional)
 		'/login': '/login',
 		'/register': '/register',
+		'/account': '/account',
 
 		// Admin - NO TRANSLATION
 		'/admin': '/admin',
