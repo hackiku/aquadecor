@@ -10,7 +10,8 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 type Props = {
 	params: Promise<{ locale: string }>;

@@ -9,7 +9,9 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { getLocale } from "~/i18n/utils";
 import type { Locale } from "~/i18n/routing";
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
+
 
 type Props = {
 	params: Promise<{ locale: string }>;
