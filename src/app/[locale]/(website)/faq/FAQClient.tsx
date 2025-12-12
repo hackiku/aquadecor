@@ -73,7 +73,7 @@ export function FAQClient({ region, dbLocale }: FAQClientProps) {
 			</div>
 
 			{/* Hero Section */}
-			<section className="relative z-10 mx-auto px-4 pt-16 md:pt-24 pb-16">
+			<section className="relative z-10 mx-auto px-4 pt-16 md:pt-24 pb-8">
 				<div className="mx-auto max-w-5xl text-center space-y-6">
 					<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
 						<span className="text-sm text-primary font-display font-medium">
@@ -97,7 +97,7 @@ export function FAQClient({ region, dbLocale }: FAQClientProps) {
 						<div className="relative group">
 							<div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 							<div className="relative">
-								<Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+								<Search className="absolute z-10 left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
 								<Input
 									placeholder={t("searchPlaceholder")}
 									value={searchQuery}
@@ -165,10 +165,10 @@ export function FAQClient({ region, dbLocale }: FAQClientProps) {
 							<div key={cat.id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
 								{/* Category Header */}
 								<div className="flex items-center gap-3">
-									<Badge variant="outline" className="px-3 py-1 text-sm font-normal bg-background/50 backdrop-blur-sm">
+									<Badge variant="outline" className="px-3 py-1 text-sm font-normal bg-primary/20 backdrop-blur-sm">
 										{cat.name}
 									</Badge>
-									<div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+									<div className="h-px flex-1 bg-linear-to-r from-border to-transparent" />
 								</div>
 
 								{/* Accordion */}
@@ -179,7 +179,7 @@ export function FAQClient({ region, dbLocale }: FAQClientProps) {
 											value={faq.id}
 											className="rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm px-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:bg-card"
 										>
-											<AccordionTrigger className="py-5 text-left text-base font-medium hover:no-underline hover:text-primary transition-colors">
+											<AccordionTrigger className="py-5 text-left text-xl font-light hover:no-underline hover:text-primary transition-colors">
 												{faq.question}
 											</AccordionTrigger>
 											<AccordionContent className="pb-6 pt-0 text-muted-foreground leading-relaxed">
@@ -195,7 +195,7 @@ export function FAQClient({ region, dbLocale }: FAQClientProps) {
 					</div>
 
 					{/* Help Section */}
-					<div className="rounded-2xl border border-border bg-gradient-to-br from-card to-muted/50 p-8 md:p-12 text-center mb-16">
+					<div className="rounded-2xl border border-border bg-linear-to-br from-card to-muted/50 p-8 md:p-12 text-center mb-16">
 						<h3 className="mb-3 text-2xl font-display font-light">{t("contactTitle")}</h3>
 						<p className="mb-8 text-muted-foreground max-w-xl mx-auto">
 							{t("contactText")}
