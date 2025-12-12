@@ -2,9 +2,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ChevronDown, Wrench, Headphones, CircleHelp, Truck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from 'next-intl';
+import { Link } from '~/i18n/navigation';
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { resourceLinks } from "~/data/navigation";
 
@@ -21,6 +22,7 @@ const iconMap: Record<string, any> = {
 
 export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const t = useTranslations('common.nav'); // Direct translation, no custom hook
 
 	const handleMouseEnter = (href: string) => {
 		router.prefetch(href);
@@ -28,13 +30,13 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 
 	return (
 		<div
-			className="relative"
+			className="relative h-full flex items-center"
 			onMouseEnter={() => setIsOpen(true)}
 			onMouseLeave={() => setIsOpen(false)}
 		>
 			{/* Trigger */}
-			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none">
-				Resources
+			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none h-full">
+				{t('resources')} {/* Or just hardcode "Resources" if not translating nav trigger */}
 				<ChevronDown
 					className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
 				/>
@@ -44,13 +46,13 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 			<AnimatePresence>
 				{isOpen && (
 					<motion.div
-						initial={{ opacity: 0, y: -10 }}
+						initial={{ opacity: 0, y: -5 }}
 						animate={{ opacity: 1, y: 0 }}
-						exit={{ opacity: 0, y: -10 }}
+						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						className="absolute top-full right-0 mt-2 w-[320px] bg-black border border-t-0 border-white/10 rounded-lg shadow-2xl overflow-hidden"
+						className="absolute top-full -right-4 -mt-px w-[340px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
-						<div className="__flex p-2">
+						<div className="p-2">
 							{resourceLinks.map((resource, index) => {
 								const Icon = resource.icon ? iconMap[resource.icon] : null;
 
@@ -62,7 +64,7 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 										transition={{ delay: index * 0.05 }}
 									>
 										<Link
-											href={resource.href}
+											href={resource.href as any}
 											onMouseEnter={() => handleMouseEnter(resource.href)}
 											className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors group"
 										>
@@ -73,10 +75,10 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 											)}
 											<div className="flex-1 min-w-0">
 												<h4 className="font-display font-normal text-white mb-0.5">
-													{resource.label}
+													{t(resource.labelKey)}
 												</h4>
 												<p className="text-xs text-gray-400 font-display font-light leading-relaxed">
-													{resource.description}
+													{t(resource.descriptionKey)}
 												</p>
 											</div>
 										</Link>

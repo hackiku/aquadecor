@@ -2,9 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ChevronDown, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ChevronDown, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from 'next-intl';
+import { Link } from '~/i18n/navigation';
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 interface ShopMegaMenuProps {
@@ -13,13 +15,13 @@ interface ShopMegaMenuProps {
 
 export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const t = useTranslations('common.nav');
 
 	const handleMouseEnter = (href: string) => {
 		router.prefetch(href);
 	};
 
 	return (
-		// The parent div is the trigger area
 		<div
 			className="relative h-full flex items-center"
 			onMouseEnter={() => setIsOpen(true)}
@@ -27,7 +29,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 		>
 			{/* Trigger */}
 			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none h-full">
-				Shop
+				{t('shop')}
 				<ChevronDown
 					className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
 				/>
@@ -41,60 +43,141 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						// 🎯 STYLING CHANGES: Aligned left/top, no shadow, clean borders
-						className="absolute top-full -left-4 mt-0 pt-2 w-[400px] bg-black border-r border-l border-b border-white/10 rounded-b-lg shadow-xl z-30 overflow-hidden"
+						// Larger width, left-aligned perfectly
+						className="absolute top-full -left-4 -mt-px w-[560px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
 						<div className="p-6">
-							{/* Product Lines */}
-							<div className="mb-6">
-								<h3 className="text-xs uppercase tracking-wide text-gray-400 font-display mb-4">
-									Product Lines
-								</h3>
-								<div className="grid grid-cols-1 gap-1">
-									{/* 3D Backgrounds */}
-									<Link
-										href="/shop/3d-backgrounds"
-										onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
-										className="group flex items-center p-3 rounded-lg hover:bg-white/5 transition-colors -mx-3"
-									>
-										<span className="text-2xl mr-3">🪨</span>
-										<div>
-											<h4 className="font-display font-medium text-white">3D Backgrounds</h4>
-											<p className="text-xs text-gray-400 font-display font-light">Custom-made realistic backgrounds</p>
-										</div>
-									</Link>
-
-									{/* Decorations */}
-									<Link
-										href="/shop/aquarium-decorations"
-										onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
-										className="group flex items-center p-3 rounded-lg hover:bg-white/5 transition-colors -mx-3"
-									>
-										<span className="text-2xl mr-3">🌿</span>
-										<div>
-											<h4 className="font-display font-medium text-white">Decorations</h4>
-											<p className="text-xs text-gray-400 font-display font-light">Plants, rocks & driftwood</p>
-										</div>
-									</Link>
-								</div>
-							</div>
-
-							{/* Quick Links */}
-							<div className="pt-4 border-t border-white/10 flex flex-col space-y-2">
+							{/* Main Grid: Shop All (wider) + Product Categories */}
+							<div className="grid grid-cols-5 gap-4 mb-6">
+								{/* Left Column: Shop Homepage (Tall & Wide - 2 cols) */}
 								<Link
 									href="/shop"
 									onMouseEnter={() => handleMouseEnter("/shop")}
-									className="text-sm text-gray-400 hover:text-blue-400 transition-colors font-display font-light"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 row-span-2 col-span-2 flex flex-col"
 								>
-									View All Products
+									{/* Background Image - more visible now */}
+									<div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+										<Image
+											src="/media/nav/shop-all.jpg"
+											alt="Shop All Products"
+											fill
+											className="object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-300"
+										/>
+									</div>
+
+									{/* Content */}
+									<div className="relative z-10 p-5 flex flex-col justify-between h-full">
+										<div>
+											<h3 className="text-xl font-display font-medium text-white mb-2">
+												{t('shop')}
+											</h3>
+											<p className="text-sm text-gray-300 font-display font-light leading-relaxed">
+												{t('shopDescription')}
+											</p>
+										</div>
+
+										<div className="flex items-center text-sm text-primary font-display font-medium mt-4 group-hover:gap-2 transition-all">
+											Browse
+											<ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+										</div>
+									</div>
 								</Link>
+
+								{/* Right Column: Product Categories (2 rows, 3 cols) */}
+
+								{/* 3D Backgrounds */}
+								<Link
+									href="/shop/3d-backgrounds"
+									onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex"
+								>
+									{/* Background Image */}
+									<div className="absolute inset-0">
+										<Image
+											src="/media/nav/backgrounds.jpg"
+											alt="3D Backgrounds"
+											fill
+											className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+										/>
+										<div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40" />
+									</div>
+
+									{/* Content */}
+									<div className="relative z-10 p-4 flex items-center gap-3 w-full">
+										<div className="flex-shrink-0 w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+											<span className="text-2xl">🪨</span>
+										</div>
+										<div className="flex-1 min-w-0">
+											<h4 className="font-display font-medium text-white mb-0.5">
+												{t('backgrounds')}
+											</h4>
+											<p className="text-xs text-gray-400 font-display font-light">
+												Custom realistic backgrounds
+											</p>
+										</div>
+										<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+									</div>
+								</Link>
+
+								{/* Aquarium Decorations */}
+								<Link
+									href="/shop/aquarium-decorations"
+									onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex"
+								>
+									{/* Background Image */}
+									<div className="absolute inset-0">
+										<Image
+											src="/media/nav/decorations.jpg"
+											alt="Aquarium Decorations"
+											fill
+											className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+										/>
+										<div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40" />
+									</div>
+
+									{/* Content */}
+									<div className="relative z-10 p-4 flex items-center gap-3 w-full">
+										<div className="flex-shrink-0 w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+											<span className="text-2xl">🌿</span>
+										</div>
+										<div className="flex-1 min-w-0">
+											<h4 className="font-display font-medium text-white mb-0.5">
+												{t('decorations')}
+											</h4>
+											<p className="text-xs text-gray-400 font-display font-light">
+												Plants, rocks & driftwood
+											</p>
+										</div>
+										<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+									</div>
+								</Link>
+							</div>
+
+							{/* Bottom CTA: Custom Calculator */}
+							<div className="pt-4 border-t border-white/10">
 								<Link
 									href="/calculator"
 									onMouseEnter={() => handleMouseEnter("/calculator")}
-									className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors font-display font-normal"
+									className="group flex items-center justify-between p-3 -mx-3 rounded-lg hover:bg-white/5 transition-colors"
 								>
-									<Sparkles className="h-3.5 w-3.5" />
-									Custom Designer
+									<div className="flex items-center gap-3">
+										<div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+											<Sparkles className="h-5 w-5 text-primary" />
+										</div>
+										<div>
+											<h4 className="font-display font-medium text-white text-sm flex items-center gap-2">
+												{t('calculator')}
+												<span className="px-1.5 py-0.5 text-[10px] bg-primary/20 text-primary rounded-full font-normal">
+													Custom
+												</span>
+											</h4>
+											<p className="text-xs text-gray-400 font-display font-light">
+												{t('calculatorDescription')}
+											</p>
+										</div>
+									</div>
+									<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
 								</Link>
 							</div>
 						</div>

@@ -8,6 +8,7 @@
 			"gallery": "Gallery",
 			"calculator": "Price Calculator",
 			"calculatorDescription": "Design your custom background",
+			"resources": "Resources",
 			"faq": "FAQ",
 			"setup": "Setting Up",
 			"setupDescription": "10 installation configurations",
@@ -33,12 +34,6 @@
 			"categoryLegal": "Legal",
 			"copyright": "© {year} Aquadecor LLC. All rights reserved.",
 			"adminPanel": "Admin Panel",
-			"newsletter": {
-				"title": "Join Our Newsletter",
-				"subtitle": "Join thousands of subscribers and get exclusive insights",
-				"placeholder": "Email address",
-				"button": "Join now"
-			},
 			"builtBy": "Web + Shop by",
 			"veenieTagline": "Aerospace-grade web dev"
 		}

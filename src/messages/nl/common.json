@@ -2,45 +2,40 @@
 	"common": {
 		"nav": {
 			"shop": "Shop",
-			"shopDescription": "Bekijk onze 3D-achterwanden en decoraties",
-			"backgrounds": "3D-Achterwanden",
+			"shopDescription": "Blader door onze 3D-achtergronden en decoraties",
+			"backgrounds": "3D Achtergronden",
 			"decorations": "Aquariumdecoraties",
 			"gallery": "Galerij",
 			"calculator": "Prijscalculator",
-			"calculatorDescription": "Ontwerp uw eigen achterwand",
+			"calculatorDescription": "Ontwerp je aangepaste achtergrond",
+			"resources": "Hulp",
 			"faq": "FAQ",
 			"setup": "Installatie",
 			"setupDescription": "10 installatieconfiguraties",
 			"support": "Klantenservice",
-			"supportDescription": "Hulp bij uw bestelling",
+			"supportDescription": "Hulp bij je bestelling",
 			"about": "Over ons",
 			"blog": "Blog",
-			"reviews": "Reviews",
+			"reviews": "Beoordelingen",
 			"distributors": "Distributeurs",
 			"contact": "Contact",
-			"terms": "Algemene Voorwaarden",
+			"terms": "Algemene voorwaarden",
 			"privacy": "Privacybeleid",
 			"shipping": "Verzendbeleid",
-			"shippingReturns": "Verzending & Retournering",
+			"shippingReturns": "Verzending & Retouren",
 			"shippingDescription": "Leverings- en retourbeleid",
 			"refund": "Restitutiebeleid",
 			"faqDescription": "Veelgestelde vragen beantwoord"
 		},
 		"footer": {
 			"categoryShop": "Shop",
-			"categoryResources": "Bronnen",
+			"categoryResources": "Hulp",
 			"categoryCompany": "Bedrijf",
 			"categoryLegal": "Juridisch",
 			"copyright": "© {year} Aquadecor LLC. Alle rechten voorbehouden.",
-			"adminPanel": "Admin Paneel",
-			"newsletter": {
-				"title": "Meld u aan voor onze nieuwsbrief",
-				"subtitle": "Sluit u aan bij duizenden abonnees en krijg exclusieve inzichten",
-				"placeholder": "E-mailadres",
-				"button": "Nu aanmelden"
-			},
+			"adminPanel": "Adminpaneel",
 			"builtBy": "Web + Shop door",
-			"veenieTagline": "Webontwikkeling van luchtvaartklasse"
+			"veenieTagline": "Webontwikkeling op aerospace-niveau"
 		}
 	}
 }

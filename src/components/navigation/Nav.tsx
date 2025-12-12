@@ -2,9 +2,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Link } from '~/i18n/navigation';
+import { useNavigationTranslations } from '~/i18n/useNavigationTranslations';
 import { ModeToggle } from "../ui/mode-toggle";
 import { LanguageSwitcher } from "~/i18n/LanguageSwitcher";
 import { ShoppingCart, Search, User, Menu, X, Heart } from "lucide-react";
@@ -18,6 +19,7 @@ import { Button } from "../ui/button";
 
 export function Nav() {
 	const router = useRouter();
+	const { translateNavLink } = useNavigationTranslations();
 	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
 	const [cartCount, setCartCount] = useState(0);
@@ -58,8 +60,9 @@ export function Nav() {
 		return () => window.removeEventListener("wishlist-updated", updateWishlistCount);
 	}, []);
 
-	// Filter out Shop from regular links (handled by mega menu)
-	const regularLinks = enabledNavLinks.filter(link => link.label !== "Shop");
+	// Translate and filter nav links
+	const translatedLinks = enabledNavLinks.map(translateNavLink);
+	const regularLinks = translatedLinks.filter(link => link.labelKey !== "shop");
 
 	return (
 		<>
@@ -86,7 +89,7 @@ export function Nav() {
 							{regularLinks.map((link) => (
 								<Link
 									key={link.href}
-									href={link.href}
+									href={link.href as any}
 									className="text-md font-light transition-colors hover:text-blue-400 text-white font-display relative group"
 								>
 									{link.label}

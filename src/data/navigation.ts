@@ -27,7 +27,7 @@ export const mainNavLinks: NavLink[] = [
 		href: "/shop",
 		enabled: true,
 		showInNav: true,
-		showInFooter: false,
+		showInFooter: true,  // ← Added to footer!
 		descriptionKey: "shopDescription",
 		category: "shop",
 	},
@@ -170,6 +170,7 @@ export const mainNavLinks: NavLink[] = [
 ];
 
 // Resources dropdown items (for mega menu)
+// Note: These use different keys because they're nav-specific
 export const resourceLinks: ResourceLink[] = [
 	{
 		labelKey: "setup",
@@ -190,7 +191,7 @@ export const resourceLinks: ResourceLink[] = [
 		icon: "circle-help",
 	},
 	{
-		labelKey: "shippingReturns",
+		labelKey: "shippingReturns",  // Different key for nav
 		href: "/legal/shipping",
 		descriptionKey: "shippingDescription",
 		icon: "truck",

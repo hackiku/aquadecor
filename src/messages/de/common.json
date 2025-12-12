@@ -8,6 +8,7 @@
 			"gallery": "Galerie",
 			"calculator": "Preisrechner",
 			"calculatorDescription": "Gestalten Sie Ihren individuellen Hintergrund",
+			"resources": "Ressourcen",
 			"faq": "FAQ",
 			"setup": "Installation",
 			"setupDescription": "10 Installationskonfigurationen",
@@ -33,12 +34,6 @@
 			"categoryLegal": "Rechtliches",
 			"copyright": "© {year} Aquadecor LLC. Alle Rechte vorbehalten.",
 			"adminPanel": "Admin-Panel",
-			"newsletter": {
-				"title": "Newsletter abonnieren",
-				"subtitle": "Schließen Sie sich Tausenden von Abonnenten an und erhalten Sie exklusive Einblicke",
-				"placeholder": "E-Mail-Adresse",
-				"button": "Jetzt beitreten"
-			},
 			"builtBy": "Web + Shop von",
 			"veenieTagline": "Webentwicklung nach Aerospace-Standard"
 		}

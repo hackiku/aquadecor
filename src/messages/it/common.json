@@ -1,46 +1,41 @@
 {
 	"common": {
 		"nav": {
-			"shop": "Negozio",
-			"shopDescription": "Sfoglia i nostri sfondi 3D e decorazioni",
+			"shop": "Shop",
+			"shopDescription": "Sfoglia i nostri sfondi e decorazioni 3D",
 			"backgrounds": "Sfondi 3D",
-			"decorations": "Decorazioni per Acquari",
+			"decorations": "Decorazioni per acquari",
 			"gallery": "Galleria",
-			"calculator": "Calcolatore Prezzi",
+			"calculator": "Calcolatore",
 			"calculatorDescription": "Progetta il tuo sfondo personalizzato",
+			"resources": "Assistenza",
 			"faq": "FAQ",
 			"setup": "Installazione",
 			"setupDescription": "10 configurazioni di installazione",
-			"support": "Assistenza Clienti",
-			"supportDescription": "Ricevi aiuto con il tuo ordine",
-			"about": "Chi Siamo",
+			"support": "Assistenza clienti",
+			"supportDescription": "Ottieni aiuto per il tuo ordine",
+			"about": "Chi siamo",
 			"blog": "Blog",
 			"reviews": "Recensioni",
 			"distributors": "Distributori",
-			"contact": "Contatti",
-			"terms": "Termini e Condizioni",
-			"privacy": "Informativa sulla Privacy",
-			"shipping": "Politica di Spedizione",
-			"shippingReturns": "Spedizioni e Resi",
+			"contact": "Contatto",
+			"terms": "Termini e condizioni",
+			"privacy": "Informativa sulla privacy",
+			"shipping": "Politica di spedizione",
+			"shippingReturns": "Spedizioni e resi",
 			"shippingDescription": "Politiche di consegna e reso",
-			"refund": "Politica di Rimborso",
-			"faqDescription": "Risposte alle domande frequenti"
+			"refund": "Politica di rimborso",
+			"faqDescription": "Risposte alle domande più frequenti"
 		},
 		"footer": {
-			"categoryShop": "Negozio",
-			"categoryResources": "Risorse",
+			"categoryShop": "Shop",
+			"categoryResources": "Informazioni",
 			"categoryCompany": "Azienda",
 			"categoryLegal": "Legale",
 			"copyright": "© {year} Aquadecor LLC. Tutti i diritti riservati.",
-			"adminPanel": "Pannello Amministratore",
-			"newsletter": {
-				"title": "Iscriviti alla Newsletter",
-				"subtitle": "Unisciti a migliaia di iscritti e ottieni approfondimenti esclusivi",
-				"placeholder": "Indirizzo email",
-				"button": "Iscriviti ora"
-			},
-			"builtBy": "Web + Shop di",
-			"veenieTagline": "Sviluppo web di livello aerospaziale"
+			"adminPanel": "Pannello Admin",
+			"builtBy": "Web + Shop da",
+			"veenieTagline": "Sviluppo web con standard aerospaziali"
 		}
 	}
 }
