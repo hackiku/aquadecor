@@ -15,6 +15,42 @@ interface PageProps {
 	}>;
 }
 
+// Generate metadata from DB
+export async function generateMetadata({ params }: PageProps) {
+	const { locale, productLine, categorySlug } = await params;
+	const dbLocale = locale === 'us' ? 'en' : locale;
+
+	// Fetch category metadata from DB
+	const categoryMeta = await api.product.getCategoryMetadataBySlug({
+		categorySlug,
+		locale: dbLocale,
+	});
+
+	if (!categoryMeta) {
+		return {
+			title: 'Category Not Found',
+		};
+	}
+
+	// Use DB translations for SEO with fallbacks
+	const title = categoryMeta.metaTitle || categoryMeta.name || categorySlug;
+	const description = categoryMeta.metaDescription || categoryMeta.description || '';
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			images: categoryMeta.heroImageUrl ? [categoryMeta.heroImageUrl] : [],
+			type: 'website',
+		},
+		alternates: {
+			canonical: `/${locale}/shop/${productLine}/${categorySlug}`,
+		},
+	};
+}
+
 export default async function CategoryProductsPage({ params, searchParams }: PageProps) {
 	const { locale, productLine, categorySlug } = await params;
 	const { market = "ROW" } = await searchParams;
@@ -23,13 +59,12 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 	setRequestLocale(locale);
 
 	// Map US locale to English for DB
-	// const dbLocale = locale === 'us' ? 'en' : locale;
+	const dbLocale = locale === 'us' ? 'en' : locale;
 
 	// Fetch products using the category slug AND market
 	const result = await api.product.getByCategory({
 		categorySlug: categorySlug,
-		// locale: dbLocale,  // ← Use dbLocale, not hardcoded "en"
-		locale: locale,  // ← Use dbLocale, not hardcoded "en"
+		locale: dbLocale,  // ← Use dbLocale, not hardcoded "en"
 		userMarket: market,
 	});
 
@@ -42,8 +77,7 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 	// Fetch full category list to get metadata (name, description, etc)
 	const categories = await api.product.getCategoriesForProductLine({
 		productLineSlug: productLine,
-		// locale: dbLocale,  // ← Use dbLocale
-		locale: locale,  // ← Use dbLocale
+		locale: dbLocale,  // ← Use dbLocale
 	});
 
 	const currentCategory = categories.find((c) => c.slug === categorySlug);
