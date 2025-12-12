@@ -1,8 +1,9 @@
 // src/app/[locale]/(website)/setup/page.tsx
 
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { routing } from '~/i18n/routing';
 import Image from "next/image";
-import Link from 'next/link';
+import { Link } from '~/i18n/navigation'; // Use our i18n-aware Link
 
 type Props = {
 	params: Promise<{ locale: string }>;
@@ -19,8 +20,17 @@ export async function generateMetadata({ params }: Props) {
 	};
 }
 
+// Generate static params for all locales
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function SetupPage({ params }: Props) {
 	const { locale } = await params;
+
+	// Enable static rendering - CRITICAL!
+	setRequestLocale(locale);
+
 	const t = await getTranslations({ locale, namespace: 'setup' });
 
 	// Setup examples with image paths
@@ -149,14 +159,15 @@ export default async function SetupPage({ params }: Props) {
 							{t('ctaSubHeadline')}
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+							{/* Use i18n-aware Link - it handles pathname translation automatically! */}
 							<Link
-								href={`/${locale}/calculator`}
+								href="/calculator"
 								className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
 							>
 								{t('ctaButton1')}
 							</Link>
 							<Link
-								href={`/${locale}/shop`}
+								href="/shop"
 								className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-border rounded-full font-display font-medium hover:border-primary/50 hover:bg-accent/30 transition-all"
 							>
 								{t('ctaButton2')}

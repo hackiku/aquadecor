@@ -1,38 +1,36 @@
 // src/data/navigation.ts
 
 export interface NavLink {
-	labelKey: string; // Translation key (without namespace prefix)
+	label: string;
 	href: string;
 	enabled: boolean;
 	showInNav?: boolean;
 	showInFooter?: boolean;
-	descriptionKey?: string;
+	description?: string;
 	badge?: string;
-	category?: "shop" | "resources" | "company" | "legal";
+	category?: "shop" | "custom" | "help" | "contact" | "legal";
 }
 
 export interface ResourceLink {
-	labelKey: string;
+	label: string;
 	href: string;
-	descriptionKey: string;
+	description: string;
 	icon?: string;
 }
 
 // Main navigation links organized by category
-// Keys should NOT include 'nav.' prefix - the hook handles that
 export const mainNavLinks: NavLink[] = [
-	// Shop Category
+	// Shop
 	{
-		labelKey: "shop",
+		label: "Shop",
 		href: "/shop",
 		enabled: true,
 		showInNav: true,
 		showInFooter: false,
-		descriptionKey: "shopDescription",
-		category: "shop",
+		description: "Browse our 3D backgrounds and decorations",
 	},
 	{
-		labelKey: "backgrounds",
+		label: "3D Backgrounds",
 		href: "/shop/3d-backgrounds",
 		enabled: true,
 		showInNav: false,
@@ -40,7 +38,7 @@ export const mainNavLinks: NavLink[] = [
 		category: "shop",
 	},
 	{
-		labelKey: "decorations",
+		label: "Aquarium Decorations",
 		href: "/shop/aquarium-decorations",
 		enabled: true,
 		showInNav: false,
@@ -48,120 +46,114 @@ export const mainNavLinks: NavLink[] = [
 		category: "shop",
 	},
 	{
-		labelKey: "gallery",
+		label: "Reviews",
+		href: "/shop/reviews",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "shop",
+	},
+	{
+		label: "Gallery",
 		href: "/gallery",
 		enabled: true,
 		showInNav: true,
 		showInFooter: true,
 		category: "shop",
 	},
+
+	// Custom
 	{
-		labelKey: "calculator",
+		label: "Calculator",
 		href: "/calculator",
 		enabled: true,
 		showInNav: true,
 		showInFooter: true,
 		category: "shop",
 		badge: "Custom",
-		descriptionKey: "calculatorDescription",
+		description: "Design your custom background",
 	},
 
-	// Resources Category (Help)
+	// Help
 	{
-		labelKey: "faq",
+		label: "FAQ",
 		href: "/faq",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
-		category: "resources",
+		category: "help",
 	},
 	{
-		labelKey: "setup",
+		label: "Setting Up",
 		href: "/setup",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
-		category: "resources",
-	},
-	{
-		labelKey: "support",
-		href: "/support",
-		enabled: false,
-		showInNav: false,
-		showInFooter: true,
-		category: "resources",
+		category: "help",
 	},
 
-	// Company Category
+	// Contact
 	{
-		labelKey: "about",
+		label: "About Us",
 		href: "/about",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
-		category: "company",
+		category: "contact",
 	},
 	{
-		labelKey: "blog",
-		href: "/blog",
-		enabled: true,
-		showInNav: true,
-		showInFooter: true,
-		category: "company",
-	},
-	{
-		labelKey: "reviews",
-		href: "/reviews",
-		enabled: true,
-		showInNav: false,
-		showInFooter: true,
-		category: "company",
-	},
-	{
-		labelKey: "distributors",
-		href: "/distributors",
-		enabled: true,
-		showInNav: false,
-		showInFooter: true,
-		category: "company",
-	},
-	{
-		labelKey: "contact",
+		label: "Contact",
 		href: "/contact",
 		enabled: false,
 		showInNav: false,
 		showInFooter: true,
-		category: "company",
+		category: "contact",
+	},
+	{
+		label: "Distributors",
+		href: "/distributors",
+		enabled: true,
+		showInNav: false,
+		showInFooter: true,
+		category: "contact",
+	},
+	{
+		label: "Blog",
+		href: "/blog",
+		enabled: true,
+		showInNav: true,
+		showInFooter: false,
+		category: "contact",
 	},
 
 	// Legal
 	{
-		labelKey: "terms",
-		href: "/legal/terms",
+		label: "Terms and Conditions",
+		href: "/en/terms",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
 		category: "legal",
 	},
 	{
-		labelKey: "privacy",
-		href: "/legal/privacy",
+		label: "Privacy Policy",
+		href: "/en/privacy",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
 		category: "legal",
 	},
 	{
-		labelKey: "shipping",
-		href: "/legal/shipping",
+		label: "Shipping Policy",
+		href: "/en/shipping",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
 		category: "legal",
 	},
 	{
-		labelKey: "refund",
-		href: "/legal/refund",
+		label: "Refund Policy",
+		href: "/en/refund",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
@@ -169,30 +161,30 @@ export const mainNavLinks: NavLink[] = [
 	},
 ];
 
-// Resources dropdown items (for mega menu)
+// Resources dropdown items
 export const resourceLinks: ResourceLink[] = [
 	{
-		labelKey: "setup",
+		label: "Setup Guide",
 		href: "/setup",
-		descriptionKey: "setupDescription",
+		description: "10 installation configurations",
 		icon: "wrench",
 	},
 	{
-		labelKey: "support",
+		label: "Customer Support",
 		href: "/support",
-		descriptionKey: "supportDescription",
+		description: "Get help with your order",
 		icon: "headphones",
 	},
 	{
-		labelKey: "faq",
+		label: "FAQ",
 		href: "/faq",
-		descriptionKey: "faqDescription",
+		description: "Common questions answered",
 		icon: "circle-help",
 	},
 	{
-		labelKey: "shippingReturns",
-		href: "/legal/shipping",
-		descriptionKey: "shippingDescription",
+		label: "Shipping & Returns",
+		href: "/shipping",
+		description: "Delivery and return policies",
 		icon: "truck",
 	},
 ];
@@ -208,8 +200,9 @@ export const footerLinks = mainNavLinks.filter(
 
 export const footerLinksByCategory = {
 	shop: footerLinks.filter((l) => l.category === "shop"),
-	resources: footerLinks.filter((l) => l.category === "resources"),
-	company: footerLinks.filter((l) => l.category === "company"),
+	custom: footerLinks.filter((l) => l.category === "custom"),
+	help: footerLinks.filter((l) => l.category === "help"),
+	contact: footerLinks.filter((l) => l.category === "contact"),
 	legal: footerLinks.filter((l) => l.category === "legal"),
 };
 

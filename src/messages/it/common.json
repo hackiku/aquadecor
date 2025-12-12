@@ -1,5 +1,46 @@
 {
-  "common": {
-    "placeholder": "Translations for common in it"
-  }
+	"common": {
+		"nav": {
+			"shop": "Negozio",
+			"shopDescription": "Sfoglia i nostri sfondi 3D e decorazioni",
+			"backgrounds": "Sfondi 3D",
+			"decorations": "Decorazioni per Acquari",
+			"gallery": "Galleria",
+			"calculator": "Calcolatore Prezzi",
+			"calculatorDescription": "Progetta il tuo sfondo personalizzato",
+			"faq": "FAQ",
+			"setup": "Installazione",
+			"setupDescription": "10 configurazioni di installazione",
+			"support": "Assistenza Clienti",
+			"supportDescription": "Ricevi aiuto con il tuo ordine",
+			"about": "Chi Siamo",
+			"blog": "Blog",
+			"reviews": "Recensioni",
+			"distributors": "Distributori",
+			"contact": "Contatti",
+			"terms": "Termini e Condizioni",
+			"privacy": "Informativa sulla Privacy",
+			"shipping": "Politica di Spedizione",
+			"shippingReturns": "Spedizioni e Resi",
+			"shippingDescription": "Politiche di consegna e reso",
+			"refund": "Politica di Rimborso",
+			"faqDescription": "Risposte alle domande frequenti"
+		},
+		"footer": {
+			"categoryShop": "Negozio",
+			"categoryResources": "Risorse",
+			"categoryCompany": "Azienda",
+			"categoryLegal": "Legale",
+			"copyright": "© {year} Aquadecor LLC. Tutti i diritti riservati.",
+			"adminPanel": "Pannello Amministratore",
+			"newsletter": {
+				"title": "Iscriviti alla Newsletter",
+				"subtitle": "Unisciti a migliaia di iscritti e ottieni approfondimenti esclusivi",
+				"placeholder": "Indirizzo email",
+				"button": "Iscriviti ora"
+			},
+			"builtBy": "Web + Shop di",
+			"veenieTagline": "Sviluppo web di livello aerospaziale"
+		}
+	}
 }

@@ -1,5 +1,46 @@
 {
-  "common": {
-    "placeholder": "Translations for common in de"
-  }
+	"common": {
+		"nav": {
+			"shop": "Shop",
+			"shopDescription": "Durchsuchen Sie unsere 3D-Hintergründe und Dekorationen",
+			"backgrounds": "3D-Hintergründe",
+			"decorations": "Aquarium-Dekorationen",
+			"gallery": "Galerie",
+			"calculator": "Preisrechner",
+			"calculatorDescription": "Gestalten Sie Ihren individuellen Hintergrund",
+			"faq": "FAQ",
+			"setup": "Installation",
+			"setupDescription": "10 Installationskonfigurationen",
+			"support": "Kundensupport",
+			"supportDescription": "Hilfe zu Ihrer Bestellung",
+			"about": "Über uns",
+			"blog": "Blog",
+			"reviews": "Bewertungen",
+			"distributors": "Händler",
+			"contact": "Kontakt",
+			"terms": "Allgemeine Geschäftsbedingungen",
+			"privacy": "Datenschutzerklärung",
+			"shipping": "Versandrichtlinie",
+			"shippingReturns": "Versand & Rücksendungen",
+			"shippingDescription": "Liefer- und Rückgaberichtlinien",
+			"refund": "Rückerstattungsrichtlinie",
+			"faqDescription": "Häufig gestellte Fragen beantwortet"
+		},
+		"footer": {
+			"categoryShop": "Shop",
+			"categoryResources": "Ressourcen",
+			"categoryCompany": "Unternehmen",
+			"categoryLegal": "Rechtliches",
+			"copyright": "© {year} Aquadecor LLC. Alle Rechte vorbehalten.",
+			"adminPanel": "Admin-Panel",
+			"newsletter": {
+				"title": "Newsletter abonnieren",
+				"subtitle": "Schließen Sie sich Tausenden von Abonnenten an und erhalten Sie exklusive Einblicke",
+				"placeholder": "E-Mail-Adresse",
+				"button": "Jetzt beitreten"
+			},
+			"builtBy": "Web + Shop von",
+			"veenieTagline": "Webentwicklung nach Aerospace-Standard"
+		}
+	}
 }

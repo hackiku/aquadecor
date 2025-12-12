@@ -1,10 +1,9 @@
 // src/components/i18n/LanguageSwitcher.tsx
 'use client';
 
-import { useLocale } from './hooks';
-// import { locales, localeNames, type Locale } from '~/i18n.config';
-import { locales, localeNames, type Locale } from './config';
-import { usePathname, useRouter } from 'next/navigation';
+import { useLocale } from '~/i18n/hooks';
+import { localeNames, type Locale } from '~/i18n/routing';
+import { useRouter, usePathname } from '~/i18n/navigation';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -20,11 +19,8 @@ export function LanguageSwitcher() {
 	const router = useRouter();
 
 	const switchLocale = (newLocale: Locale) => {
-		// Remove current locale from pathname
-		const pathWithoutLocale = pathname.replace(`/${locale}`, '');
-		// Add new locale
-		const newPath = `/${newLocale}${pathWithoutLocale}`;
-		router.push(newPath);
+		// The router from next-intl/navigation handles pathname translation automatically
+		router.replace(pathname, { locale: newLocale });
 	};
 
 	return (
@@ -36,13 +32,13 @@ export function LanguageSwitcher() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				{locales.map((loc) => (
+				{Object.entries(localeNames).map(([loc, name]) => (
 					<DropdownMenuItem
 						key={loc}
-						onClick={() => switchLocale(loc)}
+						onClick={() => switchLocale(loc as Locale)}
 						className={locale === loc ? 'bg-accent' : ''}
 					>
-						{localeNames[loc]}
+						{name}
 					</DropdownMenuItem>
 				))}
 			</DropdownMenuContent>

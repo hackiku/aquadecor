@@ -2,8 +2,7 @@
 'use client';
 
 import { useTranslations as useNextIntlTranslations, useLocale as useNextIntlLocale } from 'next-intl';
-// import { type Locale, isUSMarket } from '~/i18n.config';
-import { type Locale, isUSMarket } from './config';
+import { type Locale, isUSMarket } from './routing';
 import { type TranslationNamespace } from './utils';
 
 /**

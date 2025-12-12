@@ -1,37 +1,46 @@
 {
 	"common": {
 		"nav": {
-			"home": "Home",
 			"shop": "Shop",
-			"calculator": "Calculator",
-			"setup": "Setup Guide",
-			"about": "About",
-			"reviews": "Reviews"
-		},
-		"reviews": {
-			"title": "Customer Reviews | Aquadecor",
-			"description": "See what our customers are saying about Aquadecor 3D backgrounds",
-			"headline": "Customer Reviews",
-			"subheadline": "See what our customers are saying about Aquadecor products",
-			"totalReviews": "Total Reviews",
-			"avgRating": "Average Rating",
-			"fiveStarReviews": "5-Star Reviews",
-			"noReviews": "No reviews yet. Be the first to leave one!",
-			"ctaHeadline": "Ready to experience it yourself?",
-			"ctaSubheadline": "Join {count}+ satisfied customers who transformed their aquariums"
+			"shopDescription": "Browse our 3D backgrounds and decorations",
+			"backgrounds": "3D Backgrounds",
+			"decorations": "Aquarium Decorations",
+			"gallery": "Gallery",
+			"calculator": "Price Calculator",
+			"calculatorDescription": "Design your custom background",
+			"faq": "FAQ",
+			"setup": "Setting Up",
+			"setupDescription": "10 installation configurations",
+			"support": "Customer Support",
+			"supportDescription": "Get help with your order",
+			"about": "About Us",
+			"blog": "Blog",
+			"reviews": "Reviews",
+			"distributors": "Distributors",
+			"contact": "Contact",
+			"terms": "Terms and Conditions",
+			"privacy": "Privacy Policy",
+			"shipping": "Shipping Policy",
+			"shippingReturns": "Shipping & Returns",
+			"shippingDescription": "Delivery and return policies",
+			"refund": "Refund Policy",
+			"faqDescription": "Common questions answered"
 		},
 		"footer": {
-			"description": "Premium 3D aquarium backgrounds handcrafted in Serbia",
-			"shop": "Shop",
-			"company": "Company",
-			"support": "Support",
-			"legal": "Legal",
+			"categoryShop": "Shop",
+			"categoryResources": "Resources",
+			"categoryCompany": "Company",
+			"categoryLegal": "Legal",
+			"copyright": "© {year} Aquadecor LLC. All rights reserved.",
+			"adminPanel": "Admin Panel",
 			"newsletter": {
-				"title": "Newsletter",
-				"description": "Get updates on new products and special offers",
-				"placeholder": "Enter your email",
-				"button": "Subscribe"
-			}
+				"title": "Join Our Newsletter",
+				"subtitle": "Join thousands of subscribers and get exclusive insights",
+				"placeholder": "Email address",
+				"button": "Join now"
+			},
+			"builtBy": "Web + Shop by",
+			"veenieTagline": "Aerospace-grade web dev"
 		}
 	}
 }

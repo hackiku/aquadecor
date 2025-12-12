@@ -1,6 +1,7 @@
 // src/app/[locale]/(website)/faq/page.tsx
 
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { routing } from "~/i18n/routing";
 import { FAQClient } from "./FAQClient";
 
 type Props = {
@@ -18,11 +19,19 @@ export async function generateMetadata({ params }: Props) {
 	};
 }
 
-// 2. The Page Component
+// 2. Generate static params for all locales
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
+
+// 3. The Page Component
 export default async function FAQPage({ params }: Props) {
 	const { locale } = await params;
 
-	// 3. LOGIC: Map URL Locale to DB Region/Locale
+	// Enable static rendering
+	setRequestLocale(locale);
+
+	// 4. LOGIC: Map URL Locale to DB Region/Locale
 	// If URL is /us -> Region: US, DB Language: English
 	// If URL is /de -> Region: ROW, DB Language: German
 	// If URL is /en -> Region: ROW, DB Language: English
@@ -35,10 +44,5 @@ export default async function FAQPage({ params }: Props) {
 		dbLocale = "en"; // US uses English content
 	}
 
-	return (
-		<FAQClient
-			region={region}
-			dbLocale={dbLocale}
-		/>
-	);
+	return <FAQClient region={region} dbLocale={dbLocale} />;
 }

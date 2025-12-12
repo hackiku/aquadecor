@@ -4,8 +4,7 @@
 // https://github.com/amannn/next-intl/discussions/357
 
 import { getRequestConfig } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { locales } from './config';
+import { routing } from './routing';
 
 const NAMESPACES = [
 	'common',
@@ -26,10 +25,12 @@ const NAMESPACES = [
 export type Namespace = (typeof NAMESPACES)[number];
 
 export default getRequestConfig(async ({ requestLocale }) => {
-	const locale = await requestLocale;
+	// This typically corresponds to the `[locale]` segment
+	let locale = await requestLocale;
 
-	if (!locale || !locales.includes(locale as any)) {
-		notFound();
+	// Ensure that a valid locale is used
+	if (!locale || !routing.locales.includes(locale as any)) {
+		locale = routing.defaultLocale;
 	}
 
 	// Load all namespaces in parallel

@@ -1,6 +1,6 @@
 // src/i18n/utils.ts
 import { headers } from 'next/headers';
-import { type Locale, locales, defaultLocale, isUSMarket } from './config';
+import { type Locale, isUSMarket } from './routing';
 
 /**
  * Get the current locale from headers (set by middleware)
@@ -8,7 +8,7 @@ import { type Locale, locales, defaultLocale, isUSMarket } from './config';
  */
 export async function getLocale(): Promise<Locale> {
 	const headersList = await headers();
-	const locale = headersList.get('x-locale') || defaultLocale;
+	const locale = headersList.get('x-locale') || 'en';
 	return locale as Locale;
 }
 
@@ -49,23 +49,11 @@ export type TranslationNamespace =
 	| 'cart'
 	| 'checkout'
 	| 'account'
-	| 'usMarket';
-
-/**
- * Helper to construct locale-aware URLs
- */
-export function getLocalizedUrl(path: string, locale: Locale): string {
-	// Remove leading slash if present
-	const cleanPath = path.startsWith('/') ? path.slice(1) : path;
-	return `/${locale}/${cleanPath}`;
-}
-
-/**
- * Get alternate language links for SEO
- */
-export function getAlternateLinks(pathname: string) {
-	return locales.map((locale) => ({
-		hrefLang: locale,
-		href: getLocalizedUrl(pathname, locale),
-	}));
-}
+	| 'about'
+	| 'calculator'
+	| 'faq'
+	| 'gallery'
+	| 'reviews'
+	| 'blog'
+	| 'legal'
+	| 'register';
