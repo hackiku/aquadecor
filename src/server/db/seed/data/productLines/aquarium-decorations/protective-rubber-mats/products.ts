@@ -3,35 +3,35 @@
 export const products = [
 	{
 		"categorySlug": "protective-rubber-mats",
-		"slug": "j-1-rubber-mat-for-aquarium",
+		"slug": "j-1-dark-slate-protective-mat",
 		"sku": "J1",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
 		"sortOrder": 1,
-		"material": "Safe aquarium decoration",
+		"material": "Heavy-duty Rubber",
 		"productionTime": "Ready to ship"
 	},
 	{
 		"categorySlug": "protective-rubber-mats",
-		"slug": "j-2-rubber-mat-for-aquarium",
+		"slug": "j-2-sandstone-aquarium-rubber-mat",
 		"sku": "J2",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": false,
 		"sortOrder": 2,
-		"material": "Safe aquarium decoration",
+		"material": "Heavy-duty Rubber",
 		"productionTime": "Ready to ship"
 	},
 	{
 		"categorySlug": "protective-rubber-mats",
-		"slug": "j-3-rubber-mat-for-aquarium",
+		"slug": "j-3-red-canyon-aquarium-mat",
 		"sku": "J3",
 		"stockStatus": "in_stock",
 		"isActive": true,
 		"isFeatured": true,
 		"sortOrder": 3,
-		"material": "Safe aquarium decoration",
+		"material": "Heavy-duty Rubber",
 		"productionTime": "Ready to ship"
 	}
 ];

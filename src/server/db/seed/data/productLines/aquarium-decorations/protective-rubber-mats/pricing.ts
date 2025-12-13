@@ -5,24 +5,24 @@
 // ============================================================================
 export const pricing = [
 	{
-		"productSlug": "j-1-rubber-mat-for-aquarium",
-		"slug": "j-1-rubber-mat-for-aquarium-pricing",
+		"productSlug": "j-1-dark-slate-protective-mat",
+		"slug": "j-1-dark-slate-protective-mat-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
 		"maxQuantity": 100
 	},
 	{
-		"productSlug": "j-2-rubber-mat-for-aquarium",
-		"slug": "j-2-rubber-mat-for-aquarium-pricing",
+		"productSlug": "j-2-sandstone-aquarium-rubber-mat",
+		"slug": "j-2-sandstone-aquarium-rubber-mat-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
 		"maxQuantity": 100
 	},
 	{
-		"productSlug": "j-3-rubber-mat-for-aquarium",
-		"slug": "j-3-rubber-mat-for-aquarium-pricing",
+		"productSlug": "j-3-red-canyon-aquarium-mat",
+		"slug": "j-3-red-canyon-aquarium-mat-pricing",
 		"pricingType": "simple",
 		"unitPriceEurCents": 4900,
 		"allowQuantity": true,
@@ -45,15 +45,15 @@ export const addons = [];
 // ============================================================================
 export const marketExclusions = [
 	{
-		"productSlug": "j-1-rubber-mat-for-aquarium",
+		"productSlug": "j-1-dark-slate-protective-mat",
 		"market": "US"
 	},
 	{
-		"productSlug": "j-2-rubber-mat-for-aquarium",
+		"productSlug": "j-2-sandstone-aquarium-rubber-mat",
 		"market": "US"
 	},
 	{
-		"productSlug": "j-3-rubber-mat-for-aquarium",
+		"productSlug": "j-3-red-canyon-aquarium-mat",
 		"market": "US"
 	}
 ];
