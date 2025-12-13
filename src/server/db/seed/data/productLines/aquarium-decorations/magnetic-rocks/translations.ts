@@ -1,6 +1,5 @@
 // src/server/db/seed/data/productLines/aquarium-decorations/magnetic-rocks/translations.ts
 
-
 export const translations = {
 	"m-1-magnetic-rocks": {
 		"en": {
