@@ -1,18 +1,15 @@
 // src/app/(website)/calculator/calculator-types.ts
 
-import type { InferSelectModel } from "drizzle-orm";
-import type { categories, products } from "~/server/db/schema";
-
 // --- Database Types Helpers ---
-// We define the shape coming from the API (Calculator Models)
 export interface CalculatorCategory {
 	id: string;
 	slug: string;
 	name: string | null;
 	description: string | null;
 	image: string | null;
-	baseRatePerM2: number; // calculated field from API
-	hasSubcategories: boolean; // calculated field from API
+	textureUrl?: string | null; // Added for 3D scene compatibility
+	baseRatePerM2: number;
+	hasSubcategories: boolean;
 }
 
 // --- Configuration Types ---
@@ -37,27 +34,16 @@ export interface Dimensions {
 }
 
 export interface QuoteConfig {
-	// Product selection
 	modelCategory: CalculatorCategory | null;
-	subcategory: string | null; // Product ID
+	subcategory: string | null;
 	flexibility: FlexibilityType;
-
-	// Dimensions
 	dimensions: Dimensions;
 	unit: Unit;
-
-	// Options
 	sidePanels: SidePanelsType;
 	sidePanelWidth?: number;
-
-	// Filtration
 	filtrationType: FiltrationType;
 	filtrationCustomNotes?: string;
-
-	// Shipping
 	country: string;
-
-	// Contact (filled in modal)
 	name?: string;
 	email?: string;
 	notes?: string;

@@ -1,3 +1,4 @@
+
 // src/app/(website)/calculator/layout.tsx
 "use client";
 
@@ -19,16 +20,12 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 
 	const handleQuoteSubmit = async (data: { name: string; email: string; notes?: string }) => {
 		console.log("Quote submission:", { config, estimate, ...data });
-		// TODO: await api.calculator.createQuote.mutate({ ...config, ...data });
 		setIsQuoteModalOpen(false);
 		alert("Quote request submitted! We'll email you within 24 hours.");
 	};
 
 	const handleDepositPayment = async (data: { name: string; email: string; notes?: string }) => {
 		console.log("Deposit payment:", { config, estimate, ...data });
-		// TODO: Redirect to Stripe checkout with deposit amount
-		// const depositAmount = Math.round(estimate.total * 0.3);
-		// window.location.href = `/api/checkout?amount=${depositAmount}&...`;
 		alert("Redirecting to payment...");
 	};
 
@@ -64,18 +61,19 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 					{children}
 				</motion.div>
 
-				{/* Progress Bar - only shows when config exists */}
+				{/* Progress Bar */}
 				{config?.modelCategory && (
 					<ProgressBar completionPercent={completionPercent} />
 				)}
 
-				{/* Sticky Calculator - only shows when config exists */}
+				{/* Sticky Calculator */}
 				{config?.modelCategory && estimate && (
 					<StickyCalculator
 						dimensions={config.dimensions}
 						estimate={estimate}
-						backgroundTexture={config.modelCategory} // Pass category for texture lookup
-						subcategoryTexture={config.subcategory ?? undefined} // Convert null to undefined
+						// FIX: Pass image/texture string, fallback to empty string if null
+						backgroundTexture={config.modelCategory.textureUrl || config.modelCategory.image || ""}
+						subcategoryTexture={undefined} // Subcategory texture logic not fully implemented yet
 					/>
 				)}
 

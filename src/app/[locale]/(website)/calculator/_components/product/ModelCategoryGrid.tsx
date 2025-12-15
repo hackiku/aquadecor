@@ -3,7 +3,7 @@
 "use client";
 
 import { ModelCard } from "./ModelCard";
-import { CategoryCard } from "~/components/shop/category/CategoryCard";
+import { BackgroundCard } from "./BackgroundCard";
 import type { CalculatorCategory } from "../../calculator-types";
 
 interface ModelCategoryGridProps {
@@ -31,13 +31,13 @@ export function ModelCategoryGrid({ categories, selected, onSelect }: ModelCateg
 			) : (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{categories.map((model) => (
-						<ModelCard
+						// <ModelCard
+						<BackgroundCard
 							key={model.id}
 							id={model.id}
 							name={model.name || model.slug}
 							description={model.description || "Custom 3D Background"}
 							image={model.image || "/media/placeholders/category-placeholder.jpg"}
-							baseRatePerM2={model.baseRatePerM2}
 							isSelected={selected?.id === model.id}
 							onClick={() => onSelect(model)}
 						/>

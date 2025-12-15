@@ -260,7 +260,9 @@ export function QuoteModal({
 								<div className="grid grid-cols-2 gap-3 text-sm">
 									<div>
 										<p className="text-muted-foreground font-display font-light">Model</p>
-										<p className="font-display font-medium">{config.modelCategory?.toUpperCase() ?? "—"}</p>
+										<p className="font-display font-medium">
+											{config.modelCategory?.name?.toUpperCase() ?? config.modelCategory?.slug?.toUpperCase() ?? "—"}
+										</p>
 									</div>
 									<div>
 										<p className="text-muted-foreground font-display font-light">Dimensions</p>
