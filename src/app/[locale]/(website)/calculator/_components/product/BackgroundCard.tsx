@@ -31,7 +31,7 @@ export function BackgroundCard({
 		<div
 			onClick={onClick}
 			className={cn(
-				"group relative flex h-[320px] w-full cursor-pointer flex-col overflow-hidden rounded-2xl border-2 bg-black shadow-sm transition-all",
+				"group relative flex h-[300px] w-full cursor-pointer flex-col overflow-hidden rounded-2xl border-2 bg-black shadow-sm transition-all",
 				isSelected
 					? "border-primary ring-2 ring-primary/20 scale-[1.02]"
 					: "border-border hover:border-primary/50 hover:shadow-xl"
@@ -82,7 +82,7 @@ export function BackgroundCard({
 				<motion.div
 					initial="idle"
 					whileHover="hover"
-					animate={isSelected ? "hover" : "idle"} // Keep expanded if selected
+					animate={isSelected ? "idle" : "idle"} // Keep expanded if selected
 					className="space-y-2"
 				>
 					{/* Header Row */}
