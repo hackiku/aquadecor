@@ -51,7 +51,7 @@ export function BackgroundCard({
 				<div className="absolute bottom-0 left-0 right-0 h-3/4 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
 
 				{/* Selected Overlay Tint */}
-				{isSelected && <div className="absolute inset-0 bg-primary/10 backdrop-blur-[1px]" />}
+				{isSelected && <div className="absolute inset-0 bg-primary/10 _backdrop-blur-[1px]" />}
 			</div>
 
 			{/* Top Badges */}

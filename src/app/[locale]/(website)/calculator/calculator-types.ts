@@ -7,9 +7,20 @@ export interface CalculatorCategory {
 	name: string | null;
 	description: string | null;
 	image: string | null;
-	textureUrl?: string | null; // Added for 3D scene compatibility
+	textureUrl?: string | null; // Category-level texture
 	baseRatePerM2: number;
 	hasSubcategories: boolean;
+}
+
+export interface CalculatorSubcategory {
+	id: string;
+	slug: string;
+	sku: string | null;
+	name: string | null;
+	shortDescription: string | null;
+	baseRatePerM2: number;
+	heroImageUrl: string;
+	textureUrl: string; // Product-specific texture for 3D scene
 }
 
 // --- Configuration Types ---
@@ -36,6 +47,7 @@ export interface Dimensions {
 export interface QuoteConfig {
 	modelCategory: CalculatorCategory | null;
 	subcategory: string | null;
+	subcategoryTexture?: string | null; // NEW: Store texture URL when subcategory selected
 	flexibility: FlexibilityType;
 	dimensions: Dimensions;
 	unit: Unit;

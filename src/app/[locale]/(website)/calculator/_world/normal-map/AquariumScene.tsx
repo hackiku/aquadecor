@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/(website)/calculator/_world/AquariumScene.tsx
 "use client";
 
@@ -6,18 +7,14 @@ import { OrbitControls, Environment } from "@react-three/drei";
 import { useState, Suspense } from "react";
 import { Pause, RefreshCwIcon } from "lucide-react";
 import { BackgroundPanel } from "./BackgroundPanel";
-import type { SidePanelsType } from "../calculator-types";
 
 interface AquariumSceneProps {
 	width: number;
 	height: number;
 	depth: number;
-	backgroundTexture?: string;
-	subcategoryTexture?: string;
-	showControls?: boolean;
-	// NEW: Side panel props
-	sidePanels?: SidePanelsType;
-	sidePanelWidth?: number;
+	backgroundTexture?: string; // CDN URL for background texture
+	subcategoryTexture?: string; // CDN URL for subcategory texture (higher priority)
+	showControls?: boolean; // Show debug controls
 }
 
 function AquariumTank({
@@ -26,44 +23,24 @@ function AquariumTank({
 	depth = 40,
 	backgroundTexture,
 	subcategoryTexture,
-	sidePanels = "none",
-	sidePanelWidth = 40,
 }: Omit<AquariumSceneProps, 'showControls'>) {
+	// Convert cm to three.js units (divide by 10 for scale)
 	const w = width / 10;
 	const h = height / 10;
 	const d = depth / 10;
 
-	// CRITICAL: Validate URLs before passing to texture loader
-	const isSafeUrl = (url?: string) => {
-		if (!url) return false;
-		// Only allow local paths or valid HTTP(S) URLs from known domains
-		if (url.startsWith('/')) return true;
-		if (url.startsWith('http') && url.includes('supabase')) return true;
-		// Block broken CDN URLs
-		return false;
-	};
-
-	const safeSubcategoryTexture = isSafeUrl(subcategoryTexture) ? subcategoryTexture : undefined;
-	const safeBackgroundTexture = isSafeUrl(backgroundTexture) ? backgroundTexture : undefined;
-
-	// Priority: subcategory (product) > category > fallback
-	const activeTexture =
-		safeSubcategoryTexture ||
-		safeBackgroundTexture ||
-		"/media/images/background-placeholder.png";
+	// Use subcategory texture if available, otherwise category texture, fallback to default
+	const activeTexture = subcategoryTexture || backgroundTexture || "/3d/pics/b-1-amazonian-tree-trunk.jpg";
 
 	return (
 		<group>
-			{/* Background panel with side panels support */}
+			{/* Background panel with PBR maps - BEHIND water */}
 			<Suspense fallback={null}>
 				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={depth}
 						textureUrl={activeTexture}
-						showSidePanels={sidePanels}
-						sidePanelWidth={sidePanelWidth}
 					/>
 				</group>
 			</Suspense>
@@ -97,7 +74,7 @@ function AquariumTank({
 				/>
 			</mesh>
 
-			{/* Frame - top and bottom edges */}
+			{/* Frame - just top and bottom edges */}
 			<mesh position={[0, h / 2, 0]}>
 				<boxGeometry args={[w * 1.02, 0.15, d * 1.02]} />
 				<meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.2} />
@@ -123,27 +100,26 @@ export function AquariumScene({
 	backgroundTexture,
 	subcategoryTexture,
 	showControls = true,
-	sidePanels = "none",
-	sidePanelWidth = 40,
 }: AquariumSceneProps) {
 	const [autoRotate, setAutoRotate] = useState(true);
 
-	// Calculate stats for debug
+	// Calculate volume and surface area for debug
 	const volumeL = Math.round((width * height * depth) / 1000);
 	const surfaceM2 = ((width * height) / 10000).toFixed(2);
 
 	return (
 		<div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-b from-background to-accent/5">
+			{/* 3D Canvas */}
 			<Canvas
 				camera={{ position: [8, 4, 8], fov: 50 }}
-				frameloop={autoRotate ? "always" : "demand"}
+				frameloop={autoRotate ? "always" : "demand"} // Always when rotating, demand when static
 				gl={{
 					antialias: true,
 					alpha: true,
-					powerPreference: "default",
+					powerPreference: "default", // Changed from high-performance to reduce GPU load
 					failIfMajorPerformanceCaveat: false,
 				}}
-				dpr={[1, 1.5]}
+				dpr={[1, 1.5]} // Reduced from [1, 2] - less pixels to render
 			>
 				<color attach="background" args={["#0f0f0f"]} />
 				<fog attach="fog" args={["#0f0f0f", 10, 30]} />
@@ -159,8 +135,6 @@ export function AquariumScene({
 						depth={depth}
 						backgroundTexture={backgroundTexture}
 						subcategoryTexture={subcategoryTexture}
-						sidePanels={sidePanels}
-						sidePanelWidth={sidePanelWidth}
 					/>
 				</Suspense>
 
@@ -195,36 +169,33 @@ export function AquariumScene({
 						}}
 					>
 						{autoRotate ? (
-							<div className="flex gap-1 items-center">
+							<div className="flex gap-1">
 								<RefreshCwIcon className="w-4 h-4" /> Auto
 							</div>
+
 						) : (
-							<div className="flex gap-1 items-center">
+							<div className="flex gap-1">
 								<Pause className="w-4 h-4" /> Paused
 							</div>
 						)}
 					</div>
 
-					{/* Debug stats */}
-					<div className="absolute bottom-3 right-3 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
-						<div className="flex justify-between gap-4">
-							<span className="text-white/60">W×H×D:</span>
-							<span>{width}×{height}×{depth}cm</span>
-						</div>
-						<div className="flex justify-between gap-4">
-							<span className="text-white/60">Area:</span>
-							<span>{surfaceM2}m²</span>
-						</div>
-						<div className="flex justify-between gap-4">
-							<span className="text-white/60">Vol:</span>
-							<span>{volumeL}L</span>
-						</div>
-						{sidePanels !== "none" && (
+					{/* Dimensions debug */}
+					<div className="absolute bottom-3 right-3 space-y-2 pointer-events-auto">
+						<div className="px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
 							<div className="flex justify-between gap-4">
-								<span className="text-white/60">Sides:</span>
-								<span>{sidePanels}</span>
+								<span className="text-white/60">W×H×D:</span>
+								<span>{width}×{height}×{depth}cm</span>
 							</div>
-						)}
+							<div className="flex justify-between gap-4">
+								<span className="text-white/60">Area:</span>
+								<span>{surfaceM2}m²</span>
+							</div>
+							<div className="flex justify-between gap-4">
+								<span className="text-white/60">Vol:</span>
+								<span>{volumeL}L</span>
+							</div>
+						</div>
 					</div>
 				</>
 			)}

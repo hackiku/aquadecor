@@ -3,114 +3,135 @@
 
 import { useTexture } from "@react-three/drei";
 import { useEffect, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 interface BackgroundPanelProps {
-	width: number;
-	height: number;
+	width: number; // cm
+	height: number; // cm
+	depth?: number; // cm - used for side panel calculations
 	textureUrl?: string;
+	showSidePanels?: "none" | "single" | "both";
+	sidePanelWidth?: number; // cm
 }
 
-export function BackgroundPanel({ width, height, textureUrl }: BackgroundPanelProps) {
+/**
+ * Clean photo background for aquarium - no normal maps, just beautiful images
+ */
+export function BackgroundPanel({
+	width,
+	height,
+	depth = 40,
+	textureUrl = "/3d/pics/b-1-amazonian-tree-trunk.jpg",
+	showSidePanels = "none",
+	sidePanelWidth = 40,
+}: BackgroundPanelProps) {
 	const meshRef = useRef<THREE.Mesh>(null);
+	const leftPanelRef = useRef<THREE.Mesh>(null);
+	const rightPanelRef = useRef<THREE.Mesh>(null);
 
-	// Load all maps at once - static PBR maps + dynamic color texture
-	const maps = useTexture({
-		colorMap: textureUrl || "/3d/pics/b-1-amazonian-tree-trunk.jpg",
-		normalMap: "/3d/textures/NormalMap.png",
-		displacementMap: "/3d/textures/DisplacementMap.png",
-		aoMap: "/3d/textures/AmbientOcclusionMap.png",
-		roughnessMap: "/3d/textures/SpecularMap.png",
-	});
+	// Load texture (just the photo, no PBR complexity)
+	const texture = useTexture(textureUrl);
 
-	// Configure all textures for proper tiling and aspect ratio
+	// Configure texture for proper tiling and aspect ratio
 	useEffect(() => {
-		const allTextures = Object.values(maps);
+		if (!texture || !texture.image) return;
 
-		allTextures.forEach((tex) => {
-			if (!tex || !tex.image) return;
+		// Optimize texture settings
+		texture.generateMipmaps = true;
+		texture.minFilter = THREE.LinearMipmapLinearFilter;
+		texture.magFilter = THREE.LinearFilter;
+		texture.anisotropy = 2;
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.colorSpace = THREE.SRGBColorSpace;
 
-			// Conservative texture settings to prevent GPU overload
-			tex.generateMipmaps = true;
-			tex.minFilter = THREE.LinearMipmapLinearFilter;
-			tex.magFilter = THREE.LinearFilter;
-			tex.anisotropy = 2; // Reduced from 4 - less GPU memory
+		// Type-safe image dimension access
+		const imgElement = texture.image as HTMLImageElement;
+		const texWidth = imgElement.width || 1024;
+		const texHeight = imgElement.height || 1024;
 
-			// Set wrapping mode for tiling
-			tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-			tex.colorSpace = THREE.SRGBColorSpace;
+		// Aspect-correct scaling - "contain" mode to show full image
+		const w = width / 10;
+		const h = height / 10;
+		const wallAspect = w / h;
+		const imageAspect = texWidth / texHeight;
 
-			// Type-safe image dimension access
-			const imgElement = tex.image as HTMLImageElement;
-			const texWidth = imgElement.width || 1024;
-			const texHeight = imgElement.height || 1024;
+		if (wallAspect > imageAspect) {
+			// Wall is wider - fit height, crop sides
+			texture.repeat.set(1, imageAspect / wallAspect);
+			texture.offset.set(0, (1 - texture.repeat.y) / 2);
+		} else {
+			// Wall is taller - fit width, crop top/bottom
+			texture.repeat.set(wallAspect / imageAspect, 1);
+			texture.offset.set((1 - texture.repeat.x) / 2, 0);
+		}
 
-			// Log large textures
-			if (texWidth > 2048 || texHeight > 2048) {
-				console.warn(`[BackgroundPanel] Large texture: ${texWidth}x${texHeight} - GPU memory intensive`);
-			}
+		texture.needsUpdate = true;
 
-			// Aspect-correct scaling to prevent stretching
-			const w = width / 10;
-			const h = height / 10;
-			const wallAspect = w / h;
-			const imageAspect = texWidth / texHeight;
-
-			if (wallAspect > imageAspect) {
-				// Wall is wider than texture - fit height, crop width
-				tex.repeat.set(1, imageAspect / wallAspect);
-				tex.offset.set(0, (1 - tex.repeat.y) / 2);
-			} else {
-				// Wall is taller than texture - fit width, crop height
-				tex.repeat.set(wallAspect / imageAspect, 1);
-				tex.offset.set((1 - tex.repeat.x) / 2, 0);
-			}
-
-			tex.needsUpdate = true;
-		});
-
-		// CRITICAL: Cleanup function to dispose textures on unmount
+		// Cleanup
 		return () => {
-			allTextures.forEach((tex) => {
-				if (tex) {
-					tex.dispose();
-				}
-			});
+			texture.dispose();
 		};
-	}, [width, height, maps]);
+	}, [width, height, texture]);
 
 	const w = width / 10;
 	const h = height / 10;
+	const d = depth / 10;
+	const sidePanelW = sidePanelWidth / 10;
 
 	return (
-		<mesh ref={meshRef} receiveShadow castShadow>
-			{/* Reduced to 64x64 from 128x128 - 75% fewer vertices */}
-			<planeGeometry args={[w, h, 64, 64]} />
-			<meshStandardMaterial
-				// Color texture (the actual photo)
-				map={maps.colorMap}
+		<group>
+			{/* Main back panel */}
+			<mesh ref={meshRef} receiveShadow position={[0, 0, 0]}>
+				<planeGeometry args={[w * 0.95, h * 0.9]} />
+				<meshStandardMaterial
+					map={texture}
+					roughness={0.85}
+					metalness={0.05}
+					side={THREE.DoubleSide}
+				/>
+			</mesh>
 
-				// Normal map for surface detail bumps
-				normalMap={maps.normalMap}
-				normalScale={new THREE.Vector2(1.2, 1.2)} // Reduced from 1.5
+			{/* Right side panel (if enabled) */}
+			{(showSidePanels === "single" || showSidePanels === "both") && (
+				<mesh
+					ref={rightPanelRef}
+					receiveShadow
+					position={[w * 0.95 / 2 + sidePanelW / 2, 0, sidePanelW / 2]}
+					rotation={[0, -Math.PI / 2, 0]}
+				>
+					<planeGeometry args={[sidePanelW, h * 0.9]} />
+					<meshStandardMaterial
+						map={texture}
+						roughness={0.85}
+						metalness={0.05}
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+			)}
 
-				// Displacement for actual 3D geometry deformation
-				displacementMap={maps.displacementMap}
-				displacementScale={0.15} // Reduced from 0.2 - less GPU work
-				displacementBias={-0.08}
+			{/* Left side panel (if both enabled) */}
+			{showSidePanels === "both" && (
+				<mesh
+					ref={leftPanelRef}
+					receiveShadow
+					position={[-w * 0.95 / 2 - sidePanelW / 2, 0, sidePanelW / 2]}
+					rotation={[0, Math.PI / 2, 0]}
+				>
+					<planeGeometry args={[sidePanelW, h * 0.9]} />
+					<meshStandardMaterial
+						map={texture}
+						roughness={0.85}
+						metalness={0.05}
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+			)}
 
-				// Ambient occlusion for shadow detail
-				aoMap={maps.aoMap}
-				aoMapIntensity={1.0} // Reduced from 1.2
-
-				// Roughness/specular for shininess control
-				roughnessMap={maps.roughnessMap}
-				roughness={0.85}
-				metalness={0.05}
-
-				side={THREE.DoubleSide}
-			/>
-		</mesh>
+			{/* Black background behind everything (optional fallback) */}
+			<mesh position={[0, 0, -0.05]}>
+				<planeGeometry args={[w, h]} />
+				<meshBasicMaterial color="#0a0a0a" side={THREE.DoubleSide} />
+			</mesh>
+		</group>
 	);
 }

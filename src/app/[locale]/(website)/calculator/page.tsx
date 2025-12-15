@@ -2,7 +2,6 @@
 import { api, HydrateClient } from "~/trpc/server";
 import { CalculatorFlow } from "./_components/CalculatorFlow";
 // import { AquariumScene } from "./_world/AquariumScene";
-import { AquariumSceneDynamic as AquariumScene } from "./_hooks/useAquariumScene";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +13,13 @@ export default async function CalculatorPage() {
 		// <HydrateClient>
 			<main className="min-h-screen">
 
-				<div className="w-screen h-[60vh]">
+				{/* <div className="w-screen h-[60vh]">
 					<AquariumScene
 						width={120}
 						height={60}
 						depth={45}
 					/>
-				</div>
+				</div> */}
 
 				{/* Hero Section */}
 				<section className="pt-16 md:pt-24 bg-gradient-to-b from-muted/50 via-muted/30 to-transparent">

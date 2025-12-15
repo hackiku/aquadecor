@@ -12,15 +12,15 @@ import type { CalculatorCategory } from "../../calculator-types";
 interface SubcategorySelectorProps {
 	category: CalculatorCategory;
 	selected: string | null;
-	onSelect: (subcategoryId: string) => void;
+	onSelect: (subcategoryId: string, textureUrl?: string) => void;
 }
 
 export function SubcategorySelector({ category, selected, onSelect }: SubcategorySelectorProps) {
 	// State for grid columns: 1, 2, 3, or 4
 	const [columns, setColumns] = useState<"1" | "2" | "3" | "4">("4");
 
-	// Fetch specific products (designs) for this category
-	const { data, isLoading, error } = api.product.getByCategory.useQuery({
+	// Fetch specific products (designs) for this category using calculator router
+	const { data, isLoading, error } = api.calculator.getSubcategories.useQuery({
 		categorySlug: category.slug,
 	});
 
@@ -116,12 +116,11 @@ export function SubcategorySelector({ category, selected, onSelect }: Subcategor
 						id={product.id}
 						name={product.name || product.slug}
 						description={product.shortDescription || "Custom fit design"}
-						modelCode={product.sku || undefined} // Use SKU as model code (e.g. "E-3")
-						image={product.heroImageUrl || "/media/placeholders/product-placeholder.jpg"}
-						// Pass the category rate as base for visual reference
+						modelCode={product.sku || undefined}
+						image={product.heroImageUrl || "/media/images/background-placeholder.png"}
 						pricePerM2={category.baseRatePerM2}
 						isSelected={selected === product.id}
-						onClick={() => onSelect(product.id)}
+						onClick={() => onSelect(product.id, product.textureUrl)}
 					/>
 				))}
 			</div>
@@ -133,7 +132,7 @@ export function SubcategorySelector({ category, selected, onSelect }: Subcategor
 						💡 Not sure which design to pick yet? You can skip this step and decide later with our team.
 					</p>
 					<button
-						onClick={() => onSelect("skip")}
+						onClick={() => onSelect("skip", undefined)}
 						className="inline-flex items-center gap-2 px-6 py-2.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-full font-display font-medium text-sm transition-colors"
 					>
 						Skip Design Selection

@@ -6,13 +6,15 @@ import { AquariumScene } from "../../_world/AquariumScene";
 import { PriceBreakdown } from "./PriceBreakdown";
 import { UnitToggle } from "../dimensions/UnitToggle";
 import { useCalculatorLayout } from "../../_context/CalculatorLayoutContext";
-import type { Dimensions, PriceEstimate } from "../../calculator-types";
+import type { Dimensions, PriceEstimate, SidePanelsType } from "../../calculator-types";
 
 interface StickyCalculatorProps {
 	dimensions: Dimensions;
 	estimate: PriceEstimate;
 	backgroundTexture?: string;
 	subcategoryTexture?: string;
+	sidePanels?: SidePanelsType;
+	sidePanelWidth?: number;
 }
 
 export function StickyCalculator({
@@ -20,6 +22,8 @@ export function StickyCalculator({
 	estimate,
 	backgroundTexture,
 	subcategoryTexture,
+	sidePanels = "none",
+	sidePanelWidth = 40,
 }: StickyCalculatorProps) {
 	const { isCalculatorExpanded, setIsCalculatorExpanded } = useCalculatorLayout();
 
@@ -45,8 +49,11 @@ export function StickyCalculator({
 									width={dimensions.width}
 									height={dimensions.height}
 									depth={dimensions.depth}
-									// backgroundTexture={backgroundTexture}
-									// subcategoryTexture={subcategoryTexture}
+									showControls={false}
+									backgroundTexture={backgroundTexture}
+									subcategoryTexture={subcategoryTexture}
+									sidePanels={sidePanels}
+									sidePanelWidth={sidePanelWidth}
 								/>
 							</div>
 
@@ -88,7 +95,6 @@ export function StickyCalculator({
 
 			{/* Full state - takes right side */}
 			{isCalculatorExpanded && (
-				// clear navbar & bottom sticky bar
 				<aside className="fixed top-16 right-0 bottom-2 z-40 w-[28rem] pointer-events-auto">
 					<div className="h-full bg-card shadow-2xl border-l-2 border-primary/20 overflow-hidden flex flex-col">
 						{/* Content - fully scrollable */}
@@ -102,6 +108,8 @@ export function StickyCalculator({
 										depth={dimensions.depth}
 										backgroundTexture={backgroundTexture}
 										subcategoryTexture={subcategoryTexture}
+										sidePanels={sidePanels}
+										sidePanelWidth={sidePanelWidth}
 									/>
 								</div>
 

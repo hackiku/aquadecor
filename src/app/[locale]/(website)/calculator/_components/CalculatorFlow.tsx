@@ -1,8 +1,8 @@
-
 // src/app/(website)/calculator/_components/CalculatorFlow.tsx
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { useCalculatorLayout } from "../_context/CalculatorLayoutContext";
 import { ModelCategoryGrid } from "./product/ModelCategoryGrid";
 import { SubcategorySelector } from "./product/SubcategorySelector";
@@ -14,7 +14,7 @@ import { CountrySelect } from "./shipping/CountrySelect";
 import { useQuoteEstimate } from "../_hooks/useQuoteEstimate";
 import type { QuoteConfig, CalculatorCategory } from "../calculator-types";
 import { Button } from "~/components/ui/button";
-import { AquariumScene } from "../_world/AquariumScene";
+
 
 const DEFAULT_CONFIG: QuoteConfig = {
 	modelCategory: null,
@@ -57,15 +57,6 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 
 	return (
 		<div className="space-y-0">
-
-			{/* <div className="max-w-[90vw] h-[60vh]">
-				<AquariumScene
-					width={90}    // cm
-					height={50}    // cm  
-					depth={4}     // cm
-				/>
-			</div> */}
-
 			{/* Step 1: Model Selection */}
 			<ModelCategoryGrid
 				categories={initialCategories}
@@ -87,7 +78,13 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 						<SubcategorySelector
 							category={localConfig.modelCategory}
 							selected={localConfig.subcategory}
-							onSelect={(subId) => setLocalConfig({ ...localConfig, subcategory: subId })}
+							onSelect={(subId, textureUrl) =>
+								setLocalConfig({
+									...localConfig,
+									subcategory: subId,
+									subcategoryTexture: textureUrl // Store texture URL
+								})
+							}
 						/>
 					)}
 
