@@ -4,7 +4,7 @@
 import { useEffect } from 'react';
 import { Button } from '~/components/ui/button';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { Footer } from '~/components/navigation/Footer';
+// import { Footer } from '~/components/navigation/Footer';
 
 export default function Error({
 	error,
@@ -61,7 +61,7 @@ export default function Error({
 					)}
 				</div>
 			</div>
-			<Footer />
+			{/* <Footer /> */}
 		</main>
 	);
 }

@@ -1,11 +1,11 @@
 // src/app/(website)/calculator/_data/model-categories.ts
 // Model category metadata with real CDN images
 
-import type { CalculatorCategory } from "../calculator-types";
+import type { ModelCategoryMeta } from "../calculator-types";
 
 const CDN_BASE = "https://cdn.aquadecorbackgrounds.com/aquadecor-blob";
 
-export const MODEL_CATEGORIES: CalculatorCategory[] = [
+export const MODEL_CATEGORIES: ModelCategoryMeta[] = [
 	{
 		id: "a-models",
 		name: "A Models - Classic Rocky",

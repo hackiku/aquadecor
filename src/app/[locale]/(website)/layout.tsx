@@ -1,7 +1,7 @@
 // src/app/[locale]/(website)/layout.tsx
 
 import { getTranslations } from 'next-intl/server';
-import { Footer } from "~/components/navigation/Footer";
+// import { Footer } from "~/components/navigation/Footer";
 
 type Props = {
 	children: React.ReactNode;
@@ -37,7 +37,7 @@ export default function WebsiteLayout({ children }: { children: React.ReactNode 
 	return (
 		<>
 			{children}
-			<Footer />
+			{/* <Footer /> */}
 		</>
 	);
 }

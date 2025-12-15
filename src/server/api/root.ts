@@ -3,6 +3,7 @@ import { accountRouter } from "./routers/account";
 // shop
 import { productRouter } from "~/server/api/routers/product";
 import { reviewsRouter } from "~/server/api/routers/reviews";
+import { calculatorRouter } from "~/server/api/routers/calculator";
 // content
 import { faqRouter } from "~/server/api/routers/faq";
 import { countryRouter, publicCountryRouter } from "./routers/admin/country";
@@ -28,6 +29,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 export const appRouter = createTRPCRouter({
 	account: accountRouter,
 	product: productRouter,
+	calculator: calculatorRouter,
 	media: mediaRouter, // Public media (old CDN)
 	reviews: reviewsRouter,
 	faq: faqRouter,

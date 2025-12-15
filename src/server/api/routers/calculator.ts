@@ -2,145 +2,224 @@
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { quotes } from "~/server/db/schema";
+import {
+	quotes,
+	products,
+	productPricing,
+	categories,
+	categoryTranslations,
+	media
+} from "~/server/db/schema";
+import { eq, and, min, sql } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
 
-// Input validation schema
-const quoteConfigSchema = z.object({
-	// Product
-	modelCategory: z.enum([
-		"a-models",
-		"a-slim-models",
-		"b-models",
-		"c-models",
-		"e-models",
-		"f-models",
-		"g-models",
-		"k-models",
-		"l-models",
-		"n-models",
-	]),
+// Schema for creating a quote
+const createQuoteSchema = z.object({
+	modelCategoryId: z.string().min(1),
+	subcategoryId: z.string().optional().nullable(),
 	flexibility: z.enum(["solid", "flexible"]),
-
-	// Dimensions
 	dimensions: z.object({
-		width: z.number().min(50).max(200),
-		height: z.number().min(30).max(100),
-		depth: z.number().min(30).max(80).optional(),
+		width: z.number().min(10),
+		height: z.number().min(10),
+		depth: z.number().optional(),
 	}),
 	unit: z.enum(["cm", "inch"]),
-
-	// Options
 	sidePanels: z.enum(["none", "single", "both"]),
-	sidePanelWidth: z.number().min(30).max(80).optional(),
-	filtrationCutout: z.boolean().optional(),
-
-	// Shipping
-	country: z.string(),
-
-	// Contact (for quote submission)
+	sidePanelWidth: z.number().optional(),
+	filtrationType: z.string(),
+	filtrationCustomNotes: z.string().optional(),
+	country: z.string().min(1),
 	name: z.string().optional(),
-	email: z.string().email().optional(),
+	email: z.string().email(),
 	notes: z.string().optional(),
 });
 
 export const calculatorRouter = createTRPCRouter({
-	/**
-	 * Create a quote request
-	 * Stores config in DB and sends email notifications
-	 */
-	createQuote: publicProcedure
-		.input(quoteConfigSchema)
-		.mutation(async ({ ctx, input }) => {
-			// Calculate server-side price (validate client calculation)
-			const surfaceAreaM2 = (input.dimensions.width * input.dimensions.height) / 10000;
-			const baseRate = MODEL_PRICING[input.modelCategory] ?? 250;
-			let total = surfaceAreaM2 * baseRate;
 
-			// Add flexibility upcharge
-			if (input.flexibility === "flexible") {
-				total += total * 0.2;
-			}
+	// 1. Fetch Categories for Calculator (Aggregated Price & Counts)
+	getCalculatorModels: publicProcedure
+		.input(z.object({
+			locale: z.string().default("en"),
+		}))
+		.query(async ({ ctx, input }) => {
+			// We want: Category Details + Min Base Rate + Product Count
+			const results = await ctx.db
+				.select({
+					id: categories.id,
+					slug: categories.slug,
+					name: categoryTranslations.name,
+					description: categoryTranslations.description,
+					image: media.storageUrl,
+					// Aggregate pricing and counts
+					baseRatePerSqM: min(productPricing.baseRatePerSqM),
+					productCount: sql<number>`count(distinct ${products.id})`.mapWith(Number),
+				})
+				.from(categories)
+				.leftJoin(
+					categoryTranslations,
+					and(
+						eq(categoryTranslations.categoryId, categories.id),
+						eq(categoryTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.categoryId, categories.id),
+						eq(media.usageType, "category"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				// Join products to get counts and pricing
+				.leftJoin(products, eq(products.categoryId, categories.id))
+				.leftJoin(
+					productPricing,
+					and(
+						eq(productPricing.productId, products.id),
+						eq(productPricing.isActive, true)
+					)
+				)
+				.where(
+					and(
+						eq(categories.productLine, "3d-backgrounds"),
+						eq(categories.isActive, true)
+					)
+				)
+				.groupBy(
+					categories.id,
+					categories.slug,
+					categoryTranslations.name,
+					categoryTranslations.description,
+					media.storageUrl,
+					categories.sortOrder
+				)
+				.orderBy(categories.sortOrder);
 
-			// Add side panels
-			if (input.sidePanels !== "none" && input.sidePanelWidth) {
-				const sidePanelArea = (input.sidePanelWidth * input.dimensions.height) / 10000;
-				const multiplier = input.sidePanels === "both" ? 2 : 1;
-				total += sidePanelArea * baseRate * multiplier;
-			}
-
-			// Add filtration cutout
-			if (input.filtrationCutout) {
-				total += 50;
-			}
-
-			const estimatedPriceCents = Math.round(total * 100);
-
-			// Split name into first/last for schema compatibility
-			const fullName = input.name?.trim() ?? "Anonymous";
-			const nameParts = fullName.split(" ");
-			const firstName = nameParts[0] ?? "Anonymous";
-			const lastName = nameParts.slice(1).join(" ");
-
-			// Insert into database
-			const [quote] = await ctx.db.insert(quotes).values({
-				// Map input fields to schema columns
-				// productSlug: input.modelCategory, // Using category as slug for now
-				email: input.email ?? "no-email@provided.com",
-				firstName: firstName,
-				lastName: lastName || undefined,
-				country: input.country,
-
-				// Map dimensions and options to JSONB column
-				dimensions: {
-					width: input.dimensions.width,
-					height: input.dimensions.height,
-					depth: input.dimensions.depth,
-					unit: input.unit,
-					sidePanels: input.sidePanels,
-					sidePanelWidth: input.sidePanelWidth,
-					filtrationCutout: input.filtrationCutout,
-					notes: input.notes
-				},
-
-				estimatedPriceEurCents: estimatedPriceCents,
-				status: "pending",
-				customerNotes: input.notes,
-			}).returning();
-
-			// TODO: Send emails
-			// await sendCustomerConfirmation(quote);
-			// await sendAdminNotification(quote);
-
-			return {
-				quoteId: quote!.id,
-				estimatedPrice: estimatedPriceCents,
-			};
+			// Transform for client
+			return results.map(cat => ({
+				...cat,
+				// Ensure we have a valid rate (fallback to €250 if missing)
+				// DB stores cents (25000), client expects EUR (250) for the base logic
+				baseRatePerM2: cat.baseRatePerSqM ? cat.baseRatePerSqM / 100 : 250,
+				// Determine if it should show the subcategory step
+				hasSubcategories: cat.productCount > 1
+			}));
 		}),
 
-	/**
-	 * Get model categories (optional - can use static data instead)
-	 */
-	getModelCategories: publicProcedure.query(async () => {
-		// Return static model data from _data/model-categories.ts
-		// Or fetch from database if you want dynamic pricing
-		return MODEL_CATEGORIES as any[];
-	}),
+	// 2. Create Quote Mutation
+	createQuote: publicProcedure
+		.input(createQuoteSchema)
+		.mutation(async ({ ctx, input }) => {
+			let baseRatePerSqMCents = 0;
+			let productIdResolved: string | null = null;
+
+			// A. Check for specific product price first
+			if (input.subcategoryId && input.subcategoryId !== "skip") {
+				const productPrice = await ctx.db
+					.select({
+						rate: productPricing.baseRatePerSqM,
+						id: products.id
+					})
+					.from(products)
+					.leftJoin(productPricing, eq(productPricing.productId, products.id))
+					.where(eq(products.id, input.subcategoryId))
+					.limit(1);
+
+				if (productPrice.length > 0 && productPrice[0]?.rate) {
+					baseRatePerSqMCents = productPrice[0].rate;
+					productIdResolved = productPrice[0].id;
+				}
+			}
+
+			// B. Fallback to Category Minimum
+			if (baseRatePerSqMCents === 0) {
+				const category = await ctx.db
+					.select({ id: categories.id })
+					.from(categories)
+					.where(
+						input.modelCategoryId.includes("-") // naive check for slug vs uuid
+							? eq(categories.slug, input.modelCategoryId)
+							: eq(categories.id, input.modelCategoryId)
+					)
+					.limit(1);
+
+				if (category.length > 0) {
+					const minRate = await ctx.db
+						.select({ minRate: min(productPricing.baseRatePerSqM) })
+						.from(products)
+						.leftJoin(productPricing, eq(productPricing.productId, products.id))
+						.where(eq(products.categoryId, category[0].id));
+
+					baseRatePerSqMCents = minRate[0]?.minRate ?? 25000;
+				} else {
+					baseRatePerSqMCents = 25000;
+				}
+			}
+
+			// Calculation (Server Side Source of Truth)
+			const widthCm = input.unit === "inch" ? input.dimensions.width * 2.54 : input.dimensions.width;
+			const heightCm = input.unit === "inch" ? input.dimensions.height * 2.54 : input.dimensions.height;
+			const sidePanelWidthCm = input.sidePanelWidth
+				? (input.unit === "inch" ? input.sidePanelWidth * 2.54 : input.sidePanelWidth)
+				: 0;
+
+			const surfaceAreaM2 = (widthCm * heightCm) / 10000;
+			const basePrice = Math.round(surfaceAreaM2 * baseRatePerSqMCents);
+
+			const flexUpcharge = input.flexibility === "flexible" ? Math.round(basePrice * 0.20) : 0;
+
+			let sidePanelCost = 0;
+			if (input.sidePanels !== "none" && sidePanelWidthCm > 0) {
+				const panelAreaM2 = (sidePanelWidthCm * heightCm) / 10000;
+				const singlePanelCost = Math.round(panelAreaM2 * baseRatePerSqMCents);
+				sidePanelCost = input.sidePanels === "both" ? singlePanelCost * 2 : singlePanelCost;
+			}
+
+			const filtrationCost = input.filtrationType !== "none" ? 5000 : 0;
+			const totalEstimatedCents = basePrice + flexUpcharge + sidePanelCost + filtrationCost;
+
+			// Extract Name
+			const fullName = input.name?.trim() ?? "Guest";
+			const spaceIdx = fullName.indexOf(" ");
+			const firstName = spaceIdx > 0 ? fullName.substring(0, spaceIdx) : fullName;
+			const lastName = spaceIdx > 0 ? fullName.substring(spaceIdx + 1) : "";
+
+			// Save to DB
+			try {
+				const [savedQuote] = await ctx.db.insert(quotes).values({
+					productId: productIdResolved,
+					email: input.email,
+					firstName: firstName,
+					lastName: lastName,
+					country: input.country,
+					dimensions: {
+						width: input.dimensions.width,
+						height: input.dimensions.height,
+						depth: input.dimensions.depth,
+						unit: input.unit,
+						sidePanels: input.sidePanels,
+						sidePanelWidth: input.sidePanelWidth,
+						filtrationCutout: input.filtrationType !== "none",
+						filtrationType: input.filtrationType,
+						notes: input.filtrationCustomNotes
+					},
+					estimatedPriceEurCents: totalEstimatedCents,
+					status: "pending",
+					customerNotes: input.notes,
+				}).returning();
+
+				return {
+					success: true,
+					quoteId: savedQuote.id,
+					estimatedPriceEur: totalEstimatedCents / 100,
+				};
+
+			} catch (error) {
+				console.error("Quote submission error:", error);
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: "Could not submit quote. Please try again."
+				});
+			}
+		}),
 });
-
-// Pricing constants (sync with client-side)
-const MODEL_PRICING: Record<string, number> = {
-	"a-models": 250,
-	"a-slim-models": 230,
-	"b-models": 280,
-	"c-models": 300,
-	"e-models": 260,
-	"f-models": 350,
-	"g-models": 240,
-	"k-models": 320,
-	"l-models": 270,
-	"n-models": 290,
-};
-
-const MODEL_CATEGORIES: any[] = [
-	/* Copy from _data/model-categories.ts */
-];

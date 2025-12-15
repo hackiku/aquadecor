@@ -3,7 +3,6 @@
 "use client";
 
 import { ModelCard } from "./ModelCard";
-import { CategoryCard } from "~/components/shop/category/CategoryCard";
 import type { CalculatorCategory } from "../../calculator-types";
 
 interface ModelCategoryGridProps {
