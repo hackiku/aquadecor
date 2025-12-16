@@ -208,7 +208,7 @@ export const categoryTranslations = {
 	"slim-rocky-backgrounds": {
 		en: {
 			model: "A SLIM Models",
-			name: "Slim Stone Backgrounds",
+			name: "Slim Rocky Backgrounds",
 			description: "A slimmer version of our classic rocky designs. Features realistic stone textures with a reduced depth, ideal for standard rectangular tanks needing a rugged look.",
 			longDescription: "The A Slim Model series takes the detailed, rugged texture of our Classic Rocky backgrounds and compresses it into a more space-efficient design. Perfect for community tanks or setups where you want the stone aesthetic without the deep overhangs, ensuring your fish have maximum room to swim while still enjoying a natural backdrop.",
 			metaTitle: "Slim Stone 3D Aquarium Backgrounds | Low Profile Rock Walls | Aquadecor",
