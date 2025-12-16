@@ -1,7 +1,6 @@
 // src/app/(website)/calculator/_components/product/ModelCategoryGrid.tsx
 "use client";
 
-import { ModelCard } from "./ModelCard";
 import { BackgroundCard } from "./BackgroundCard";
 import type { CalculatorCategory } from "../../calculator-types";
 

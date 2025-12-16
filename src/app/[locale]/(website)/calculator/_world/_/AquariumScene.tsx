@@ -35,18 +35,38 @@ function AquariumTank({
 	const h = height / 10;
 	const d = depth / 10;
 
+	// CRITICAL: Validate URLs before passing to texture loader
+	const isSafeUrl = (url?: string) => {
+		if (!url) return false;
+		// Only allow local paths or valid HTTP(S) URLs from known domains
+		if (url.startsWith('/')) return true;
+		if (url.startsWith('http') && url.includes('supabase')) return true;
+		// Block broken CDN URLs
+		return false;
+	};
+
+	const safeSubcategoryTexture = isSafeUrl(subcategoryTexture) ? subcategoryTexture : undefined;
+	const safeBackgroundTexture = isSafeUrl(backgroundTexture) ? backgroundTexture : undefined;
+
+	// Priority: subcategory (product) > category > fallback
+	const activeTexture =
+		safeSubcategoryTexture ||
+		safeBackgroundTexture ||
+		"/media/images/background-placeholder.png";
+
 	return (
 		<group>
-			{/* Procedural rock background panel */}
+			{/* Background panel with side panels support */}
 			<Suspense fallback={null}>
 				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={2} // 1-2cm wall thickness
-						sidePanels={sidePanels}
+						depth={depth}
+						textureUrl={activeTexture}
+						showSidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						baseColor="#6B5D52" // Gray-brown stone color
+						isEmpty={isEmpty}
 					/>
 				</group>
 			</Suspense>

@@ -7,10 +7,11 @@ import { useCalculatorLayout } from "../_context/CalculatorLayoutContext";
 import { ModelCategoryGrid } from "./product/ModelCategoryGrid";
 import { SubcategorySelector } from "./product/SubcategorySelector";
 import { DimensionControls } from "./dimensions/DimensionControls";
+// options
 import { FlexibilityToggle } from "./options/FlexibilityToggle";
 import { SidePanelsSelector } from "./options/SidePanelsSelector";
 import { FiltrationSelector } from "./options/FiltrationSelector";
-import { CountrySelect } from "./shipping/CountrySelect";
+import { CountrySelect } from "./options/CountrySelect";
 import { useQuoteEstimate } from "../_hooks/useQuoteEstimate";
 import type { QuoteConfig, CalculatorCategory } from "../calculator-types";
 import { Button } from "~/components/ui/button";
@@ -34,7 +35,7 @@ const DEFAULT_CONFIG: QuoteConfig = {
 export function CalculatorFlow({ initialCategories }: { initialCategories: CalculatorCategory[] }) {
 	const [localConfig, setLocalConfig] = useState<QuoteConfig>(DEFAULT_CONFIG);
 	const estimate = useQuoteEstimate(localConfig);
-	const { setConfig, setEstimate, setCompletionPercent, openQuoteModal } = useCalculatorLayout();
+	const { setConfig, setEstimate, setCompletionPercent, openQuoteModal, setIsCalculatorExpanded } = useCalculatorLayout();
 
 	// Sync local config and estimate to global layout context (for StickyCalculator)
 	useEffect(() => {
@@ -52,6 +53,13 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 		const percent = (completionSteps.filter(Boolean).length / completionSteps.length) * 100;
 		setCompletionPercent(percent);
 	}, [localConfig, estimate, setConfig, setEstimate, setCompletionPercent]);
+
+	// AUTO-EXPAND: When user selects a category, immediately expand the sticky calculator
+	useEffect(() => {
+		if (localConfig.modelCategory) {
+			setIsCalculatorExpanded(true);
+		}
+	}, [localConfig.modelCategory, setIsCalculatorExpanded]);
 
 	const canRequestQuote = localConfig.modelCategory !== null && localConfig.country !== "";
 

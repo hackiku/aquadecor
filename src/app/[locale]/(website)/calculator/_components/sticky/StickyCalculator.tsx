@@ -15,6 +15,7 @@ interface StickyCalculatorProps {
 	subcategoryTexture?: string;
 	sidePanels?: SidePanelsType;
 	sidePanelWidth?: number;
+	hasSubcategory?: boolean; // NEW: Track if user has selected a subcategory
 }
 
 export function StickyCalculator({
@@ -24,6 +25,7 @@ export function StickyCalculator({
 	subcategoryTexture,
 	sidePanels = "none",
 	sidePanelWidth = 40,
+	hasSubcategory = false,
 }: StickyCalculatorProps) {
 	const { isCalculatorExpanded, setIsCalculatorExpanded } = useCalculatorLayout();
 
@@ -54,6 +56,7 @@ export function StickyCalculator({
 									subcategoryTexture={subcategoryTexture}
 									sidePanels={sidePanels}
 									sidePanelWidth={sidePanelWidth}
+									isEmpty={!hasSubcategory}
 								/>
 							</div>
 
@@ -110,6 +113,7 @@ export function StickyCalculator({
 										subcategoryTexture={subcategoryTexture}
 										sidePanels={sidePanels}
 										sidePanelWidth={sidePanelWidth}
+										isEmpty={!hasSubcategory}
 									/>
 								</div>
 

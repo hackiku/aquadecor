@@ -1,4 +1,4 @@
-// src/app/(website)/calculator/_utils/textureHelpers.ts
+// src/app/(website)/calculator/_world/textureHelpers.ts
 
 /**
  * Validates and sanitizes texture URLs for 3D scene
@@ -13,6 +13,13 @@ export function sanitizeTextureUrl(url: string | null | undefined): string | und
 	// Allow Supabase storage URLs
 	if (url.includes('supabase.co/storage')) return url;
 
+	// TEMPORARILY allow old CDN for testing (even though CORS is fucked)
+	// We'll block these again after Supabase migration
+	if (url.includes('cdn.aquadecorbackgrounds.com') || url.includes('aquadecor-blob')) {
+		console.warn('⚠️ Using legacy CDN URL (may fail CORS):', url);
+		return url;
+	}
+
 	// Block everything else (broken CDN, external URLs, etc.)
 	console.warn('🚫 Blocked unsafe texture URL:', url);
 	return undefined;
@@ -24,7 +31,7 @@ export function sanitizeTextureUrl(url: string | null | undefined): string | und
 export function getBestTextureUrl(
 	subcategoryTexture?: string | null,
 	backgroundTexture?: string | null,
-	fallback: string = "/media/images/background-placeholder.png"
+	fallback: string = "/3d/texture-placeholder.png"
 ): string {
 	// Try subcategory (product-specific) first
 	const safeSubcategory = sanitizeTextureUrl(subcategoryTexture);

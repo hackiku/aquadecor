@@ -1,4 +1,3 @@
-
 // src/app/(website)/calculator/layout.tsx
 "use client";
 
@@ -9,6 +8,7 @@ import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
 import { ProgressBar } from "./_components/sticky/ProgressBar";
 import { StickyCalculator } from "./_components/sticky/StickyCalculator";
 import { QuoteModal } from "./_components/quote/QuoteModal";
+import { getBestTextureUrl } from "./_world/textureHelpers";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
 
 export default function CalculatorLayout({ children }: { children: ReactNode }) {
@@ -28,6 +28,18 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 		console.log("Deposit payment:", { config, estimate, ...data });
 		alert("Redirecting to payment...");
 	};
+
+	// Sanitize texture URLs to prevent crashes
+	const safeBackgroundTexture = config?.modelCategory
+		? getBestTextureUrl(
+			undefined, // No subcategory yet at category level
+			config.modelCategory.textureUrl || config.modelCategory.image
+		)
+		: undefined;
+
+	const safeSubcategoryTexture = config?.subcategoryTexture
+		? getBestTextureUrl(config.subcategoryTexture)
+		: undefined;
 
 	return (
 		<UnitProvider>
@@ -71,9 +83,11 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 					<StickyCalculator
 						dimensions={config.dimensions}
 						estimate={estimate}
-						// FIX: Pass image/texture string, fallback to empty string if null
-						backgroundTexture={config.modelCategory.textureUrl || config.modelCategory.image || ""}
-						subcategoryTexture={undefined} // Subcategory texture logic not fully implemented yet
+						backgroundTexture={safeBackgroundTexture}
+						subcategoryTexture={safeSubcategoryTexture}
+						sidePanels={config.sidePanels}
+						sidePanelWidth={config.sidePanelWidth}
+						hasSubcategory={!!config.subcategory && config.subcategory !== "skip"}
 					/>
 				)}
 
