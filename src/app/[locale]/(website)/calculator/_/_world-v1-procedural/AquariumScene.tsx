@@ -39,19 +39,17 @@ function AquariumTank({
 		<group>
 			{/* Procedural rock background panel */}
 			<Suspense fallback={null}>
-				{/* Move to back wall: -d/2 is back glass, + margin */}
-				<group position={[0, 0, -d / 2 + 0.1]}>
+				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={3} // Base thickness of the "sheet"
+						depth={2} // 1-2cm wall thickness
 						sidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						// baseColor="#5A4D41" // Deep river stone color
+						baseColor="#6B5D52" // Gray-brown stone color
 					/>
 				</group>
 			</Suspense>
-
 
 			{/* Water inside tank - fills ~90% */}
 			<mesh position={[0, -h * 0.05, 0]}>

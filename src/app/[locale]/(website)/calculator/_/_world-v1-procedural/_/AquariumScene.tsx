@@ -35,23 +35,41 @@ function AquariumTank({
 	const h = height / 10;
 	const d = depth / 10;
 
+	// CRITICAL: Validate URLs before passing to texture loader
+	const isSafeUrl = (url?: string) => {
+		if (!url) return false;
+		// Only allow local paths or valid HTTP(S) URLs from known domains
+		if (url.startsWith('/')) return true;
+		if (url.startsWith('http') && url.includes('supabase')) return true;
+		// Block broken CDN URLs
+		return false;
+	};
+
+	const safeSubcategoryTexture = isSafeUrl(subcategoryTexture) ? subcategoryTexture : undefined;
+	const safeBackgroundTexture = isSafeUrl(backgroundTexture) ? backgroundTexture : undefined;
+
+	// Priority: subcategory (product) > category > fallback
+	const activeTexture =
+		safeSubcategoryTexture ||
+		safeBackgroundTexture ||
+		"/media/images/background-placeholder.png";
+
 	return (
 		<group>
-			{/* Procedural rock background panel */}
+			{/* Background panel with side panels support */}
 			<Suspense fallback={null}>
-				{/* Move to back wall: -d/2 is back glass, + margin */}
-				<group position={[0, 0, -d / 2 + 0.1]}>
+				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={3} // Base thickness of the "sheet"
-						sidePanels={sidePanels}
+						depth={depth}
+						textureUrl={activeTexture}
+						showSidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						// baseColor="#5A4D41" // Deep river stone color
+						isEmpty={isEmpty}
 					/>
 				</group>
 			</Suspense>
-
 
 			{/* Water inside tank - fills ~90% */}
 			<mesh position={[0, -h * 0.05, 0]}>

@@ -47,7 +47,7 @@ function AquariumTank({
 						depth={3} // Base thickness of the "sheet"
 						sidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						// baseColor="#5A4D41" // Deep river stone color
+						baseColor="#5A4D41" // Deep river stone color
 					/>
 				</group>
 			</Suspense>

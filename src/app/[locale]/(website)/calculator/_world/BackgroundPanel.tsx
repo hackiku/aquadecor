@@ -1,46 +1,83 @@
 // src/app/(website)/calculator/_world/BackgroundPanel.tsx
 "use client";
 
-import { ProceduralRockWall } from "./ProceduralRockWall";
+import { ProceduralRockSheet } from "./ProceduralRockSheet";
 import type { SidePanelsType } from "../calculator-types";
 
 interface BackgroundPanelProps {
-	width: number; // cm - INTERNAL width of aquarium
-	height: number; // cm
-	depth?: number; // cm - wall thickness (1-2cm as mentioned)
+	width: number;       // cm - INTERNAL width
+	height: number;      // cm
+	depth?: number;      // cm - base thickness
 	sidePanels?: SidePanelsType;
-	sidePanelWidth?: number; // cm - INTERNAL depth for side panels
-	baseColor?: string; // Hex color for rocks (optional color map support)
+	sidePanelWidth?: number; // cm - depth of side panels
+	baseColor?: string;
 }
 
-/**
- * Background panel with procedural rock wall
- * Generates stone wall that fills space based on dimensions and side panel config
- */
 export function BackgroundPanel({
 	width,
 	height,
-	depth = 2, // 1-2cm thick wall as specified
+	depth = 2,
 	sidePanels = "none",
 	sidePanelWidth = 40,
-	baseColor = "#6B5D52", // Default gray-brown stone
+	baseColor = "#6B5D52",
 }: BackgroundPanelProps) {
-	// Calculate appropriate number of rocks based on surface area
-	// ~0.5 rocks per 100cm² gives good density without overcrowding
-	const surfaceAreaCm2 = width * height;
-	const numRocks = Math.min(Math.max(Math.floor(surfaceAreaCm2 / 350), 20), 40);
+
+	// Convert depths to decimeters for positioning calculations
+	const wDm = width / 10;
+	const sideDm = sidePanelWidth / 10;
+	const dDm = depth / 10;
 
 	return (
 		<group>
-			<ProceduralRockWall
-				width={width}
-				height={height}
-				depth={depth}
-				sidePanels={sidePanels}
-				sidePanelDepth={sidePanelWidth}
-				numRocks={numRocks}
-				baseColor={baseColor}
-			/>
+			{/* --- BACK PANEL --- */}
+			{/* Positioned slightly forward so its back is at z=0 local space */}
+			<group position={[0, 0, 0]}>
+				<ProceduralRockSheet
+					width={width}
+					height={height}
+					thickness={depth}
+					relief={12} // Main relief
+					color={baseColor}
+					seed={1}
+					bias={0} // Balanced growth
+				/>
+			</group>
+
+			{/* --- RIGHT PANEL --- */}
+			{(sidePanels === "single" || sidePanels === "both") && (
+				<group
+					position={[wDm / 2 - dDm / 2, 0, sideDm / 2]}
+					rotation={[0, -Math.PI / 2, 0]}
+				>
+					<ProceduralRockSheet
+						width={sidePanelWidth} // This becomes width in local space
+						height={height}
+						thickness={depth}
+						relief={10}
+						color={baseColor}
+						seed={2}
+						bias={-0.5} // Grow slightly larger towards the back corner
+					/>
+				</group>
+			)}
+
+			{/* --- LEFT PANEL --- */}
+			{sidePanels === "both" && (
+				<group
+					position={[-wDm / 2 + dDm / 2, 0, sideDm / 2]}
+					rotation={[0, Math.PI / 2, 0]}
+				>
+					<ProceduralRockSheet
+						width={sidePanelWidth}
+						height={height}
+						thickness={depth}
+						relief={10}
+						color={baseColor}
+						seed={3}
+						bias={-0.5} // Grow slightly larger towards the back corner
+					/>
+				</group>
+			)}
 		</group>
 	);
 }
