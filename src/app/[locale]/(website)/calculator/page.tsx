@@ -1,6 +1,7 @@
 // src/app/(website)/calculator/page.tsx
 import { api, HydrateClient } from "~/trpc/server";
 import { CalculatorFlow } from "./_components/CalculatorFlow";
+import { VeenieKitBadge } from "./_components/VeenieKitBadge";
 
 export default async function CalculatorPage() {
 	// Fetch initial model categories server-side
@@ -51,6 +52,13 @@ export default async function CalculatorPage() {
 								<p className="text-sm text-muted-foreground font-display">Handcrafted</p>
 							</div>
 						</div>
+					</div>
+				</section>
+
+				{/* Veenie Kit Attribution */}
+				<section className="py-8 border-t">
+					<div className="container px-4 max-w-5xl mx-auto flex justify-center">
+						<VeenieKitBadge />
 					</div>
 				</section>
 			</main>

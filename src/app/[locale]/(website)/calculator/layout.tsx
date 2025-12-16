@@ -12,8 +12,9 @@ import { getBestTextureUrl } from "./_world/textureHelpers";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
 
 export default function CalculatorLayout({ children }: { children: React.ReactNode }) {
+	// Start expanded if we have a category (prevents WebGL context death)
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
-	const hasAutoExpanded = useRef(false); // <--- The Latch
+	const hasAutoExpanded = useRef(false);
 
 	const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 	const [config, setConfig] = useState<QuoteConfig | null>(null);
@@ -31,7 +32,7 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 		alert("Redirecting to payment...");
 	};
 
-	// Safe texture logic
+	// Safe texture logic - properly handle subcategory texture priority
 	const safeBackgroundTexture = config?.modelCategory
 		? getBestTextureUrl(
 			undefined,
@@ -49,7 +50,7 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 				value={{
 					isCalculatorExpanded,
 					setIsCalculatorExpanded,
-					hasAutoExpanded, // Pass it down
+					hasAutoExpanded,
 					isQuoteModalOpen,
 					openQuoteModal: () => setIsQuoteModalOpen(true),
 					closeQuoteModal: () => setIsQuoteModalOpen(false),

@@ -4,7 +4,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
 import { useState, Suspense } from "react";
-import { Pause, RefreshCwIcon, FishSymbol } from "lucide-react";
+import { Pause, RefreshCwIcon } from "lucide-react";
 import { BackgroundPanel } from "./BackgroundPanel";
 import { DimensionsOverlay } from "./DimensionsOverlay";
 import { Fish } from "./Fish";
@@ -219,7 +219,7 @@ export function AquariumScene({
 				/>
 			</Canvas>
 
-			{/* UI CONTROLS OVERLAY */}
+			{/* UI CONTROLS OVERLAY - Only when showControls is true */}
 			{showControls && (
 				<>
 					{/* Auto-rotate toggle */}
