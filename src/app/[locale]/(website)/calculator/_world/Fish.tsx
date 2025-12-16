@@ -30,17 +30,24 @@ export function Fish({ tankWidth, tankHeight, tankDepth }: FishProps) {
 
 	// Start swimming animation if available
 	useEffect(() => {
-		// Play the first animation found (usually 'Swim' or 'Take 001')
 		const actionName = Object.keys(actions)[0];
-		if (actionName && actions[actionName]) {
-			actions[actionName]?.reset().fadeIn(0.5).play();
+		// Guard clause: if no animation found, stop
+		if (!actionName) return;
+
+		const action = actions[actionName];
+
+		if (action) {
+			action.reset().fadeIn(0.5).play();
 			// Randomize playback speed slightly for realism
-			actions[actionName]!.timeScale = 0.8 + Math.random() * 0.4;
+			action.timeScale = 0.8 + Math.random() * 0.4;
 		}
+
 		return () => {
-			actions[actionName]?.fadeOut(0.5);
+			// Use the captured variable, not the index look-up
+			action?.fadeOut(0.5);
 		}
 	}, [actions]);
+
 
 	useFrame((state, delta) => {
 		if (!group.current) return;

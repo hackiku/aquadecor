@@ -41,7 +41,7 @@ function AquariumTank({
 	// 🎨 DYNAMIC COLOR EXTRACTION
 	// This pulls the dominant color from the user's selected image
 	// effectively "tinting" the procedural rock to match the product line
-	const targetImage = subcategoryTexture || backgroundTexture;
+	const targetImage = subcategoryTexture || backgroundTexture || "/media/images/background-placeholder.png";
 	const dynamicRockColor = useProductColor(targetImage, "#6B5D52");
 
 	return (
@@ -65,14 +65,13 @@ function AquariumTank({
 			{/* 2. THE FISH (NEMO) */}
 			{/* Only render if we aren't in an "empty" state */}
 			<Suspense fallback={null}>
-				{!isEmpty && (
-					<Fish
-						tankWidth={width}
-						tankHeight={height}
-						tankDepth={depth}
-					/>
-				)}
+				<Fish
+					tankWidth={width}
+					tankHeight={height}
+					tankDepth={depth}
+				/>
 			</Suspense>
+
 
 			{/* 3. WATER VOLUME */}
 			{/* Fills ~90% of the tank, slightly transparent blue */}

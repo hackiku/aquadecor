@@ -15,21 +15,45 @@ export function useProductColor(imageUrl?: string, defaultColor = "#6B5D52") {
 			return;
 		}
 
-		// Check if it's a valid URL to prevent errors
+		// Basic validation
 		if (imageUrl.startsWith("/") || imageUrl.startsWith("http")) {
-			fac.getColorAsync(imageUrl, { algorithm: "dominant" })
+			fac.getColorAsync(imageUrl, {
+				algorithm: "dominant",
+				ignoredColor: [0, 0, 0, 255] // Ignore pure black if it appears
+			})
 				.then((col) => {
-					// We darken the color slightly because average colors 
-					// tend to be too bright for 3D rock shadows
-					// increasing saturation slightly also helps
-					setColor(col.hex);
+					// Manually adjust brightness if it's too dark
+					// (Common issue with transparent PNGs on black backgrounds or dark rock photos)
+					const [r, g, b] = col.value;
+
+					// Calculate perceived brightness (standard formula)
+					const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+					// If too dark (< 60/255), boost it
+					if (brightness < 60) {
+						// boost factor
+						const factor = 1.5;
+						const newHex = rgbToHex(
+							Math.min(255, r * factor),
+							Math.min(255, g * factor),
+							Math.min(255, b * factor)
+						);
+						setColor(newHex);
+					} else {
+						setColor(col.hex);
+					}
 				})
 				.catch((e) => {
-					console.warn("Color extraction failed, using default", e);
+					console.warn("Color extraction failed", e);
 					setColor(defaultColor);
 				});
 		}
 	}, [imageUrl, defaultColor]);
 
 	return color;
+}
+
+// Helper to reconvert boosted RGB to hex
+function rgbToHex(r: number, g: number, b: number) {
+	return "#" + ((1 << 24) + (Math.round(r) << 16) + (Math.round(g) << 8) + Math.round(b)).toString(16).slice(1);
 }
