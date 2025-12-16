@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "logs-leaves-driftwood-rocks",
+		categorySlug: "logs-leaves-driftwood-rocks",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-models-logs-leaves-driftwood-rocks-and-roots.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-models-logs-leaves-driftwood-rocks-and-roots.webp",
+		altText: "Logs, Leaves & Driftwood Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "d-1-standing-roots",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-standing-roots.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/d-1-standing-roots.webp",

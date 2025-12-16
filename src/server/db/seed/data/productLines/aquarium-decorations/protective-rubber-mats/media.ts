@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "protective-rubber-mats",
+		categorySlug: "protective-rubber-mats",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/j-models-protective-rubber-mats-for-cichlid-aquariums.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/j-models-protective-rubber-mats-for-cichlid-aquariums.webp",
+		altText: "Protective Rubber Mats Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "j-1-dark-slate-protective-mat",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/j-1-rubber-mat-for-aquarium.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/j-1-rubber-mat-for-aquarium.webp",

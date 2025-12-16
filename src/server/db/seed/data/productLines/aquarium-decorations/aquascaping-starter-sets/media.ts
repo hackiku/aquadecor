@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "aquascaping-starter-sets",
+		categorySlug: "aquascaping-starter-sets",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/starter-sets.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/starter-sets.webp",
+		altText: "Aquascaping Starter Sets Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "set-1",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/set-1.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/set-1.webp",
