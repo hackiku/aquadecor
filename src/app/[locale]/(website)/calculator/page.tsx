@@ -11,7 +11,6 @@ export default async function CalculatorPage() {
 		<HydrateClient>
 			<main className="min-h-screen">
 
-
 				{/* Hero Section */}
 				<section className="pt-16 md:pt-24 bg-gradient-to-b from-muted/50 via-muted/30 to-transparent">
 					<div className="container px-4 max-w-7xl mx-auto text-center space-y-3">

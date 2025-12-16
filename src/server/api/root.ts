@@ -13,6 +13,7 @@ import { adminMediaRouter } from "./routers/admin/media";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminPricingRouter } from "./routers/admin/pricing";
+import { adminCalculatorRouter } from "./routers/admin/calculator";
 import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
@@ -39,6 +40,7 @@ export const appRouter = createTRPCRouter({
 		product: adminProductRouter,
 		pricing: adminPricingRouter,
 		media: adminMediaRouter, // Admin media (old CDN)
+		calculator: adminCalculatorRouter,
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
 		sale: adminSaleRouter,
