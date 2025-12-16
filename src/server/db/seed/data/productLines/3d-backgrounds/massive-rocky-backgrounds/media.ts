@@ -4,17 +4,15 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
-		"productSlug": "massive-rocky-backgrounds",
-		"categorySlug": "massive-rocky-backgrounds",
-		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/c-models-massive-rocky-backgrounds.webp",
-		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/c-models-massive-rocky-backgrounds.webp",
-		"altText": "Massive Rocky Backgrounds Hero",
-		"usageType": "category",
-		"sortOrder": 0,
-		"tags": [
-			"category-hero"
-		],
-		"storagePath": null
+		productSlug: "massive-rocky-backgrounds",
+		categorySlug: "massive-rocky-backgrounds",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/c-models-massive-rocky-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/c-models-massive-rocky-backgrounds.webp",
+		altText: "Massive Rocky Backgrounds Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
 	},
 	{
 		"productSlug": "c-3-massive-rocky-background",

@@ -10,7 +10,7 @@ import { products as p_juwel_aquarium_backgrounds } from './juwel-aquarium-backg
 import { products as p_saltwater_marine_backgrounds } from './saltwater-marine-backgrounds/products';
 import { products as p_classic_rocky_backgrounds } from './classic-rocky-backgrounds/products';
 import { products as p_massive_slim_backgrounds } from './massive-slim-backgrounds/products';
-import { products as p_slim_stone_backgrounds } from './slim-stone-backgrounds/products';
+import { products as p_thin_stone_backgrounds } from './thin-stone-backgrounds/products';
 import { products as p_amazonian_tree_trunks } from './amazonian-tree-trunks/products';
 import { products as p_slim_rocky_backgrounds } from './slim-rocky-backgrounds/products';
 import { products as p_room_divider_backgrounds } from './room-divider-backgrounds/products';
@@ -22,7 +22,7 @@ import { pricing as pr_juwel_aquarium_backgrounds, bundles as b_juwel_aquarium_b
 import { pricing as pr_saltwater_marine_backgrounds, bundles as b_saltwater_marine_backgrounds, addons as a_saltwater_marine_backgrounds, marketExclusions as me_saltwater_marine_backgrounds } from './saltwater-marine-backgrounds/pricing';
 import { pricing as pr_classic_rocky_backgrounds, bundles as b_classic_rocky_backgrounds, addons as a_classic_rocky_backgrounds, marketExclusions as me_classic_rocky_backgrounds } from './classic-rocky-backgrounds/pricing';
 import { pricing as pr_massive_slim_backgrounds, bundles as b_massive_slim_backgrounds, addons as a_massive_slim_backgrounds, marketExclusions as me_massive_slim_backgrounds } from './massive-slim-backgrounds/pricing';
-import { pricing as pr_slim_stone_backgrounds, bundles as b_slim_stone_backgrounds, addons as a_slim_stone_backgrounds, marketExclusions as me_slim_stone_backgrounds } from './slim-stone-backgrounds/pricing';
+import { pricing as pr_thin_stone_backgrounds, bundles as b_thin_stone_backgrounds, addons as a_thin_stone_backgrounds, marketExclusions as me_thin_stone_backgrounds } from './thin-stone-backgrounds/pricing';
 import { pricing as pr_amazonian_tree_trunks, bundles as b_amazonian_tree_trunks, addons as a_amazonian_tree_trunks, marketExclusions as me_amazonian_tree_trunks } from './amazonian-tree-trunks/pricing';
 import { pricing as pr_slim_rocky_backgrounds, bundles as b_slim_rocky_backgrounds, addons as a_slim_rocky_backgrounds, marketExclusions as me_slim_rocky_backgrounds } from './slim-rocky-backgrounds/pricing';
 import { pricing as pr_room_divider_backgrounds, bundles as b_room_divider_backgrounds, addons as a_room_divider_backgrounds, marketExclusions as me_room_divider_backgrounds } from './room-divider-backgrounds/pricing';
@@ -34,7 +34,7 @@ import { media as m_juwel_aquarium_backgrounds } from './juwel-aquarium-backgrou
 import { media as m_saltwater_marine_backgrounds } from './saltwater-marine-backgrounds/media';
 import { media as m_classic_rocky_backgrounds } from './classic-rocky-backgrounds/media';
 import { media as m_massive_slim_backgrounds } from './massive-slim-backgrounds/media';
-import { media as m_slim_stone_backgrounds } from './slim-stone-backgrounds/media';
+import { media as m_thin_stone_backgrounds } from './thin-stone-backgrounds/media';
 import { media as m_amazonian_tree_trunks } from './amazonian-tree-trunks/media';
 import { media as m_slim_rocky_backgrounds } from './slim-rocky-backgrounds/media';
 import { media as m_room_divider_backgrounds } from './room-divider-backgrounds/media';
@@ -46,7 +46,7 @@ import { translations as t_juwel_aquarium_backgrounds } from './juwel-aquarium-b
 import { translations as t_saltwater_marine_backgrounds } from './saltwater-marine-backgrounds/translations';
 import { translations as t_classic_rocky_backgrounds } from './classic-rocky-backgrounds/translations';
 import { translations as t_massive_slim_backgrounds } from './massive-slim-backgrounds/translations';
-import { translations as t_slim_stone_backgrounds } from './slim-stone-backgrounds/translations';
+import { translations as t_thin_stone_backgrounds } from './thin-stone-backgrounds/translations';
 import { translations as t_amazonian_tree_trunks } from './amazonian-tree-trunks/translations';
 import { translations as t_slim_rocky_backgrounds } from './slim-rocky-backgrounds/translations';
 import { translations as t_room_divider_backgrounds } from './room-divider-backgrounds/translations';
@@ -62,7 +62,7 @@ export const productLine = {
 		...p_saltwater_marine_backgrounds,
 		...p_classic_rocky_backgrounds,
 		...p_massive_slim_backgrounds,
-		...p_slim_stone_backgrounds,
+		...p_thin_stone_backgrounds,
 		...p_amazonian_tree_trunks,
 		...p_slim_rocky_backgrounds,
 		...p_room_divider_backgrounds,
@@ -75,7 +75,7 @@ export const productLine = {
 		...pr_saltwater_marine_backgrounds,
 		...pr_classic_rocky_backgrounds,
 		...pr_massive_slim_backgrounds,
-		...pr_slim_stone_backgrounds,
+		...pr_thin_stone_backgrounds,
 		...pr_amazonian_tree_trunks,
 		...pr_slim_rocky_backgrounds,
 		...pr_room_divider_backgrounds,
@@ -88,7 +88,7 @@ export const productLine = {
 		...b_saltwater_marine_backgrounds,
 		...b_classic_rocky_backgrounds,
 		...b_massive_slim_backgrounds,
-		...b_slim_stone_backgrounds,
+		...b_thin_stone_backgrounds,
 		...b_amazonian_tree_trunks,
 		...b_slim_rocky_backgrounds,
 		...b_room_divider_backgrounds,
@@ -101,7 +101,7 @@ export const productLine = {
 		...a_saltwater_marine_backgrounds,
 		...a_classic_rocky_backgrounds,
 		...a_massive_slim_backgrounds,
-		...a_slim_stone_backgrounds,
+		...a_thin_stone_backgrounds,
 		...a_amazonian_tree_trunks,
 		...a_slim_rocky_backgrounds,
 		...a_room_divider_backgrounds,
@@ -114,7 +114,7 @@ export const productLine = {
 		...me_saltwater_marine_backgrounds,
 		...me_classic_rocky_backgrounds,
 		...me_massive_slim_backgrounds,
-		...me_slim_stone_backgrounds,
+		...me_thin_stone_backgrounds,
 		...me_amazonian_tree_trunks,
 		...me_slim_rocky_backgrounds,
 		...me_room_divider_backgrounds,
@@ -127,7 +127,7 @@ export const productLine = {
 		...m_saltwater_marine_backgrounds,
 		...m_classic_rocky_backgrounds,
 		...m_massive_slim_backgrounds,
-		...m_slim_stone_backgrounds,
+		...m_thin_stone_backgrounds,
 		...m_amazonian_tree_trunks,
 		...m_slim_rocky_backgrounds,
 		...m_room_divider_backgrounds,
@@ -140,7 +140,7 @@ export const productLine = {
 		...t_saltwater_marine_backgrounds,
 		...t_classic_rocky_backgrounds,
 		...t_massive_slim_backgrounds,
-		...t_slim_stone_backgrounds,
+		...t_thin_stone_backgrounds,
 		...t_amazonian_tree_trunks,
 		...t_slim_rocky_backgrounds,
 		...t_room_divider_backgrounds,

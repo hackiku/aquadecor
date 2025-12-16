@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "saltwater-marine-backgrounds",
+		categorySlug: "saltwater-marine-backgrounds",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/k-models-saltwater-marine-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/k-models-saltwater-marine-backgrounds.webp",
+		altText: "Saltwater Marine Backgrounds Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "k-1-marine-background",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/k-1-marine-background.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/k-1-marine-background.webp",

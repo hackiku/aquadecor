@@ -52,7 +52,7 @@ export const categories = [
 		contentBlocks: { icon: "box", emoji: "📦" },
 	},
 	{
-		slug: "slim-stone-backgrounds",
+		slug: "slim-rocky-backgrounds",
 		productLine: "3d-backgrounds",
 		modelCode: "A SLIM",
 		sortOrder: 70,
@@ -68,7 +68,7 @@ export const categories = [
 		contentBlocks: { icon: "box", emoji: "📦" },
 	},
 	{
-		slug: "slim-rocky-backgrounds",
+		slug: "thin-stone-backgrounds",
 		productLine: "3d-backgrounds",
 		modelCode: "G",
 		sortOrder: 90,

@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "massive-slim-backgrounds",
+		categorySlug: "massive-slim-backgrounds",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/n-models-massive-3d-slim-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/n-models-massive-3d-slim-backgrounds.webp",
+		altText: "Massive Slim Backgrounds Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "n-1-massive-3d-slim-background",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/n-1-massive-3d-slim-background/n1.png",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/n-1-massive-3d-slim-background/n1.png",

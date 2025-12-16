@@ -4,6 +4,19 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "juwel-aquarium-backgrounds",
+		categorySlug: "juwel-aquarium-backgrounds",
+		// Fixed URL: was pointing to k-models-saltwater...
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/l-models-juwel-3d-aquarium-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/l-models-juwel-3d-aquarium-backgrounds.webp",
+		altText: "Juwel 3D Aquarium Background Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+
+	{
 		"productSlug": "l-2-juwel-3d-aquarium-background",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/l-2-juwel-3d-aquarium-background.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/l-2-juwel-3d-aquarium-background.webp",

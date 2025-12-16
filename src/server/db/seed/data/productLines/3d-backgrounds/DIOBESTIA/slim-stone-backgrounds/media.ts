@@ -4,6 +4,17 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
+		productSlug: "slim-rocky-backgrounds",
+		categorySlug: "slim-rocky-backgrounds",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/g-models-slim-rocky-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/g-models-slim-rocky-backgrounds.webp",
+		altText: "Slim Stone Backgrounds Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
+	},
+	{
 		"productSlug": "g-1-slim-rocky-backgrounds",
 		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/g-1-slim-rocky-backgrounds.webp",
 		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/g-1-slim-rocky-backgrounds.webp",

@@ -205,7 +205,7 @@ export const categoryTranslations = {
 			metaDescription: "Imponenti sfondi rocciosi con un profilo sottile. Ottieni un impatto visivo drammatico senza sacrificare il volume d'acqua. Perfetti per aquascapes attenti allo spazio."
 		},
 	},
-	"slim-stone-backgrounds": {
+	"slim-rocky-backgrounds": {
 		en: {
 			model: "A SLIM Models",
 			name: "Slim Stone Backgrounds",
@@ -273,10 +273,10 @@ export const categoryTranslations = {
 			metaDescription: "Crea una foresta sommersa con sfondi di Tronchi d'Albero Amazzonici. Design in legno massiccio 3D perfetti per habitat di Discus e Scalari."
 		},
 	},
-	"slim-rocky-backgrounds": {
+	"thin-stone-backgrounds": {
 		en: {
 			model: "G Models",
-			name: "Slim Rocky Backgrounds",
+			name: "Thin Stone Backgrounds",
 			description: "Elegant, low-profile rock backgrounds that maximize tank space. Detailed stone textures provide a natural backdrop without dominating the aquarium's layout.",
 			longDescription: "G Model Slim Rocky Backgrounds are designed for efficiency and elegance. With a low profile that hugs the back glass, these backgrounds offer detailed rock textures that enhance your tank's depth without consuming swimming space. They are the versatile choice for planted tanks, community setups, or narrow aquariums where every centimeter counts.",
 			metaTitle: "Slim Rocky 3D Aquarium Backgrounds | Low Profile Stone | Aquadecor",

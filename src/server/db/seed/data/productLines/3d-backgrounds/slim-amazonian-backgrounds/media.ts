@@ -4,17 +4,15 @@ import type { MediaSeed } from "../../../../../schema";
 
 export const media: MediaSeed[] = [
 	{
-		"productSlug": "slim-amazonian-backgrounds",
-		"categorySlug": "slim-amazonian-backgrounds",
-		"storageUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/e-models-slim-amazonian-backgrounds.webp",
-		"legacyCdnUrl": "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/e-models-slim-amazonian-backgrounds.webp",
-		"altText": "Slim Amazonian Backgrounds Hero",
-		"usageType": "category",
-		"sortOrder": 0,
-		"tags": [
-			"category-hero"
-		],
-		"storagePath": null
+		productSlug: "slim-amazonian-backgrounds",
+		categorySlug: "slim-amazonian-backgrounds",
+		storageUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/e-models-slim-amazonian-backgrounds.webp",
+		legacyCdnUrl: "https://cdn.aquadecorbackgrounds.com/aquadecor-blob/e-models-slim-amazonian-backgrounds.webp",
+		altText: "Slim Amazonian Backgrounds Category Hero",
+		usageType: "category",
+		sortOrder: 0,
+		tags: ["category-hero"],
+		storagePath: null,
 	},
 	{
 		"productSlug": "e-3-slim-amazonian-background",
