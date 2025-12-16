@@ -35,7 +35,15 @@ const DEFAULT_CONFIG: QuoteConfig = {
 export function CalculatorFlow({ initialCategories }: { initialCategories: CalculatorCategory[] }) {
 	const [localConfig, setLocalConfig] = useState<QuoteConfig>(DEFAULT_CONFIG);
 	const estimate = useQuoteEstimate(localConfig);
-	const { setConfig, setEstimate, setCompletionPercent, openQuoteModal, setIsCalculatorExpanded } = useCalculatorLayout();
+	const {
+		setConfig,
+		setEstimate,
+		setCompletionPercent,
+		openQuoteModal,
+		setIsCalculatorExpanded,
+		hasAutoExpanded
+	} = useCalculatorLayout();
+
 
 	// Sync local config and estimate to global layout context (for StickyCalculator)
 	useEffect(() => {
@@ -56,10 +64,13 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 
 	// AUTO-EXPAND: When user selects a category, immediately expand the sticky calculator
 	useEffect(() => {
-		if (localConfig.modelCategory) {
+		// Only expand if we have a category AND we haven't done it yet
+		if (localConfig.modelCategory && !hasAutoExpanded.current) {
 			setIsCalculatorExpanded(true);
+			hasAutoExpanded.current = true; // Mark as done
 		}
-	}, [localConfig.modelCategory, setIsCalculatorExpanded]);
+	}, [localConfig.modelCategory, setIsCalculatorExpanded, hasAutoExpanded]);
+
 
 	const canRequestQuote = localConfig.modelCategory !== null && localConfig.country !== "";
 

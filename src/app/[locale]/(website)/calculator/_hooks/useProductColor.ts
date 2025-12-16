@@ -44,7 +44,7 @@ export function useProductColor(imageUrl?: string, defaultColor = "#6B5D52") {
 					}
 				})
 				.catch((e) => {
-					console.warn("Color extraction failed", e);
+					// console.warn("Color extraction failed", e); // avoid CORS console spam
 					setColor(defaultColor);
 				});
 		}

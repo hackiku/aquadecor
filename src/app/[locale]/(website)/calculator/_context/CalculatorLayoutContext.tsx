@@ -1,23 +1,23 @@
 // src/app/(website)/calculator/_context/CalculatorLayoutContext.tsx
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 import type { QuoteConfig, PriceEstimate } from "../calculator-types";
 
-// Context to manage calculator state globally
 interface CalculatorLayoutContextType {
 	isCalculatorExpanded: boolean;
 	setIsCalculatorExpanded: (expanded: boolean) => void;
-	// Quote modal state
+
+	// NEW: A ref to track if we've already auto-expanded once
+	hasAutoExpanded: React.MutableRefObject<boolean>;
+
 	isQuoteModalOpen: boolean;
 	openQuoteModal: () => void;
 	closeQuoteModal: () => void;
-	// Calculator config for modal
 	config: QuoteConfig | null;
 	setConfig: (config: QuoteConfig) => void;
 	estimate: PriceEstimate | null;
 	setEstimate: (estimate: PriceEstimate) => void;
-	// Completion percentage
 	completionPercent: number;
 	setCompletionPercent: (percent: number) => void;
 }

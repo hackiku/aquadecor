@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, type ReactNode } from "react";
+import { useState, useRef } from "react";
 import { UnitProvider } from "./_context/UnitContext";
 import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
 import { ProgressBar } from "./_components/sticky/ProgressBar";
@@ -11,28 +11,30 @@ import { QuoteModal } from "./_components/quote/QuoteModal";
 import { getBestTextureUrl } from "./_world/textureHelpers";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
 
-export default function CalculatorLayout({ children }: { children: ReactNode }) {
+export default function CalculatorLayout({ children }: { children: React.ReactNode }) {
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
+	const hasAutoExpanded = useRef(false); // <--- The Latch
+
 	const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 	const [config, setConfig] = useState<QuoteConfig | null>(null);
 	const [estimate, setEstimate] = useState<PriceEstimate | null>(null);
 	const [completionPercent, setCompletionPercent] = useState(0);
 
-	const handleQuoteSubmit = async (data: { name: string; email: string; notes?: string }) => {
+	const handleQuoteSubmit = async (data: any) => {
 		console.log("Quote submission:", { config, estimate, ...data });
 		setIsQuoteModalOpen(false);
 		alert("Quote request submitted! We'll email you within 24 hours.");
 	};
 
-	const handleDepositPayment = async (data: { name: string; email: string; notes?: string }) => {
+	const handleDepositPayment = async (data: any) => {
 		console.log("Deposit payment:", { config, estimate, ...data });
 		alert("Redirecting to payment...");
 	};
 
-	// Sanitize texture URLs to prevent crashes
+	// Safe texture logic
 	const safeBackgroundTexture = config?.modelCategory
 		? getBestTextureUrl(
-			undefined, // No subcategory yet at category level
+			undefined,
 			config.modelCategory.textureUrl || config.modelCategory.image
 		)
 		: undefined;
@@ -47,6 +49,7 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 				value={{
 					isCalculatorExpanded,
 					setIsCalculatorExpanded,
+					hasAutoExpanded, // Pass it down
 					isQuoteModalOpen,
 					openQuoteModal: () => setIsQuoteModalOpen(true),
 					closeQuoteModal: () => setIsQuoteModalOpen(false),
@@ -58,27 +61,27 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 					setCompletionPercent,
 				}}
 			>
-				{/* Animated content wrapper */}
+				{/* Main Content Area - Pushes left when expanded */}
 				<motion.div
 					animate={{
 						marginRight: isCalculatorExpanded ? "28rem" : "0",
 					}}
+					// Slower, smoother transition to reduce layout thrashing stutter
 					transition={{
-						type: "spring",
-						stiffness: 300,
-						damping: 30,
+						duration: 0.5,
+						ease: [0.32, 0.72, 0, 1], // Custom bezier for smooth push
 					}}
-					className="will-change-[margin]"
+					className="will-change-[margin-right] min-h-screen relative z-0"
 				>
 					{children}
 				</motion.div>
 
-				{/* Progress Bar */}
+				{/* Progress Bar (Fixed at bottom) */}
 				{config?.modelCategory && (
 					<ProgressBar completionPercent={completionPercent} />
 				)}
 
-				{/* Sticky Calculator */}
+				{/* The Morphing Calculator (Fixed on right) */}
 				{config?.modelCategory && estimate && (
 					<StickyCalculator
 						dimensions={config.dimensions}
@@ -91,7 +94,7 @@ export default function CalculatorLayout({ children }: { children: ReactNode }) 
 					/>
 				)}
 
-				{/* Quote Modal */}
+				{/* Modal */}
 				{config && estimate && (
 					<QuoteModal
 						config={config}
