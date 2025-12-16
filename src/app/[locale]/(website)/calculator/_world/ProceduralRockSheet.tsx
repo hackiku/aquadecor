@@ -44,10 +44,11 @@ export function ProceduralRockSheet({
 		// Apply the rocky displacement
 		displaceGeometryToRock(geo, {
 			seed,
-			scale: 1.2,        // Noise frequency
-			amplitude: relief, // How far rocks protrude
-			bias,              // Left/Right growth
-			thickness: thickness // pass original cm thickness for logic
+			scale: 1.2,
+			amplitude: relief,
+			bias,
+			thickness,
+			edgeSmoothing: 0.2 // 15% of the edges will taper down
 		});
 
 		return geo;

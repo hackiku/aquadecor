@@ -7,6 +7,7 @@ import { useState, Suspense } from "react";
 import { Pause, RefreshCwIcon } from "lucide-react";
 import { BackgroundPanel } from "./BackgroundPanel";
 import type { SidePanelsType } from "../calculator-types";
+import { DimensionsOverlay } from "./DimensionsOverlay";
 
 interface AquariumSceneProps {
 	width: number;
@@ -97,6 +98,12 @@ function AquariumTank({
 				<boxGeometry args={[w * 0.95, 0.5, d * 0.95]} />
 				<meshStandardMaterial color="#8B7355" roughness={0.9} />
 			</mesh>
+
+			<DimensionsOverlay
+				width={width}
+				height={height}
+				depth={depth}
+			/>
 		</group>
 	);
 }
@@ -170,7 +177,7 @@ export function AquariumScene({
 					{/* Auto-rotate toggle */}
 					<div
 						onClick={() => setAutoRotate(!autoRotate)}
-						className="absolute bottom-2 left-2 px-3 py-1.5 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light hover:bg-black/80 transition-colors cursor-pointer"
+						className="absolute bottom-2 right-6 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light hover:bg-black/80 transition-colors cursor-pointer"
 						title={autoRotate ? "Disable auto-rotate" : "Enable auto-rotate"}
 						role="button"
 						tabIndex={0}
@@ -193,11 +200,11 @@ export function AquariumScene({
 					</div>
 
 					{/* Debug stats */}
-					<div className="absolute bottom-3 right-3 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
-						<div className="flex justify-between gap-4">
+					<div className="absolute bottom-1 left-1 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
+						{/* <div className="flex justify-between gap-4">
 							<span className="text-white/60">W×H×D:</span>
 							<span>{width}×{height}×{depth}cm</span>
-						</div>
+						</div> */}
 						<div className="flex justify-between gap-4">
 							<span className="text-white/60">Area:</span>
 							<span>{surfaceM2}m²</span>
