@@ -21,7 +21,6 @@ import { api } from "~/trpc/react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
-import { useTranslations } from "next-intl";
 
 const profileSchema = z.object({
 	name: z.string().min(1, "Name is required"),
@@ -31,9 +30,6 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function SettingsPage() {
-	const t = useTranslations("account.settings");
-	const tToast = useTranslations("account.toast");
-
 	const utils = api.useUtils();
 	const { data: profile, isLoading } = api.account.getProfile.useQuery();
 
@@ -57,7 +53,7 @@ export default function SettingsPage() {
 
 	const updateMutation = api.account.updateProfile.useMutation({
 		onSuccess: () => {
-			toast.success(tToast("profileUpdated"));
+			toast.success("Profile updated successfully");
 			utils.account.getProfile.invalidate();
 		},
 		onError: (err) => toast.error(err.message),
@@ -79,11 +75,9 @@ export default function SettingsPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl md:text-3xl font-display font-light">
-						{t("title")}
-					</h1>
+					<h1 className="text-2xl md:text-3xl font-display font-light">Settings</h1>
 					<p className="text-muted-foreground font-display font-light">
-						{t("subtitle")}
+						Manage your account settings and preferences
 					</p>
 				</div>
 				<MobileAccountNav />
@@ -93,11 +87,9 @@ export default function SettingsPage() {
 				{/* Profile Settings */}
 				<Card>
 					<CardHeader>
-						<CardTitle className="font-display font-medium">
-							{t("personalInfo.title")}
-						</CardTitle>
+						<CardTitle className="font-display font-medium">Profile Information</CardTitle>
 						<CardDescription className="font-display font-light">
-							{t("personalInfo.subtitle")}
+							Update your personal information
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -108,7 +100,7 @@ export default function SettingsPage() {
 									name="name"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>{t("personalInfo.name")}</FormLabel>
+											<FormLabel>Full Name</FormLabel>
 											<FormControl>
 												<Input placeholder="John Doe" {...field} />
 											</FormControl>
@@ -122,12 +114,12 @@ export default function SettingsPage() {
 									name="phone"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>{t("personalInfo.phone")}</FormLabel>
+											<FormLabel>Phone Number</FormLabel>
 											<FormControl>
 												<Input type="tel" placeholder="+1 234 567 8900" {...field} />
 											</FormControl>
 											<FormDescription className="font-display font-light text-xs">
-												{t("personalInfo.phoneHelp")}
+												Optional. Used for order updates and support.
 											</FormDescription>
 											<FormMessage />
 										</FormItem>
@@ -143,7 +135,7 @@ export default function SettingsPage() {
 										{updateMutation.isPending && (
 											<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 										)}
-										{t("personalInfo.save")}
+										Save Changes
 									</Button>
 								</div>
 							</form>
@@ -154,19 +146,15 @@ export default function SettingsPage() {
 				{/* Email - Read Only */}
 				<Card className="mt-6">
 					<CardHeader>
-						<CardTitle className="font-display font-medium">
-							{t("email.title")}
-						</CardTitle>
+						<CardTitle className="font-display font-medium">Email Address</CardTitle>
 						<CardDescription className="font-display font-light">
-							{t("email.subtitle")}
+							Your email is managed through your authentication provider
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30">
 							<div className="font-display font-light">{profile?.email}</div>
-							<span className="text-xs text-muted-foreground">
-								{t("email.verified")}
-							</span>
+							<span className="text-xs text-muted-foreground">Verified</span>
 						</div>
 					</CardContent>
 				</Card>
@@ -175,18 +163,18 @@ export default function SettingsPage() {
 				<Card className="mt-6">
 					<CardHeader>
 						<CardTitle className="font-display font-medium text-red-600">
-							{t("danger.title")}
+							Danger Zone
 						</CardTitle>
 						<CardDescription className="font-display font-light">
-							{t("danger.subtitle")}
+							Irreversible actions for your account
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<Button variant="destructive" className="rounded-full" disabled>
-							{t("danger.deleteAccount")}
+							Delete Account
 						</Button>
 						<p className="text-xs text-muted-foreground mt-2 font-display font-light">
-							{t("danger.deleteWarning")}
+							Contact support to delete your account
 						</p>
 					</CardContent>
 				</Card>

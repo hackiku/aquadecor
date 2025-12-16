@@ -4,33 +4,32 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from '~/i18n/routing';
 import { NextResponse } from 'next/server';
 
-// Create the i18n middleware
 const intlMiddleware = createMiddleware(routing);
 
 export default auth(async (req) => {
-	// FIRST: Let next-intl handle locale detection/redirects
+	// Let next-intl handle locale first
 	const intlResponse = intlMiddleware(req);
+	if (intlResponse) return intlResponse;
 
-	// If next-intl wants to redirect (e.g., /account -> /en/account), let it
-	if (intlResponse) {
-		return intlResponse;
-	}
-
-	// SECOND: After locale is resolved, check auth
+	// Then check auth for protected routes
 	const { pathname } = req.nextUrl;
+	const isAccountRoute = pathname.match(/^\/[^/]+\/account/);
+	const isLoginRoute = pathname.match(/^\/[^/]+\/login/);
 
-	// Protected paths (WITHOUT locale prefix - intl already handled it)
-	const isProtectedRoute = pathname.match(/^\/[^/]+\/(account|admin)/);
-
-	if (isProtectedRoute && !req.auth) {
-		// Extract locale from pathname
+	// Redirect to login if accessing account without auth
+	if (isAccountRoute && !req.auth) {
 		const locale = pathname.split('/')[1] || 'en';
 		const signInUrl = new URL(`/${locale}/login`, req.url);
 		signInUrl.searchParams.set('callbackUrl', pathname);
 		return NextResponse.redirect(signInUrl);
 	}
 
-	// All good, continue
+	// Redirect to account if already logged in and visiting login
+	if (isLoginRoute && req.auth) {
+		const locale = pathname.split('/')[1] || 'en';
+		return NextResponse.redirect(new URL(`/${locale}/account`, req.url));
+	}
+
 	return NextResponse.next();
 });
 

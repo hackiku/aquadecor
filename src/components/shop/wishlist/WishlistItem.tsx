@@ -2,16 +2,17 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { X, ShoppingCart, Package } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { Link } from "~/i18n/navigation";
+import { useTranslations } from "next-intl";
 import type { Product } from "~/server/db/schema/shop";
 
 // Type matches what WishlistDrawer passes (ProductForWishlist)
-type ProductForWishlist = Pick<Product, 'id' | 'slug' > & {
+type ProductForWishlist = Pick<Product, 'id' | 'slug'> & {
 	name: string | null;
 	shortDescription: string | null;
-	heroImageUrl: string | null; // UPDATED from featuredImageUrl
+	heroImageUrl: string | null;
 	categorySlug: string | null;
 	productLineSlug: string | null;
 	basePriceEurCents: number | null;
@@ -24,6 +25,8 @@ interface WishlistItemProps {
 }
 
 export function WishlistItem({ product, onRemove }: WishlistItemProps) {
+	const t = useTranslations("account.wishlist");
+
 	const productUrl = `/shop/${product.productLineSlug ?? ''}/${product.categorySlug ?? ''}/${product.slug}`;
 	const displayName = product.name ?? "Unknown Product";
 	const hasPrice = product.basePriceEurCents !== null;
@@ -52,9 +55,6 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 
 			localStorage.setItem("cart", JSON.stringify(cart));
 			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: cart } }));
-
-			// Optional: Remove from wishlist after adding to cart
-			// onRemove(); 
 		} else {
 			console.log("Request quote:", product.id);
 		}
@@ -110,7 +110,7 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 						</p>
 					) : (
 						<p className="text-xs text-muted-foreground font-display font-medium">
-							{product.priceNote ?? "Custom Quote"}
+							{product.priceNote ?? t("outOfStock")}
 						</p>
 					)}
 
@@ -121,7 +121,7 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 						onClick={handleAddToCart}
 					>
 						<ShoppingCart className="h-3 w-3" />
-						{hasPrice ? "Add" : "Quote"}
+						{hasPrice ? t("addToCart") : "Quote"}
 					</Button>
 				</div>
 			</div>

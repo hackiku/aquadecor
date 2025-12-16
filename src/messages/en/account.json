@@ -1,0 +1,210 @@
+{
+	"account": {
+		"nav": {
+			"overview": "Overview",
+			"orders": "Orders",
+			"wishlist": "Wishlist",
+			"addresses": "Addresses",
+			"settings": "Settings",
+			"signOut": "Sign Out",
+			"mobileMenu": "Menu",
+			"myAccount": "My Account"
+		},
+		"overview": {
+			"greeting": "Hello, {name}",
+			"greetingDefault": "Hello there",
+			"welcomeBack": "Welcome back to your account",
+			"stats": {
+				"orders": "Orders",
+				"totalOrders": "Total orders",
+				"wishlist": "Wishlist",
+				"savedItems": "Saved items",
+				"addresses": "Addresses",
+				"savedAddresses": "Saved addresses",
+				"settings": "Settings",
+				"accountSettings": "Account settings"
+			},
+			"profile": {
+				"title": "Profile Information",
+				"name": "Name",
+				"email": "Email",
+				"phone": "Phone",
+				"notSet": "Not set",
+				"editProfile": "Edit Profile"
+			},
+			"defaultAddress": {
+				"title": "Default Address",
+				"noAddress": "No default address set. Add one to speed up checkout.",
+				"manageAddresses": "Manage Addresses",
+				"addAddress": "Add Address"
+			},
+			"recentOrders": {
+				"title": "Recent Orders",
+				"noOrders": "No orders yet",
+				"noOrdersText": "Your order history will appear here",
+				"startShopping": "Start Shopping"
+			}
+		},
+		"orders": {
+			"title": "My Orders",
+			"subtitle": "View and track your order history",
+			"table": {
+				"order": "Order",
+				"date": "Date",
+				"status": "Status",
+				"items": "Items",
+				"total": "Total",
+				"actions": "Actions",
+				"track": "Track"
+			},
+			"status": {
+				"pending": "Pending",
+				"processing": "Processing",
+				"inProduction": "In Production",
+				"shipped": "Shipped",
+				"delivered": "Delivered",
+				"cancelled": "Cancelled"
+			},
+			"empty": "No orders found",
+			"viewDetails": "View Details"
+		},
+		"addresses": {
+			"title": "Saved Addresses",
+			"subtitle": "Manage your shipping and billing addresses",
+			"addNew": "Add New Address",
+			"edit": "Edit",
+			"delete": "Delete",
+			"setDefault": "Set as default",
+			"default": "Default",
+			"empty": "No addresses yet",
+			"emptyText": "Add your first shipping address to get started",
+			"deleteConfirm": "Delete Address?",
+			"deleteWarning": "This action cannot be undone. This will permanently delete the address from your account.",
+			"deleteSuccess": "Address deleted successfully",
+			"deleteError": "Failed to delete address",
+			"form": {
+				"addTitle": "Add New Address",
+				"editTitle": "Edit Address",
+				"addDescription": "Add a new shipping destination to your account.",
+				"editDescription": "Update your existing shipping details.",
+				"label": "Label",
+				"labelPlaceholder": "e.g. Home, Office",
+				"firstName": "First Name",
+				"lastName": "Last Name",
+				"company": "Company (Optional)",
+				"phone": "Phone",
+				"address": "Address",
+				"addressPlaceholder": "Street address",
+				"apartment": "Apartment, suite, etc. (optional)",
+				"city": "City",
+				"state": "State/Province",
+				"postalCode": "Postal Code",
+				"country": "Country",
+				"selectCountry": "Select country",
+				"noCountries": "No countries available",
+				"isDefault": "Set as default",
+				"cancel": "Cancel",
+				"save": "Save Address",
+				"update": "Update Address",
+				"saving": "Saving..."
+			}
+		},
+		"settings": {
+			"title": "Account Settings",
+			"subtitle": "Manage your account settings and preferences",
+			"personalInfo": {
+				"title": "Personal Information",
+				"subtitle": "Update your personal information",
+				"name": "Full Name",
+				"email": "Email Address",
+				"phone": "Phone Number",
+				"phoneHelp": "Optional. Used for order updates and support.",
+				"save": "Save Changes"
+			},
+			"email": {
+				"title": "Email Address",
+				"subtitle": "Your email is managed through your authentication provider",
+				"verified": "Verified"
+			},
+			"password": {
+				"title": "Password",
+				"current": "Current Password",
+				"new": "New Password",
+				"confirm": "Confirm New Password",
+				"change": "Change Password"
+			},
+			"preferences": {
+				"title": "Preferences",
+				"language": "Language",
+				"currency": "Currency",
+				"newsletter": "Newsletter Subscription",
+				"newsletterText": "Receive updates about new products and special offers"
+			},
+			"danger": {
+				"title": "Danger Zone",
+				"subtitle": "Irreversible actions for your account",
+				"deleteAccount": "Delete Account",
+				"deleteWarning": "Contact support to delete your account"
+			}
+		},
+		"wishlist": {
+			"title": "My Wishlist",
+			"subtitle": "Items you've saved for later",
+			"empty": "Your wishlist is empty",
+			"emptyText": "Start adding items you love",
+			"browse": "Browse Products",
+			"remove": "Remove",
+			"addToCart": "Add to Cart",
+			"outOfStock": "Out of Stock"
+		},
+		"login": {
+			"title": "Sign In",
+			"subtitle": "Welcome back! Please sign in to continue.",
+			"email": "Email",
+			"emailPlaceholder": "your@email.com",
+			"password": "Password",
+			"passwordPlaceholder": "Enter your password",
+			"signIn": "Sign In",
+			"signingIn": "Signing in...",
+			"noAccount": "Don't have an account?",
+			"signUp": "Sign up",
+			"forgotPassword": "Forgot password?",
+			"orContinueWith": "Or continue with",
+			"google": "Continue with Google",
+			"discord": "Continue with Discord",
+			"devMode": "Dev mode: Use test@aquadecor.com with any password",
+			"invalidCredentials": "Invalid credentials",
+			"error": "Something went wrong. Please try again."
+		},
+		"register": {
+			"title": "Create Account",
+			"subtitle": "Join Aquadecor to start shopping",
+			"name": "Full Name",
+			"namePlaceholder": "John Doe",
+			"email": "Email",
+			"emailPlaceholder": "your@email.com",
+			"password": "Password",
+			"passwordPlaceholder": "Choose a strong password",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Confirm your password",
+			"createAccount": "Create Account",
+			"creating": "Creating account...",
+			"haveAccount": "Already have an account?",
+			"signIn": "Sign in",
+			"terms": "By creating an account, you agree to our",
+			"termsLink": "Terms of Service",
+			"and": "and",
+			"privacyLink": "Privacy Policy"
+		},
+		"toast": {
+			"signOutSuccess": "Signed out successfully",
+			"signOutError": "Failed to sign out",
+			"addressCreated": "Address created",
+			"addressUpdated": "Address updated",
+			"addressDeleted": "Address deleted",
+			"profileUpdated": "Profile updated",
+			"passwordChanged": "Password changed successfully",
+			"error": "Something went wrong"
+		}
+	}
+}

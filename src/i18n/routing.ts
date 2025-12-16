@@ -34,20 +34,6 @@ export const routing = defineRouting({
 			it: '/calcolatore',
 			us: '/calculator'
 		},
-		'/faq': {
-			en: '/faq',
-			de: '/haufig-gestellte-fragen',
-			nl: '/veelgestelde-vragen',
-			it: '/domande-frequenti',
-			us: '/faq'
-		},
-		'/gallery': {
-			en: '/gallery',
-			de: '/galerie',
-			nl: '/galerij',
-			it: '/galleria',
-			us: '/gallery'
-		},
 		'/reviews': {
 			en: '/reviews',
 			de: '/bewertungen',
@@ -75,20 +61,95 @@ export const routing = defineRouting({
 			us: '/distributors'
 		},
 
-		// Auth pages - NO TRANSLATION (functional)
-		'/login': '/login',
-		'/register': '/register',
-		'/account': '/account',
 
-		// Admin - NO TRANSLATION
+		// ================================================
+		// Content
+		// ================================================
+
+		'/blog': '/blog',
+
+		'/faq': {
+			en: '/faq',
+			de: '/haufig-gestellte-fragen',
+			nl: '/veelgestelde-vragen',
+			it: '/domande-frequenti',
+			us: '/faq'
+		},
+		
+		'/gallery': {
+			en: '/gallery',
+			de: '/galerie',
+			nl: '/galerij',
+			it: '/galleria',
+			us: '/gallery'
+		},
+
+		// ================================================
+		// Auth pages
+		// ================================================
+	
+		'/login': {
+			en: '/login',
+			de: '/anmelden',      // German: "sign in"
+			nl: '/inloggen',      // Dutch: "log in"
+			it: '/accedi',        // Italian: "access"
+			us: '/login'
+		},
+
+		'/account': {
+			en: '/account',
+			de: '/konto',         // German uses "Konto"
+			nl: '/account',       // Dutch same as English
+			it: '/account',       // Italian same as English
+			us: '/account'
+		},
+
+		'/account/orders': {
+			en: '/account/orders',
+			de: '/konto/bestellungen',    // Orders
+			nl: '/account/bestellingen',
+			it: '/account/ordini',
+			us: '/account/orders'
+		},
+
+		'/account/addresses': {
+			en: '/account/addresses',
+			de: '/konto/adressen',        // Addresses
+			nl: '/account/adressen',
+			it: '/account/indirizzi',
+			us: '/account/addresses'
+		},
+
+		'/account/wishlist': {
+			en: '/account/wishlist',
+			de: '/konto/wunschliste',     // Wishlist
+			nl: '/account/verlanglijst',
+			it: '/account/lista-desideri',
+			us: '/account/wishlist'
+		},
+
+		'/account/settings': {
+			en: '/account/settings',
+			de: '/konto/einstellungen',   // Settings
+			nl: '/account/instellingen',
+			it: '/account/impostazioni',
+			us: '/account/settings'
+		},
+
+		// ================================================
+		// Admin
+		// ================================================
+
 		'/admin': '/admin',
 
 		// Support/Contact
 		'/support': '/support',
 		'/contact': '/contact',
 
-		// Blog
-		'/blog': '/blog',
+
+		// ================================================
+		// Legal
+		// ================================================
 
 		// Legal pages (NO /legal prefix needed)
 		'/terms': '/terms',

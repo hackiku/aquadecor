@@ -1,5 +1,6 @@
-// src/app/[locale]/account/_components/EditAddress.tsx
 // @ts-nocheck
+// src/app/[locale]/account/_components/EditAddress.tsx
+
 "use client";
 
 import { useEffect } from "react";
@@ -9,7 +10,6 @@ import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { api } from "~/trpc/react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -67,8 +67,6 @@ export function EditAddress({
 	initialData,
 	mode = "create"
 }: EditAddressProps) {
-	const t = useTranslations("account.addresses.form");
-	const tToast = useTranslations("account.toast");
 	const utils = api.useUtils();
 
 	// Fetch countries
@@ -132,7 +130,7 @@ export function EditAddress({
 	// Mutations
 	const createMutation = api.account.address.create.useMutation({
 		onSuccess: () => {
-			toast.success(tToast("addressCreated"));
+			toast.success("Address created");
 			utils.account.address.getAll.invalidate();
 			onOpenChange(false);
 		},
@@ -141,7 +139,7 @@ export function EditAddress({
 
 	const updateMutation = api.account.address.update.useMutation({
 		onSuccess: () => {
-			toast.success(tToast("addressUpdated"));
+			toast.success("Address updated");
 			utils.account.address.getAll.invalidate();
 			onOpenChange(false);
 		},
@@ -164,10 +162,12 @@ export function EditAddress({
 			<DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
 				<DialogHeader>
 					<DialogTitle className="font-display font-medium text-2xl">
-						{mode === "create" ? t("addTitle") : t("editTitle")}
+						{mode === "create" ? "Add New Address" : "Edit Address"}
 					</DialogTitle>
 					<DialogDescription className="font-display font-light">
-						{mode === "create" ? t("addDescription") : t("editDescription")}
+						{mode === "create"
+							? "Add a new shipping destination to your account."
+							: "Update your existing shipping details."}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -180,8 +180,8 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid} className="flex-1">
-										<FieldLabel>{t("label")}</FieldLabel>
-										<Input {...field} placeholder={t("labelPlaceholder")} />
+										<FieldLabel>Label</FieldLabel>
+										<Input {...field} placeholder="e.g. Home, Office" />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
 								)}
@@ -196,7 +196,7 @@ export function EditAddress({
 											onCheckedChange={field.onChange}
 										/>
 										<FieldLabel className="cursor-pointer">
-											{t("isDefault")}
+											Set as default
 										</FieldLabel>
 									</Field>
 								)}
@@ -210,7 +210,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("firstName")}</FieldLabel>
+										<FieldLabel>First Name</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -221,7 +221,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("lastName")}</FieldLabel>
+										<FieldLabel>Last Name</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -236,7 +236,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("company")}</FieldLabel>
+										<FieldLabel>Company (Optional)</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -247,7 +247,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("phone")}</FieldLabel>
+										<FieldLabel>Phone</FieldLabel>
 										<Input type="tel" {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -261,8 +261,8 @@ export function EditAddress({
 							control={form.control}
 							render={({ field, fieldState }) => (
 								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>{t("address")}</FieldLabel>
-									<Input {...field} placeholder={t("addressPlaceholder")} />
+									<FieldLabel>Address</FieldLabel>
+									<Input {...field} placeholder="Street address" />
 									{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 								</Field>
 							)}
@@ -272,7 +272,7 @@ export function EditAddress({
 							control={form.control}
 							render={({ field, fieldState }) => (
 								<Field data-invalid={fieldState.invalid}>
-									<Input {...field} placeholder={t("apartment")} />
+									<Input {...field} placeholder="Apartment, suite, etc. (optional)" />
 									{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 								</Field>
 							)}
@@ -285,7 +285,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("city")}</FieldLabel>
+										<FieldLabel>City</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -296,7 +296,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("state")}</FieldLabel>
+										<FieldLabel>State/Province</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -307,7 +307,7 @@ export function EditAddress({
 								control={form.control}
 								render={({ field, fieldState }) => (
 									<Field data-invalid={fieldState.invalid}>
-										<FieldLabel>{t("postalCode")}</FieldLabel>
+										<FieldLabel>Postal Code</FieldLabel>
 										<Input {...field} />
 										{fieldState.invalid && <FieldError errors={[fieldState.error]} />}
 									</Field>
@@ -321,13 +321,13 @@ export function EditAddress({
 							control={form.control}
 							render={({ field, fieldState }) => (
 								<Field data-invalid={fieldState.invalid}>
-									<FieldLabel>{t("country")}</FieldLabel>
+									<FieldLabel>Country</FieldLabel>
 									<Select
 										value={field.value}
 										onValueChange={field.onChange}
 									>
 										<SelectTrigger aria-invalid={fieldState.invalid}>
-											<SelectValue placeholder={t("selectCountry")} />
+											<SelectValue placeholder="Select country" />
 										</SelectTrigger>
 										<SelectContent className="max-h-[300px]">
 											{countriesLoading ? (
@@ -343,7 +343,7 @@ export function EditAddress({
 												))
 											) : (
 												<div className="py-4 text-center text-sm text-muted-foreground">
-													{t("noCountries")}
+													No countries available
 												</div>
 											)}
 										</SelectContent>
@@ -356,11 +356,11 @@ export function EditAddress({
 
 					<DialogFooter className="pt-4">
 						<Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
-							{t("cancel")}
+							Cancel
 						</Button>
 						<Button type="submit" disabled={isSubmitting} className="rounded-full px-8">
 							{isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-							{mode === "create" ? t("save") : t("update")}
+							{mode === "create" ? "Save Address" : "Update Address"}
 						</Button>
 					</DialogFooter>
 				</form>

@@ -1,0 +1,210 @@
+{
+	"account": {
+		"nav": {
+			"overview": "Overzicht",
+			"orders": "Bestellingen",
+			"wishlist": "Verlanglijst",
+			"addresses": "Adressen",
+			"settings": "Instellingen",
+			"signOut": "Afmelden",
+			"mobileMenu": "Menu",
+			"myAccount": "Mijn account"
+		},
+		"overview": {
+			"greeting": "Hallo, {name}",
+			"greetingDefault": "Hallo",
+			"welcomeBack": "Welkom terug in je account",
+			"stats": {
+				"orders": "Bestellingen",
+				"totalOrders": "Totaal bestellingen",
+				"wishlist": "Verlanglijst",
+				"savedItems": "Opgeslagen items",
+				"addresses": "Adressen",
+				"savedAddresses": "Opgeslagen adressen",
+				"settings": "Instellingen",
+				"accountSettings": "Accountinstellingen"
+			},
+			"profile": {
+				"title": "Profielinformatie",
+				"name": "Naam",
+				"email": "E-mail",
+				"phone": "Telefoon",
+				"notSet": "Niet ingesteld",
+				"editProfile": "Profiel bewerken"
+			},
+			"defaultAddress": {
+				"title": "Standaardadres",
+				"noAddress": "Geen standaardadres ingesteld. Voeg er een toe voor sneller afrekenen.",
+				"manageAddresses": "Adressen beheren",
+				"addAddress": "Adres toevoegen"
+			},
+			"recentOrders": {
+				"title": "Recente bestellingen",
+				"noOrders": "Nog geen bestellingen",
+				"noOrdersText": "Je bestelgeschiedenis verschijnt hier",
+				"startShopping": "Begin met winkelen"
+			}
+		},
+		"orders": {
+			"title": "Mijn bestellingen",
+			"subtitle": "Bekijk en volg je bestelgeschiedenis",
+			"table": {
+				"order": "Bestelling",
+				"date": "Datum",
+				"status": "Status",
+				"items": "Artikelen",
+				"total": "Totaal",
+				"actions": "Acties",
+				"track": "Volgen"
+			},
+			"status": {
+				"pending": "In afwachting",
+				"processing": "In behandeling",
+				"inProduction": "In productie",
+				"shipped": "Verzonden",
+				"delivered": "Bezorgd",
+				"cancelled": "Geannuleerd"
+			},
+			"empty": "Geen bestellingen gevonden",
+			"viewDetails": "Details bekijken"
+		},
+		"addresses": {
+			"title": "Opgeslagen adressen",
+			"subtitle": "Beheer je verzend- en factuuradressen",
+			"addNew": "Nieuw adres toevoegen",
+			"edit": "Bewerken",
+			"delete": "Verwijderen",
+			"setDefault": "Instellen als standaard",
+			"default": "Standaard",
+			"empty": "Nog geen adressen",
+			"emptyText": "Voeg je eerste verzendadres toe om te beginnen",
+			"deleteConfirm": "Adres verwijderen?",
+			"deleteWarning": "Deze actie kan niet ongedaan worden gemaakt. Dit zal het adres permanent van je account verwijderen.",
+			"deleteSuccess": "Adres succesvol verwijderd",
+			"deleteError": "Kan adres niet verwijderen",
+			"form": {
+				"addTitle": "Nieuw adres toevoegen",
+				"editTitle": "Adres bewerken",
+				"addDescription": "Voeg een nieuwe verzendbestemming toe aan je account.",
+				"editDescription": "Update je bestaande verzendgegevens.",
+				"label": "Label",
+				"labelPlaceholder": "bijv. Thuis, Kantoor",
+				"firstName": "Voornaam",
+				"lastName": "Achternaam",
+				"company": "Bedrijf (Optioneel)",
+				"phone": "Telefoon",
+				"address": "Adres",
+				"addressPlaceholder": "Straat en huisnummer",
+				"apartment": "Appartement, toevoeging, etc. (optioneel)",
+				"city": "Stad",
+				"state": "Provincie/Staat",
+				"postalCode": "Postcode",
+				"country": "Land",
+				"selectCountry": "Selecteer land",
+				"noCountries": "Geen landen beschikbaar",
+				"isDefault": "Instellen als standaardadres",
+				"cancel": "Annuleren",
+				"save": "Adres opslaan",
+				"update": "Adres bijwerken",
+				"saving": "Opslaan..."
+			}
+		},
+		"settings": {
+			"title": "Accountinstellingen",
+			"subtitle": "Beheer je accountinstellingen en voorkeuren",
+			"personalInfo": {
+				"title": "Persoonlijke informatie",
+				"subtitle": "Update je persoonlijke informatie",
+				"name": "Volledige naam",
+				"email": "E-mailadres",
+				"phone": "Telefoonnummer",
+				"phoneHelp": "Optioneel. Gebruikt voor bestelupdates en ondersteuning.",
+				"save": "Wijzigingen opslaan"
+			},
+			"email": {
+				"title": "E-mailadres",
+				"subtitle": "Je e-mail wordt beheerd via je authenticatieprovider",
+				"verified": "Geverifieerd"
+			},
+			"password": {
+				"title": "Wachtwoord",
+				"current": "Huidig wachtwoord",
+				"new": "Nieuw wachtwoord",
+				"confirm": "Bevestig nieuw wachtwoord",
+				"change": "Wachtwoord wijzigen"
+			},
+			"preferences": {
+				"title": "Voorkeuren",
+				"language": "Taal",
+				"currency": "Valuta",
+				"newsletter": "Nieuwsbriefabonnement",
+				"newsletterText": "Ontvang updates over nieuwe producten en speciale aanbiedingen"
+			},
+			"danger": {
+				"title": "Gevarenzone",
+				"subtitle": "Onomkeerbare acties voor je account",
+				"deleteAccount": "Account verwijderen",
+				"deleteWarning": "Neem contact op met support om je account te verwijderen"
+			}
+		},
+		"wishlist": {
+			"title": "Mijn verlanglijst",
+			"subtitle": "Artikelen die je voor later hebt bewaard",
+			"empty": "Je verlanglijst is leeg",
+			"emptyText": "Begin met het toevoegen van artikelen die je leuk vindt",
+			"browse": "Producten bekijken",
+			"remove": "Verwijderen",
+			"addToCart": "In winkelwagen",
+			"outOfStock": "Niet op voorraad"
+		},
+		"login": {
+			"title": "Inloggen",
+			"subtitle": "Welkom terug! Log in om door te gaan.",
+			"email": "E-mail",
+			"emailPlaceholder": "jouw@email.com",
+			"password": "Wachtwoord",
+			"passwordPlaceholder": "Voer je wachtwoord in",
+			"signIn": "Inloggen",
+			"signingIn": "Inloggen...",
+			"noAccount": "Heb je geen account?",
+			"signUp": "Registreren",
+			"forgotPassword": "Wachtwoord vergeten?",
+			"orContinueWith": "Of ga verder met",
+			"google": "Doorgaan met Google",
+			"discord": "Doorgaan met Discord",
+			"devMode": "Dev-modus: Gebruik test@aquadecor.com met elk wachtwoord",
+			"invalidCredentials": "Ongeldige inloggegevens",
+			"error": "Er is iets misgegaan. Probeer het opnieuw."
+		},
+		"register": {
+			"title": "Account aanmaken",
+			"subtitle": "Word lid van Aquadecor om te winkelen",
+			"name": "Volledige naam",
+			"namePlaceholder": "Jan Jansen",
+			"email": "E-mail",
+			"emailPlaceholder": "jouw@email.com",
+			"password": "Wachtwoord",
+			"passwordPlaceholder": "Kies een sterk wachtwoord",
+			"confirmPassword": "Wachtwoord bevestigen",
+			"confirmPasswordPlaceholder": "Bevestig je wachtwoord",
+			"createAccount": "Account aanmaken",
+			"creating": "Account aanmaken...",
+			"haveAccount": "Heb je al een account?",
+			"signIn": "Inloggen",
+			"terms": "Door een account aan te maken, ga je akkoord met onze",
+			"termsLink": "Servicevoorwaarden",
+			"and": "en het",
+			"privacyLink": "Privacybeleid"
+		},
+		"toast": {
+			"signOutSuccess": "Succesvol uitgelogd",
+			"signOutError": "Kan niet uitloggen",
+			"addressCreated": "Adres aangemaakt",
+			"addressUpdated": "Adres bijgewerkt",
+			"addressDeleted": "Adres verwijderd",
+			"profileUpdated": "Profiel bijgewerkt",
+			"passwordChanged": "Wachtwoord succesvol gewijzigd",
+			"error": "Er is iets misgegaan"
+		}
+	}
+}

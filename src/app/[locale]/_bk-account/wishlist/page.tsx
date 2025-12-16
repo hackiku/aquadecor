@@ -1,24 +1,15 @@
 // src/app/[locale]/account/wishlist/page.tsx
 "use client";
-
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { MobileAccountNav } from "../_components/MobileAccountNav";
 import { WishlistItem } from "~/components/shop/wishlist/WishlistItem";
 import { api } from "~/trpc/react";
 import { Loader2, Heart } from "lucide-react";
+import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import { useTranslations } from "next-intl";
-import { Link } from "~/i18n/navigation";
-
 export default function AccountWishlistPage() {
-	const params = useParams();
-	const locale = params.locale as string;
-	const t = useTranslations("account.wishlist");
-
 	const [wishlistIds, setWishlistIds] = useState<string[]>([]);
 	const [isClient, setIsClient] = useState(false);
-
 	useEffect(() => {
 		setIsClient(true);
 		const loadWishlist = () => {
@@ -39,12 +30,9 @@ export default function AccountWishlistPage() {
 		return () => window.removeEventListener("wishlist-updated", loadWishlist);
 	}, []);
 
-	// Map locale for DB (US -> EN)
-	const dbLocale = locale === 'us' ? 'en' : locale;
-
-	// Fetch data for IDs with proper locale
+	// Fetch data for IDs
 	const { data: products, isLoading } = api.product.getByIds.useQuery(
-		{ ids: wishlistIds, locale: dbLocale },
+		{ ids: wishlistIds, locale: "en" },
 		{ enabled: wishlistIds.length > 0 }
 	);
 
@@ -59,11 +47,9 @@ export default function AccountWishlistPage() {
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
 				<div>
-					<h1 className="text-2xl md:text-3xl font-display font-light">
-						{t("title")}
-					</h1>
+					<h1 className="text-2xl md:text-3xl font-display font-light">My Wishlist</h1>
 					<p className="text-muted-foreground font-display font-light">
-						{t("subtitle")}
+						Saved items for later.
 					</p>
 				</div>
 				<MobileAccountNav />
@@ -78,14 +64,12 @@ export default function AccountWishlistPage() {
 					<div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
 						<Heart className="h-6 w-6 text-muted-foreground" />
 					</div>
-					<h3 className="font-display font-medium text-lg mb-2">
-						{t("empty")}
-					</h3>
+					<h3 className="font-display font-medium text-lg">Your wishlist is empty</h3>
 					<p className="text-muted-foreground font-display font-light mb-6">
-						{t("emptyText")}
+						Browse the shop to find items you love.
 					</p>
 					<Button asChild className="rounded-full">
-						<Link href="/shop">{t("browse")}</Link>
+						<Link href="/shop">Start Shopping</Link>
 					</Button>
 				</div>
 			) : (

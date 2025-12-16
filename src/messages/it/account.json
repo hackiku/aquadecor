@@ -1,0 +1,210 @@
+{
+	"account": {
+		"nav": {
+			"overview": "Panoramica",
+			"orders": "Ordini",
+			"wishlist": "Lista desideri",
+			"addresses": "Indirizzi",
+			"settings": "Impostazioni",
+			"signOut": "Esci",
+			"mobileMenu": "Menu",
+			"myAccount": "Il mio account"
+		},
+		"overview": {
+			"greeting": "Ciao, {name}",
+			"greetingDefault": "Ciao",
+			"welcomeBack": "Bentornato nel tuo account",
+			"stats": {
+				"orders": "Ordini",
+				"totalOrders": "Ordini totali",
+				"wishlist": "Lista desideri",
+				"savedItems": "Articoli salvati",
+				"addresses": "Indirizzi",
+				"savedAddresses": "Indirizzi salvati",
+				"settings": "Impostazioni",
+				"accountSettings": "Impostazioni account"
+			},
+			"profile": {
+				"title": "Informazioni Profilo",
+				"name": "Nome",
+				"email": "Email",
+				"phone": "Telefono",
+				"notSet": "Non impostato",
+				"editProfile": "Modifica profilo"
+			},
+			"defaultAddress": {
+				"title": "Indirizzo predefinito",
+				"noAddress": "Nessun indirizzo predefinito impostato. Aggiungine uno per velocizzare il checkout.",
+				"manageAddresses": "Gestisci indirizzi",
+				"addAddress": "Aggiungi indirizzo"
+			},
+			"recentOrders": {
+				"title": "Ordini recenti",
+				"noOrders": "Nessun ordine ancora",
+				"noOrdersText": "La cronologia dei tuoi ordini apparirà qui",
+				"startShopping": "Inizia lo shopping"
+			}
+		},
+		"orders": {
+			"title": "I miei ordini",
+			"subtitle": "Visualizza e traccia la cronologia dei tuoi ordini",
+			"table": {
+				"order": "Ordine",
+				"date": "Data",
+				"status": "Stato",
+				"items": "Articoli",
+				"total": "Totale",
+				"actions": "Azioni",
+				"track": "Traccia"
+			},
+			"status": {
+				"pending": "In attesa",
+				"processing": "In lavorazione",
+				"inProduction": "In produzione",
+				"shipped": "Spedito",
+				"delivered": "Consegnato",
+				"cancelled": "Cancellato"
+			},
+			"empty": "Nessun ordine trovato",
+			"viewDetails": "Vedi dettagli"
+		},
+		"addresses": {
+			"title": "Indirizzi salvati",
+			"subtitle": "Gestisci i tuoi indirizzi di spedizione e fatturazione",
+			"addNew": "Aggiungi nuovo indirizzo",
+			"edit": "Modifica",
+			"delete": "Elimina",
+			"setDefault": "Imposta come predefinito",
+			"default": "Predefinito",
+			"empty": "Nessun indirizzo ancora",
+			"emptyText": "Aggiungi il tuo primo indirizzo di spedizione per iniziare",
+			"deleteConfirm": "Eliminare indirizzo?",
+			"deleteWarning": "Questa azione è irreversibile. L'indirizzo verrà eliminato definitivamente dal tuo account.",
+			"deleteSuccess": "Indirizzo eliminato con successo",
+			"deleteError": "Impossibile eliminare l'indirizzo",
+			"form": {
+				"addTitle": "Aggiungi nuovo indirizzo",
+				"editTitle": "Modifica indirizzo",
+				"addDescription": "Aggiungi una nuova destinazione di spedizione al tuo account.",
+				"editDescription": "Aggiorna i tuoi dettagli di spedizione esistenti.",
+				"label": "Etichetta",
+				"labelPlaceholder": "es. Casa, Ufficio",
+				"firstName": "Nome",
+				"lastName": "Cognome",
+				"company": "Azienda (Opzionale)",
+				"phone": "Telefono",
+				"address": "Indirizzo",
+				"addressPlaceholder": "Via e numero civico",
+				"apartment": "Appartamento, interno, ecc. (opzionale)",
+				"city": "Città",
+				"state": "Provincia/Stato",
+				"postalCode": "Codice Postale",
+				"country": "Paese",
+				"selectCountry": "Seleziona paese",
+				"noCountries": "Nessun paese disponibile",
+				"isDefault": "Imposta come predefinito",
+				"cancel": "Annulla",
+				"save": "Salva indirizzo",
+				"update": "Aggiorna indirizzo",
+				"saving": "Salvataggio..."
+			}
+		},
+		"settings": {
+			"title": "Impostazioni account",
+			"subtitle": "Gestisci le impostazioni e le preferenze del tuo account",
+			"personalInfo": {
+				"title": "Informazioni personali",
+				"subtitle": "Aggiorna le tue informazioni personali",
+				"name": "Nome completo",
+				"email": "Indirizzo email",
+				"phone": "Numero di telefono",
+				"phoneHelp": "Opzionale. Usato per aggiornamenti sugli ordini e supporto.",
+				"save": "Salva modifiche"
+			},
+			"email": {
+				"title": "Indirizzo Email",
+				"subtitle": "La tua email è gestita tramite il tuo provider di autenticazione",
+				"verified": "Verificato"
+			},
+			"password": {
+				"title": "Password",
+				"current": "Password attuale",
+				"new": "Nuova password",
+				"confirm": "Conferma nuova password",
+				"change": "Cambia password"
+			},
+			"preferences": {
+				"title": "Preferenze",
+				"language": "Lingua",
+				"currency": "Valuta",
+				"newsletter": "Iscrizione alla newsletter",
+				"newsletterText": "Ricevi aggiornamenti su nuovi prodotti e offerte speciali"
+			},
+			"danger": {
+				"title": "Zona pericolosa",
+				"subtitle": "Azioni irreversibili per il tuo account",
+				"deleteAccount": "Elimina account",
+				"deleteWarning": "Contatta il supporto per eliminare il tuo account"
+			}
+		},
+		"wishlist": {
+			"title": "La mia lista desideri",
+			"subtitle": "Articoli che hai salvato per dopo",
+			"empty": "La tua lista dei desideri è vuota",
+			"emptyText": "Inizia ad aggiungere articoli che ti piacciono",
+			"browse": "Sfoglia prodotti",
+			"remove": "Rimuovi",
+			"addToCart": "Aggiungi al carrello",
+			"outOfStock": "Esaurito"
+		},
+		"login": {
+			"title": "Accedi",
+			"subtitle": "Bentornato! Accedi per continuare.",
+			"email": "Email",
+			"emailPlaceholder": "tu@email.com",
+			"password": "Password",
+			"passwordPlaceholder": "Inserisci la tua password",
+			"signIn": "Accedi",
+			"signingIn": "Accesso in corso...",
+			"noAccount": "Non hai un account?",
+			"signUp": "Registrati",
+			"forgotPassword": "Password dimenticata?",
+			"orContinueWith": "O continua con",
+			"google": "Continua con Google",
+			"discord": "Continua con Discord",
+			"devMode": "Modalità dev: Usa test@aquadecor.com con qualsiasi password",
+			"invalidCredentials": "Credenziali non valide",
+			"error": "Qualcosa è andato storto. Riprova."
+		},
+		"register": {
+			"title": "Crea account",
+			"subtitle": "Unisciti ad Aquadecor per iniziare a fare acquisti",
+			"name": "Nome completo",
+			"namePlaceholder": "Mario Rossi",
+			"email": "Email",
+			"emailPlaceholder": "tu@email.com",
+			"password": "Password",
+			"passwordPlaceholder": "Scegli una password sicura",
+			"confirmPassword": "Conferma password",
+			"confirmPasswordPlaceholder": "Conferma la tua password",
+			"createAccount": "Crea account",
+			"creating": "Creazione account...",
+			"haveAccount": "Hai già un account?",
+			"signIn": "Accedi",
+			"terms": "Creando un account, accetti i nostri",
+			"termsLink": "Termini di servizio",
+			"and": "e la",
+			"privacyLink": "Privacy Policy"
+		},
+		"toast": {
+			"signOutSuccess": "Disconnessione riuscita",
+			"signOutError": "Impossibile disconnettersi",
+			"addressCreated": "Indirizzo creato",
+			"addressUpdated": "Indirizzo aggiornato",
+			"addressDeleted": "Indirizzo eliminato",
+			"profileUpdated": "Profilo aggiornato",
+			"passwordChanged": "Password cambiata con successo",
+			"error": "Qualcosa è andato storto"
+		}
+	}
+}

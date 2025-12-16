@@ -1,0 +1,210 @@
+{
+	"account": {
+		"nav": {
+			"overview": "Übersicht",
+			"orders": "Bestellungen",
+			"wishlist": "Wunschliste",
+			"addresses": "Adressen",
+			"settings": "Einstellungen",
+			"signOut": "Abmelden",
+			"mobileMenu": "Menü",
+			"myAccount": "Mein Konto"
+		},
+		"overview": {
+			"greeting": "Hallo, {name}",
+			"greetingDefault": "Hallo",
+			"welcomeBack": "Willkommen zurück in Ihrem Konto",
+			"stats": {
+				"orders": "Bestellungen",
+				"totalOrders": "Bestellungen gesamt",
+				"wishlist": "Wunschliste",
+				"savedItems": "Gespeicherte Artikel",
+				"addresses": "Adressen",
+				"savedAddresses": "Gespeicherte Adressen",
+				"settings": "Einstellungen",
+				"accountSettings": "Kontoeinstellungen"
+			},
+			"profile": {
+				"title": "Profilinformationen",
+				"name": "Name",
+				"email": "E-Mail",
+				"phone": "Telefon",
+				"notSet": "Nicht festgelegt",
+				"editProfile": "Profil bearbeiten"
+			},
+			"defaultAddress": {
+				"title": "Standardadresse",
+				"noAddress": "Keine Standardadresse festgelegt. Fügen Sie eine hinzu, um den Checkout zu beschleunigen.",
+				"manageAddresses": "Adressen verwalten",
+				"addAddress": "Adresse hinzufügen"
+			},
+			"recentOrders": {
+				"title": "Aktuelle Bestellungen",
+				"noOrders": "Noch keine Bestellungen",
+				"noOrdersText": "Ihr Bestellverlauf wird hier angezeigt",
+				"startShopping": "Einkauf starten"
+			}
+		},
+		"orders": {
+			"title": "Meine Bestellungen",
+			"subtitle": "Bestellhistorie ansehen und verfolgen",
+			"table": {
+				"order": "Bestellung",
+				"date": "Datum",
+				"status": "Status",
+				"items": "Artikel",
+				"total": "Summe",
+				"actions": "Aktionen",
+				"track": "Verfolgen"
+			},
+			"status": {
+				"pending": "Ausstehend",
+				"processing": "In Bearbeitung",
+				"inProduction": "In Produktion",
+				"shipped": "Versendet",
+				"delivered": "Zugestellt",
+				"cancelled": "Storniert"
+			},
+			"empty": "Keine Bestellungen gefunden",
+			"viewDetails": "Details ansehen"
+		},
+		"addresses": {
+			"title": "Gespeicherte Adressen",
+			"subtitle": "Liefer- und Rechnungsadressen verwalten",
+			"addNew": "Neue Adresse hinzufügen",
+			"edit": "Bearbeiten",
+			"delete": "Löschen",
+			"setDefault": "Als Standard festlegen",
+			"default": "Standard",
+			"empty": "Noch keine Adressen",
+			"emptyText": "Fügen Sie Ihre erste Lieferadresse hinzu, um zu beginnen",
+			"deleteConfirm": "Adresse löschen?",
+			"deleteWarning": "Diese Aktion kann nicht rückgängig gemacht werden. Die Adresse wird dauerhaft aus Ihrem Konto gelöscht.",
+			"deleteSuccess": "Adresse erfolgreich gelöscht",
+			"deleteError": "Fehler beim Löschen der Adresse",
+			"form": {
+				"addTitle": "Neue Adresse hinzufügen",
+				"editTitle": "Adresse bearbeiten",
+				"addDescription": "Fügen Sie Ihrem Konto ein neues Lieferziel hinzu.",
+				"editDescription": "Aktualisieren Sie Ihre bestehenden Lieferdaten.",
+				"label": "Bezeichnung",
+				"labelPlaceholder": "z. B. Zuhause, Büro",
+				"firstName": "Vorname",
+				"lastName": "Nachname",
+				"company": "Firma (Optional)",
+				"phone": "Telefon",
+				"address": "Adresse",
+				"addressPlaceholder": "Straße und Hausnummer",
+				"apartment": "Wohnung, Zimmer, etc. (optional)",
+				"city": "Stadt",
+				"state": "Bundesland/Kanton",
+				"postalCode": "Postleitzahl",
+				"country": "Land",
+				"selectCountry": "Land auswählen",
+				"noCountries": "Keine Länder verfügbar",
+				"isDefault": "Als Standardadresse festlegen",
+				"cancel": "Abbrechen",
+				"save": "Adresse speichern",
+				"update": "Adresse aktualisieren",
+				"saving": "Speichern..."
+			}
+		},
+		"settings": {
+			"title": "Kontoeinstellungen",
+			"subtitle": "Verwalten Sie Ihre Kontoeinstellungen und Präferenzen",
+			"personalInfo": {
+				"title": "Persönliche Informationen",
+				"subtitle": "Aktualisieren Sie Ihre persönlichen Daten",
+				"name": "Vollständiger Name",
+				"email": "E-Mail-Adresse",
+				"phone": "Telefonnummer",
+				"phoneHelp": "Optional. Wird für Bestell-Updates und Support verwendet.",
+				"save": "Änderungen speichern"
+			},
+			"email": {
+				"title": "E-Mail-Adresse",
+				"subtitle": "Ihre E-Mail wird über Ihren Authentifizierungsanbieter verwaltet",
+				"verified": "Verifiziert"
+			},
+			"password": {
+				"title": "Passwort",
+				"current": "Aktuelles Passwort",
+				"new": "Neues Passwort",
+				"confirm": "Neues Passwort bestätigen",
+				"change": "Passwort ändern"
+			},
+			"preferences": {
+				"title": "Präferenzen",
+				"language": "Sprache",
+				"currency": "Währung",
+				"newsletter": "Newsletter-Abonnement",
+				"newsletterText": "Erhalten Sie Updates zu neuen Produkten und Sonderangeboten"
+			},
+			"danger": {
+				"title": "Gefahrenzone",
+				"subtitle": "Unwiderrufliche Aktionen für Ihr Konto",
+				"deleteAccount": "Konto löschen",
+				"deleteWarning": "Kontaktieren Sie den Support, um Ihr Konto zu löschen"
+			}
+		},
+		"wishlist": {
+			"title": "Meine Wunschliste",
+			"subtitle": "Artikel, die Sie für später gespeichert haben",
+			"empty": "Ihre Wunschliste ist leer",
+			"emptyText": "Fügen Sie Artikel hinzu, die Ihnen gefallen",
+			"browse": "Produkte durchsuchen",
+			"remove": "Entfernen",
+			"addToCart": "In den Warenkorb",
+			"outOfStock": "Nicht vorrätig"
+		},
+		"login": {
+			"title": "Anmelden",
+			"subtitle": "Willkommen zurück! Bitte melden Sie sich an.",
+			"email": "E-Mail",
+			"emailPlaceholder": "ihre@email.com",
+			"password": "Passwort",
+			"passwordPlaceholder": "Passwort eingeben",
+			"signIn": "Anmelden",
+			"signingIn": "Anmeldung läuft...",
+			"noAccount": "Sie haben kein Konto?",
+			"signUp": "Registrieren",
+			"forgotPassword": "Passwort vergessen?",
+			"orContinueWith": "Oder weiter mit",
+			"google": "Weiter mit Google",
+			"discord": "Weiter mit Discord",
+			"devMode": "Entwicklermodus: Verwenden Sie test@aquadecor.com mit beliebigem Passwort",
+			"invalidCredentials": "Ungültige Anmeldedaten",
+			"error": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+		},
+		"register": {
+			"title": "Konto erstellen",
+			"subtitle": "Werden Sie Mitglied bei Aquadecor, um einzukaufen",
+			"name": "Vollständiger Name",
+			"namePlaceholder": "Max Mustermann",
+			"email": "E-Mail",
+			"emailPlaceholder": "ihre@email.com",
+			"password": "Passwort",
+			"passwordPlaceholder": "Wählen Sie ein sicheres Passwort",
+			"confirmPassword": "Passwort bestätigen",
+			"confirmPasswordPlaceholder": "Bestätigen Sie Ihr Passwort",
+			"createAccount": "Konto erstellen",
+			"creating": "Konto wird erstellt...",
+			"haveAccount": "Sie haben bereits ein Konto?",
+			"signIn": "Anmelden",
+			"terms": "Durch die Erstellung eines Kontos stimmen Sie unseren",
+			"termsLink": "Nutzungsbedingungen",
+			"and": "und der",
+			"privacyLink": "Datenschutzerklärung zu"
+		},
+		"toast": {
+			"signOutSuccess": "Erfolgreich abgemeldet",
+			"signOutError": "Fehler beim Abmelden",
+			"addressCreated": "Adresse erstellt",
+			"addressUpdated": "Adresse aktualisiert",
+			"addressDeleted": "Adresse gelöscht",
+			"profileUpdated": "Profil aktualisiert",
+			"passwordChanged": "Passwort erfolgreich geändert",
+			"error": "Etwas ist schiefgelaufen"
+		}
+	}
+}

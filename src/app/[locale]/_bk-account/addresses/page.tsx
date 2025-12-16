@@ -10,7 +10,6 @@ import { Badge } from "~/components/ui/badge";
 import { EditAddress } from "../_components/EditAddress";
 import { api, type RouterOutputs } from "~/trpc/react";
 import { toast } from "sonner";
-import { useTranslations } from "next-intl";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -26,9 +25,6 @@ import {
 type Address = RouterOutputs["account"]["address"]["getAll"][number];
 
 export default function AddressesPage() {
-	const t = useTranslations("account.addresses");
-	const tToast = useTranslations("account.toast");
-
 	const [isEditOpen, setIsEditOpen] = useState(false);
 	const [editMode, setEditMode] = useState<"create" | "edit">("create");
 	const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
@@ -42,7 +38,7 @@ export default function AddressesPage() {
 	// Mutations
 	const deleteMutation = api.account.address.delete.useMutation({
 		onSuccess: () => {
-			toast.success(tToast("addressDeleted"));
+			toast.success("Address deleted");
 			utils.account.address.getAll.invalidate();
 			setDeleteId(null);
 		},
@@ -51,7 +47,7 @@ export default function AddressesPage() {
 
 	const setDefaultMutation = api.account.address.setDefault.useMutation({
 		onSuccess: () => {
-			toast.success(tToast("addressUpdated"));
+			toast.success("Default address updated");
 			utils.account.address.getAll.invalidate();
 		},
 		onError: (err) => toast.error(err.message)
@@ -88,11 +84,9 @@ export default function AddressesPage() {
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
 					<div>
-						<h1 className="text-2xl md:text-3xl font-display font-light">
-							{t("title")}
-						</h1>
+						<h1 className="text-2xl md:text-3xl font-display font-light">Addresses</h1>
 						<p className="text-muted-foreground font-display font-light">
-							{t("subtitle")}
+							Manage shipping and billing addresses.
 						</p>
 					</div>
 					<MobileAccountNav />
@@ -109,11 +103,9 @@ export default function AddressesPage() {
 			<div className="space-y-6">
 				<div className="flex items-center justify-between">
 					<div>
-						<h1 className="text-2xl md:text-3xl font-display font-light">
-							{t("title")}
-						</h1>
+						<h1 className="text-2xl md:text-3xl font-display font-light">Addresses</h1>
 						<p className="text-muted-foreground font-display font-light">
-							{t("subtitle")}
+							Manage shipping and billing addresses.
 						</p>
 					</div>
 					<MobileAccountNav />
@@ -123,15 +115,13 @@ export default function AddressesPage() {
 					// Empty state
 					<div className="flex flex-col items-center justify-center py-12 border-2 border-dashed rounded-xl">
 						<MapPin className="h-12 w-12 text-muted-foreground mb-4" />
-						<h3 className="font-display font-medium text-lg mb-2">
-							{t("empty")}
-						</h3>
+						<h3 className="font-display font-medium text-lg mb-2">No addresses yet</h3>
 						<p className="text-muted-foreground text-sm mb-6">
-							{t("emptyText")}
+							Add your first shipping address to get started
 						</p>
 						<Button onClick={handleCreate} className="rounded-full">
 							<Plus className="h-4 w-4 mr-2" />
-							{t("addNew")}
+							Add Address
 						</Button>
 					</div>
 				) : (
@@ -148,7 +138,7 @@ export default function AddressesPage() {
 											<span className="font-display font-medium">{address.label}</span>
 											{address.isDefault && (
 												<Badge variant="secondary" className="text-xs font-normal">
-													{t("default")}
+													Default
 												</Badge>
 											)}
 										</div>
@@ -178,7 +168,7 @@ export default function AddressesPage() {
 											onClick={() => handleEdit(address)}
 										>
 											<Pencil className="h-3 w-3 mr-2" />
-											{t("edit")}
+											Edit
 										</Button>
 										{!address.isDefault && (
 											<Button
@@ -188,7 +178,7 @@ export default function AddressesPage() {
 												onClick={() => handleSetDefault(address.id)}
 												disabled={setDefaultMutation.isPending}
 											>
-												{t("setDefault")}
+												Set Default
 											</Button>
 										)}
 										<Button
@@ -213,7 +203,7 @@ export default function AddressesPage() {
 							<div className="w-12 h-12 rounded-full bg-muted group-hover:bg-primary/10 flex items-center justify-center mb-3 transition-colors">
 								<Plus className="h-6 w-6 text-muted-foreground group-hover:text-primary" />
 							</div>
-							<span className="font-display font-medium">{t("addNew")}</span>
+							<span className="font-display font-medium">Add New Address</span>
 						</button>
 					</div>
 				)}
@@ -231,9 +221,10 @@ export default function AddressesPage() {
 			<AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>{t("deleteConfirm")}</AlertDialogTitle>
+						<AlertDialogTitle>Delete Address?</AlertDialogTitle>
 						<AlertDialogDescription>
-							{t("deleteWarning")}
+							This action cannot be undone. This will permanently delete the address from
+							your account.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -242,7 +233,7 @@ export default function AddressesPage() {
 							onClick={confirmDelete}
 							className="bg-red-600 hover:bg-red-700"
 						>
-							{t("delete")}
+							Delete
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

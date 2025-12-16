@@ -18,7 +18,7 @@ const NAMESPACES = [
 	'about',
 	'blog',
 	'legal',
-	'register',
+	'account',
 	'faq',
 ] as const;
 
