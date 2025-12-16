@@ -2,12 +2,14 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment } from "@react-three/drei";
+import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
 import { useState, Suspense } from "react";
-import { Pause, RefreshCwIcon } from "lucide-react";
+import { Pause, RefreshCwIcon, FishSymbol } from "lucide-react";
 import { BackgroundPanel } from "./BackgroundPanel";
-import type { SidePanelsType } from "../calculator-types";
 import { DimensionsOverlay } from "./DimensionsOverlay";
+import { Fish } from "./Fish";
+import { useProductColor } from "../_hooks/useProductColor";
+import type { SidePanelsType } from "../calculator-types";
 
 interface AquariumSceneProps {
 	width: number;
@@ -16,10 +18,9 @@ interface AquariumSceneProps {
 	backgroundTexture?: string;
 	subcategoryTexture?: string;
 	showControls?: boolean;
-	// NEW: Side panel props
 	sidePanels?: SidePanelsType;
 	sidePanelWidth?: number;
-	isEmpty?: boolean; // NEW: Show empty state if no subcategory selected
+	isEmpty?: boolean;
 }
 
 function AquariumTank({
@@ -32,73 +33,102 @@ function AquariumTank({
 	sidePanelWidth = 40,
 	isEmpty = false,
 }: Omit<AquariumSceneProps, 'showControls'>) {
+	// Convert cm to decimeters (Three.js world units)
 	const w = width / 10;
 	const h = height / 10;
 	const d = depth / 10;
 
+	// 🎨 DYNAMIC COLOR EXTRACTION
+	// This pulls the dominant color from the user's selected image
+	// effectively "tinting" the procedural rock to match the product line
+	const targetImage = subcategoryTexture || backgroundTexture;
+	const dynamicRockColor = useProductColor(targetImage, "#6B5D52");
+
 	return (
 		<group>
-			{/* Procedural rock background panel */}
+			{/* 1. PROCEDURAL ROCK BACKGROUND */}
+			{/* Renders the "Wet Stone" sheet with displacement */}
 			<Suspense fallback={null}>
-				{/* Move to back wall: -d/2 is back glass, + margin */}
-				<group position={[0, 0, -d / 2 + 0.1]}>
+				{/* Position at back of tank (-d/2) plus slight margin */}
+				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={3} // Base thickness of the "sheet"
+						depth={2} // Base thickness of background wall
 						sidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						// baseColor="#5A4D41" // Deep river stone color
+						baseColor={dynamicRockColor}
 					/>
 				</group>
 			</Suspense>
 
+			{/* 2. THE FISH (NEMO) */}
+			{/* Only render if we aren't in an "empty" state */}
+			<Suspense fallback={null}>
+				{!isEmpty && (
+					<Fish
+						tankWidth={width}
+						tankHeight={height}
+						tankDepth={depth}
+					/>
+				)}
+			</Suspense>
 
-			{/* Water inside tank - fills ~90% */}
+			{/* 3. WATER VOLUME */}
+			{/* Fills ~90% of the tank, slightly transparent blue */}
 			<mesh position={[0, -h * 0.05, 0]}>
-				<boxGeometry args={[w * 0.95, h * 0.9, d * 0.95]} />
+				<boxGeometry args={[w * 0.98, h * 0.92, d * 0.98]} />
 				<meshPhysicalMaterial
 					color="#3781C2"
 					transparent
-					opacity={0.35}
+					opacity={0.3} // Low opacity to see the background clearly
 					roughness={0.1}
 					metalness={0.1}
-					transmission={0.6}
+					transmission={0.8}
 					thickness={2}
+					ior={1.33} // Index of Refraction for water
 				/>
 			</mesh>
 
-			{/* Glass tank - thin edges */}
+			{/* 4. GLASS WALLS */}
+			{/* The physical container */}
 			<mesh>
 				<boxGeometry args={[w, h, d]} />
 				<meshPhysicalMaterial
 					color="#87CEEB"
 					transparent
-					opacity={0.08}
-					roughness={0.05}
-					metalness={0.1}
-					transmission={0.95}
+					opacity={0.1}
+					roughness={0.0}
+					metalness={0.2}
+					transmission={0.98}
 					thickness={0.1}
 					side={2} // THREE.DoubleSide
 				/>
 			</mesh>
 
-			{/* Frame - top and bottom edges */}
+			{/* 5. FRAMES (Top and Bottom) */}
 			<mesh position={[0, h / 2, 0]}>
 				<boxGeometry args={[w * 1.02, 0.15, d * 1.02]} />
-				<meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.2} />
+				<meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.4} />
 			</mesh>
 			<mesh position={[0, -h / 2, 0]}>
 				<boxGeometry args={[w * 1.02, 0.15, d * 1.02]} />
-				<meshStandardMaterial color="#2a2a2a" metalness={0.7} roughness={0.2} />
+				<meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.4} />
 			</mesh>
 
-			{/* Bottom substrate */}
-			<mesh position={[0, -h / 2 + 0.3, 0]}>
-				<boxGeometry args={[w * 0.95, 0.5, d * 0.95]} />
-				<meshStandardMaterial color="#8B7355" roughness={0.9} />
+			{/* 6. SUBSTRATE (Sand) */}
+			{/* Positioned at the bottom inside the glass */}
+			<mesh position={[0, -h / 2 + 0.15, 0]}>
+				<boxGeometry args={[w * 0.98, 0.2, d * 0.98]} />
+				<meshStandardMaterial
+					color="#E3DAC9" // Sand/Beige color
+					roughness={1}
+					metalness={0}
+				/>
 			</mesh>
 
+			{/* 7. DIMENSIONS OVERLAY */}
+			{/* CAD-style arrows floating in front */}
 			<DimensionsOverlay
 				width={width}
 				height={height}
@@ -121,29 +151,36 @@ export function AquariumScene({
 }: AquariumSceneProps) {
 	const [autoRotate, setAutoRotate] = useState(true);
 
-	// Calculate stats for debug
+	// Calculate stats for debug display
 	const volumeL = Math.round((width * height * depth) / 1000);
 	const surfaceM2 = ((width * height) / 10000).toFixed(2);
 
 	return (
-		<div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-b from-background to-accent/5">
+		<div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-b from-zinc-900 to-zinc-950">
 			<Canvas
-				camera={{ position: [8, 4, 8], fov: 50 }}
-				frameloop={autoRotate ? "always" : "demand"}
+				camera={{ position: [8, 5, 10], fov: 45 }}
+				frameloop="always" // Always animate for the fish
 				gl={{
 					antialias: true,
-					alpha: true,
-					powerPreference: "default",
-					failIfMajorPerformanceCaveat: false,
+					alpha: false,
+					powerPreference: "high-performance",
 				}}
-				dpr={[1, 1.5]}
+				dpr={[1, 1.5]} // Clamp pixel ratio for mobile performance
+				shadows
 			>
-				<color attach="background" args={["#0f0f0f"]} />
-				<fog attach="fog" args={["#0f0f0f", 10, 30]} />
+				<color attach="background" args={["#09090b"]} />
+				<fog attach="fog" args={["#09090b", 10, 40]} />
 
-				<ambientLight intensity={0.4} />
-				<directionalLight position={[10, 10, 5]} intensity={0.8} />
-				<pointLight position={[-10, 5, -5]} intensity={0.3} color="#3781C2" />
+				{/* Lighting Setup */}
+				<ambientLight intensity={0.5} />
+				<directionalLight
+					position={[5, 10, 5]}
+					intensity={1.5}
+					castShadow
+					shadow-mapSize={[1024, 1024]}
+				/>
+				{/* Backlight to highlight water transparency */}
+				<pointLight position={[0, 5, -5]} intensity={0.5} color="#00aaee" />
 
 				<Suspense fallback={null}>
 					<AquariumTank
@@ -156,69 +193,69 @@ export function AquariumScene({
 						sidePanelWidth={sidePanelWidth}
 						isEmpty={isEmpty}
 					/>
+
+					{/* Soft shadow on the floor */}
+					<ContactShadows
+						position={[0, -height / 20 - 0.1, 0]}
+						opacity={0.4}
+						scale={20}
+						blur={2}
+						far={4}
+					/>
 				</Suspense>
 
-				<Environment preset="apartment" />
+				{/* Environment reflections */}
+				<Environment preset="city" blur={0.8} />
+
 				<OrbitControls
 					enablePan={false}
 					enableZoom={true}
 					minDistance={5}
-					maxDistance={15}
-					minPolarAngle={Math.PI / 6}
-					maxPolarAngle={Math.PI / 2.2}
+					maxDistance={20}
+					minPolarAngle={Math.PI / 6} // Prevent going under the floor
+					maxPolarAngle={Math.PI / 2.1}
 					autoRotate={autoRotate}
-					autoRotateSpeed={0.5}
+					autoRotateSpeed={0.8}
 					makeDefault
 				/>
 			</Canvas>
 
+			{/* UI CONTROLS OVERLAY */}
 			{showControls && (
 				<>
 					{/* Auto-rotate toggle */}
 					<div
 						onClick={() => setAutoRotate(!autoRotate)}
-						className="absolute bottom-2 right-6 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-display font-light hover:bg-black/80 transition-colors cursor-pointer"
-						title={autoRotate ? "Disable auto-rotate" : "Enable auto-rotate"}
+						className="absolute bottom-3 left-3 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white/90 text-xs font-medium hover:bg-black/80 transition-all cursor-pointer flex gap-2 items-center group shadow-lg"
 						role="button"
-						tabIndex={0}
-						onKeyDown={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault();
-								setAutoRotate(!autoRotate);
-							}
-						}}
 					>
 						{autoRotate ? (
-							<div className="flex gap-1 items-center">
-								<RefreshCwIcon className="w-4 h-4" /> Auto
-							</div>
+							<>
+								<RefreshCwIcon className="w-3.5 h-3.5 animate-spin-slow" />
+								<span>Rotating</span>
+							</>
 						) : (
-							<div className="flex gap-1 items-center">
-								<Pause className="w-4 h-4" /> Paused
-							</div>
+							<>
+								<Pause className="w-3.5 h-3.5" />
+								<span>Paused</span>
+							</>
 						)}
 					</div>
 
-					{/* Debug stats */}
-					<div className="absolute bottom-1 left-1 px-3 py-2 rounded-lg bg-black/70 backdrop-blur-sm border border-white/10 text-white text-xs font-mono space-y-1">
-						{/* <div className="flex justify-between gap-4">
-							<span className="text-white/60">W×H×D:</span>
-							<span>{width}×{height}×{depth}cm</span>
-						</div> */}
-						<div className="flex justify-between gap-4">
-							<span className="text-white/60">Area:</span>
-							<span>{surfaceM2}m²</span>
+					{/* Stats Badge */}
+					<div className="absolute bottom-3 right-3 px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-white text-xs space-y-1 shadow-lg pointer-events-none">
+						<div className="flex items-center gap-3 justify-between">
+							<span className="text-white/50">Dim</span>
+							<span className="font-mono">{width}×{height}×{depth}</span>
 						</div>
-						<div className="flex justify-between gap-4">
-							<span className="text-white/60">Vol:</span>
-							<span>{volumeL}L</span>
+						<div className="flex items-center gap-3 justify-between">
+							<span className="text-white/50">Area</span>
+							<span className="font-mono text-primary-foreground">{surfaceM2}m²</span>
 						</div>
-						{sidePanels !== "none" && (
-							<div className="flex justify-between gap-4">
-								<span className="text-white/60">Sides:</span>
-								<span>{sidePanels}</span>
-							</div>
-						)}
+						<div className="flex items-center gap-3 justify-between border-t border-white/10 pt-1 mt-1">
+							<span className="text-white/50">Vol</span>
+							<span className="font-mono">{volumeL}L</span>
+						</div>
 					</div>
 				</>
 			)}
