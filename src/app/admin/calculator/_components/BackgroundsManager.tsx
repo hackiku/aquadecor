@@ -3,32 +3,28 @@
 
 import { useState, useEffect } from "react";
 import { api } from "~/trpc/react";
-import { Switch } from "~/components/ui/switch";
-import { Badge } from "~/components/ui/badge";
 import { Loader2 } from "lucide-react";
-import { SortableList } from "../../_components/primitives/SortableList";
+import { DraggableGrid } from "../../_components/primitives/DraggableGrid";
+import { EditDrawer } from "../../_components/primitives/EditDrawer";
 import { toast } from "sonner";
 
 export function BackgroundsManager() {
 	const { data: categories, isLoading, refetch } = api.admin.calculator.getBackgroundCategories.useQuery();
 	const [localItems, setLocalItems] = useState<any[]>([]);
+	const [editingItem, setEditingItem] = useState<any>(null);
 
 	useEffect(() => {
 		if (categories) setLocalItems(categories);
 	}, [categories]);
 
-	const toggleStatus = api.admin.calculator.toggleCategoryStatus.useMutation({
+	const updateCategory = api.admin.category.update.useMutation({
 		onSuccess: () => {
-			toast.success("Updated visibility");
-			refetch(); // Ensure server sync
+			toast.success("Category updated");
+			refetch();
 		}
 	});
 
-	const reorder = api.admin.calculator.reorderCategories.useMutation({
-		onSuccess: () => {
-			// silent success for drag operations
-		}
-	});
+	const reorder = api.admin.calculator.reorderCategories.useMutation();
 
 	const handleReorder = (newItems: any[]) => {
 		setLocalItems(newItems);
@@ -37,41 +33,47 @@ export function BackgroundsManager() {
 		});
 	};
 
+	const handleSave = (data: any) => {
+		updateCategory.mutate({
+			id: data.id,
+			slug: data.slug, // Required by schema but likely unchanged
+			isActive: data.isActive,
+			// Add any other editable fields here if you expand the schema
+		});
+	};
+
 	if (isLoading) return <div className="py-20 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" /></div>;
 
 	return (
-		<div className="space-y-4">
-			<div className="flex justify-between items-end mb-4">
+		<div className="space-y-6">
+			<div className="flex justify-between items-end">
 				<p className="text-sm text-muted-foreground">
-					Drag to reorder how model categories appear in Step 1 of the calculator.
+					Drag to reorder model families. Use the edit button to toggle visibility or change details.
 				</p>
 			</div>
 
-			<SortableList
+			<DraggableGrid
 				items={localItems}
 				keyExtractor={(item) => item.id}
 				onReorder={handleReorder}
-				renderItem={(cat) => (
-					<div className="flex items-center justify-between gap-4">
-						<div className="flex flex-col">
-							<div className="flex items-center gap-2">
-								<span className="font-medium">{cat.name || cat.slug}</span>
-								{!cat.isActive && <Badge variant="secondary" className="text-[10px] h-5">Hidden</Badge>}
-							</div>
-							<span className="text-xs text-muted-foreground font-mono">{cat.slug}</span>
-						</div>
+				getTitle={(item) => item.name || item.slug}
+				getSubtitle={(item) => item.slug}
+				getImage={(item) => item.image} // Assuming category has 'image' field from fetch
+				getStatus={(item) => item.isActive}
+				onEdit={(item) => setEditingItem(item)}
+			/>
 
-						<div className="flex items-center gap-3">
-							<div className="flex items-center gap-2 text-sm text-muted-foreground mr-4">
-								<Switch
-									checked={cat.isActive}
-									onCheckedChange={(val) => toggleStatus.mutate({ id: cat.id, isActive: val })}
-								/>
-								<span className="w-12">{cat.isActive ? "Visible" : "Hidden"}</span>
-							</div>
-						</div>
-					</div>
-				)}
+			<EditDrawer
+				open={!!editingItem}
+				onOpenChange={(open) => !open && setEditingItem(null)}
+				data={editingItem}
+				title="Edit Category"
+				onSave={handleSave}
+				fields={[
+					{ key: "name", label: "Display Name", type: "readonly", description: "Manage translations in Catalog > Categories" },
+					{ key: "slug", label: "Slug / ID", type: "readonly" },
+					{ key: "isActive", label: "Visible in Calculator", type: "boolean" },
+				]}
 			/>
 		</div>
 	);
