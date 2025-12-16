@@ -8,11 +8,10 @@ import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
 import { ProgressBar } from "./_components/sticky/ProgressBar";
 import { StickyCalculator } from "./_components/sticky/StickyCalculator";
 import { QuoteModal } from "./_components/quote/QuoteModal";
-import { getBestTextureUrl } from "./_world/textureHelpers";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
 
 export default function CalculatorLayout({ children }: { children: React.ReactNode }) {
-	// Start expanded if we have a category (prevents WebGL context death)
+	
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
 	const hasAutoExpanded = useRef(false);
 
@@ -32,18 +31,6 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 		alert("Redirecting to payment...");
 	};
 
-	// Safe texture logic - properly handle subcategory texture priority
-	const safeBackgroundTexture = config?.modelCategory
-		? getBestTextureUrl(
-			undefined,
-			config.modelCategory.textureUrl || config.modelCategory.image
-		)
-		: undefined;
-
-	const safeSubcategoryTexture = config?.subcategoryTexture
-		? getBestTextureUrl(config.subcategoryTexture)
-		: undefined;
-
 	return (
 		<UnitProvider>
 			<CalculatorLayoutContext.Provider
@@ -62,38 +49,37 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 					setCompletionPercent,
 				}}
 			>
-				{/* Main Content Area - Pushes left when expanded */}
+				{/* Main Content Area */}
 				<motion.div
 					animate={{
 						marginRight: isCalculatorExpanded ? "28rem" : "0",
 					}}
-					// Slower, smoother transition to reduce layout thrashing stutter
 					transition={{
 						duration: 0.5,
-						ease: [0.32, 0.72, 0, 1], // Custom bezier for smooth push
+						ease: [0.32, 0.72, 0, 1],
 					}}
 					className="will-change-[margin-right] min-h-screen relative z-0"
 				>
 					{children}
 				</motion.div>
 
-				{/* Progress Bar (Fixed at bottom) */}
+				{/* Progress Bar */}
 				{config?.modelCategory && (
 					<ProgressBar completionPercent={completionPercent} />
 				)}
 
-				{/* The Morphing Calculator (Fixed on right) */}
+				{/* The Calculator - NO TEXTURES */}
 				{config?.modelCategory && estimate && (
 					<StickyCalculator
 						dimensions={config.dimensions}
 						estimate={estimate}
-						backgroundTexture={safeBackgroundTexture}
-						subcategoryTexture={safeSubcategoryTexture}
 						sidePanels={config.sidePanels}
 						sidePanelWidth={config.sidePanelWidth}
 						hasSubcategory={!!config.subcategory && config.subcategory !== "skip"}
 					/>
 				)}
+
+
 
 				{/* Modal */}
 				{config && estimate && (

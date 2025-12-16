@@ -6,7 +6,7 @@ import { Rocket } from "lucide-react";
 export function VeenieKitBadge() {
 	return (
 		<a
-			href="https://veenie.space"
+			href="https://veenie.space/kit"
 			target="_blank"
 			rel="noopener noreferrer"
 			className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 border border-indigo-500/20 rounded-full text-sm transition-all group"

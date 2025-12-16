@@ -8,62 +8,54 @@ import { Pause, RefreshCwIcon } from "lucide-react";
 import { BackgroundPanel } from "./BackgroundPanel";
 import { DimensionsOverlay } from "./DimensionsOverlay";
 import { Fish } from "./Fish";
-import { useProductColor } from "../_hooks/useProductColor";
 import type { SidePanelsType } from "../calculator-types";
 
 interface AquariumSceneProps {
 	width: number;
 	height: number;
 	depth: number;
-	backgroundTexture?: string;
-	subcategoryTexture?: string;
 	showControls?: boolean;
 	sidePanels?: SidePanelsType;
 	sidePanelWidth?: number;
 	isEmpty?: boolean;
+	// Legacy texture props - IGNORED
+	backgroundTexture?: string;
+	subcategoryTexture?: string;
 }
 
 function AquariumTank({
 	width = 100,
 	height = 50,
 	depth = 40,
-	backgroundTexture,
-	subcategoryTexture,
 	sidePanels = "none",
 	sidePanelWidth = 40,
 	isEmpty = false,
-}: Omit<AquariumSceneProps, 'showControls'>) {
-	// Convert cm to decimeters (Three.js world units)
+}: Omit<AquariumSceneProps, 'showControls' | 'backgroundTexture' | 'subcategoryTexture'>) {
+	// Convert cm to decimeters
 	const w = width / 10;
 	const h = height / 10;
 	const d = depth / 10;
 
-	// 🎨 DYNAMIC COLOR EXTRACTION
-	// This pulls the dominant color from the user's selected image
-	// effectively "tinting" the procedural rock to match the product line
-	const targetImage = subcategoryTexture || backgroundTexture || "/media/images/background-placeholder.png";
-	const dynamicRockColor = useProductColor(targetImage, "#6B5D52");
+	// 🎨 PLACEHOLDER COLOR - No dynamic extraction, no texture loading
+	const ROCK_COLOR = "#6B5D52";
 
 	return (
 		<group>
-			{/* 1. PROCEDURAL ROCK BACKGROUND */}
-			{/* Renders the "Wet Stone" sheet with displacement */}
+			{/* PROCEDURAL ROCK BACKGROUND */}
 			<Suspense fallback={null}>
-				{/* Position at back of tank (-d/2) plus slight margin */}
 				<group position={[0, 0, -d / 2 + 0.05]}>
 					<BackgroundPanel
 						width={width}
 						height={height}
-						depth={2} // Base thickness of background wall
+						depth={2}
 						sidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
-						baseColor={dynamicRockColor}
+						baseColor={ROCK_COLOR}
 					/>
 				</group>
 			</Suspense>
 
-			{/* 2. THE FISH (NEMO) */}
-			{/* Only render if we aren't in an "empty" state */}
+			{/* THE FISH */}
 			<Suspense fallback={null}>
 				<Fish
 					tankWidth={width}
@@ -72,25 +64,22 @@ function AquariumTank({
 				/>
 			</Suspense>
 
-
-			{/* 3. WATER VOLUME */}
-			{/* Fills ~90% of the tank, slightly transparent blue */}
+			{/* WATER VOLUME */}
 			<mesh position={[0, -h * 0.05, 0]}>
 				<boxGeometry args={[w * 0.98, h * 0.92, d * 0.98]} />
 				<meshPhysicalMaterial
 					color="#3781C2"
 					transparent
-					opacity={0.3} // Low opacity to see the background clearly
+					opacity={0.3}
 					roughness={0.1}
 					metalness={0.1}
 					transmission={0.8}
 					thickness={2}
-					ior={1.33} // Index of Refraction for water
+					ior={1.33}
 				/>
 			</mesh>
 
-			{/* 4. GLASS WALLS */}
-			{/* The physical container */}
+			{/* GLASS WALLS */}
 			<mesh>
 				<boxGeometry args={[w, h, d]} />
 				<meshPhysicalMaterial
@@ -101,11 +90,11 @@ function AquariumTank({
 					metalness={0.2}
 					transmission={0.98}
 					thickness={0.1}
-					side={2} // THREE.DoubleSide
+					side={2}
 				/>
 			</mesh>
 
-			{/* 5. FRAMES (Top and Bottom) */}
+			{/* FRAMES */}
 			<mesh position={[0, h / 2, 0]}>
 				<boxGeometry args={[w * 1.02, 0.15, d * 1.02]} />
 				<meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.4} />
@@ -115,24 +104,14 @@ function AquariumTank({
 				<meshStandardMaterial color="#1a1a1a" metalness={0.6} roughness={0.4} />
 			</mesh>
 
-			{/* 6. SUBSTRATE (Sand) */}
-			{/* Positioned at the bottom inside the glass */}
+			{/* SUBSTRATE */}
 			<mesh position={[0, -h / 2 + 0.15, 0]}>
 				<boxGeometry args={[w * 0.98, 0.2, d * 0.98]} />
-				<meshStandardMaterial
-					color="#E3DAC9" // Sand/Beige color
-					roughness={1}
-					metalness={0}
-				/>
+				<meshStandardMaterial color="#E3DAC9" roughness={1} metalness={0} />
 			</mesh>
 
-			{/* 7. DIMENSIONS OVERLAY */}
-			{/* CAD-style arrows floating in front */}
-			<DimensionsOverlay
-				width={width}
-				height={height}
-				depth={depth}
-			/>
+			{/* DIMENSIONS OVERLAY */}
+			<DimensionsOverlay width={width} height={height} depth={depth} />
 		</group>
 	);
 }
@@ -141,16 +120,17 @@ export function AquariumScene({
 	width = 100,
 	height = 50,
 	depth = 40,
-	backgroundTexture,
-	subcategoryTexture,
 	showControls = true,
 	sidePanels = "none",
 	sidePanelWidth = 40,
 	isEmpty = false,
+	// Texture props ignored
+	backgroundTexture,
+	subcategoryTexture,
 }: AquariumSceneProps) {
 	const [autoRotate, setAutoRotate] = useState(true);
 
-	// Calculate stats for debug display
+	// Calculate stats
 	const volumeL = Math.round((width * height * depth) / 1000);
 	const surfaceM2 = ((width * height) / 10000).toFixed(2);
 
@@ -158,19 +138,20 @@ export function AquariumScene({
 		<div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-b from-zinc-900 to-zinc-950">
 			<Canvas
 				camera={{ position: [8, 5, 10], fov: 45 }}
-				frameloop="always" // Always animate for the fish
+				resize={{ debounce: 50 }} // trying context loss fix
+				frameloop="always"
 				gl={{
 					antialias: true,
 					alpha: false,
 					powerPreference: "high-performance",
 				}}
-				dpr={[1, 1.5]} // Clamp pixel ratio for mobile performance
+				dpr={[1, 1.5]}
 				shadows
 			>
 				<color attach="background" args={["#09090b"]} />
 				<fog attach="fog" args={["#09090b", 10, 40]} />
 
-				{/* Lighting Setup */}
+				{/* Lighting */}
 				<ambientLight intensity={0.5} />
 				<directionalLight
 					position={[5, 10, 5]}
@@ -178,7 +159,6 @@ export function AquariumScene({
 					castShadow
 					shadow-mapSize={[1024, 1024]}
 				/>
-				{/* Backlight to highlight water transparency */}
 				<pointLight position={[0, 5, -5]} intensity={0.5} color="#00aaee" />
 
 				<Suspense fallback={null}>
@@ -186,14 +166,11 @@ export function AquariumScene({
 						width={width}
 						height={height}
 						depth={depth}
-						backgroundTexture={backgroundTexture}
-						subcategoryTexture={subcategoryTexture}
 						sidePanels={sidePanels}
 						sidePanelWidth={sidePanelWidth}
 						isEmpty={isEmpty}
 					/>
 
-					{/* Soft shadow on the floor */}
 					<ContactShadows
 						position={[0, -height / 20 - 0.1, 0]}
 						opacity={0.4}
@@ -203,7 +180,6 @@ export function AquariumScene({
 					/>
 				</Suspense>
 
-				{/* Environment reflections */}
 				<Environment preset="city" blur={0.8} />
 
 				<OrbitControls
@@ -211,7 +187,7 @@ export function AquariumScene({
 					enableZoom={true}
 					minDistance={5}
 					maxDistance={20}
-					minPolarAngle={Math.PI / 6} // Prevent going under the floor
+					minPolarAngle={Math.PI / 6}
 					maxPolarAngle={Math.PI / 2.1}
 					autoRotate={autoRotate}
 					autoRotateSpeed={0.8}
@@ -219,7 +195,7 @@ export function AquariumScene({
 				/>
 			</Canvas>
 
-			{/* UI CONTROLS OVERLAY - Only when showControls is true */}
+			{/* UI CONTROLS */}
 			{showControls && (
 				<>
 					{/* Auto-rotate toggle */}
@@ -242,19 +218,17 @@ export function AquariumScene({
 					</div>
 
 					{/* Stats Badge */}
-					<div className="absolute bottom-3 right-3 px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-white text-xs space-y-1 shadow-lg pointer-events-none">
+					<div className="absolute top-2 left-2 px-4 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-white text-xs space-y-1 shadow-lg pointer-events-none">
 						<div className="flex items-center gap-3 justify-between">
-							<span className="text-white/50">Dim</span>
-							<span className="font-mono">{width}×{height}×{depth}</span>
-						</div>
-						<div className="flex items-center gap-3 justify-between">
-							<span className="text-white/50">Area</span>
-							<span className="font-mono text-primary-foreground">{surfaceM2}m²</span>
-						</div>
-						<div className="flex items-center gap-3 justify-between border-t border-white/10 pt-1 mt-1">
-							<span className="text-white/50">Vol</span>
+							{/* <span className="text-white/50">Area</span> */}
+							<span className="font-mono">{surfaceM2}m²</span>
+							{/* <span>•</span> */}
 							<span className="font-mono">{volumeL}L</span>
 						</div>
+						{/* <div className="flex items-center gap-3 justify-between border-t border-white/10 pt-1 mt-1">
+							<span className="text-white/50">Vol</span>
+							<span className="font-mono">{volumeL}L</span>
+						</div> */}
 					</div>
 				</>
 			)}
