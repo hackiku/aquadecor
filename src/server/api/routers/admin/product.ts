@@ -635,7 +635,6 @@ export const adminProductRouter = createTRPCRouter({
 			};
 		}),
 
-
 	// ============================================================================
 	// CREATE
 	// ============================================================================
@@ -648,7 +647,7 @@ export const adminProductRouter = createTRPCRouter({
 			isActive: z.boolean().default(true),
 			isFeatured: z.boolean().default(false),
 			sortOrder: z.number().default(0),
-			
+
 			// Physical/Technical
 			material: z.string().optional().nullable(),
 			widthCm: z.number().optional().nullable(),
@@ -656,69 +655,62 @@ export const adminProductRouter = createTRPCRouter({
 			depthCm: z.number().optional().nullable(),
 			weightGrams: z.number().int().optional().nullable(),
 			productionTime: z.string().optional().nullable(),
-			technicalSpecs: z.any().optional().nullable(), // JSONB
+			technicalSpecs: z.any().optional().nullable(),
 
-			// Translation (English required, using new fields)
+			// Translation
 			translation: ProductTranslationSchema,
 		}))
 		.mutation(async ({ ctx, input }) => {
-			// 1. Insert product
+			return await ctx.db.transaction(async (tx) => {
+				// 1. Insert product
+				const [product] = await tx
+					.insert(products)
+					.values({
+						categoryId: input.categoryId,
+						slug: input.slug,
+						sku: input.sku ?? "TEMP_" + crypto.randomUUID().slice(0, 8),
+						stockStatus: input.stockStatus,
+						isActive: input.isActive,
+						isFeatured: input.isFeatured,
+						sortOrder: input.sortOrder,
+						material: input.material,
+						widthCm: input.widthCm === undefined ? undefined : (input.widthCm === null ? null : sql`${input.widthCm}::decimal`),
+						heightCm: input.heightCm === undefined ? undefined : (input.heightCm === null ? null : sql`${input.heightCm}::decimal`),
+						depthCm: input.depthCm === undefined ? undefined : (input.depthCm === null ? null : sql`${input.depthCm}::decimal`),
+						weightGrams: input.weightGrams,
+						productionTime: input.productionTime,
+						technicalSpecs: input.technicalSpecs,
+					})
+					.returning();
 
-			const [product] = await ctx.db
-				.insert(products)
-				.values({
-					categoryId: input.categoryId,
-					slug: input.slug,
+				if (!product) throw new Error("Failed to create product.");
 
-					// FIX: SKU must be a string (non-null)
-					sku: input.sku ?? "TEMP_SKU_" + crypto.randomUUID().slice(0, 8),
+				// 2. Insert English translation
+				await tx.insert(productTranslations).values({
+					productId: product.id,
+					locale: "en",
+					name: input.translation.name,
+					shortDescription: input.translation.shortDescription,
+					longDescription: input.translation.longDescription,
+					metaTitle: input.translation.metaTitle,
+					metaDescription: input.translation.metaDescription,
+					materialTranslated: input.translation.materialTranslated,
+					productionTimeTranslated: input.translation.productionTimeTranslated,
+				});
 
-					stockStatus: input.stockStatus,
-					isActive: input.isActive,
-					isFeatured: input.isFeatured,
-					sortOrder: input.sortOrder,
-					material: input.material,
+				// 3. Create Default ROW Pricing (The Anti-Zombie Fix)
+				await tx.insert(productPricing).values({
+					productId: product.id,
+					market: "ROW", // Default market
+					currency: "EUR", // Default currency
+					pricingType: "simple",
+					isActive: false, // Inactive until they actually set a price
+					allowQuantity: true,
+				});
 
-					// FIX: Safely handle optional/nullable decimal fields without external object
-					widthCm: input.widthCm === undefined
-						? undefined
-						: (input.widthCm === null ? null : sql`${input.widthCm}::decimal`),
-
-					heightCm: input.heightCm === undefined
-						? undefined
-						: (input.heightCm === null ? null : sql`${input.heightCm}::decimal`),
-
-					depthCm: input.depthCm === undefined
-						? undefined
-						: (input.depthCm === null ? null : sql`${input.depthCm}::decimal`),
-
-					weightGrams: input.weightGrams,
-					productionTime: input.productionTime,
-					technicalSpecs: input.technicalSpecs,
-				})
-				.returning();
-
-			if (!product) throw new Error("Failed to create product.");
-
-			// 2. Insert English translation
-			await ctx.db.insert(productTranslations).values({
-				productId: product.id,
-				locale: "en",
-				name: input.translation.name,
-				shortDescription: input.translation.shortDescription,
-				longDescription: input.translation.longDescription,
-				metaTitle: input.translation.metaTitle,
-				metaDescription: input.translation.metaDescription,
-				materialTranslated: input.translation.materialTranslated,
-				productionTimeTranslated: input.translation.productionTimeTranslated,
+				return product;
 			});
-
-			// NOTE: Initial pricing, addons, and customization options are not
-			// created here and should be managed via subsequent Admin UI actions.
-
-			return product;
 		}),
-
 
 	// ============================================================================
 	// UPDATE

@@ -9,6 +9,8 @@ import { orders } from "./orders";
 // Affiliate/team members who get commission on sales
 // ============================================================================
 
+
+
 export const promoters = createTable(
 	"promoter",
 	(d) => ({
@@ -42,6 +44,8 @@ export const promoters = createTable(
 // Discount codes linked to promoters
 // ============================================================================
 
+// ... imports
+
 export const promoterCodes = createTable(
 	"promoter_code",
 	(d) => ({
@@ -49,23 +53,29 @@ export const promoterCodes = createTable(
 		promoterId: d.text().notNull().references(() => promoters.id, { onDelete: "cascade" }),
 
 		// Code details
-		code: d.text().notNull().unique(), // "JOEY15", "SUMMER20"
-		discountPercent: d.integer().notNull(), // 10, 15, 20, etc.
-		commissionPercent: d.integer().notNull(), // How much promoter gets (3%, 5%, 10%)
+		code: d.text().notNull().unique(), // "JOEY15"
+
+		// DISCOUNT LOGIC (Matches Sales Table)
+		type: d.text().notNull().default('percentage'), // 'percentage' | 'fixed_amount'
+		discountPercent: d.integer(),
+		discountAmountCents: d.integer(),
+
+		// TARGETING (Optional - if null, applies to everything)
+		targetType: d.text().default('all'),
+		targetProductIds: d.text().array(),
+		targetCategoryIds: d.text().array(),
+
+		// COMMISSION
+		commissionPercent: d.integer().notNull(), // 3, 5, 10
 
 		// Stats
 		usageCount: d.integer().default(0).notNull(),
-
-		// Status
 		isActive: d.boolean().default(true).notNull(),
-
-		// Timestamps
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 	}),
 	(t) => [
 		index("promoter_code_promoter_idx").on(t.promoterId),
 		index("promoter_code_code_idx").on(t.code),
-		index("promoter_code_active_idx").on(t.isActive),
 	],
 );
 

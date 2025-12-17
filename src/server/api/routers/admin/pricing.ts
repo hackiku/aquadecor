@@ -49,8 +49,8 @@ export const adminPricingRouter = createTRPCRouter({
 	create: adminProcedure
 		.input(z.object({
 			productId: z.string(),
-			market: z.enum(["US", "ROW", "CA", "UK"]),
-			currency: z.enum(["USD", "EUR", "GBP", "CAD"]),
+			market: z.enum(["ROW", "US"]),
+			currency: z.enum(["EUR", "USD"]),
 			pricingType: z.enum(["simple", "bundle", "configuration"]),
 
 			// Simple pricing fields

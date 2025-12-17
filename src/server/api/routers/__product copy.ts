@@ -14,81 +14,8 @@ import {
 	productMarketExclusions,
 	media,
 	categoryTranslations,
-	sales, // Required for discount engine
 } from "~/server/db/schema";
-import { eq, and, inArray, lte, gte, desc } from "drizzle-orm";
-
-// ============================================================================
-// HELPER: DISCOUNT ENGINE
-// ============================================================================
-
-/**
- * Calculates the sale price for a single product based on active sales rules.
- */
-function calculateSalePrice(
-	basePriceCents: number | null | undefined,
-	productId: string,
-	categoryId: string,
-	productLineSlug: string | null | undefined,
-	activeSales: typeof sales.$inferSelect[],
-	userMarket: string
-) {
-	// If no base price, we can't have a sale price
-	if (!basePriceCents) return { salePrice: null, activeSale: null };
-
-	// Find the first applicable sale
-	// Priority: The first sale in the list that matches the criteria wins.
-	const applicableSale = activeSales.find((sale) => {
-		// 1. Check Market (Is this sale allowed in this region?)
-		if (sale.targetMarkets && !sale.targetMarkets.includes(userMarket)) return false;
-
-		// 2. Check Scope (Does it target this product?)
-		if (sale.targetType === "all") return true;
-
-		if (sale.targetType === "specific_products" && sale.targetProductIds?.includes(productId)) {
-			return true;
-		}
-
-		if (sale.targetType === "category" && sale.targetCategoryIds?.includes(categoryId)) {
-			return true;
-		}
-
-		// (Optional: Logic for Product Line targeting if needed)
-		// if (sale.targetType === "product_line" && ...) return true;
-
-		return false;
-	});
-
-	if (!applicableSale) return { salePrice: null, activeSale: null };
-
-	// Calculate the new price
-	let salePrice = basePriceCents;
-	const discountType = applicableSale.type || 'percentage'; // Default to %
-
-	if (discountType === "percentage") {
-		const percent = applicableSale.discountPercent || 0;
-		const discountAmount = Math.round(basePriceCents * (percent / 100));
-		salePrice = Math.max(0, basePriceCents - discountAmount);
-	} else if (discountType === "fixed_amount") {
-		const amount = applicableSale.discountAmountCents || 0;
-		salePrice = Math.max(0, basePriceCents - amount);
-	}
-
-	return {
-		salePrice, // The calculated lower price in cents
-		activeSale: {
-			id: applicableSale.id,
-			name: applicableSale.name,
-			type: discountType,
-			value: discountType === 'percentage' ? applicableSale.discountPercent : applicableSale.discountAmountCents,
-			slug: applicableSale.slug,
-		},
-	};
-}
-
-// ============================================================================
-// ROUTER
-// ============================================================================
+import { eq, and, inArray } from "drizzle-orm";
 
 export const productRouter = createTRPCRouter({
 
@@ -113,6 +40,8 @@ export const productRouter = createTRPCRouter({
 
 			return category;
 		}),
+
+
 
 	getCategoriesForProductLine: publicProcedure
 		.input(z.object({
@@ -160,7 +89,7 @@ export const productRouter = createTRPCRouter({
 		}),
 
 	// ============================================================================
-	// PRODUCT LISTINGS (Catalog View)
+	// PRODUCT LISTINGS
 	// ============================================================================
 
 	getByCategory: publicProcedure
@@ -172,38 +101,25 @@ export const productRouter = createTRPCRouter({
 			}),
 		)
 		.query(async ({ ctx, input }) => {
-			const resolvedMarket = input.userMarket === "US" ? "US" : "ROW";
-			const now = new Date();
+			const resolvedMarket = input.userMarket === "EU" ? "ROW" : input.userMarket
 
-			// 1. Fetch Active Sales
-			const activeSales = await ctx.db
-				.select()
-				.from(sales)
-				.where(
-					and(
-						eq(sales.isActive, true),
-						lte(sales.startsAt, now),
-						gte(sales.endsAt, now)
-					)
-				);
+			// Find category
+			const [category] = await ctx.db.select().from(categories).where(eq(categories.slug, input.categorySlug)).limit(1)
 
-			// 2. Fetch Category
-			const [category] = await ctx.db.select().from(categories).where(eq(categories.slug, input.categorySlug)).limit(1);
 			if (!category) {
-				return { products: [], categorySlug: input.categorySlug, productLineSlug: null };
+				return { products: [], categorySlug: input.categorySlug, productLineSlug: null }
 			}
 
-			// 3. Fetch Products
-			const rawProducts = await ctx.db
+			// Get products with basic pricing info
+			const results = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
 					stockStatus: products.stockStatus,
 					categoryId: products.categoryId,
-					productLineSlug: categories.productLine,
 
-					// Basic pricing
+					// Basic pricing (will query separately for bundles)
 					pricingId: productPricing.id,
 					pricingType: productPricing.pricingType,
 					unitPriceEurCents: productPricing.unitPriceEurCents,
@@ -217,7 +133,6 @@ export const productRouter = createTRPCRouter({
 					shortDescription: productTranslations.shortDescription,
 				})
 				.from(products)
-				.leftJoin(categories, eq(categories.id, products.categoryId))
 				.leftJoin(
 					productPricing,
 					and(eq(productPricing.productId, products.id), eq(productPricing.market, resolvedMarket)),
@@ -228,49 +143,33 @@ export const productRouter = createTRPCRouter({
 				)
 				.leftJoin(media, and(eq(media.productId, products.id), eq(media.usageType, "product"), eq(media.sortOrder, 0)))
 				.where(and(eq(products.categoryId, category.id), eq(products.isActive, true)))
-				.orderBy(products.sortOrder);
+				.orderBy(products.sortOrder)
 
-			// 4. Filter Exclusions
-			const productIds = rawProducts.map((p) => p.id);
-			let excludedIds = new Set<string>();
+			// Check market exclusions
+			const productIds = results.map((p) => p.id)
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, productIds),
+						eq(productMarketExclusions.market, input.userMarket),
+					),
+				)
 
-			if (productIds.length > 0) {
-				const exclusions = await ctx.db
-					.select()
-					.from(productMarketExclusions)
-					.where(
-						and(
-							inArray(productMarketExclusions.productId, productIds),
-							eq(productMarketExclusions.market, resolvedMarket),
-						),
-					);
-				excludedIds = new Set(exclusions.map((e) => e.productId));
-			}
+			const excludedProductIds = new Set(exclusions.map((e) => e.productId))
 
-			// 5. Apply Sales Logic
-			const processedProducts = rawProducts
-				.filter((p) => !excludedIds.has(p.id))
-				.map((p) => {
-					const { salePrice, activeSale } = calculateSalePrice(
-						p.unitPriceEurCents,
-						p.id,
-						p.categoryId,
-						p.productLineSlug,
-						activeSales,
-						resolvedMarket
-					);
-					return { ...p, salePrice, activeSale };
-				});
+			const filteredProducts = results.filter((p) => !excludedProductIds.has(p.id))
 
 			return {
-				products: processedProducts,
+				products: filteredProducts,
 				categorySlug: category.slug,
 				productLineSlug: category.productLine,
-			};
+			}
 		}),
 
 	// ============================================================================
-	// SINGLE PRODUCT (Full Details View)
+	// SINGLE PRODUCT (Full Details)
 	// ============================================================================
 
 	getBySlug: publicProcedure
@@ -280,10 +179,7 @@ export const productRouter = createTRPCRouter({
 			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
-			const resolvedMarket = input.userMarket === "US" ? "US" : "ROW";
-			const now = new Date();
-
-			// 1. Fetch Product
+			// Get product with translation and category
 			const [product] = await ctx.db
 				.select({
 					id: products.id,
@@ -293,7 +189,9 @@ export const productRouter = createTRPCRouter({
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
 					stockStatus: products.stockStatus,
+					// productType: products.productType, // LEGACY
 
+					// Product details
 					material: products.material,
 					widthCm: products.widthCm,
 					heightCm: products.heightCm,
@@ -302,6 +200,7 @@ export const productRouter = createTRPCRouter({
 					productionTime: products.productionTime,
 					technicalSpecs: products.technicalSpecs,
 
+					// Translations
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
 					longDescription: productTranslations.longDescription,
@@ -322,63 +221,28 @@ export const productRouter = createTRPCRouter({
 
 			if (!product) return null;
 
-			// 2. Check Exclusions
+			// Check market exclusion
 			const [exclusion] = await ctx.db
 				.select()
 				.from(productMarketExclusions)
 				.where(
 					and(
 						eq(productMarketExclusions.productId, product.id),
-						eq(productMarketExclusions.market, resolvedMarket)
+						eq(productMarketExclusions.market, input.userMarket)
 					)
 				)
 				.limit(1);
 
 			if (exclusion) return null;
 
-			// 3. Get Pricing (Market Specific)
+			// Get pricing config
 			const [pricing] = await ctx.db
 				.select()
 				.from(productPricing)
-				.where(
-					and(
-						eq(productPricing.productId, product.id),
-						eq(productPricing.market, resolvedMarket)
-					)
-				)
+				.where(eq(productPricing.productId, product.id))
 				.limit(1);
 
-			// 4. Calculate Sale Price & Enhanced Pricing Object
-			let enhancedPricing = null;
-			if (pricing) {
-				const activeSales = await ctx.db
-					.select()
-					.from(sales)
-					.where(
-						and(
-							eq(sales.isActive, true),
-							lte(sales.startsAt, now),
-							gte(sales.endsAt, now)
-						)
-					);
-
-				const { salePrice, activeSale } = calculateSalePrice(
-					pricing.unitPriceEurCents,
-					product.id,
-					product.categoryId,
-					product.productLineSlug,
-					activeSales,
-					resolvedMarket
-				);
-
-				enhancedPricing = {
-					...pricing,
-					salePrice, // Frontend can now show: {salePrice} <strike>{unitPrice}</strike>
-					activeSale,
-				};
-			}
-
-			// 5. Get Bundles
+			// Get bundles if pricing type is quantity_bundle
 			let bundles = null;
 			if (pricing && pricing.pricingType === "quantity_bundle") {
 				bundles = await ctx.db
@@ -388,21 +252,21 @@ export const productRouter = createTRPCRouter({
 					.orderBy(pricingBundles.quantity);
 			}
 
-			// 6. Get Addons
+			// Get addons
 			const addons = await ctx.db
 				.select()
 				.from(productAddons)
 				.where(eq(productAddons.productId, product.id))
 				.orderBy(productAddons.sortOrder);
 
-			// 7. Get Customization Options
+			// Get customization options
 			const customOptions = await ctx.db
 				.select()
 				.from(customizationOptions)
 				.where(eq(customizationOptions.productId, product.id))
 				.orderBy(customizationOptions.sortOrder);
 
-			// 8. Get Select Options
+			// Get select options for each customization option
 			const selectOptionsByCustomOptionId: Record<string, any[]> = {};
 			for (const option of customOptions) {
 				if (option.type === "select") {
@@ -415,7 +279,7 @@ export const productRouter = createTRPCRouter({
 				}
 			}
 
-			// 9. Get Images
+			// Get all images
 			const images = await ctx.db
 				.select({
 					id: media.id,
@@ -437,7 +301,7 @@ export const productRouter = createTRPCRouter({
 
 			return {
 				...product,
-				pricing: enhancedPricing,
+				pricing,
 				bundles,
 				addons,
 				customizationOptions: customOptions.map(opt => ({
@@ -448,8 +312,98 @@ export const productRouter = createTRPCRouter({
 			};
 		}),
 
+	getMarketAvailability: publicProcedure
+		.input(z.object({ productId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(eq(productMarketExclusions.productId, input.productId));
+
+			const allMarkets = ['US', 'ROW'] as const;
+			const excludedMarkets = exclusions.map(e => e.market);
+
+			return {
+				available: allMarkets.filter(m => !excludedMarkets.includes(m)),
+				excluded: excludedMarkets,
+			};
+		}),
+
+
+
 	// ============================================================================
-	// FEATURED PRODUCTS (Home Page)
+	// MULTI-PRODUCT QUERIES (Cart, Wishlist)
+	// ============================================================================
+
+	getByIds: publicProcedure
+		.input(z.object({
+			ids: z.array(z.string()),
+			locale: z.string().default("en"),
+			userMarket: z.string().default("ROW"),
+		}))
+		.query(async ({ ctx, input }) => {
+			if (!input.ids || input.ids.length === 0) return [];
+
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					stockStatus: products.stockStatus,
+					categoryId: products.categoryId,
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
+					heroImageUrl: media.storageUrl,
+					heroImageAlt: media.altText,
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(productPricing, eq(productPricing.productId, products.id))
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, "product"),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(
+					and(
+						eq(products.isActive, true),
+						inArray(products.id, input.ids)
+					)
+				);
+
+			// Filter by market
+			const exclusions = await ctx.db
+				.select()
+				.from(productMarketExclusions)
+				.where(
+					and(
+						inArray(productMarketExclusions.productId, input.ids),
+						eq(productMarketExclusions.market, input.userMarket)
+					)
+				);
+
+			const excludedIds = new Set(exclusions.map(e => e.productId));
+			return results.filter(p => !excludedIds.has(p.id));
+		}),
+
+	// ============================================================================
+	// FEATURED PRODUCTS
 	// ============================================================================
 
 	getFeatured: publicProcedure
@@ -459,23 +413,10 @@ export const productRouter = createTRPCRouter({
 			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
-			const resolvedMarket = input.userMarket === "US" ? "US" : "ROW";
-			const now = new Date();
+			// Map "EU" to "ROW" for pricing/market resolution
+			const resolvedMarket = input.userMarket === "EU" ? "ROW" : input.userMarket;
 
-			// 1. Fetch Active Sales
-			const activeSales = await ctx.db
-				.select()
-				.from(sales)
-				.where(
-					and(
-						eq(sales.isActive, true),
-						lte(sales.startsAt, now),
-						gte(sales.endsAt, now)
-					)
-				);
-
-			// 2. Fetch Featured Products
-			const rawProducts = await ctx.db
+			const results = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
@@ -499,7 +440,7 @@ export const productRouter = createTRPCRouter({
 					productPricing,
 					and(
 						eq(productPricing.productId, products.id),
-						eq(productPricing.market, resolvedMarket)
+						eq(productPricing.market, resolvedMarket)  // <-- Add this to filter by market
 					)
 				)
 				.leftJoin(
@@ -526,167 +467,61 @@ export const productRouter = createTRPCRouter({
 				.orderBy(products.sortOrder)
 				.limit(input.limit);
 
-			// 3. Filter Exclusions & Apply Sales
-			const productIds = rawProducts.map(p => p.id);
-			if (productIds.length === 0) return [];
-
+			// Filter by market (exclusions logic remains the same)
+			const productIds = results.map(p => p.id);
 			const exclusions = await ctx.db
 				.select()
 				.from(productMarketExclusions)
 				.where(
 					and(
 						inArray(productMarketExclusions.productId, productIds),
-						eq(productMarketExclusions.market, resolvedMarket)
+						eq(productMarketExclusions.market, input.userMarket)  // Note: Uses original input.userMarket, not resolved
 					)
 				);
 
 			const excludedIds = new Set(exclusions.map(e => e.productId));
-
-			return rawProducts
-				.filter(p => !excludedIds.has(p.id))
-				.map(p => {
-					const { salePrice, activeSale } = calculateSalePrice(
-						p.unitPriceEurCents,
-						p.id,
-						p.categoryId,
-						p.productLineSlug,
-						activeSales,
-						resolvedMarket
-					);
-					return { ...p, salePrice, activeSale };
-				});
+			return results.filter(p => !excludedIds.has(p.id));
 		}),
 
 	// ============================================================================
-	// CART & WISHLIST (Get by IDs)
+	// PRICING HELPERS (for calculator, cart)
 	// ============================================================================
 
-	getByIds: publicProcedure
+	getPricingForProduct: publicProcedure
 		.input(z.object({
-			ids: z.array(z.string()),
-			locale: z.string().default("en"),
+			productId: z.string(),
 			userMarket: z.string().default("ROW"),
 		}))
 		.query(async ({ ctx, input }) => {
-			if (!input.ids || input.ids.length === 0) return [];
-
-			const resolvedMarket = input.userMarket === "US" ? "US" : "ROW";
-			const now = new Date();
-
-			// 1. Fetch Active Sales
-			const activeSales = await ctx.db
+			const [pricing] = await ctx.db
 				.select()
-				.from(sales)
-				.where(
-					and(
-						eq(sales.isActive, true),
-						lte(sales.startsAt, now),
-						gte(sales.endsAt, now)
-					)
-				);
+				.from(productPricing)
+				.where(eq(productPricing.productId, input.productId))
+				.limit(1);
 
-			// 2. Fetch Products
-			const rawProducts = await ctx.db
-				.select({
-					id: products.id,
-					slug: products.slug,
-					sku: products.sku,
-					stockStatus: products.stockStatus,
-					categoryId: products.categoryId,
-					categorySlug: categories.slug,
-					productLineSlug: categories.productLine,
+			if (!pricing) return null;
 
-					pricingType: productPricing.pricingType,
-					unitPriceEurCents: productPricing.unitPriceEurCents,
-
-					heroImageUrl: media.storageUrl,
-					heroImageAlt: media.altText,
-					name: productTranslations.name,
-					shortDescription: productTranslations.shortDescription,
-				})
-				.from(products)
-				.leftJoin(categories, eq(categories.id, products.categoryId))
-				.leftJoin(productPricing,
-					and(
-						eq(productPricing.productId, products.id),
-						eq(productPricing.market, resolvedMarket)
-					)
-				)
-				.leftJoin(
-					productTranslations,
-					and(
-						eq(productTranslations.productId, products.id),
-						eq(productTranslations.locale, input.locale)
-					)
-				)
-				.leftJoin(
-					media,
-					and(
-						eq(media.productId, products.id),
-						eq(media.usageType, "product"),
-						eq(media.sortOrder, 0)
-					)
-				)
-				.where(
-					and(
-						eq(products.isActive, true),
-						inArray(products.id, input.ids)
-					)
-				);
-
-			// 3. Filter by market exclusions
-			const exclusions = await ctx.db
-				.select()
-				.from(productMarketExclusions)
-				.where(
-					and(
-						inArray(productMarketExclusions.productId, input.ids),
-						eq(productMarketExclusions.market, resolvedMarket)
-					)
-				);
-
-			const excludedIds = new Set(exclusions.map(e => e.productId));
-
-			// 4. Apply Sales Logic
-			return rawProducts
-				.filter(p => !excludedIds.has(p.id))
-				.map(p => {
-					const { salePrice, activeSale } = calculateSalePrice(
-						p.unitPriceEurCents,
-						p.id,
-						p.categoryId,
-						p.productLineSlug,
-						activeSales,
-						resolvedMarket
-					);
-					return { ...p, salePrice, activeSale };
-				});
-		}),
-
-	// ============================================================================
-	// MARKET AVAILABILITY
-	// ============================================================================
-
-	getMarketAvailability: publicProcedure
-		.input(z.object({ productId: z.string() }))
-		.query(async ({ ctx, input }) => {
-			const exclusions = await ctx.db
-				.select()
-				.from(productMarketExclusions)
-				.where(eq(productMarketExclusions.productId, input.productId));
-
-			const allMarkets = ['US', 'ROW'] as const;
-			const excludedMarkets = exclusions.map(e => e.market);
+			// Get bundles if applicable
+			let bundles = null;
+			if (pricing.pricingType === "quantity_bundle") {
+				bundles = await ctx.db
+					.select()
+					.from(pricingBundles)
+					.where(eq(pricingBundles.pricingId, pricing.id))
+					.orderBy(pricingBundles.quantity);
+			}
 
 			return {
-				available: allMarkets.filter(m => !excludedMarkets.includes(m)),
-				excluded: excludedMarkets,
+				...pricing,
+				bundles,
 			};
 		}),
 
+
 	// ============================================================================
-	// SEO METADATA
+	// SEO 
 	// ============================================================================
+
 
 	getCategoryMetadataBySlug: publicProcedure
 		.input(z.object({
@@ -696,14 +531,21 @@ export const productRouter = createTRPCRouter({
 		.query(async ({ ctx, input }) => {
 			const [result] = await ctx.db
 				.select({
+					// Category basics
 					id: categories.id,
 					slug: categories.slug,
 					productLine: categories.productLine,
 					modelCode: categories.modelCode,
+
+					// Translation fields
 					name: categoryTranslations.name,
 					description: categoryTranslations.description,
+
+					// SEO fields - ✅ FIXED: Using metaTitle/metaDescription
 					metaTitle: categoryTranslations.metaTitle,
 					metaDescription: categoryTranslations.metaDescription,
+
+					// Image for OG tags
 					heroImageUrl: media.storageUrl,
 				})
 				.from(categories)
@@ -736,15 +578,24 @@ export const productRouter = createTRPCRouter({
 		.query(async ({ ctx, input }) => {
 			const [result] = await ctx.db
 				.select({
+					// Product basics
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
+
+					// Category for breadcrumbs/context
 					categorySlug: categories.slug,
 					productLineSlug: categories.productLine,
+
+					// Translation fields
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
+
+					// SEO fields - ✅ ALREADY CORRECT in your router
 					metaTitle: productTranslations.metaTitle,
 					metaDescription: productTranslations.metaDescription,
+
+					// Image for OG tags
 					heroImageUrl: media.storageUrl,
 				})
 				.from(products)
@@ -769,4 +620,7 @@ export const productRouter = createTRPCRouter({
 
 			return result || null;
 		}),
+
+
+
 });

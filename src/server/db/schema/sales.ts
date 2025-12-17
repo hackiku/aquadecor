@@ -9,17 +9,29 @@ import { orders } from "./orders";
 // Time-bound promotional campaigns (Black Friday, Summer Sale, etc.)
 // ============================================================================
 
+
 export const sales = createTable(
 	"sale",
 	(d) => ({
 		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
 
 		// Campaign info
-		name: d.text().notNull(), // "Black Friday 2025"
-		slug: d.text().notNull().unique(), // "black-friday-2025"
+		name: d.text().notNull(),
+		slug: d.text().notNull().unique(),
+
+		// LOGIC HOOKS
+		type: d.text().notNull().default('percentage'), // 'percentage' | 'fixed_amount'
+
+		// SCOPE
+		targetType: d.text().default('all'), // 'all' | 'category' | 'product_line' | 'specific_products'
+		targetCategoryIds: d.text().array(),
+		targetProductIds: d.text().array(),
+		targetMarkets: d.text().array().default(['ROW', 'US']), // Default to supported markets
 
 		// Discount details
-		discountPercent: d.integer().notNull(), // 25 for 25% off
+		discountPercent: d.integer(), // Used if type = 'percentage'
+		discountAmountCents: d.integer(), // Used if type = 'fixed_amount'
+
 		discountCode: d.text().notNull().unique(), // "BLACKFRIDAY25"
 
 		// Campaign duration
@@ -29,28 +41,23 @@ export const sales = createTable(
 		// Banner configuration
 		bannerType: d.text().notNull().default("SaleBanner"),
 		// Values: "SaleBanner" | "CountdownBanner" | "FlashSaleBanner" | "MinimalBanner"
-
 		bannerConfig: jsonb().$type<{
-			backgroundColor?: string; // Custom bg color
-			textColor?: string; // Custom text color
-			showCountdown?: boolean; // Show countdown timer
-			customMessage?: string; // Override default message
-			ctaText?: string; // Custom CTA button text
-			ctaLink?: string; // Custom CTA link
+			backgroundColor?: string;
+			textColor?: string;
+			showCountdown?: boolean;
+			customMessage?: string;
+			ctaText?: string;
+			ctaLink?: string;
 		}>(),
 
-		// Page visibility - simple array of route patterns
+		// Page visibility
 		visibleOn: d.text().array().notNull().default(["/"]),
-		// Examples: ["/", "/shop", "/shop/*"] - we'll match these in layout
 
-		// Stats (cached for performance)
+		// Stats
 		usageCount: d.integer().default(0).notNull(),
-		totalRevenue: d.integer().default(0).notNull(), // In cents
+		totalRevenue: d.integer().default(0).notNull(),
 
-		// Status
-		isActive: d.boolean().default(true).notNull(), // Manual override to disable
-
-		// Timestamps
+		isActive: d.boolean().default(true).notNull(),
 		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 		updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 	}),
