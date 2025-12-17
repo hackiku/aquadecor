@@ -9,6 +9,8 @@ import { BackgroundPanel } from "./BackgroundPanel";
 import { DimensionsOverlay } from "./DimensionsOverlay";
 import { Fish } from "./Fish";
 import type { SidePanelsType } from "../calculator-types";
+import { Dory } from "./Dory";
+import { Nemo } from "./Nemo";
 
 interface AquariumSceneProps {
 	width: number;
@@ -57,12 +59,28 @@ function AquariumTank({
 
 			{/* THE FISH */}
 			<Suspense fallback={null}>
-				<Fish
+				<Nemo
 					tankWidth={width}
 					tankHeight={height}
 					tankDepth={depth}
 				/>
 			</Suspense>
+
+			<Suspense fallback={null}>
+				<Dory
+					tankWidth={width}
+					tankHeight={height}
+					tankDepth={depth}
+				/>
+			</Suspense>
+			
+			{/* <Suspense fallback={null}>
+				<Fish
+					tankWidth={width}
+					tankHeight={height}
+					tankDepth={depth}
+				/>
+			</Suspense> */}
 
 			{/* WATER VOLUME */}
 			<mesh position={[0, -h * 0.05, 0]}>
