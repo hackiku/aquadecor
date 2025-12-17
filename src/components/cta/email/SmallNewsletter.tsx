@@ -15,11 +15,11 @@ export function SmallNewsletter() {
 
 	return (
 		<div className="relative overflow-hidden rounded-3xl border border-primary/10 bg-linear-to-tr from-primary/20 via-transparent to-primary/20 p-6">
-			<h4 className="font-display text-lg font-light">Join Our Newsletter</h4>
-			<p className="mt-2 text-sm text-gray-400">
-				Join thousands of subscribers and get exclusive insights
-			</p>
-			<form onSubmit={handleSubmit} className="mt-4 flex flex-col sm:flex-row gap-2">
+			<h4 className="font-display text-lg font-light">Join 10,000+ aquascapers</h4>
+			{/* <p className="mt-2 text-sm text-gray-400">
+				Join 10,000+ aquascapers
+			</p> */}
+			<form onSubmit={handleSubmit} className="mt-4 flex flex-col _sm:flex-row gap-2">
 				<input
 					type="email"
 					value={email}
