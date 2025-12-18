@@ -6,7 +6,6 @@ import { setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
-import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { db } from '~/server/db';
 import { products, categories } from '~/server/db/schema';
 import { eq } from 'drizzle-orm';
@@ -17,6 +16,10 @@ import { LongDescriptionSection } from "~/components/shop/product/LongDescriptio
 import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
 import { getTranslations } from "next-intl/server";
+// seo
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { generateProductSchema, generateBreadcrumbSchema } from "~/i18n/seo/json-ld";
+
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -105,6 +108,8 @@ export async function generateMetadata({ params }: ProductDetailPageProps) {
 	});
 }
 
+
+
 // ========================================
 // PAGE COMPONENT
 // ========================================
@@ -119,6 +124,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 	const t = await getTranslations('shop.productDetail');
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
+	// 1. Fetch Data in Parallel
 	const productPromise = api.product.getBySlug({
 		slug: productSlug,
 		locale: dbLocale,
@@ -137,13 +143,12 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		notFound();
 	}
 
-	// Determine if product requires custom quote
+	// 2. Logic & Transformations
 	const isCustomOnly =
-		product.pricing?.pricingType === "configured" ||
+		product.pricing?.pricingType === "configuration" || // Updated to match schema enum
 		product.stockStatus === "requires_quote" ||
 		!product.pricing;
 
-	// Inject route params into the product object
 	const productForButtons = {
 		...product,
 		categorySlug,
@@ -151,7 +156,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		name: product.name ?? "Product",
 	};
 
-	// Prepare related products (filter out current)
+	// 3. Related Products Logic
 	const relatedProducts =
 		"products" in relatedProductsResult
 			? relatedProductsResult.products.filter((p) => p.slug !== productSlug).slice(0, 4)
@@ -174,14 +179,55 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		addonOptions: null,
 	}));
 
-	// Format category name for "More from X" section
 	const categoryDisplayName = categorySlug
 		.split("-")
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(" ");
 
+	// ==================================================================
+	// 4. SEO & STRUCTURED DATA (JSON-LD)
+	// ==================================================================
+
+	// Calculate final price for Schema (or null if custom/calculator)
+	// If it's custom only, we intentionally send null so Google hides the price (avoids "€0.00")
+	const schemaPrice = isCustomOnly
+		? null
+		: (product.pricing?.salePrice ?? product.pricing?.unitPriceEurCents ?? null);
+
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
+	const canonicalUrl = `${baseUrl}/${locale}/shop/${productLine}/${categorySlug}/${productSlug}`;
+
+	// Generate Product Schema
+	const productJsonLd = generateProductSchema({
+		name: product.name ?? "Product",
+		description: product.shortDescription || product.name || "",
+		images: product.images?.map(img => img.storageUrl).filter(Boolean) as string[] || [],
+		sku: product.sku || "N/A",
+		priceCents: schemaPrice,
+		currency: (product.pricing?.currency as "EUR" | "USD") || "EUR",
+		availability: product.stockStatus || "in_stock",
+		url: canonicalUrl
+	});
+
+	// Generate Breadcrumb Schema
+	const breadcrumbJsonLd = generateBreadcrumbSchema([
+		{ name: "Home", url: `${baseUrl}/${locale}` },
+		{ name: "Shop", url: `${baseUrl}/${locale}/shop` },
+		{ name: categoryDisplayName, url: `${baseUrl}/${locale}/shop/${productLine}/${categorySlug}` },
+		{ name: product.name ?? "Product", url: canonicalUrl }
+	]);
+
 	return (
 		<HydrateClient>
+			{/* ✅ SEO: Inject JSON-LD Scripts */}
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+			/>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+			/>
 			<main className="min-h-screen">
 				{/* Hero Section - Full Width Image */}
 				<section className="relative h-[40vh] md:h-[50vh] border-b bg-black">

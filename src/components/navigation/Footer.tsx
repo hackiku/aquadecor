@@ -215,7 +215,7 @@ export function Footer() {
 					<a
 						href="https://veenie.space"
 						target="_blank"
-						rel="noopener noreferrer"
+						rel="dofollow"
 						className="group relative order-1 lg:order-2 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300 hover:scale-105"
 					>
 						{/* Subtle glow effect on hover */}

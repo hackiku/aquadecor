@@ -1,4 +1,5 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
+
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
@@ -7,6 +8,11 @@ import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { db } from '~/server/db';
 import { categories } from '~/server/db/schema';
 import { eq } from 'drizzle-orm';
+import { generateBreadcrumbSchema } from "~/i18n/seo/json-ld";
+
+// Standardize caching behavior
+export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 interface PageProps {
 	params: Promise<{
@@ -36,7 +42,7 @@ export async function generateStaticParams() {
 }
 
 // ========================================
-// SEO METADATA WITH HREFLANG
+// SEO METADATA
 // ========================================
 
 export async function generateMetadata({ params }: PageProps) {
@@ -55,11 +61,9 @@ export async function generateMetadata({ params }: PageProps) {
 		};
 	}
 
-	// Use DB translations for SEO with fallbacks
 	const title = categoryMeta.metaTitle || categoryMeta.name || categorySlug;
 	const description = categoryMeta.metaDescription || categoryMeta.description || '';
 
-	// ✅ Generate complete SEO metadata with hreflang
 	return generateSEOMetadata({
 		currentLocale: locale,
 		path: `/shop/${productLine}/${categorySlug}`,
@@ -78,41 +82,35 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 	const { locale, productLine, categorySlug } = await params;
 	const { market = "ROW" } = await searchParams;
 
-	// Enable static rendering for this locale
 	setRequestLocale(locale);
-
-	// Map US locale to English for DB
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
-	// Fetch products using the category slug AND market
-	const result = await api.product.getByCategory({
+	// 1. Parallel Data Fetching (Optimization)
+	const productsPromise = api.product.getByCategory({
 		categorySlug: categorySlug,
 		locale: dbLocale,
 		userMarket: market,
 	});
 
-	if (!result || !("products" in result)) {
-		notFound();
-	}
-
-	const { products } = result;
-
-	// Fetch full category list to get metadata (name, description, etc)
-	const categories = await api.product.getCategoriesForProductLine({
+	const categoryListPromise = api.product.getCategoriesForProductLine({
 		productLineSlug: productLine,
 		locale: dbLocale,
 	});
 
-	const currentCategory = categories.find((c) => c.slug === categorySlug);
+	const [productsResult, categoriesList] = await Promise.all([productsPromise, categoryListPromise]);
+
+	if (!productsResult || !("products" in productsResult)) {
+		notFound();
+	}
+
+	const { products } = productsResult;
+	const currentCategory = categoriesList.find((c) => c.slug === categorySlug);
 
 	// Text formatting
 	const productLineName = productLine === "3d-backgrounds" ? "3D Backgrounds" : "Aquarium Decorations";
 	const categoryName =
 		currentCategory?.name ??
-		categorySlug
-			.split("-")
-			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-			.join(" ");
+		categorySlug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
 	// Transform data for the grid
 	const productsForGrid = products.map((product) => ({
@@ -132,8 +130,49 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 		addonOptions: null,
 	}));
 
+	// ==================================================================
+	// 2. JSON-LD (CollectionPage & ItemList)
+	// ==================================================================
+
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
+	const canonicalUrl = `${baseUrl}/${locale}/shop/${productLine}/${categorySlug}`;
+
+	// Schema: Breadcrumbs
+	const breadcrumbJsonLd = generateBreadcrumbSchema([
+		{ name: "Home", url: `${baseUrl}/${locale}` },
+		{ name: "Shop", url: `${baseUrl}/${locale}/shop` },
+		{ name: categoryName, url: canonicalUrl }
+	]);
+
+	// Schema: CollectionPage with ItemList
+	const collectionJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		"name": categoryName,
+		"description": currentCategory?.description || "",
+		"url": canonicalUrl,
+		"mainEntity": {
+			"@type": "ItemList",
+			"itemListElement": products.map((p, index) => ({
+				"@type": "ListItem",
+				"position": index + 1,
+				"url": `${baseUrl}/${locale}/shop/${productLine}/${categorySlug}/${p.slug}`
+			}))
+		}
+	};
+
 	return (
 		<HydrateClient>
+			{/* Inject Schemas */}
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+			/>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+			/>
+
 			<main className="min-h-screen">
 				{/* Header Section */}
 				<section className="py-16 md:py-20 bg-linear-to-b from-muted/30 to-transparent">
@@ -166,7 +205,7 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 							</p>
 						</div>
 
-						{/* Category Features (if available) */}
+						{/* Category Features */}
 						{currentCategory?.contentBlocks?.features && (
 							<div className="mt-8 flex flex-wrap justify-center gap-3">
 								{currentCategory.contentBlocks.features.map((feature, idx) => (

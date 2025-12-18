@@ -9,6 +9,7 @@ import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
@@ -29,17 +30,16 @@ export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'shop' });
 
-	return {
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/shop/aquarium-decorations', // Canonical path (no locale)
 		title: t('metadata.decorations.title'),
 		description: t('metadata.decorations.description'),
-		openGraph: {
-			title: t('metadata.decorations.title'),
-			description: t('metadata.decorations.description'),
-			images: ['/media/images/additional-items_500px.webp'],
-			type: 'website',
-		},
-	};
+		image: '/media/images/additional-items_500px.webp', // Automatically adds to OpenGraph & Twitter
+		type: 'website',
+	});
 }
+
 
 export default async function AquariumDecorationsPage({ params }: Props) {
 	const { locale } = await params;

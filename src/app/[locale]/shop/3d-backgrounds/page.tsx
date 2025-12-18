@@ -9,6 +9,7 @@ import { CategoryGrid } from "~/components/shop/category/CategoryGrid";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
@@ -24,22 +25,19 @@ type Props = {
 	params: Promise<{ locale: string }>;
 };
 
-// Generate metadata
 export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'shop' });
 
-	return {
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/shop/3d-backgrounds', // Canonical path (no locale)
 		title: t('metadata.backgrounds.title'),
 		description: t('metadata.backgrounds.description'),
-		openGraph: {
-			title: t('metadata.backgrounds.title'),
-			description: t('metadata.backgrounds.description'),
-			images: ['/media/images/3d-backgrounds_500px.webp'],
-			type: 'website',
-		},
-	};
-}
+		image: '/media/images/3d-backgrounds_500px.webp', // Automatically adds to OpenGraph & Twitter
+		type: 'website',
+	});
+};
 
 export default async function BackgroundsPage({ params }: Props) {
 	const { locale } = await params;
