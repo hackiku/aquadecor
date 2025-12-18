@@ -1,5 +1,112 @@
 {
-  "about": {
-    "placeholder": "Translations for about in nl"
-  }
+	"about": {
+		"meta": {
+			"title": "Over Aquadecor | Handgemaakte Aquariumachterwanden Sinds 2004",
+			"description": "Ontdek het verhaal achter Aquadecor. Al meer dan 20 jaar creëren wij 's werelds meest realistische 3D-aquariumachterwanden, handgemaakt in Servië en wereldwijd verzonden."
+		},
+		"hero": {
+			"badge": "Opgericht 2004",
+			"title": "Op de natuur geïnspireerde aquascapers sinds 2004",
+			"subtitle": "Wij zijn Aquadecor, een in Servië gevestigd bedrijf dat unieke, handgemaakte 3D-achterwanden voor aquaria maakt. Al meer dan 20 jaar perfectioneren we de kunst om de natuur in jouw aquarium te brengen.",
+			"ctaStory": "Ons verhaal",
+			"ctaShop": "Bekijk producten",
+			"stats": {
+				"years": "Jaren actief",
+				"customers": "Tevreden klanten",
+				"designs": "Unieke ontwerpen",
+				"countries": "Landen bediend"
+			}
+		},
+		"story": {
+			"badge": "Het Begin",
+			"title": "Alleen de natuur kan ons kopiëren",
+			"paragraph1": "Ons verhaal begon in een schuurtje van 9m² in Servië. Oprichter Florian Kovac bracht uren door met het perfectioneren van zijn ambacht en maakte de eerste 3D-aquariumachterwanden met de hand. Hij wist vanaf het begin dat dit iets speciaals was.",
+			"paragraph2": "\"Ik bracht uren door met kijken naar het resultaat van mijn werk,\" herinnert Florian zich. \"Stukje bij beetje kwam het hele plaatje tevoorschijn. Mijn favoriete deel zijn de laatste details—de kers op de taart. Het schilderwerk beïnvloedt de uiteindelijke look aanzienlijk, en je kunt de uitstraling van een 3D-achterwand er gemakkelijk mee veranderen.\"",
+			"paragraph3": "Wat in 2004 begon als een lokale Servische operatie, is uitgegroeid tot een wereldwijd merk. Tegenwoordig wordt 95% van onze producten internationaal verzonden. We hebben meer dan 1.000 unieke modellen ontworpen en meer dan 50.000 klanten in meer dan 50 landen bediend.",
+			"ctaInterview": "Lees het volledige interview",
+			"quote": {
+				"text": "Elke achterwand wordt met de hand gebeeldhouwd en geschilderd. We bestuderen hoe algen natuurlijk zouden groeien, hoe licht over rotsformaties speelt, hoe wortels zich verstrengelen. Het doel is geen perfectie; het is authenticiteit.",
+				"author": "Florian Kovac",
+				"title": "Oprichter & Hoofdontwerper"
+			},
+			"milestones": {
+				"founding": {
+					"title": "Het Schuurtijdperk",
+					"description": "Begonnen in een werkplaats van 9m² in Servië, achterwanden één voor één makend"
+				},
+				"global": {
+					"title": "Wereldwijd gaan",
+					"description": "Uitgebreid naar 50+ landen met een internationaal distributienetwerk"
+				},
+				"today": {
+					"title": "Industrieleiders",
+					"description": "1000+ unieke modellen, 50K+ klanten, nog steeds handgemaakt in Servië"
+				}
+			}
+		},
+		"process": {
+			"badge": "Vakmanschap",
+			"title": "Hoe we elke achterwand maken",
+			"subtitle": "Elke Aquadecor-achterwand doorloopt ons zorgvuldige 4-stappenproces, geperfectioneerd door meer dan 20 jaar vakmanschap.",
+			"steps": {
+				"sculpt": {
+					"title": "Beeldhouwen & Vormen",
+					"description": "Handgebeeldhouwd uit een polyurethaan/hars-mix, waarbij elk natuurlijk detail en textuur wordt vastgelegd"
+				},
+				"paint": {
+					"title": "Schilderen & Detailleren",
+					"description": "Meerdere lagen aquariumveilige verf creëren diepte en realisme, en bootsen natuurlijke verwering na"
+				},
+				"seal": {
+					"title": "Verzegelen & Testen",
+					"description": "Chemicaliënbestendige coating zorgt voor veiligheid en duurzaamheid. Elk stuk ondergaat een strenge kwaliteitscontrole"
+				},
+				"ship": {
+					"title": "Verpakken & Verzenden",
+					"description": "Zorgvuldig gedesinfecteerd, genummerd voor eenvoudige montage en wereldwijd met zorg verzonden"
+				}
+			},
+			"imageCaption": "Elke achterwand is een uniek stuk functionele kunst, gemaakt door ervaren ambachtslieden"
+		},
+		"family": {
+			"badge": "De DecorGroup",
+			"title": "Twee bedrijven. Eén visie.",
+			"subtitle": "DecorGroup bestaat uit AquaDecor en TerraDecor, beide toegewijd om de natuur in jouw ruimte te brengen met ongeëvenaard vakmanschap.",
+			"companies": {
+				"aquadecor": {
+					"name": "AquaDecor",
+					"tagline": "Aquariumspecialisten",
+					"description": "Meer dan 70 modellen op maat gemaakte aquariumachterwanden en decoraties. Van Malawi-rotsformaties tot Amazone-wortelsystemen, elk stuk is uniek en geïnspireerd door natuurlijke habitats.",
+					"founded": "Opr. 2004"
+				},
+				"terradecor": {
+					"name": "TerraDecor",
+					"tagline": "Terrarium & Interieurontwerp",
+					"description": "Opgericht kort na het succes van AquaDecor, brengt TerraDecor hetzelfde nauwgezette vakmanschap naar terrariuminterieurs en architecturale decoratieprojecten.",
+					"founded": "Opr. 2005"
+				}
+			},
+			"team": {
+				"title": "Toegewijde vakmensen",
+				"description": "Ons team werkt dagelijks aan het perfectioneren van nieuwe modellen, met aandacht voor de kleinste details—vormen, kleuren, natuurlijke texturen, zelfs hoe algen natuurlijk zouden groeien. Elke achterwand ondergaat een strenge kwaliteitscontrole en desinfectie voordat deze zorgvuldig wordt verpakt en verzonden vanuit ons distributiecentrum.",
+				"badges": {
+					"custom": "Op Maat Gemaakt Design",
+					"consultation": "Persoonlijk Advies",
+					"patented": "Gepatenteerd Proces"
+				}
+			},
+			"trademark": "Alle AquaDecor-producten en productieprocessen zijn gepatenteerd. Onze naam is een geregistreerd handelsmerk in de EU, de VS en vele andere landen."
+		},
+		"gallery": {
+			"title": "Zie ze in actie",
+			"subtitle": "Duizenden aquariumliefhebbers wereldwijd vertrouwen op Aquadecor-achterwanden. Bekijk echte opstellingen van onze community.",
+			"cta": "Bekijk volledige galerij",
+			"placeholder": "Galerij-component laden..."
+		},
+		"distributors": {
+			"title": "Onze wereldwijde partners",
+			"subtitle": "Vertrouwde distributeurs wereldwijd",
+			"cta": "Bekijk alle partners"
+		}
+	}
 }

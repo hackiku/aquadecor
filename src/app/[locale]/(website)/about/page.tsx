@@ -1,55 +1,57 @@
-// src/app/about/page.tsx
-// UPDATED VERSION - Add FeaturedArticles component
+// src/app/[locale]/(website)/about/page.tsx
 
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { routing } from "~/i18n/routing";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import type { Metadata } from "next";
 import { HeroSection } from "./_components/HeroSection";
 import { StorySection } from "./_components/StorySection";
-import { TechSection } from "./_components/TechSection";
-import { ValuesSection } from "./_components/ValuesSection";
 import { FamilySection } from "./_components/FamilySection";
-import { DistributorsGrid } from "../distributors/DistributorsGrid";
-import { FeaturedArticles } from "~/components/blog/FeaturedArticles";
+import { ProcessSection } from "./_components/ProcessSection";
+import { GalleryPreview } from "./_components/GalleryPreview";
+import { DistributorsPreview } from "./_components/DistributorsPreview";
 
-export default function AboutPage() {
+type Props = {
+	params: Promise<{ locale: string }>;
+};
+
+// ========================================
+// SEO METADATA
+// ========================================
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'about' });
+
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/about',
+		title: t('meta.title'),
+		description: t('meta.description'),
+		type: 'website',
+	});
+}
+
+// ========================================
+// STATIC GENERATION
+// ========================================
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function AboutPage({ params }: Props) {
+	const { locale } = await params;
+	
+	// Enable static rendering
+	setRequestLocale(locale);
+
 	return (
-		<main className="min-h-screen">
+		<main className="min-h-screen -mt-16">
 			<HeroSection />
-			<ValuesSection />
 			<StorySection />
-			<TechSection />
-			{/* <StoreSlider /> */}
+			<ProcessSection />
 			<FamilySection />
-
-			{/* Blog Articles - NEW! */}
-			<FeaturedArticles
-				limit={3}
-				title="Latest from Our Blog"
-				description="Expert tips, guides, and inspiration for your aquarium"
-			/>
-
-			{/* Distributors Preview */}
-			<section className="py-16 md:py-24 bg-accent/5">
-				<div className="container px-4 max-w-7xl mx-auto">
-					<div className="flex items-center justify-between mb-12">
-						<div>
-							<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
-								Our Global Partners
-							</h2>
-							<p className="text-lg text-muted-foreground font-display font-light">
-								Trusted distributors worldwide
-							</p>
-						</div>
-						<a
-							href="/distributors"
-							className="text-primary hover:underline font-display font-medium"
-						>
-							View all →
-						</a>
-					</div>
-
-					{/* Show first 6 distributors */}
-					<DistributorsGrid className="lg:grid-cols-3" />
-				</div>
-			</section>
+			<GalleryPreview />
+			<DistributorsPreview />
 		</main>
 	);
 }

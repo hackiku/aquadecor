@@ -1,5 +1,112 @@
 {
-  "about": {
-    "placeholder": "Translations for about in en"
-  }
+	"about": {
+		"meta": {
+			"title": "About Aquadecor | Handcrafted Aquarium Backgrounds Since 2004",
+			"description": "Discover the story behind Aquadecor. For over 20 years, we've been creating the world's most realistic 3D aquarium backgrounds, handcrafted in Serbia and shipped worldwide."
+		},
+		"hero": {
+			"badge": "Est. 2004",
+			"title": "Nature-Inspired Aquascapers Since 2004",
+			"subtitle": "We are Aquadecor, a Serbia-based company that creates unique, handmade 3D backgrounds for aquariums. For over 20 years, we've perfected the art of bringing nature into your fish tank.",
+			"ctaStory": "Our Story",
+			"ctaShop": "Browse Products",
+			"stats": {
+				"years": "Years in Business",
+				"customers": "Happy Customers",
+				"designs": "Unique Designs",
+				"countries": "Countries Served"
+			}
+		},
+		"story": {
+			"badge": "The Beginning",
+			"title": "Only Nature Can Copy Us",
+			"paragraph1": "Our story started in a 9m² shed in Serbia. Founder Florian Kovac spent hours perfecting his craft, creating the first 3D aquarium backgrounds by hand. He knew from the start this was something special.",
+			"paragraph2": "\"I would spend hours looking at the result of my work,\" Florian recalls. \"Bit by bit, the whole picture started to show up. My favorite part is the final details—the cherry on top. Painting affects the final look substantially, and you can change the appearance of a 3D background easily.\"",
+			"paragraph3": "What started as a local Serbian operation in 2004 has grown into a worldwide brand. Today, 95% of our products ship internationally. We've designed over 1,000 unique models and served 50,000+ customers across 50+ countries.",
+			"ctaInterview": "Read the full interview",
+			"quote": {
+				"text": "Every background is hand-sculpted and painted. We study how algae would naturally grow, how light plays across rock formations, how roots intertwine. The goal isn't perfection; it's authenticity.",
+				"author": "Florian Kovac",
+				"title": "Founder & Head Designer"
+			},
+			"milestones": {
+				"founding": {
+					"title": "The Shed Era",
+					"description": "Started in a 9m² workshop in Serbia, creating backgrounds one at a time"
+				},
+				"global": {
+					"title": "Going Global",
+					"description": "Expanded to 50+ countries with international distribution network"
+				},
+				"today": {
+					"title": "Industry Leaders",
+					"description": "1000+ unique models, 50K+ customers, still handcrafted in Serbia"
+				}
+			}
+		},
+		"process": {
+			"badge": "Craftsmanship",
+			"title": "How We Create Each Background",
+			"subtitle": "Every Aquadecor background goes through our meticulous 4-step process, perfected over 20 years of craftsmanship.",
+			"steps": {
+				"sculpt": {
+					"title": "Sculpt & Mold",
+					"description": "Hand-sculpted from polyurethane/resin blend, capturing every natural detail and texture"
+				},
+				"paint": {
+					"title": "Paint & Detail",
+					"description": "Multiple layers of aquarium-safe paint create depth and realism, mimicking natural weathering"
+				},
+				"seal": {
+					"title": "Seal & Test",
+					"description": "Chemical-resistant coating ensures safety and durability. Each piece undergoes rigorous quality control"
+				},
+				"ship": {
+					"title": "Package & Ship",
+					"description": "Carefully disinfected, numbered for easy assembly, and shipped worldwide with care"
+				}
+			},
+			"imageCaption": "Each background is a unique piece of functional art, crafted by experienced artisans"
+		},
+		"family": {
+			"badge": "The DecorGroup",
+			"title": "Two Companies. One Vision.",
+			"subtitle": "DecorGroup consists of AquaDecor and TerraDecor, both dedicated to bringing nature into your space with unmatched craftsmanship.",
+			"companies": {
+				"aquadecor": {
+					"name": "AquaDecor",
+					"tagline": "Aquarium Specialists",
+					"description": "Over 70 models of custom-made aquarium backgrounds and decorations. From Malawi rock formations to Amazonian root systems, every piece is unique and inspired by natural habitats.",
+					"founded": "Est. 2004"
+				},
+				"terradecor": {
+					"name": "TerraDecor",
+					"tagline": "Terrarium & Interior Design",
+					"description": "Founded shortly after AquaDecor's success, TerraDecor brings the same meticulous craftsmanship to terrarium interiors and architectural decoration projects.",
+					"founded": "Est. 2005"
+				}
+			},
+			"team": {
+				"title": "Dedicated Craftspeople",
+				"description": "Our team works daily to perfect new models, paying attention to the tiniest details—shapes, colors, natural textures, even how algae would naturally grow. Every background undergoes rigorous quality control and disinfection before being carefully packaged and shipped from our distribution center.",
+				"badges": {
+					"custom": "Custom Design Service",
+					"consultation": "In-Person Consultations",
+					"patented": "Patented Process"
+				}
+			},
+			"trademark": "All AquaDecor products and production processes are patented. Our name is a registered trademark in the EU, USA, and many other countries."
+		},
+		"gallery": {
+			"title": "See Them in Action",
+			"subtitle": "Thousands of aquarium enthusiasts worldwide trust Aquadecor backgrounds. Browse real setups from our community.",
+			"cta": "View Full Gallery",
+			"placeholder": "Gallery component loading..."
+		},
+		"distributors": {
+			"title": "Our Global Partners",
+			"subtitle": "Trusted distributors worldwide",
+			"cta": "View All Partners"
+		}
+	}
 }

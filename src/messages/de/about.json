@@ -1,5 +1,112 @@
 {
-  "about": {
-    "placeholder": "Translations for about in de"
-  }
+	"about": {
+		"meta": {
+			"title": "Über Aquadecor | Handgefertigte Aquarium-Rückwände seit 2004",
+			"description": "Entdecken Sie die Geschichte hinter Aquadecor. Seit über 20 Jahren kreieren wir die weltweit realistischsten 3D-Aquarium-Rückwände, handgefertigt in Serbien und weltweit versandt."
+		},
+		"hero": {
+			"badge": "Gegr. 2004",
+			"title": "Von der Natur inspirierte Aquascaper seit 2004",
+			"subtitle": "Wir sind Aquadecor, ein Unternehmen aus Serbien, das einzigartige, handgefertigte 3D-Rückwände für Aquarien herstellt. Seit über 20 Jahren perfektionieren wir die Kunst, ein Stück Natur in Ihr Aquarium zu bringen.",
+			"ctaStory": "Unsere Geschichte",
+			"ctaShop": "Produkte ansehen",
+			"stats": {
+				"years": "Jahre im Geschäft",
+				"customers": "Zufriedene Kunden",
+				"designs": "Einzigartige Designs",
+				"countries": "Belieferte Länder"
+			}
+		},
+		"story": {
+			"badge": "Der Anfang",
+			"title": "Nur die Natur kann uns kopieren",
+			"paragraph1": "Unsere Geschichte begann in einem 9m² großen Schuppen in Serbien. Gründer Florian Kovac verbrachte Stunden damit, sein Handwerk zu perfektionieren und die ersten 3D-Rückwände von Hand zu fertigen. Er wusste von Anfang an, dass dies etwas Besonderes war.",
+			"paragraph2": "„Ich verbrachte Stunden damit, das Ergebnis meiner Arbeit zu betrachten“, erinnert sich Florian. „Stück für Stück zeigte sich das Gesamtbild. Mein Lieblingsteil sind die letzten Details – das i-Tüpfelchen. Die Bemalung beeinflusst das Endresultat maßgeblich, und man kann das Aussehen einer 3D-Rückwand dadurch leicht verändern.“",
+			"paragraph3": "Was 2004 als lokaler serbischer Betrieb begann, ist zu einer weltweiten Marke gewachsen. Heute werden 95% unserer Produkte international versandt. Wir haben über 1.000 einzigartige Modelle entworfen und mehr als 50.000 Kunden in über 50 Ländern bedient.",
+			"ctaInterview": "Vollständiges Interview lesen",
+			"quote": {
+				"text": "Jede Rückwand wird handmodelliert und bemalt. Wir studieren, wie Algen natürlich wachsen würden, wie Licht über Felsformationen spielt, wie Wurzeln sich verflechten. Das Ziel ist nicht Perfektion – es ist Authentizität.",
+				"author": "Florian Kovac",
+				"title": "Gründer & Chefdesigner"
+			},
+			"milestones": {
+				"founding": {
+					"title": "Die Schuppen-Ära",
+					"description": "Start in einer 9m² Werkstatt in Serbien, jede Rückwand einzeln gefertigt"
+				},
+				"global": {
+					"title": "Globale Expansion",
+					"description": "Expansion in über 50 Länder mit internationalem Vertriebsnetz"
+				},
+				"today": {
+					"title": "Branchenführer",
+					"description": "1000+ einzigartige Modelle, 50K+ Kunden, immer noch handgefertigt in Serbien"
+				}
+			}
+		},
+		"process": {
+			"badge": "Handwerkskunst",
+			"title": "Wie wir jede Rückwand erschaffen",
+			"subtitle": "Jede Aquadecor-Rückwand durchläuft unseren sorgfältigen 4-Schritte-Prozess, der über 20 Jahre Handwerkskunst perfektioniert wurde.",
+			"steps": {
+				"sculpt": {
+					"title": "Modellieren & Formen",
+					"description": "Handmodelliert aus einer Polyurethan/Harz-Mischung, um jedes natürliche Detail und jede Textur einzufangen"
+				},
+				"paint": {
+					"title": "Bemalen & Detaillieren",
+					"description": "Mehrere Schichten aquariensicherer Farbe erzeugen Tiefe und Realismus und ahmen natürliche Verwitterung nach"
+				},
+				"seal": {
+					"title": "Versiegeln & Testen",
+					"description": "Chemikalienbeständige Beschichtung sorgt für Sicherheit und Haltbarkeit. Jedes Stück durchläuft eine strenge Qualitätskontrolle"
+				},
+				"ship": {
+					"title": "Verpacken & Versenden",
+					"description": "Sorgfältig desinfiziert, für einfache Montage nummeriert und mit Sorgfalt weltweit versandt"
+				}
+			},
+			"imageCaption": "Jede Rückwand ist ein einzigartiges Stück funktionaler Kunst, gefertigt von erfahrenen Handwerkern"
+		},
+		"family": {
+			"badge": "Die DecorGroup",
+			"title": "Zwei Firmen. Eine Vision.",
+			"subtitle": "Die DecorGroup besteht aus AquaDecor und TerraDecor, beide widmen sich mit unübertroffener Handwerkskunst dem Ziel, Natur in Ihren Raum zu bringen.",
+			"companies": {
+				"aquadecor": {
+					"name": "AquaDecor",
+					"tagline": "Aquarium-Spezialisten",
+					"description": "Über 70 Modelle maßgefertigter Aquarium-Rückwände und Dekorationen. Von Malawi-Felsformationen bis zu Amazonas-Wurzelsystemen ist jedes Stück einzigartig und von natürlichen Lebensräumen inspiriert.",
+					"founded": "Gegr. 2004"
+				},
+				"terradecor": {
+					"name": "TerraDecor",
+					"tagline": "Terrarium & Inneneinrichtung",
+					"description": "Kurz nach dem Erfolg von AquaDecor gegründet, bringt TerraDecor dieselbe sorgfältige Handwerkskunst in Terrarien-Interieurs und architektonische Dekorationsprojekte.",
+					"founded": "Gegr. 2005"
+				}
+			},
+			"team": {
+				"title": "Engagierte Handwerker",
+				"description": "Unser Team arbeitet täglich an der Perfektionierung neuer Modelle und achtet auf kleinste Details – Formen, Farben, natürliche Texturen, sogar wie Algen natürlich wachsen würden. Jede Rückwand durchläuft eine strenge Qualitätskontrolle und Desinfektion, bevor sie sorgfältig verpackt und von unserem Verteilzentrum aus versandt wird.",
+				"badges": {
+					"custom": "Individueller Design-Service",
+					"consultation": "Persönliche Beratung",
+					"patented": "Patentierter Prozess"
+				}
+			},
+			"trademark": "Alle AquaDecor-Produkte und Produktionsprozesse sind patentiert. Unser Name ist eine eingetragene Marke in der EU, den USA und vielen anderen Ländern."
+		},
+		"gallery": {
+			"title": "Im Einsatz sehen",
+			"subtitle": "Tausende Aquarianer weltweit vertrauen auf Aquadecor-Rückwände. Durchstöbern Sie echte Setups unserer Community.",
+			"cta": "Zur Galerie",
+			"placeholder": "Galerie-Komponente lädt..."
+		},
+		"distributors": {
+			"title": "Unsere globalen Partner",
+			"subtitle": "Vertrauenswürdige Händler weltweit",
+			"cta": "Alle Partner ansehen"
+		}
+	}
 }

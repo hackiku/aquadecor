@@ -1,5 +1,112 @@
 {
-  "about": {
-    "placeholder": "Translations for about in it"
-  }
+	"about": {
+		"meta": {
+			"title": "Chi Siamo | Sfondi per Acquari Artigianali dal 2004",
+			"description": "Scopri la storia di Aquadecor. Da oltre 20 anni creiamo gli sfondi 3D per acquari più realistici al mondo, fatti a mano in Serbia e spediti ovunque."
+		},
+		"hero": {
+			"badge": "Fondato nel 2004",
+			"title": "Aquascapers ispirati dalla natura dal 2004",
+			"subtitle": "Siamo Aquadecor, un'azienda con sede in Serbia che crea sfondi 3D unici e fatti a mano per acquari. Da oltre 20 anni perfezioniamo l'arte di portare la natura nel tuo acquario.",
+			"ctaStory": "La nostra storia",
+			"ctaShop": "Vedi prodotti",
+			"stats": {
+				"years": "Anni di attività",
+				"customers": "Clienti felici",
+				"designs": "Design unici",
+				"countries": "Paesi serviti"
+			}
+		},
+		"story": {
+			"badge": "L'Inizio",
+			"title": "Solo la natura può copiarci",
+			"paragraph1": "La nostra storia è iniziata in un capanno di 9m² in Serbia. Il fondatore Florian Kovac passava ore a perfezionare la sua tecnica, creando i primi sfondi 3D a mano. Sapeva fin dall'inizio che si trattava di qualcosa di speciale.",
+			"paragraph2": "\"Passavo ore a guardare il risultato del mio lavoro,\" ricorda Florian. \"Pezzo dopo pezzo, l'immagine completa iniziava a mostrarsi. La mia parte preferita sono i dettagli finali—la ciliegina sulla torta. La pittura influenza sostanzialmente l'aspetto finale, e puoi cambiare l'apparenza di uno sfondo 3D facilmente.\"",
+			"paragraph3": "Ciò che è iniziato come un'operazione locale serba nel 2004 è cresciuto fino a diventare un marchio mondiale. Oggi, il 95% dei nostri prodotti viene spedito a livello internazionale. Abbiamo progettato oltre 1.000 modelli unici e servito più di 50.000 clienti in oltre 50 paesi.",
+			"ctaInterview": "Leggi l'intervista completa",
+			"quote": {
+				"text": "Ogni sfondo è scolpito e dipinto a mano. Studiamo come le alghe crescerebbero naturalmente, come la luce gioca sulle formazioni rocciose, come le radici si intrecciano. L'obiettivo non è la perfezione; è l'autenticità.",
+				"author": "Florian Kovac",
+				"title": "Fondatore e Capo Designer"
+			},
+			"milestones": {
+				"founding": {
+					"title": "L'era del capanno",
+					"description": "Iniziato in un laboratorio di 9m² in Serbia, creando sfondi uno alla volta"
+				},
+				"global": {
+					"title": "Espansione globale",
+					"description": "Espanso in oltre 50 paesi con una rete di distribuzione internazionale"
+				},
+				"today": {
+					"title": "Leader del settore",
+					"description": "1000+ modelli unici, 50K+ clienti, ancora fatti a mano in Serbia"
+				}
+			}
+		},
+		"process": {
+			"badge": "Artigianato",
+			"title": "Come creiamo ogni sfondo",
+			"subtitle": "Ogni sfondo Aquadecor passa attraverso il nostro meticoloso processo in 4 fasi, perfezionato in oltre 20 anni di artigianato.",
+			"steps": {
+				"sculpt": {
+					"title": "Scolpire e Formare",
+					"description": "Scolpito a mano da una miscela di poliuretano/resina, catturando ogni dettaglio e texture naturale"
+				},
+				"paint": {
+					"title": "Dipingere e Dettagliare",
+					"description": "Strati multipli di vernice sicura per acquari creano profondità e realismo, imitando l'invecchiamento naturale"
+				},
+				"seal": {
+					"title": "Sigillare e Testare",
+					"description": "Il rivestimento resistente agli agenti chimici garantisce sicurezza e durata. Ogni pezzo subisce un rigoroso controllo qualità"
+				},
+				"ship": {
+					"title": "Imballare e Spedire",
+					"description": "Accuratamente disinfettato, numerato per un facile montaggio e spedito in tutto il mondo con cura"
+				}
+			},
+			"imageCaption": "Ogni sfondo è un pezzo unico di arte funzionale, realizzato da artigiani esperti"
+		},
+		"family": {
+			"badge": "Il DecorGroup",
+			"title": "Due aziende. Una visione.",
+			"subtitle": "DecorGroup è composto da AquaDecor e TerraDecor, entrambe dedicate a portare la natura nel tuo spazio con un artigianato impareggiabile.",
+			"companies": {
+				"aquadecor": {
+					"name": "AquaDecor",
+					"tagline": "Specialisti in Acquari",
+					"description": "Oltre 70 modelli di sfondi e decorazioni per acquari su misura. Dalle formazioni rocciose del Malawi ai sistemi di radici amazzoniche, ogni pezzo è unico e ispirato agli habitat naturali.",
+					"founded": "Fond. 2004"
+				},
+				"terradecor": {
+					"name": "TerraDecor",
+					"tagline": "Terrari e Design d'Interni",
+					"description": "Fondata poco dopo il successo di AquaDecor, TerraDecor porta lo stesso meticoloso artigianato negli interni dei terrari e nei progetti di decorazione architettonica.",
+					"founded": "Fond. 2005"
+				}
+			},
+			"team": {
+				"title": "Artigiani Dedicati",
+				"description": "Il nostro team lavora quotidianamente per perfezionare nuovi modelli, prestando attenzione ai minimi dettagli—forme, colori, texture naturali, persino come le alghe crescerebbero naturalmente. Ogni sfondo subisce un rigoroso controllo qualità e disinfezione prima di essere accuratamente imballato e spedito dal nostro centro di distribuzione.",
+				"badges": {
+					"custom": "Servizio di Design Personalizzato",
+					"consultation": "Consulenze di Persona",
+					"patented": "Processo Brevettato"
+				}
+			},
+			"trademark": "Tutti i prodotti e i processi di produzione AquaDecor sono brevettati. Il nostro nome è un marchio registrato nell'UE, negli USA e in molti altri paesi."
+		},
+		"gallery": {
+			"title": "Vedili in azione",
+			"subtitle": "Migliaia di appassionati di acquari in tutto il mondo si fidano degli sfondi Aquadecor. Sfoglia allestimenti reali della nostra community.",
+			"cta": "Vedi galleria completa",
+			"placeholder": "Caricamento galleria..."
+		},
+		"distributors": {
+			"title": "I nostri partner globali",
+			"subtitle": "Distributori fidati in tutto il mondo",
+			"cta": "Vedi tutti i partner"
+		}
+	}
 }
