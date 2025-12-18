@@ -11,7 +11,7 @@ import calculator from '~/messages/en/calculator.json';
 import about from '~/messages/en/about.json';
 import blog from '~/messages/en/blog.json';
 import legal from '~/messages/en/legal.json';
-import register from '~/messages/en/register.json';
+import account from '~/messages/en/account.json';
 import faq from '~/messages/en/faq.json';
 
 /**
@@ -31,7 +31,7 @@ export type Messages =
 	typeof about &
 	typeof blog &
 	typeof legal &
-	typeof register &
+	typeof account &
 	typeof faq;
 
 /**
