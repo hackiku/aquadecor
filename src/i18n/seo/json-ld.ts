@@ -8,7 +8,6 @@ type ProductSchemaParams = {
 	sku: string;
 	mpn?: string;
 	brandName?: string;
-	// ✅ CHANGED: Allow null or undefined for price
 	priceCents: number | null | undefined;
 	currency: "EUR" | "USD";
 	availability: "in_stock" | "out_of_stock" | "made_to_order" | "requires_quote" | "discontinued" | string;
@@ -19,12 +18,11 @@ export function generateProductSchema(product: ProductSchemaParams) {
 	const availabilityMap: Record<string, string> = {
 		in_stock: "https://schema.org/InStock",
 		made_to_order: "https://schema.org/InStock",
-		requires_quote: "https://schema.org/PreOrder", // or omit offer entirely
+		requires_quote: "https://schema.org/PreOrder",
 		out_of_stock: "https://schema.org/OutOfStock",
 		discontinued: "https://schema.org/Discontinued",
 	};
 
-	// Base Schema
 	const schema: any = {
 		"@context": "https://schema.org/",
 		"@type": "Product",
@@ -39,9 +37,6 @@ export function generateProductSchema(product: ProductSchemaParams) {
 		}
 	};
 
-	// ✅ LOGIC: Only add "Offer" if we have a real price (> 0)
-	// If it's a calculator product (price = 0 or null), we simply don't tell Google a price.
-	// This prevents "€0.00" in search results.
 	if (product.priceCents && product.priceCents > 0) {
 		schema.offers = {
 			"@type": "Offer",
@@ -70,20 +65,24 @@ export function generateBreadcrumbSchema(items: { name: string; url: string }[])
 }
 
 export function generateArticleSchema(post: BlogPost, locale: string) {
-	const baseUrl = "https://aquadecorbackgrounds.com";
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://aquadecorbackgrounds.com";
 
-	return {
+	const schema: any = {
 		"@context": "https://schema.org",
-		"@type": "BlogPosting", // More specific than Article
+		"@type": "BlogPosting",
 		"mainEntityOfPage": {
 			"@type": "WebPage",
 			"@id": `${baseUrl}/${locale}/blog/${post.slug}`
 		},
 		"headline": post.title,
 		"description": post.description,
-		"image": post.cover.url,
+		"image": {
+			"@type": "ImageObject",
+			"url": post.cover.url,
+			...(post.cover.alternativeText && { "caption": post.cover.alternativeText })
+		},
 		"author": {
-			"@type": "Organization", // Or Person if you have author data
+			"@type": "Organization",
 			"name": "Aquadecor Team",
 			"url": baseUrl
 		},
@@ -92,10 +91,80 @@ export function generateArticleSchema(post: BlogPost, locale: string) {
 			"name": "Aquadecor",
 			"logo": {
 				"@type": "ImageObject",
-				"url": `${baseUrl}/logo.png` // Ensure this exists or use a CDN link
+				"url": `${baseUrl}/logo.png`
 			}
 		},
 		"datePublished": post.publishedAt,
 		"dateModified": post.updatedAt
+	};
+
+	if (post.reading_time) {
+		schema.timeRequired = `PT${post.reading_time}M`;
+	}
+
+	return schema;
+}
+
+export function generateWebApplicationSchema(params: {
+	name: string;
+	description: string;
+	url: string;
+	features?: string[];
+}) {
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://aquadecorbackgrounds.com";
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": params.name,
+		"description": params.description,
+		"url": params.url,
+		"applicationCategory": "DesignApplication",
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "EUR",
+			"description": "Free online tool"
+		},
+		...(params.features && {
+			"featureList": params.features
+		}),
+		"publisher": {
+			"@type": "Organization",
+			"name": "Aquadecor",
+			"logo": {
+				"@type": "ImageObject",
+				"url": `${baseUrl}/logo.png`
+			}
+		}
+	};
+}
+
+/**
+ * Generate FAQPage schema for rich snippets in Google Search
+ * Shows expandable Q&A cards directly in search results
+ * 
+ * @param questions - Array of FAQ items with question and answer
+ * @returns FAQPage schema for injection
+ */
+export function generateFAQSchema(questions: Array<{ question: string; answer: string }>) {
+	// Filter out any empty questions/answers
+	const validQuestions = questions.filter(q => q.question && q.answer);
+
+	if (validQuestions.length === 0) {
+		return null; // Don't generate schema if no valid FAQs
+	}
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": validQuestions.map(item => ({
+			"@type": "Question",
+			"name": item.question,
+			"acceptedAnswer": {
+				"@type": "Answer",
+				"text": item.answer
+			}
+		}))
 	};
 }

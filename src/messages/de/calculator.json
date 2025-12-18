@@ -1,5 +1,27 @@
 {
-  "calculator": {
-    "placeholder": "Translations for calculator in de"
-  }
+	"calculator": {
+		"metadata": {
+			"title": "Rechner für individuelle Aquarium-Rückwände | Aquadecor",
+			"description": "Konfigurieren Sie Ihre perfekte 3D-Aquarium-Rückwand in Echtzeit. Passen Sie Maße an, wählen Sie Materialien und erhalten Sie eine sofortige Preisschätzung."
+		},
+		"hero": {
+			"badge": "How much is the fish?",
+			"title": "Rechner für individuelle Aquarium-Rückwände",
+			"subtitle": "Konfigurieren Sie Ihre perfekte 3D-Rückwand in Echtzeit. Passen Sie Maße an, wählen Sie Materialien und erhalten Sie eine sofortige Preisschätzung."
+		},
+		"trustSignals": {
+			"responseTime": {
+				"value": "24h",
+				"label": "Antwortzeit für Angebote"
+			},
+			"experience": {
+				"value": "20+",
+				"label": "Jahre Erfahrung"
+			},
+			"handcrafted": {
+				"value": "100%",
+				"label": "Handgefertigt"
+			}
+		}
+	}
 }

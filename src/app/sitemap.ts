@@ -176,24 +176,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		);
 
 		// ========================================
-		// 7. BLOG POSTS (Placeholder / Strapi Integration)
-		// ========================================
-
-		// TODO: Fetch from Strapi when ready
-		/*
-		const blogPosts = await fetchStrapiPosts();
-		for (const post of blogPosts) {
-			sitemapEntries.push({
-				url: `${baseUrl}/${locale}/blog/${post.slug}`,
-				lastModified: post.updatedAt,
-				changeFrequency: 'monthly',
-				priority: 0.6,
-				images: [post.coverImage],
-			});
-		}
-		*/
-
-		// ========================================
 		// 8. LEGAL PAGES (Low Priority)
 		// ========================================
 

@@ -1,5 +1,27 @@
 {
-  "calculator": {
-    "placeholder": "Translations for calculator in it"
-  }
+	"calculator": {
+		"metadata": {
+			"title": "Calcolatore Sfondi Acquario su Misura | Aquadecor",
+			"description": "Configura il tuo sfondo 3D per acquario perfetto in tempo reale. Regola le dimensioni, scegli i materiali e ottieni una stima immediata del prezzo."
+		},
+		"hero": {
+			"badge": "How much is the fish?",
+			"title": "Calcolatore Sfondi Acquario su Misura",
+			"subtitle": "Configura il tuo sfondo 3D perfetto in tempo reale. Regola le dimensioni, scegli i materiali e ottieni una stima immediata del prezzo."
+		},
+		"trustSignals": {
+			"responseTime": {
+				"value": "24h",
+				"label": "Tempo risposta preventivo"
+			},
+			"experience": {
+				"value": "20+",
+				"label": "Anni di esperienza"
+			},
+			"handcrafted": {
+				"value": "100%",
+				"label": "Fatto a mano"
+			}
+		}
+	}
 }

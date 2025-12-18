@@ -1,5 +1,27 @@
 {
-  "calculator": {
-    "placeholder": "Translations for calculator in en"
-  }
+	"calculator": {
+		"metadata": {
+			"title": "Custom Aquarium Background Calculator | Aquadecor",
+			"description": "Configure your perfect 3D aquarium background in real-time. Adjust dimensions, choose materials, and get an instant price estimate."
+		},
+		"hero": {
+			"badge": "How Much for the Fish?",
+			"title": "Custom Aquarium Background Calculator",
+			"subtitle": "Configure your perfect 3D background in real-time. Adjust dimensions, choose materials, and get an instant price estimate."
+		},
+		"trustSignals": {
+			"responseTime": {
+				"value": "24h",
+				"label": "Quote Response Time"
+			},
+			"experience": {
+				"value": "20+",
+				"label": "Years Experience"
+			},
+			"handcrafted": {
+				"value": "100%",
+				"label": "Handcrafted"
+			}
+		}
+	}
 }

@@ -1,5 +1,27 @@
 {
-  "calculator": {
-    "placeholder": "Translations for calculator in nl"
-  }
+	"calculator": {
+		"metadata": {
+			"title": "Calculator voor Aangepaste Aquariumachterwanden | Aquadecor",
+			"description": "Configureer je perfecte 3D-aquariumachterwand in realtime. Pas afmetingen aan, kies materialen en krijg direct een prijsindicatie."
+		},
+		"hero": {
+			"badge": "How much is the fish?",
+			"title": "Calculator voor Aangepaste Aquariumachterwanden",
+			"subtitle": "Configureer je perfecte 3D-achterwand in realtime. Pas afmetingen aan, kies materialen en krijg direct een prijsindicatie."
+		},
+		"trustSignals": {
+			"responseTime": {
+				"value": "24u",
+				"label": "Reactietijd offerte"
+			},
+			"experience": {
+				"value": "20+",
+				"label": "Jaren ervaring"
+			},
+			"handcrafted": {
+				"value": "100%",
+				"label": "Handgemaakt"
+			}
+		}
+	}
 }

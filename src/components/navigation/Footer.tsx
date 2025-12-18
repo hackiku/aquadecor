@@ -90,10 +90,10 @@ export function Footer() {
 			</svg>
 
 			<div className="mx-auto max-w-7xl px-4 pt-20 pb-10">
-				{/* Main Content Grid: Brand + 3 Categories + Newsletter */}
+				{/* Main Content Grid: Brand + Newsletter on top row (mobile), then 3 link columns */}
 				<div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-5 mb-12">
 
-					{/* COLUMN 1: Logo, Copyright & Socials */}
+					{/* COLUMN 1: Logo, Copyright & Socials - Desktop: Far Left, Mobile: Top Left */}
 					<div className="space-y-6 order-1 lg:col-span-1">
 						<div className="flex flex-col items-start gap-3">
 							<Link href="/" className="relative">
@@ -123,8 +123,13 @@ export function Footer() {
 						</div>
 					</div>
 
-					{/* COLUMN 2: Shop */}
-					<div className="space-y-4 order-2 lg:order-2">
+					{/* COLUMN 2 (Mobile): Newsletter - Right of logo on mobile, Far right on desktop */}
+					<div className="space-y-4 order-2 lg:order-5 lg:col-span-1">
+						<SmallNewsletter />
+					</div>
+
+					{/* COLUMN 3: Shop - Second row on mobile, middle columns on desktop */}
+					<div className="space-y-4 order-3 lg:order-2 lg:col-span-1">
 						<h3 className="font-display font-normal text-base text-primary">
 							{t('categoryShop')}
 						</h3>
@@ -147,8 +152,8 @@ export function Footer() {
 						</ul>
 					</div>
 
-					{/* COLUMN 3: Resources (Help) */}
-					<div className="space-y-4 order-3 lg:order-3">
+					{/* COLUMN 4: Resources */}
+					<div className="space-y-4 order-4 lg:order-3 lg:col-span-1">
 						<h3 className="font-display font-normal text-base text-primary">
 							{t('categoryResources')}
 						</h3>
@@ -166,8 +171,8 @@ export function Footer() {
 						</ul>
 					</div>
 
-					{/* COLUMN 4: Company */}
-					<div className="space-y-4 order-4 lg:order-4">
+					{/* COLUMN 5: Company */}
+					<div className="space-y-4 order-5 lg:order-4 lg:col-span-1">
 						<h3 className="font-display font-normal text-base text-primary">
 							{t('categoryCompany')}
 						</h3>
@@ -183,11 +188,6 @@ export function Footer() {
 								</li>
 							))}
 						</ul>
-					</div>
-
-					{/* COLUMN 5: Newsletter */}
-					<div className="space-y-4 order-5 lg:order-5">
-						<SmallNewsletter />
 					</div>
 				</div>
 
