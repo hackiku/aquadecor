@@ -196,6 +196,45 @@
 			"and": "en het",
 			"privacyLink": "Privacybeleid"
 		},
+		"forgotPassword": {
+			"title": "Wachtwoord herstellen",
+			"subtitle": "Voer je e-mailadres in en we sturen je een link om je wachtwoord te herstellen",
+			"email": "E-mail",
+			"emailPlaceholder": "jouw@email.nl",
+			"sendLink": "Verstuur herstellink",
+			"sending": "Versturen...",
+			"backToLogin": "Terug naar inloggen",
+			"success": {
+				"title": "Check je e-mail",
+				"message": "We hebben een herstellink gestuurd naar",
+				"note": "Als je hem niet ziet, controleer dan je spamfolder of vraag hieronder een nieuwe link aan.",
+				"resend": "Stuur nog een link"
+			}
+		},
+		"resetPassword": {
+			"title": "Nieuw wachtwoord aanmaken",
+			"subtitle": "Voer hieronder je nieuwe wachtwoord in",
+			"password": "Nieuw wachtwoord",
+			"passwordPlaceholder": "Voer nieuw wachtwoord in",
+			"passwordHelp": "Moet minimaal 8 tekens bevatten",
+			"confirmPassword": "Bevestig wachtwoord",
+			"confirmPasswordPlaceholder": "Voer nieuw wachtwoord opnieuw in",
+			"reset": "Wachtwoord herstellen",
+			"resetting": "Herstellen...",
+			"backToLogin": "Terug naar inloggen",
+			"success": {
+				"title": "Wachtwoord hersteld",
+				"message": "Je wachtwoord is succesvol gewijzigd",
+				"redirecting": "Doorsturen naar inlogpagina...",
+				"action": "Ga naar inloggen"
+			},
+			"errors": {
+				"mismatch": "Wachtwoorden komen niet overeen",
+				"tooShort": "Wachtwoord moet minimaal 8 tekens bevatten",
+				"invalidToken": "Ongeldig of ontbrekend hersteltoken",
+				"failed": "Wachtwoord herstellen mislukt. Probeer het opnieuw."
+			}
+		},
 		"toast": {
 			"signOutSuccess": "Succesvol uitgelogd",
 			"signOutError": "Kan niet uitloggen",

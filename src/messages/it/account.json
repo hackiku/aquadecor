@@ -196,6 +196,45 @@
 			"and": "e la",
 			"privacyLink": "Privacy Policy"
 		},
+		"forgotPassword": {
+			"title": "Reimposta password",
+			"subtitle": "Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password",
+			"email": "Email",
+			"emailPlaceholder": "tua@email.it",
+			"sendLink": "Invia link di reimpostazione",
+			"sending": "Invio in corso...",
+			"backToLogin": "Torna al login",
+			"success": {
+				"title": "Controlla la tua email",
+				"message": "Abbiamo inviato un link per reimpostare la password a",
+				"note": "Se non lo vedi, controlla la cartella spam o richiedi un altro link qui sotto.",
+				"resend": "Invia un altro link"
+			}
+		},
+		"resetPassword": {
+			"title": "Crea nuova password",
+			"subtitle": "Inserisci la tua nuova password qui sotto",
+			"password": "Nuova password",
+			"passwordPlaceholder": "Inserisci nuova password",
+			"passwordHelp": "Deve contenere almeno 8 caratteri",
+			"confirmPassword": "Conferma password",
+			"confirmPasswordPlaceholder": "Inserisci di nuovo la password",
+			"reset": "Reimposta password",
+			"resetting": "Reimpostazione...",
+			"backToLogin": "Torna al login",
+			"success": {
+				"title": "Password reimpostata",
+				"message": "La tua password è stata reimpostata con successo",
+				"redirecting": "Reindirizzamento al login...",
+				"action": "Vai al login"
+			},
+			"errors": {
+				"mismatch": "Le password non corrispondono",
+				"tooShort": "La password deve contenere almeno 8 caratteri",
+				"invalidToken": "Token di reimpostazione non valido o mancante",
+				"failed": "Impossibile reimpostare la password. Riprova."
+			}
+		},
 		"toast": {
 			"signOutSuccess": "Disconnessione riuscita",
 			"signOutError": "Impossibile disconnettersi",

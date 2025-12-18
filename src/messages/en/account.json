@@ -196,6 +196,45 @@
 			"and": "and",
 			"privacyLink": "Privacy Policy"
 		},
+		"forgotPassword": {
+			"title": "Reset Password",
+			"subtitle": "Enter your email address and we'll send you a link to reset your password",
+			"email": "Email",
+			"emailPlaceholder": "your@email.com",
+			"sendLink": "Send Reset Link",
+			"sending": "Sending...",
+			"backToLogin": "Back to Login",
+			"success": {
+				"title": "Check Your Email",
+				"message": "We've sent a password reset link to",
+				"note": "If you don't see it, check your spam folder or request another link below.",
+				"resend": "Send Another Link"
+			}
+		},
+		"resetPassword": {
+			"title": "Create New Password",
+			"subtitle": "Enter your new password below",
+			"password": "New Password",
+			"passwordPlaceholder": "Enter new password",
+			"passwordHelp": "Must be at least 8 characters",
+			"confirmPassword": "Confirm Password",
+			"confirmPasswordPlaceholder": "Re-enter new password",
+			"reset": "Reset Password",
+			"resetting": "Resetting...",
+			"backToLogin": "Back to Login",
+			"success": {
+				"title": "Password Reset",
+				"message": "Your password has been successfully reset",
+				"redirecting": "Redirecting to login...",
+				"action": "Go to Login"
+			},
+			"errors": {
+				"mismatch": "Passwords do not match",
+				"tooShort": "Password must be at least 8 characters",
+				"invalidToken": "Invalid or missing reset token",
+				"failed": "Failed to reset password. Please try again."
+			}
+		},
 		"toast": {
 			"signOutSuccess": "Signed out successfully",
 			"signOutError": "Failed to sign out",
