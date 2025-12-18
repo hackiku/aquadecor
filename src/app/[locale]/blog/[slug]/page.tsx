@@ -6,57 +6,38 @@ import { notFound } from "next/navigation";
 import { Clock, Calendar, ArrowLeft } from "lucide-react";
 import { getBlogPost } from "~/lib/strapi/queries";
 import { BlogBody } from "~/components/blog/BlogBody";
+// SEO
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { generateArticleSchema } from "~/i18n/seo/json-ld";
 import type { Metadata } from "next";
 
 interface BlogPostPageProps {
 	params: Promise<{
 		slug: string;
+		locale: string;
 	}>;
 }
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-	const { slug } = await params;
+	const { slug, locale } = await params;
 	const post = await getBlogPost(slug);
 
-	if (!post) {
-		return {
-			title: "Post Not Found",
-		};
-	}
+	if (!post) return { title: "Post Not Found" };
 
-	return {
-		title: post.seo.metaTitle,
-		description: post.seo.metaDescription,
-		keywords: post.seo.keywords,
-		alternates: {
-			canonical: `https://aquadecorbackgrounds.com/blog/${slug}`,
-		},
-		openGraph: {
-			title: post.seo.metaTitle,
-			description: post.seo.metaDescription,
-			images: [
-				{
-					url: post.seo.shared_image?.file.url || post.cover.url,
-					width: post.seo.shared_image?.file.width || 1200,
-					height: post.seo.shared_image?.file.height || 630,
-					alt: post.seo.shared_image?.file.alternativeText || post.title,
-				},
-			],
-			url: `https://aquadecorbackgrounds.com/blog/${slug}`,
-			type: "article",
-			publishedTime: post.publishedAt,
-			modifiedTime: post.updatedAt,
-			authors: ["Florian Kovac"],
-			siteName: "Aquadecor",
-		},
-		twitter: {
-			card: "summary_large_image",
-			title: post.seo.metaTitle,
-			description: post.seo.metaDescription,
-			images: [post.seo.shared_image?.file.url || post.cover.url],
-		},
-	};
+
+	// TODO: When you have translations in Strapi, fetch them here 
+	// and create a map: { de: `/blog/${post.localizations.de.slug}` }
+	// For now, we assume slugs are same or handled by redirects
+
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: `/blog/${slug}`,
+		title: post.seo.metaTitle || post.title,
+		description: post.seo.metaDescription || post.description,
+		image: post.seo.shared_image?.file.url || post.cover.url,
+		type: 'article',
+	});
 }
 
 // Revalidate every hour
@@ -70,16 +51,26 @@ function formatDate(dateString: string): string {
 	});
 }
 
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-	const { slug } = await params;
+	const { slug, locale } = await params;
 	const post = await getBlogPost(slug);
 
 	if (!post) {
 		notFound();
 	}
 
+	// Generate JSON-LD
+	const articleJsonLd = generateArticleSchema(post, locale);
+
 	return (
 		<main className="min-h-screen">
+			{/* Inject JSON-LD */}
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+			/>
+
 			{/* Back Button */}
 			<div className="container px-4 max-w-4xl mx-auto pt-32 pb-8">
 				<Link
@@ -90,6 +81,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 					Back to blog
 				</Link>
 			</div>
+
 
 			{/* Article Header */}
 			<article className="pb-16 md:pb-24">

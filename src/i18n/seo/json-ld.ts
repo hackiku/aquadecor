@@ -1,4 +1,5 @@
 // src/i18n/seo/json-ld.ts
+import type { BlogPost } from "~/lib/strapi/types";
 
 type ProductSchemaParams = {
 	name: string;
@@ -65,5 +66,36 @@ export function generateBreadcrumbSchema(items: { name: string; url: string }[])
 			"name": item.name,
 			"item": item.url
 		}))
+	};
+}
+
+export function generateArticleSchema(post: BlogPost, locale: string) {
+	const baseUrl = "https://aquadecorbackgrounds.com";
+
+	return {
+		"@context": "https://schema.org",
+		"@type": "BlogPosting", // More specific than Article
+		"mainEntityOfPage": {
+			"@type": "WebPage",
+			"@id": `${baseUrl}/${locale}/blog/${post.slug}`
+		},
+		"headline": post.title,
+		"description": post.description,
+		"image": post.cover.url,
+		"author": {
+			"@type": "Organization", // Or Person if you have author data
+			"name": "Aquadecor Team",
+			"url": baseUrl
+		},
+		"publisher": {
+			"@type": "Organization",
+			"name": "Aquadecor",
+			"logo": {
+				"@type": "ImageObject",
+				"url": `${baseUrl}/logo.png` // Ensure this exists or use a CDN link
+			}
+		},
+		"datePublished": post.publishedAt,
+		"dateModified": post.updatedAt
 	};
 }

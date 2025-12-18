@@ -5,12 +5,14 @@ import { routing } from '~/i18n/routing';
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
 
 interface HreflangOptions {
-	/** Current locale from params */
 	currentLocale: string;
-	/** Path without locale prefix, e.g., "/shop/3d-backgrounds" */
-	path: string;
-	/** Optional: Different x-default locale (defaults to 'en') */
+	path: string; /** Path without locale prefix, e.g., "/shop/3d-backgrounds" */
 	defaultLocale?: string;
+	/** 
+		 * Optional: Specific paths for other locales 
+		 * e.g. { de: '/blog/fische', nl: '/blog/vissen' }
+		 */
+	localizedPaths?: Record<string, string>;
 }
 
 /**
@@ -32,28 +34,34 @@ interface HreflangOptions {
  * ```
  */
 export function generateHreflang(options: HreflangOptions) {
-	const { currentLocale, path, defaultLocale = 'en' } = options;
+	const { currentLocale, path, defaultLocale = 'en', localizedPaths } = options;
 
-	// Build language alternatives
 	const languages: Record<string, string> = {};
 
-	// Add all locales
 	for (const locale of routing.locales) {
-		// Map locale to proper hreflang code
 		const hreflangCode = locale === 'us' ? 'en-US' : locale;
-		languages[hreflangCode] = `${baseUrl}/${locale}${path}`;
+
+		// Use specific localized path if available, otherwise fallback to standard pattern
+		const localePath = localizedPaths?.[locale] || path;
+
+		languages[hreflangCode] = `${baseUrl}/${locale}${localePath}`;
 	}
 
-	// Add x-default (fallback for unmatched locales)
-	languages['x-default'] = `${baseUrl}/${defaultLocale}${path}`;
+	// x-default logic
+	const defaultPath = localizedPaths?.[defaultLocale] || path;
+	languages['x-default'] = `${baseUrl}/${defaultLocale}${defaultPath}`;
+
+	// Determine canonical URL for THIS page
+	const currentPath = localizedPaths?.[currentLocale] || path;
 
 	return {
 		alternates: {
-			canonical: `${baseUrl}/${currentLocale}${path}`,
+			canonical: `${baseUrl}/${currentLocale}${currentPath}`,
 			languages,
 		},
 	};
 }
+
 
 /**
  * Extract clean path from full URL path
@@ -78,10 +86,11 @@ export function generateSEOMetadata(options: {
 	description: string;
 	image?: string;
 	type?: 'website' | 'article';
+	localizedPaths?: Record<string, string>; // for blog
 }) {
-	const { currentLocale, path, title, description, image, type = 'website' } = options;
+	const { currentLocale, path, title, description, image, type = 'website', localizedPaths } = options;
 
-	const hreflang = generateHreflang({ currentLocale, path });
+	const hreflang = generateHreflang({ currentLocale, path, localizedPaths });
 
 	return {
 		title,
@@ -90,7 +99,7 @@ export function generateSEOMetadata(options: {
 			title,
 			description,
 			type,
-			url: `${baseUrl}/${currentLocale}${path}`,
+			url: hreflang.alternates.canonical,
 			...(image && { images: [image] }),
 		},
 		twitter: {

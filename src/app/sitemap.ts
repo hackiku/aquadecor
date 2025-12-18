@@ -1,15 +1,16 @@
 // src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
 import { db } from '~/server/db';
-import { categories, products } from '~/server/db/schema';
+import { categories, products, media } from '~/server/db/schema';
 import { routing } from '~/i18n/routing';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
+import { getBlogPosts } from '~/lib/strapi/queries'; // blog SEO
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecor.com';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	// Fetch all data in parallel for performance
-	const [allCategories, allProducts] = await Promise.all([
+	const [allCategories, allProducts, blogPosts] = await Promise.all([
 		db
 			.select({
 				id: categories.id,
@@ -25,9 +26,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				slug: products.slug,
 				categoryId: products.categoryId,
 				updatedAt: products.updatedAt,
+				// ✅ SEO WIN: Fetch the hero image URL for Google Images
+				heroImage: media.storageUrl,
 			})
 			.from(products)
-			.where(eq(products.isActive, true))
+			// Join media to get the main image (sortOrder 0)
+			.leftJoin(media, and(
+				eq(media.productId, products.id),
+				eq(media.usageType, 'product'),
+				eq(media.sortOrder, 0)
+			))
+			.where(eq(products.isActive, true)),
+			getBlogPosts().catch(() => []) // ✅ Fetch Strapi posts (safe catch)
 	]);
 
 	// Create category lookup map for O(1) access
@@ -47,25 +57,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				productLine: category.productLine,
 			};
 		})
-		.filter((p): p is NonNullable<typeof p> => p !== null); // Remove nulls with type guard
+		.filter((p): p is NonNullable<typeof p> => p !== null);
 
 	const sitemapEntries: MetadataRoute.Sitemap = [];
 
 	// Generate entries for each locale
 	for (const locale of routing.locales) {
 		// ========================================
-		// CORE PAGES (Highest Priority)
+		// 1. CORE PAGES (Highest Priority)
 		// ========================================
 
 		sitemapEntries.push(
-			// Homepage
 			{
 				url: `${baseUrl}/${locale}`,
 				lastModified: new Date(),
 				changeFrequency: 'daily',
 				priority: 1.0,
 			},
-			// Main shop page
 			{
 				url: `${baseUrl}/${locale}/shop`,
 				lastModified: new Date(),
@@ -75,7 +83,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		);
 
 		// ========================================
-		// PRODUCT LINES (Main Category Hubs)
+		// 2. PRODUCT LINES (Main Category Hubs)
 		// ========================================
 
 		sitemapEntries.push(
@@ -94,7 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		);
 
 		// ========================================
-		// CATEGORY PAGES
+		// 3. CATEGORY PAGES
 		// ========================================
 
 		for (const category of allCategories) {
@@ -107,7 +115,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		}
 
 		// ========================================
-		// PRODUCT PAGES
+		// 4. PRODUCT PAGES (With Images!)
 		// ========================================
 
 		for (const product of productsWithCategories) {
@@ -116,47 +124,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				lastModified: product.updatedAt || new Date(),
 				changeFrequency: 'monthly',
 				priority: 0.7,
+				// ✅ GOOGLE IMAGES: Index this product's image
+				images: product.heroImage ? [product.heroImage] : undefined,
 			});
 		}
 
 		// ========================================
-		// INFORMATIONAL PAGES
+		// 5. INFORMATIONAL & TOOLS
 		// ========================================
 
-		sitemapEntries.push(
-			{
-				url: `${baseUrl}/${locale}/about`,
+		const staticPages = [
+			{ path: 'about', priority: 0.6 },
+			{ path: 'setup', priority: 0.6 },
+			{ path: 'faq', priority: 0.6 },
+			{ path: 'calculator', priority: 0.7 }, // High value tool
+			{ path: 'distributors', priority: 0.5 },
+		];
+
+		for (const page of staticPages) {
+			sitemapEntries.push({
+				url: `${baseUrl}/${locale}/${page.path}`,
 				lastModified: new Date(),
 				changeFrequency: 'monthly',
-				priority: 0.6,
-			},
-			{
-				url: `${baseUrl}/${locale}/setup`,
-				lastModified: new Date(),
-				changeFrequency: 'monthly',
-				priority: 0.6,
-			},
-			{
-				url: `${baseUrl}/${locale}/faq`,
-				lastModified: new Date(),
-				changeFrequency: 'monthly',
-				priority: 0.6,
-			}
-		);
+				priority: page.priority,
+			});
+		}
 
 		// ========================================
-		// TOOLS & CALCULATORS (Higher Priority)
-		// ========================================
-
-		sitemapEntries.push({
-			url: `${baseUrl}/${locale}/calculator`,
-			lastModified: new Date(),
-			changeFrequency: 'monthly',
-			priority: 0.7, // Tools are high-value pages
-		});
-
-		// ========================================
-		// SOCIAL PROOF & DISCOVERY
+		// 6. SOCIAL PROOF & BLOG HUB
 		// ========================================
 
 		sitemapEntries.push(
@@ -164,7 +159,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				url: `${baseUrl}/${locale}/gallery`,
 				lastModified: new Date(),
 				changeFrequency: 'weekly',
-				priority: 0.6, // Gallery updated often, good for discovery
+				priority: 0.6,
 			},
 			{
 				url: `${baseUrl}/${locale}/reviews`,
@@ -173,87 +168,59 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				priority: 0.6,
 			},
 			{
-				url: `${baseUrl}/${locale}/distributors`,
+				url: `${baseUrl}/${locale}/blog`,
 				lastModified: new Date(),
-				changeFrequency: 'monthly',
+				changeFrequency: 'weekly',
 				priority: 0.5,
 			}
 		);
 
 		// ========================================
-		// BLOG (Future Content Hub)
+		// 7. BLOG POSTS (Placeholder / Strapi Integration)
 		// ========================================
 
-		sitemapEntries.push({
-			url: `${baseUrl}/${locale}/blog`,
-			lastModified: new Date(),
-			changeFrequency: 'weekly',
-			priority: 0.5,
-		});
-
-		// TODO: Add individual blog posts when you have them
-		// const blogPosts = await db.query.blogPosts.findMany();
-		// for (const post of blogPosts) {
-		//   sitemapEntries.push({
-		//     url: `${baseUrl}/${locale}/blog/${post.slug}`,
-		//     lastModified: post.updatedAt || new Date(),
-		//     changeFrequency: 'monthly',
-		//     priority: 0.6,
-		//   });
-		// }
-
-		// ========================================
-		// LEGAL PAGES (Low Priority but Required)
-		// ========================================
-
-		sitemapEntries.push(
-			{
-				url: `${baseUrl}/${locale}/terms`,
-				lastModified: new Date(),
-				changeFrequency: 'yearly',
-				priority: 0.3,
-			},
-			{
-				url: `${baseUrl}/${locale}/privacy`,
-				lastModified: new Date(),
-				changeFrequency: 'yearly',
-				priority: 0.3,
-			},
-			{
-				url: `${baseUrl}/${locale}/shipping`,
-				lastModified: new Date(),
+		// TODO: Fetch from Strapi when ready
+		/*
+		const blogPosts = await fetchStrapiPosts();
+		for (const post of blogPosts) {
+			sitemapEntries.push({
+				url: `${baseUrl}/${locale}/blog/${post.slug}`,
+				lastModified: post.updatedAt,
 				changeFrequency: 'monthly',
-				priority: 0.4, // Shipping info changes more often
-			},
-			{
-				url: `${baseUrl}/${locale}/refund`,
+				priority: 0.6,
+				images: [post.coverImage],
+			});
+		}
+		*/
+
+		// ========================================
+		// 8. LEGAL PAGES (Low Priority)
+		// ========================================
+
+		const legalPages = ['terms', 'privacy', 'shipping', 'refund'];
+		for (const page of legalPages) {
+			sitemapEntries.push({
+				url: `${baseUrl}/${locale}/${page}`,
 				lastModified: new Date(),
 				changeFrequency: 'yearly',
 				priority: 0.3,
-			}
-		);
-	}
+			});
+		}
 
+		for (const post of blogPosts) {
+			sitemapEntries.push({
+				url: `${baseUrl}/${locale}/blog/${post.slug}`,
+				// Prefer updated date, fallback to publish date
+				lastModified: new Date(post.publishedAt),
+				changeFrequency: 'monthly',
+				priority: 0.6,
+				// ✅ Google Images for Blog
+				images: post.cover?.url ? [post.cover.url] : undefined
+			});
+		}
+	}
 	return sitemapEntries;
 }
 
-// Regenerate sitemap every 24 hours
+// Regenerate once a day
 export const revalidate = 86400;
-
-// ========================================
-// SITEMAP STATISTICS
-// ========================================
-// With 200 products, 20 categories, 5 locales:
-// - Core pages: 10
-// - Product lines: 10
-// - Categories: 100
-// - Products: 1000
-// - Info pages: 25
-// - Tools: 5
-// - Social: 15
-// - Blog: 5
-// - Legal: 20
-// TOTAL: ~1,190 URLs
-//
-// All URLs are ISR-cached, so sitemap generation is fast
-// Google will recrawl changed pages based on lastModified dates
