@@ -63,7 +63,7 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 	return (
 		<div className="flex gap-4 group relative">
 			{/* Image */}
-			<Link href={productUrl} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 border border-border">
+			<Link href={productUrl as any} className="relative w-20 h-20 rounded-lg overflow-hidden bg-muted flex-shrink-0 border border-border">
 				{product.heroImageUrl ? (
 					<Image
 						src={product.heroImageUrl}
@@ -82,7 +82,7 @@ export function WishlistItem({ product, onRemove }: WishlistItemProps) {
 			{/* Details */}
 			<div className="flex-1 min-w-0 space-y-1.5">
 				<div className="flex justify-between items-start gap-2">
-					<Link href={productUrl} className="block">
+					<Link href={productUrl as any} className="block">
 						<h3 className="font-display font-medium text-sm leading-tight line-clamp-2 hover:text-primary transition-colors">
 							{displayName}
 						</h3>

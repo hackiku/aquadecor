@@ -1,4 +1,4 @@
-// src/app/[locale]/account/page.tsx
+// src/app/[locale]/(account)/account/page.tsx
 "use client";
 
 import { MobileAccountNav } from "./_components/MobileAccountNav";

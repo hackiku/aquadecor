@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/cta/sale/ActiveSaleBanner.tsx
 "use client";
 

@@ -2,6 +2,8 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { DefaultSession, NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+// Uncomment when ready for Google OAuth:
+// import GoogleProvider from "next-auth/providers/google";
 import { db } from "~/server/db";
 import { users, accounts, sessions, verificationTokens } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
@@ -18,6 +20,11 @@ declare module "next-auth" {
 
 export const authConfig = {
 	providers: [
+		// Uncomment when ready for Google OAuth:
+		// GoogleProvider({
+		// 	clientId: process.env.GOOGLE_CLIENT_ID!,
+		// 	clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+		// }),
 		CredentialsProvider({
 			name: "Email",
 			credentials: {
@@ -74,5 +81,5 @@ export const authConfig = {
 	pages: {
 		signIn: '/login',
 	},
-	debug: true,
+	debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthConfig;

@@ -75,7 +75,7 @@ export const routing = defineRouting({
 			it: '/domande-frequenti',
 			us: '/faq'
 		},
-		
+
 		'/gallery': {
 			en: '/gallery',
 			de: '/galerie',
@@ -87,13 +87,37 @@ export const routing = defineRouting({
 		// ================================================
 		// Auth pages
 		// ================================================
-	
+
 		'/login': {
 			en: '/login',
 			de: '/anmelden',      // German: "sign in"
 			nl: '/inloggen',      // Dutch: "log in"
 			it: '/accedi',        // Italian: "access"
 			us: '/login'
+		},
+
+		'/register': {
+			en: '/register',
+			de: '/registrieren',  // German: "register"
+			nl: '/registreren',   // Dutch: "register"
+			it: '/registrati',    // Italian: "register"
+			us: '/register'
+		},
+
+		'/forgot-password': {
+			en: '/forgot-password',
+			de: '/passwort-vergessen',
+			nl: '/wachtwoord-vergeten',
+			it: '/password-dimenticata',
+			us: '/forgot-password'
+		},
+
+		'/reset-password': {
+			en: '/reset-password',
+			de: '/passwort-zurucksetzen',
+			nl: '/wachtwoord-resetten',
+			it: '/reimposta-password',
+			us: '/reset-password'
 		},
 
 		'/account': {

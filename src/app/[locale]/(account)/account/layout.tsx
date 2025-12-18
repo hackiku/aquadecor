@@ -1,4 +1,4 @@
-// src/app/[locale]/account/layout.tsx
+// src/app/[locale]/(account)/account/layout.tsx
 
 import { AccountSidebar } from "./_components/AccountSidebar";
 import { NavWithBanner } from "~/components/navigation/NavWithBanner";

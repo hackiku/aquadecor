@@ -34,16 +34,19 @@ interface AddMarketDialogProps {
 	onSuccess?: () => void;
 }
 
-type Market = "US" | "ROW" | "CA" | "UK";
-type Currency = "USD" | "EUR" | "GBP" | "CAD";
+// ✅ FIXED: Restricted types to match backend schema (ROW/US only)
+type Market = "US" | "ROW";
+type Currency = "USD" | "EUR";
 type PricingType = "simple" | "bundle" | "configuration";
 
 const marketCurrencyMap: Record<Market, Currency> = {
 	US: "USD",
 	ROW: "EUR",
-	CA: "CAD",
-	UK: "GBP",
+	// CA/UK removed to prevent backend type errors
 };
+
+// Available markets list
+const SUPPORTED_MARKETS: Market[] = ["US", "ROW"];
 
 export function AddMarketDialog({
 	open,
@@ -53,13 +56,15 @@ export function AddMarketDialog({
 	existingMarkets,
 	onSuccess,
 }: AddMarketDialogProps) {
+	// Defaults to US if available, otherwise ROW, otherwise undefined logic handled below
 	const [market, setMarket] = useState<Market>("US");
 	const [pricingType, setPricingType] = useState<PricingType>("simple");
 	const [unitPrice, setUnitPrice] = useState("");
 
 	const utils = api.useUtils();
 
-	const availableMarkets = (["US", "ROW", "CA", "UK"] as Market[]).filter(
+	// ✅ FIXED: Filter supported markets
+	const availableMarkets = SUPPORTED_MARKETS.filter(
 		(m) => !existingMarkets.includes(m)
 	);
 
@@ -77,7 +82,9 @@ export function AddMarketDialog({
 	});
 
 	const resetForm = () => {
-		setMarket("US");
+		// Reset to first available or default
+		const nextAvailable = SUPPORTED_MARKETS.find(m => !existingMarkets.includes(m)) || "US";
+		setMarket(nextAvailable);
 		setPricingType("simple");
 		setUnitPrice("");
 	};
@@ -118,7 +125,7 @@ export function AddMarketDialog({
 				<div className="space-y-6 py-4">
 					{availableMarkets.length === 0 ? (
 						<p className="text-sm text-muted-foreground font-display font-light text-center py-4">
-							All markets already have pricing configurations
+							All supported markets already have pricing configurations
 						</p>
 					) : (
 						<>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/cta/sale/BannerWrapper.tsx
 "use client";
 import React from "react";

@@ -1,4 +1,4 @@
-// src/app/[locale]/login/page.tsx
+// src/app/[locale]/(account)/login/page.tsx
 "use client";
 
 import { signIn } from "next-auth/react";

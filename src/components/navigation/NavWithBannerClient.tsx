@@ -13,7 +13,7 @@ interface Sale {
 	id: string;
 	name: string;
 	discountCode: string;
-	discountPercent: number;
+	discountPercent: number | null;
 	endsAt: Date;
 	bannerType: string;
 	bannerConfig?: {
@@ -72,11 +72,12 @@ export function NavWithBannerClient({ activeSale, bannerHeight }: NavWithBannerC
 		const props = {
 			name: activeSale.name,
 			discountCode: activeSale.discountCode,
-			discountPercent: activeSale.discountPercent,
+			discountPercent: activeSale.discountPercent ?? 0,
 			backgroundColor: activeSale.bannerConfig?.backgroundColor,
 			textColor: activeSale.bannerConfig?.textColor,
 			customMessage: activeSale.bannerConfig?.customMessage,
 		};
+
 
 		switch (activeSale.bannerType) {
 			case "CountdownBanner":
