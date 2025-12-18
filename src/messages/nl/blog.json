@@ -1,5 +1,33 @@
 {
-  "blog": {
-    "placeholder": "Translations for blog in nl"
-  }
+	"blog": {
+		"hero": {
+			"badge": "Aquarium Expertise",
+			"title": "Aquadecor Blog",
+			"subtitle": "Deskundige tips, installatiegidsen en verhalen uit meer dan 20 jaar ervaring in het creëren van 's werelds meest realistische aquariumachterwanden."
+		},
+		"ui": {
+			"backToBlog": "Terug naar blog",
+			"readMore": "Lees artikel",
+			"minRead": "{count} min leestijd",
+			"publishedOn": "Gepubliceerd op {date}",
+			"updatedOn": "Bijgewerkt op {date}",
+			"writtenBy": "Geschreven door {author}",
+			"share": "Deel dit artikel"
+		},
+		"categories": {
+			"all": "Alle berichten",
+			"guides": "Installatiegidsen",
+			"tips": "Tips & Trucs",
+			"showcase": "Klantvoorbeelden"
+		},
+		"empty": {
+			"title": "Geen berichten gevonden",
+			"description": "We hebben nog geen artikelen in deze categorie gepubliceerd. Kom binnenkort terug!"
+		},
+		"cta": {
+			"title": "Klaar om uw aquarium te transformeren?",
+			"subtitle": "Ontdek onze collectie handgemaakte 3D-achterwanden",
+			"button": "Bekijk producten"
+		}
+	}
 }

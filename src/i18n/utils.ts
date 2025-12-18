@@ -2,6 +2,8 @@
 import { headers } from 'next/headers';
 import { type Locale, isUSMarket } from './routing';
 
+
+// ⚠️ REMOVED headers to fix shop SSG
 /**
  * Get the current locale from headers (set by middleware)
  * Use this in Server Components when you need locale outside of params

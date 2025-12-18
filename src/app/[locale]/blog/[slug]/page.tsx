@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, Calendar, ArrowLeft } from "lucide-react";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getBlogPost } from "~/lib/strapi/queries";
 import { BlogBody } from "~/components/blog/BlogBody";
-// SEO
 import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { generateArticleSchema } from "~/i18n/seo/json-ld";
+import { routing } from "~/i18n/routing";
 import type { Metadata } from "next";
 
 interface BlogPostPageProps {
@@ -18,13 +19,14 @@ interface BlogPostPageProps {
 	}>;
 }
 
-// Generate metadata for SEO
+// ========================================
+// SEO METADATA
+// ========================================
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
 	const { slug, locale } = await params;
 	const post = await getBlogPost(slug);
 
 	if (!post) return { title: "Post Not Found" };
-
 
 	// TODO: When you have translations in Strapi, fetch them here 
 	// and create a map: { de: `/blog/${post.localizations.de.slug}` }
@@ -40,20 +42,47 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 	});
 }
 
+// ========================================
+// STATIC GENERATION
+// ========================================
+export function generateStaticParams() {
+	// Generate params for all locales
+	// Note: You'll need to add logic here to fetch all blog post slugs from Strapi
+	return routing.locales.map((locale) => ({ locale }));
+}
+
 // Revalidate every hour
 export const revalidate = 3600;
 
-function formatDate(dateString: string): string {
-	return new Date(dateString).toLocaleDateString("en-US", {
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
+function formatDate(dateString: string, locale: string): string {
+	const localeMap: Record<string, string> = {
+		en: 'en-US',
+		us: 'en-US',
+		de: 'de-DE',
+		nl: 'nl-NL',
+		it: 'it-IT',
+	};
+
+	return new Date(dateString).toLocaleDateString(localeMap[locale] || 'en-US', {
 		year: "numeric",
 		month: "long",
 		day: "numeric",
 	});
 }
 
-
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug, locale } = await params;
+
+	// Enable static rendering
+	setRequestLocale(locale);
+
+	// Get translations
+	const t = await getTranslations({ locale, namespace: 'blog' });
+
+	// Fetch post
 	const post = await getBlogPost(slug);
 
 	if (!post) {
@@ -78,10 +107,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 					className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-display font-light"
 				>
 					<ArrowLeft className="h-4 w-4" />
-					Back to blog
+					{t('ui.backToBlog')}
 				</Link>
 			</div>
-
 
 			{/* Article Header */}
 			<article className="pb-16 md:pb-24">
@@ -91,19 +119,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 						<div className="flex items-center gap-1.5">
 							<Calendar className="h-4 w-4" />
 							<time dateTime={post.publishedAt}>
-								{formatDate(post.publishedAt)}
+								{formatDate(post.publishedAt, locale)}
 							</time>
 						</div>
 						<span>•</span>
 						<div className="flex items-center gap-1.5">
 							<Clock className="h-4 w-4" />
-							<span>{post.reading_time} min read</span>
+							<span>{t('ui.minRead', { count: post.reading_time })}</span>
 						</div>
 						{post.updatedAt !== post.publishedAt && (
 							<>
 								<span>•</span>
 								<span className="text-xs">
-									Updated {formatDate(post.updatedAt)}
+									{t('ui.updatedOn', { date: formatDate(post.updatedAt, locale) })}
 								</span>
 							</>
 						)}
@@ -145,20 +173,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 						<BlogBody content={post.body} />
 					</div>
 
-					{/* Share / CTA Section */}
+					{/* CTA Section */}
 					<div className="mt-16 pt-8 border-t border-border">
 						<div className="bg-primary/5 backdrop-blur-sm rounded-2xl p-8 text-center">
 							<h3 className="text-2xl font-display font-light mb-4">
-								Ready to Transform Your Aquarium?
+								{t('cta.title')}
 							</h3>
 							<p className="text-muted-foreground font-display font-light mb-6">
-								Explore our collection of handcrafted 3D backgrounds
+								{t('cta.subtitle')}
 							</p>
 							<Link
 								href="/shop"
 								className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
 							>
-								Browse Products
+								{t('cta.button')}
 							</Link>
 						</div>
 					</div>

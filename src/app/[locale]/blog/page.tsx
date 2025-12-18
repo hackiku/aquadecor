@@ -2,46 +2,97 @@
 
 import { BlogCard } from "~/components/blog/BlogCard";
 import { getBlogPosts } from "~/lib/strapi/queries";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { routing } from "~/i18n/routing";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-	title: "Blog | Aquarium Tips & Stories",
-	description: "Expert aquarium advice, installation guides, and stories from the Aquadecor team. Learn how to create the perfect aquatic habitat.",
-	keywords: ["aquarium blog", "aquascaping tips", "3D backgrounds", "fish tank setup", "aquarium maintenance"],
-	alternates: {
-		canonical: "https://aquadecorbackgrounds.com/blog",
-	},
-	openGraph: {
-		title: "Aquadecor Blog | Aquarium Tips & Stories",
-		description: "Expert aquarium advice, installation guides, and stories from the Aquadecor team.",
-		url: "https://aquadecorbackgrounds.com/blog",
-		siteName: "Aquadecor",
-		type: "website",
-	},
+type Props = {
+	params: Promise<{ locale: string }>;
 };
+
+// ========================================
+// SEO METADATA
+// ========================================
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'blog' });
+
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/blog',
+		title: t('hero.title'),
+		description: t('hero.subtitle'),
+		type: 'website',
+	});
+}
+
+// ========================================
+// STATIC GENERATION
+// ========================================
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
 
 // Revalidate every hour
 export const revalidate = 3600;
 
-export default async function BlogPage() {
+export default async function BlogPage({ params }: Props) {
+	const { locale } = await params;
+
+	// Enable static rendering
+	setRequestLocale(locale);
+
+	// Get translations
+	const t = await getTranslations({ locale, namespace: 'blog' });
+
+	// Fetch posts
 	const posts = await getBlogPosts();
+
+	// ========================================
+	// JSON-LD for Blog CollectionPage
+	// ========================================
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
+	const canonicalUrl = `${baseUrl}/${locale}/blog`;
+
+	const collectionJsonLd = {
+		"@context": "https://schema.org",
+		"@type": "CollectionPage",
+		"name": t('hero.title'),
+		"description": t('hero.subtitle'),
+		"url": canonicalUrl,
+		"mainEntity": {
+			"@type": "ItemList",
+			"itemListElement": posts.map((post, index) => ({
+				"@type": "ListItem",
+				"position": index + 1,
+				"url": `${baseUrl}/${locale}/blog/${post.slug}`
+			}))
+		}
+	};
 
 	return (
 		<main className="min-h-screen">
+			{/* Inject JSON-LD */}
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+			/>
+
 			{/* Hero */}
 			<section className="relative pt-16 md:pt-24 pb-16 md:pb-24 bg-linear-to-b from-muted/50 to-transparent">
 				<div className="container px-4 max-w-7xl mx-auto">
 					<div className="space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
 							<span className="text-sm text-primary font-display font-medium">
-								Aquarium Expertise
+								{t('hero.badge')}
 							</span>
 						</div>
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
-							Aquadecor Blog
+							{t('hero.title')}
 						</h1>
 						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl leading-relaxed">
-							Expert tips, installation guides, and stories from 20+ years of creating the world's most realistic aquarium backgrounds.
+							{t('hero.subtitle')}
 						</p>
 					</div>
 				</div>
@@ -59,7 +110,7 @@ export default async function BlogPage() {
 					) : (
 						<div className="text-center py-12">
 							<p className="text-lg text-muted-foreground font-display font-light">
-								No blog posts available yet. Check back soon!
+								{t('empty.description')}
 							</p>
 						</div>
 					)}

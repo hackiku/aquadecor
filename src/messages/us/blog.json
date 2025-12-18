@@ -1,5 +1,33 @@
 {
-  "blog": {
-    "placeholder": "Translations for blog in us"
-  }
+	"blog": {
+		"hero": {
+			"badge": "Aquarium Expertise",
+			"title": "Aquadecor Blog",
+			"subtitle": "Expert tips, installation guides, and stories from 20+ years of creating the world's most realistic aquarium backgrounds."
+		},
+		"ui": {
+			"backToBlog": "Back to blog",
+			"readMore": "Read Article",
+			"minRead": "{count} min read",
+			"publishedOn": "Published on {date}",
+			"updatedOn": "Updated on {date}",
+			"writtenBy": "Written by {author}",
+			"share": "Share this article"
+		},
+		"categories": {
+			"all": "All Posts",
+			"guides": "Installation Guides",
+			"tips": "Tips & Tricks",
+			"showcase": "Customer Showcases"
+		},
+		"empty": {
+			"title": "No posts found",
+			"description": "We haven't published any articles in this category yet. Check back soon!"
+		},
+		"cta": {
+			"title": "Ready to Transform Your Aquarium?",
+			"subtitle": "Explore our collection of handcrafted 3D backgrounds",
+			"button": "Browse Products"
+		}
+	}
 }

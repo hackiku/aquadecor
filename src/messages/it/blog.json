@@ -1,5 +1,33 @@
 {
-  "blog": {
-    "placeholder": "Translations for blog in it"
-  }
+	"blog": {
+		"hero": {
+			"badge": "Esperti di Acquari",
+			"title": "Blog Aquadecor",
+			"subtitle": "Consigli esperti, guide all'installazione e storie da oltre 20 anni di creazione degli sfondi per acquari più realistici al mondo."
+		},
+		"ui": {
+			"backToBlog": "Torna al blog",
+			"readMore": "Leggi l'articolo",
+			"minRead": "{count} min di lettura",
+			"publishedOn": "Pubblicato il {date}",
+			"updatedOn": "Aggiornato il {date}",
+			"writtenBy": "Scritto da {author}",
+			"share": "Condividi questo articolo"
+		},
+		"categories": {
+			"all": "Tutti gli articoli",
+			"guides": "Guide all'installazione",
+			"tips": "Consigli e trucchi",
+			"showcase": "Vetrine clienti"
+		},
+		"empty": {
+			"title": "Nessun articolo trovato",
+			"description": "Non abbiamo ancora pubblicato articoli in questa categoria. Torna presto a controllare!"
+		},
+		"cta": {
+			"title": "Pronto a trasformare il tuo acquario?",
+			"subtitle": "Esplora la nostra collezione di sfondi 3D fatti a mano",
+			"button": "Sfoglia i prodotti"
+		}
+	}
 }

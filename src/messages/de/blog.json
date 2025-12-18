@@ -1,5 +1,33 @@
 {
-  "blog": {
-    "placeholder": "Translations for blog in de"
-  }
+	"blog": {
+		"hero": {
+			"badge": "Aquarium-Expertise",
+			"title": "Aquadecor Blog",
+			"subtitle": "Expertentipps, Installationsanleitungen und Geschichten aus über 20 Jahren Erfahrung in der Herstellung der realistischsten Aquarium-Rückwände der Welt."
+		},
+		"ui": {
+			"backToBlog": "Zurück zum Blog",
+			"readMore": "Artikel lesen",
+			"minRead": "{count} Min. Lesezeit",
+			"publishedOn": "Veröffentlicht am {date}",
+			"updatedOn": "Aktualisiert am {date}",
+			"writtenBy": "Verfasst von {author}",
+			"share": "Diesen Artikel teilen"
+		},
+		"categories": {
+			"all": "Alle Beiträge",
+			"guides": "Installationsanleitungen",
+			"tips": "Tipps & Tricks",
+			"showcase": "Kundengalerien"
+		},
+		"empty": {
+			"title": "Keine Beiträge gefunden",
+			"description": "Wir haben in dieser Kategorie noch keine Artikel veröffentlicht. Schauen Sie bald wieder vorbei!"
+		},
+		"cta": {
+			"title": "Bereit, Ihr Aquarium zu verwandeln?",
+			"subtitle": "Entdecken Sie unsere Kollektion handgefertigter 3D-Rückwände",
+			"button": "Produkte ansehen"
+		}
+	}
 }
