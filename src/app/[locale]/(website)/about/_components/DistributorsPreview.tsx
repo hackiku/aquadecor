@@ -35,7 +35,7 @@ export function DistributorsPreview() {
 				</div>
 
 				{/* Show first 6 distributors */}
-				<DistributorsGrid limit={6} className="lg:grid-cols-3" />
+				<DistributorsGrid className="lg:grid-cols-3" />
 			</div>
 		</section>
 	);

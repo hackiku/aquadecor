@@ -11,15 +11,17 @@ const NAMESPACES = [
 	'home',
 	'shop',
 	'product',
+	'calculator',
+	'gallery',
 	'cart',
 	'checkout',
 	'setup',
-	'calculator',
 	'about',
 	'blog',
 	'legal',
 	'account',
 	'faq',
+	'contact',
 ] as const;
 
 export type Namespace = (typeof NAMESPACES)[number];

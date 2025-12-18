@@ -1,0 +1,32 @@
+{
+	"gallery": {
+		"meta": {
+			"title": "Galerie | Kunden-Aquarien",
+			"description": "Durchstöbern Sie Tausende echter Aquarien-Einrichtungen von Aquadecor-Kunden weltweit. Lassen Sie sich von riesigen Riff-Aquarien, Nano-Cubes und allem dazwischen inspirieren."
+		},
+		"hero": {
+			"badge": "50K+ Setups",
+			"title": "Inspirations-Galerie",
+			"subtitle": "Sehen Sie, wie über 50.000 Hobbyisten ihre Aquarien verwandelt haben. Von massiven 1000L-Becken bis zu Nano-Cubes."
+		},
+		"toolbar": {
+			"results": "{count} Ergebnisse",
+			"loading": "Lädt..."
+		},
+		"sidebar": {
+			"filters": {
+				"title": "Nach Stil filtern",
+				"all": "Alle Stile"
+			}
+		},
+		"empty": {
+			"message": "Noch keine Bilder in dieser Kategorie gefunden.",
+			"cta": "Alle Fotos ansehen"
+		},
+		"loadMore": {
+			"tagline": "\"Nur die Natur kann uns kopieren\"",
+			"button": "Mehr Inspiration laden",
+			"loading": "Lädt..."
+		}
+	}
+}

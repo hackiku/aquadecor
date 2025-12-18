@@ -1,0 +1,32 @@
+{
+	"gallery": {
+		"meta": {
+			"title": "Gallery | Customer Aquarium Setups",
+			"description": "Browse thousands of real aquarium setups from Aquadecor customers worldwide. Get inspired by massive reef tanks, nano cubes, and everything in between."
+		},
+		"hero": {
+			"badge": "50K+ Setups",
+			"title": "Inspiration Gallery",
+			"subtitle": "See how 50,000+ hobbyists have transformed their tanks. From massive 1000L setups to nano cubes."
+		},
+		"toolbar": {
+			"results": "{count} results",
+			"loading": "Loading..."
+		},
+		"sidebar": {
+			"filters": {
+				"title": "Filter by Style",
+				"all": "All Styles"
+			}
+		},
+		"empty": {
+			"message": "No images found in this category yet.",
+			"cta": "View All Photos"
+		},
+		"loadMore": {
+			"tagline": "\"Only nature can copy us\"",
+			"button": "Load More Inspiration",
+			"loading": "Loading..."
+		}
+	}
+}

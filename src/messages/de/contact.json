@@ -1,0 +1,132 @@
+{
+	"contact": {
+		"meta": {
+			"title": "Kontakt Aquadecor | Nehmen Sie Kontakt auf",
+			"description": "Haben Sie Fragen zu unseren Aquarium-Rückwänden? Kontaktieren Sie das Aquadecor-Team. Wir antworten werktags innerhalb von 24 Stunden."
+		},
+		"hero": {
+			"badge": "Kontakt aufnehmen",
+			"title": "Kontaktieren Sie uns",
+			"subtitle": "Haben Sie Fragen oder Anliegen? Wir sind hier, um zu helfen. Unser Team meldet sich werktags innerhalb von 24 Stunden bei Ihnen."
+		},
+		"form": {
+			"title": "Senden Sie uns eine Nachricht",
+			"fields": {
+				"firstName": {
+					"label": "Vorname",
+					"placeholder": "Geben Sie Ihren Vornamen ein..."
+				},
+				"email": {
+					"label": "E-Mail",
+					"placeholder": "Geben Sie Ihre E-Mail ein..."
+				},
+				"country": {
+					"label": "Land",
+					"placeholder": "Land auswählen"
+				},
+				"topic": {
+					"label": "Betreff",
+					"placeholder": "Wählen Sie ein Thema",
+					"options": {
+						"pricing": "Preise",
+						"payment": "Zahlungsmethoden",
+						"shipping": "Versand",
+						"filters": "Filter verstecken",
+						"other": "Sonstiges"
+					}
+				},
+				"message": {
+					"label": "Nachricht",
+					"placeholder": "Sagen Sie uns, wie wir helfen können..."
+				}
+			},
+			"submit": "Absenden",
+			"submitting": "Wird gesendet...",
+			"success": "Danke! Wir melden uns innerhalb von 24 Stunden bei Ihnen."
+		},
+		"info": {
+			"address": {
+				"title": "Unser Standort",
+				"line1": "Alekse Santica 12",
+				"line2": "Zrenjanin, Serbien, 23000"
+			},
+			"email": {
+				"title": "E-Mail an uns"
+			}
+		},
+		"sidebar": {
+			"quickLinks": {
+				"title": "Bevor Sie fragen",
+				"calculator": "Preiskalkulator",
+				"faq": "FAQ-Seite",
+				"distributors": "Händler finden"
+			},
+			"responseTime": {
+				"title": "24-Stunden-Antwort",
+				"description": "Wir bemühen uns, alle Anfragen werktags innerhalb von 24 Stunden zu beantworten."
+			}
+		},
+		"support": {
+			"meta": {
+				"title": "Support | Aquadecor Hilfe-Center",
+				"description": "Benötigen Sie Hilfe mit Ihrem Aquadecor-Produkt? Erhalten Sie Installationshilfe, Garantie-Support und technische Unterstützung von unserem Team."
+			},
+			"hero": {
+				"badge": "Support-Center",
+				"title": "Wie können wir helfen?",
+				"subtitle": "Erhalten Sie Unterstützung bei Installation, Produktproblemen, Garantien und mehr. Prüfen Sie unsere Ressourcen oder reichen Sie ein Support-Ticket ein."
+			},
+			"resources": {
+				"title": "Schnelle Antworten finden",
+				"faq": {
+					"title": "FAQ",
+					"description": "Häufige Fragen zu unseren Produkten, Versand und Installation"
+				},
+				"guides": {
+					"title": "Installationsanleitungen",
+					"description": "Schritt-für-Schritt-Anleitungen zum Einrichten Ihrer Rückwand"
+				},
+				"contact": {
+					"title": "Verkauf kontaktieren",
+					"description": "Fragen zu Preisen oder Sonderanfertigungen"
+				}
+			},
+			"form": {
+				"heading": "Noch immer Hilfe nötig?",
+				"subheading": "Reichen Sie ein Support-Ticket ein und wir melden uns innerhalb von 24 Stunden bei Ihnen.",
+				"fields": {
+					"orderNumber": {
+						"label": "Bestellnummer",
+						"optional": "(optional)",
+						"placeholder": "z.B. ORD-12345"
+					},
+					"issueType": {
+						"label": "Wobei können wir helfen?",
+						"placeholder": "Problemtyp auswählen",
+						"options": {
+							"installation": "Installationshilfe",
+							"damage": "Beschädigtes Produkt",
+							"warranty": "Garantiefall",
+							"technical": "Technische Frage",
+							"other": "Anderes Problem"
+						}
+					},
+					"message": {
+						"placeholder": "Beschreiben Sie Ihr Problem im Detail. Fügen Sie Fotos hinzu, falls relevant.",
+						"hint": "Je mehr Details Sie angeben, desto schneller können wir helfen."
+					}
+				},
+				"submit": "Support-Ticket absenden"
+			},
+			"responseTime": {
+				"title": "24h Antwortzeit",
+				"description": "Unser Support-Team beantwortet alle Tickets werktags innerhalb von 24 Stunden. Für dringende Probleme fügen Sie bitte 'DRINGEND' in Ihre Nachricht ein."
+			},
+			"beforeContact": {
+				"title": "Vor dem Absenden",
+				"description": "Bitte überprüfen Sie unsere",
+				"faqLink": "FAQ-Seite"
+			}
+		}
+	}
+}

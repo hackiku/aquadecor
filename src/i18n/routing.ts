@@ -167,8 +167,21 @@ export const routing = defineRouting({
 		'/admin': '/admin',
 
 		// Support/Contact
-		'/support': '/support',
-		'/contact': '/contact',
+		'/contact': {
+			en: '/contact',
+			de: '/kontakt',
+			nl: '/contact',
+			it: '/contatti',
+			us: '/contact'
+		},
+
+		'/support': {
+			en: '/support',
+			de: '/support',
+			nl: '/support',
+			it: '/assistenza',
+			us: '/support'
+		},
 
 
 		// ================================================

@@ -1,0 +1,32 @@
+{
+	"gallery": {
+		"meta": {
+			"title": "Galleria | Allestimenti Clienti",
+			"description": "Sfoglia migliaia di allestimenti reali di acquari dei clienti Aquadecor in tutto il mondo. Lasciati ispirare da enormi acquari di barriera, nano cubi e tutto ciò che sta in mezzo."
+		},
+		"hero": {
+			"badge": "50K+ Allestimenti",
+			"title": "Galleria di Ispirazione",
+			"subtitle": "Guarda come oltre 50.000 appassionati hanno trasformato i loro acquari. Dai massicci allestimenti da 1000L ai nano cubi."
+		},
+		"toolbar": {
+			"results": "{count} risultati",
+			"loading": "Caricamento..."
+		},
+		"sidebar": {
+			"filters": {
+				"title": "Filtra per stile",
+				"all": "Tutti gli stili"
+			}
+		},
+		"empty": {
+			"message": "Nessuna immagine trovata ancora in questa categoria.",
+			"cta": "Vedi tutte le foto"
+		},
+		"loadMore": {
+			"tagline": "\"Solo la natura può copiarci\"",
+			"button": "Carica più ispirazione",
+			"loading": "Caricamento..."
+		}
+	}
+}

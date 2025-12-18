@@ -1,0 +1,132 @@
+{
+	"contact": {
+		"meta": {
+			"title": "Contact Aquadecor | Neem contact op",
+			"description": "Heb je vragen over onze aquariumachterwanden? Neem contact op met het Aquadecor-team. Wij reageren op werkdagen binnen 24 uur."
+		},
+		"hero": {
+			"badge": "Contact opnemen",
+			"title": "Neem contact met ons op",
+			"subtitle": "Heb je vragen of opmerkingen? Wij zijn er om te helpen. Ons team neemt op werkdagen binnen 24 uur contact met je op."
+		},
+		"form": {
+			"title": "Stuur ons een bericht",
+			"fields": {
+				"firstName": {
+					"label": "Voornaam",
+					"placeholder": "Voer je voornaam in..."
+				},
+				"email": {
+					"label": "E-mail",
+					"placeholder": "Voer je e-mailadres in..."
+				},
+				"country": {
+					"label": "Land",
+					"placeholder": "Selecteer land"
+				},
+				"topic": {
+					"label": "Onderwerp bericht",
+					"placeholder": "Selecteer een onderwerp",
+					"options": {
+						"pricing": "Prijzen",
+						"payment": "Betaalopties",
+						"shipping": "Verzending",
+						"filters": "Filters verbergen",
+						"other": "Overig"
+					}
+				},
+				"message": {
+					"label": "Bericht",
+					"placeholder": "Vertel ons hoe we kunnen helpen..."
+				}
+			},
+			"submit": "Versturen",
+			"submitting": "Versturen...",
+			"success": "Bedankt! We nemen binnen 24 uur contact met je op."
+		},
+		"info": {
+			"address": {
+				"title": "Onze locatie",
+				"line1": "Alekse Santica 12",
+				"line2": "Zrenjanin, Servië, 23000"
+			},
+			"email": {
+				"title": "E-mail ons"
+			}
+		},
+		"sidebar": {
+			"quickLinks": {
+				"title": "Voordat je vraagt",
+				"calculator": "Prijscalculator",
+				"faq": "FAQ-pagina",
+				"distributors": "Vind een distributeur"
+			},
+			"responseTime": {
+				"title": "24-uurs reactie",
+				"description": "Wij streven ernaar om alle vragen op werkdagen binnen 24 uur te beantwoorden."
+			}
+		},
+		"support": {
+			"meta": {
+				"title": "Support | Aquadecor Helpcenter",
+				"description": "Hulp nodig bij je Aquadecor-product? Krijg installatiehulp, garantieondersteuning en technische assistentie van ons team."
+			},
+			"hero": {
+				"badge": "Support Center",
+				"title": "Hoe kunnen we helpen?",
+				"subtitle": "Krijg hulp bij installatie, productproblemen, garanties en meer. Bekijk onze bronnen of dien een supportticket in."
+			},
+			"resources": {
+				"title": "Vind snel antwoorden",
+				"faq": {
+					"title": "FAQ",
+					"description": "Veelgestelde vragen over onze producten, verzending en installatie"
+				},
+				"guides": {
+					"title": "Installatiegidsen",
+					"description": "Stap-voor-stap instructies voor het plaatsen van je achterwand"
+				},
+				"contact": {
+					"title": "Contact verkoop",
+					"description": "Vragen over prijzen of maatwerkbestellingen"
+				}
+			},
+			"form": {
+				"heading": "Nog steeds hulp nodig?",
+				"subheading": "Dien een supportticket in en we nemen binnen 24 uur contact met je op.",
+				"fields": {
+					"orderNumber": {
+						"label": "Bestelnummer",
+						"optional": "(optioneel)",
+						"placeholder": "bijv. ORD-12345"
+					},
+					"issueType": {
+						"label": "Waarmee kunnen we helpen?",
+						"placeholder": "Selecteer type probleem",
+						"options": {
+							"installation": "Installatiehulp",
+							"damage": "Beschadigd product",
+							"warranty": "Garantieclaim",
+							"technical": "Technische vraag",
+							"other": "Ander probleem"
+						}
+					},
+					"message": {
+						"placeholder": "Beschrijf je probleem in detail. Voeg indien relevant foto's toe.",
+						"hint": "Hoe meer details je geeft, hoe sneller we kunnen helpen."
+					}
+				},
+				"submit": "Supportticket indienen"
+			},
+			"responseTime": {
+				"title": "24u reactietijd",
+				"description": "Ons supportteam beantwoordt alle tickets op werkdagen binnen 24 uur. Voor dringende zaken, vermeld 'URGENT' in je bericht."
+			},
+			"beforeContact": {
+				"title": "Voor het indienen",
+				"description": "Controleer eerst onze",
+				"faqLink": "FAQ-pagina"
+			}
+		}
+	}
+}

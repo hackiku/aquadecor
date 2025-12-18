@@ -1,0 +1,132 @@
+{
+	"contact": {
+		"meta": {
+			"title": "Contatta Aquadecor | Mettiti in contatto",
+			"description": "Hai domande sui nostri sfondi per acquari? Contatta il team Aquadecor. Rispondiamo entro 24 ore nei giorni lavorativi."
+		},
+		"hero": {
+			"badge": "Mettiti in contatto",
+			"title": "Contattaci",
+			"subtitle": "Hai domande o dubbi? Siamo qui per aiutarti. Il nostro team ti risponderà entro 24 ore nei giorni lavorativi."
+		},
+		"form": {
+			"title": "Inviaci un messaggio",
+			"fields": {
+				"firstName": {
+					"label": "Nome",
+					"placeholder": "Inserisci il tuo nome..."
+				},
+				"email": {
+					"label": "Email",
+					"placeholder": "Inserisci la tua email..."
+				},
+				"country": {
+					"label": "Paese",
+					"placeholder": "Seleziona paese"
+				},
+				"topic": {
+					"label": "Argomento messaggio",
+					"placeholder": "Seleziona un argomento",
+					"options": {
+						"pricing": "Prezzi",
+						"payment": "Opzioni di pagamento",
+						"shipping": "Spedizione",
+						"filters": "Nascondere i filtri",
+						"other": "Altro"
+					}
+				},
+				"message": {
+					"label": "Messaggio",
+					"placeholder": "Dicci come possiamo aiutarti..."
+				}
+			},
+			"submit": "Invia",
+			"submitting": "Invio in corso...",
+			"success": "Grazie! Ti risponderemo entro 24 ore."
+		},
+		"info": {
+			"address": {
+				"title": "La nostra sede",
+				"line1": "Alekse Santica 12",
+				"line2": "Zrenjanin, Serbia, 23000"
+			},
+			"email": {
+				"title": "Scrivici una email"
+			}
+		},
+		"sidebar": {
+			"quickLinks": {
+				"title": "Prima di chiedere",
+				"calculator": "Calcolatore Prezzi",
+				"faq": "Pagina FAQ",
+				"distributors": "Trova un Distributore"
+			},
+			"responseTime": {
+				"title": "Risposta in 24 Ore",
+				"description": "Ci impegniamo a rispondere a tutte le richieste entro 24 ore nei giorni lavorativi."
+			}
+		},
+		"support": {
+			"meta": {
+				"title": "Supporto | Centro Assistenza Aquadecor",
+				"description": "Hai bisogno di aiuto con il tuo prodotto Aquadecor? Ottieni aiuto per l'installazione, supporto in garanzia e assistenza tecnica dal nostro team."
+			},
+			"hero": {
+				"badge": "Centro Assistenza",
+				"title": "Come possiamo aiutarti?",
+				"subtitle": "Ricevi assistenza per l'installazione, problemi con i prodotti, garanzie e altro. Consulta le nostre risorse o invia un ticket di supporto."
+			},
+			"resources": {
+				"title": "Trova risposte velocemente",
+				"faq": {
+					"title": "FAQ",
+					"description": "Domande frequenti su prodotti, spedizione e installazione"
+				},
+				"guides": {
+					"title": "Guide all'installazione",
+					"description": "Istruzioni passo-passo per configurare il tuo sfondo"
+				},
+				"contact": {
+					"title": "Contatta vendite",
+					"description": "Domande su prezzi o ordini personalizzati"
+				}
+			},
+			"form": {
+				"heading": "Serve ancora aiuto?",
+				"subheading": "Invia un ticket di supporto e ti risponderemo entro 24 ore.",
+				"fields": {
+					"orderNumber": {
+						"label": "Numero ordine",
+						"optional": "(opzionale)",
+						"placeholder": "es. ORD-12345"
+					},
+					"issueType": {
+						"label": "Con cosa possiamo aiutarti?",
+						"placeholder": "Seleziona tipo di problema",
+						"options": {
+							"installation": "Aiuto installazione",
+							"damage": "Prodotto danneggiato",
+							"warranty": "Richiesta garanzia",
+							"technical": "Domanda tecnica",
+							"other": "Altro problema"
+						}
+					},
+					"message": {
+						"placeholder": "Descrivi il tuo problema in dettaglio. Includi foto se rilevante.",
+						"hint": "Più dettagli fornisci, più velocemente possiamo aiutarti."
+					}
+				},
+				"submit": "Invia Ticket di Supporto"
+			},
+			"responseTime": {
+				"title": "Tempo risposta 24h",
+				"description": "Il nostro team di supporto risponde a tutti i ticket entro 24 ore nei giorni lavorativi. Per problemi urgenti, includi 'URGENT' nel tuo messaggio."
+			},
+			"beforeContact": {
+				"title": "Prima di inviare",
+				"description": "Per favore controlla la nostra",
+				"faqLink": "pagina FAQ"
+			}
+		}
+	}
+}

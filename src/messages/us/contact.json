@@ -1,0 +1,132 @@
+{
+	"contact": {
+		"meta": {
+			"title": "Contact Aquadecor | Get in Touch",
+			"description": "Have questions about our aquarium backgrounds? Contact the Aquadecor team. We respond within 24 hours on working days."
+		},
+		"hero": {
+			"badge": "Get in Touch",
+			"title": "Contact Us",
+			"subtitle": "Have questions or concerns? We're here to help. Our team will get back to you within 24 hours on working days."
+		},
+		"form": {
+			"title": "Send us a message",
+			"fields": {
+				"firstName": {
+					"label": "First Name",
+					"placeholder": "Enter your first name..."
+				},
+				"email": {
+					"label": "Email",
+					"placeholder": "Enter your email..."
+				},
+				"country": {
+					"label": "Country",
+					"placeholder": "Select country"
+				},
+				"topic": {
+					"label": "Message Topic",
+					"placeholder": "Select a topic",
+					"options": {
+						"pricing": "Pricing",
+						"payment": "Payment Options",
+						"shipping": "Shipping",
+						"filters": "Hiding Filters",
+						"other": "Other"
+					}
+				},
+				"message": {
+					"label": "Message",
+					"placeholder": "Tell us how we can help..."
+				}
+			},
+			"submit": "Submit",
+			"submitting": "Sending...",
+			"success": "Thank you! We'll get back to you within 24 hours."
+		},
+		"info": {
+			"address": {
+				"title": "Our Location",
+				"line1": "Alekse Santica 12",
+				"line2": "Zrenjanin, Serbia, 23000"
+			},
+			"email": {
+				"title": "Email Us"
+			}
+		},
+		"sidebar": {
+			"quickLinks": {
+				"title": "Before You Ask",
+				"calculator": "Price Calculator",
+				"faq": "FAQ Page",
+				"distributors": "Find a Distributor"
+			},
+			"responseTime": {
+				"title": "24 Hour Response",
+				"description": "We aim to respond to all inquiries within 24 hours on working days."
+			}
+		},
+		"support": {
+			"meta": {
+				"title": "Support | Aquadecor Help Center",
+				"description": "Need help with your Aquadecor product? Get installation help, warranty support, and technical assistance from our team."
+			},
+			"hero": {
+				"badge": "Support Center",
+				"title": "How Can We Help?",
+				"subtitle": "Get assistance with installation, product issues, warranties, and more. Check our resources or submit a support ticket."
+			},
+			"resources": {
+				"title": "Find Answers Fast",
+				"faq": {
+					"title": "FAQ",
+					"description": "Common questions about our products, shipping, and installation"
+				},
+				"guides": {
+					"title": "Installation Guides",
+					"description": "Step-by-step instructions for setting up your background"
+				},
+				"contact": {
+					"title": "Contact Sales",
+					"description": "Questions about pricing or custom orders"
+				}
+			},
+			"form": {
+				"heading": "Still Need Help?",
+				"subheading": "Submit a support ticket and we'll get back to you within 24 hours.",
+				"fields": {
+					"orderNumber": {
+						"label": "Order Number",
+						"optional": "(optional)",
+						"placeholder": "e.g., ORD-12345"
+					},
+					"issueType": {
+						"label": "What can we help with?",
+						"placeholder": "Select issue type",
+						"options": {
+							"installation": "Installation Help",
+							"damage": "Damaged Product",
+							"warranty": "Warranty Claim",
+							"technical": "Technical Question",
+							"other": "Other Issue"
+						}
+					},
+					"message": {
+						"placeholder": "Describe your issue in detail. Include photos if relevant.",
+						"hint": "The more details you provide, the faster we can help."
+					}
+				},
+				"submit": "Submit Support Ticket"
+			},
+			"responseTime": {
+				"title": "24 Hour Response Time",
+				"description": "Our support team responds to all tickets within 24 hours on working days. For urgent issues, please include 'URGENT' in your message."
+			},
+			"beforeContact": {
+				"title": "Before Submitting",
+				"description": "Please check our",
+				"faqLink": "FAQ page"
+			}
+		}
+	}
+}

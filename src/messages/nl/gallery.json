@@ -1,0 +1,32 @@
+{
+	"gallery": {
+		"meta": {
+			"title": "Galerij | Klantenopstellingen",
+			"description": "Blader door duizenden echte aquariumopstellingen van Aquadecor-klanten wereldwijd. Laat je inspireren door enorme rifaquaria, nano-cubes en alles daartussenin."
+		},
+		"hero": {
+			"badge": "50K+ Setups",
+			"title": "Inspiratiegalerij",
+			"subtitle": "Zie hoe meer dan 50.000 hobbyisten hun aquaria hebben getransformeerd. Van enorme 1000L-opstellingen tot nano-cubes."
+		},
+		"toolbar": {
+			"results": "{count} resultaten",
+			"loading": "Laden..."
+		},
+		"sidebar": {
+			"filters": {
+				"title": "Filter op stijl",
+				"all": "Alle stijlen"
+			}
+		},
+		"empty": {
+			"message": "Nog geen afbeeldingen gevonden in deze categorie.",
+			"cta": "Bekijk alle foto's"
+		},
+		"loadMore": {
+			"tagline": "\"Alleen de natuur kan ons kopiëren\"",
+			"button": "Laad meer inspiratie",
+			"loading": "Laden..."
+		}
+	}
+}

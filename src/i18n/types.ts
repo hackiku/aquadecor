@@ -4,6 +4,7 @@ import common from '~/messages/en/common.json';
 import home from '~/messages/en/home.json';
 import shop from '~/messages/en/shop.json';
 import product from '~/messages/en/product.json';
+import gallery from '~/messages/en/gallery.json';
 import cart from '~/messages/en/cart.json';
 import checkout from '~/messages/en/checkout.json';
 import setup from '~/messages/en/setup.json';
@@ -13,6 +14,7 @@ import blog from '~/messages/en/blog.json';
 import legal from '~/messages/en/legal.json';
 import account from '~/messages/en/account.json';
 import faq from '~/messages/en/faq.json';
+import contact from '~/messages/en/contact.json';
 
 /**
  * Combine all individual namespace files into one Messages type.
@@ -24,6 +26,7 @@ export type Messages =
 	typeof home &
 	typeof shop &
 	typeof product &
+	typeof gallery &
 	typeof cart &
 	typeof checkout &
 	typeof setup &
@@ -32,7 +35,8 @@ export type Messages =
 	typeof blog &
 	typeof legal &
 	typeof account &
-	typeof faq;
+	typeof faq & 
+	typeof contact;
 
 /**
  * Recursively get all nested keys from an object
