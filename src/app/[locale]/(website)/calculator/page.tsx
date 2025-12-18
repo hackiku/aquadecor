@@ -2,6 +2,21 @@
 import { api, HydrateClient } from "~/trpc/server";
 import { CalculatorFlow } from "./_components/CalculatorFlow";
 import { VeenieKitBadge } from "./_components/VeenieKitBadge";
+// seo
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+
+
+// export async function generateMetadata({ params }: Props) {
+// 	const { locale } = await params;
+// 	const t = await getTranslations({ locale, namespace: 'calculator' });
+
+// 	return generateSEOMetadata({
+// 		currentLocale: locale,
+// 		path: '/calculator',
+// 		title: t('metadata.title'),
+// 		description: t('metadata.description'),
+// 	});
+// }
 
 export default async function CalculatorPage() {
 	// Fetch initial model categories server-side

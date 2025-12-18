@@ -1,24 +1,39 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
-// build time
-import { db } from '~/server/db';
-import { products, categories } from '~/server/db/schema';
-import { eq } from 'drizzle-orm';
-
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { Badge } from "~/components/ui/badge";
 import { Package, Shield, Zap, CheckCircle2 } from "lucide-react";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { db } from '~/server/db';
+import { products, categories } from '~/server/db/schema';
+import { eq } from 'drizzle-orm';
 // components
 import { CustomOnlyBadge } from "~/components/shop/product/CustomOnlyBadge";
 import { PricingCard } from "~/components/shop/checkout/PricingCard";
 import { LongDescriptionSection } from "~/components/shop/product/LongDescriptionSection";
 import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
+import { getTranslations } from "next-intl/server";
 
-// static build
+interface ProductDetailPageProps {
+	params: Promise<{
+		locale: string;
+		productLine: string;
+		categorySlug: string;
+		productSlug: string;
+	}>;
+	searchParams: Promise<{
+		market?: string;
+	}>;
+}
+
+// ========================================
+// STATIC GENERATION
+// ========================================
+
 export async function generateStaticParams() {
 	// Fetch all active products with their category info
 	const allProducts = await db
@@ -52,28 +67,15 @@ export async function generateStaticParams() {
 				productSlug: product.productSlug,
 			};
 		})
-		.filter(Boolean); // Remove nulls
+		.filter((p): p is NonNullable<typeof p> => p !== null); // Remove nulls with type guard
 }
 
+// ========================================
+// SEO METADATA WITH HREFLANG
+// ========================================
 
-
-
-interface ProductDetailPageProps {
-	params: Promise<{
-		locale: string;  // ← CRITICAL: Must include locale!
-		productLine: string;
-		categorySlug: string;
-		productSlug: string;
-	}>;
-	searchParams: Promise<{
-		market?: string;
-	}>;
-}
-
-
-// Generate metadata from DB
 export async function generateMetadata({ params }: ProductDetailPageProps) {
-	const { locale, productSlug } = await params;
+	const { locale, productLine, categorySlug, productSlug } = await params;
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
 	// Fetch product metadata
@@ -89,24 +91,23 @@ export async function generateMetadata({ params }: ProductDetailPageProps) {
 	}
 
 	// Use DB translations for SEO
-	// ✅ FIXED: Using metaTitle/metaDescription (not seoTitle/seoDescription)
 	const title = productMeta.metaTitle || productMeta.name || productSlug;
 	const description = productMeta.metaDescription || productMeta.shortDescription || '';
 
-	return {
+	// ✅ Generate complete SEO metadata with hreflang
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: `/shop/${productLine}/${categorySlug}/${productSlug}`,
 		title,
 		description,
-		openGraph: {
-			title,
-			description,
-			images: productMeta.heroImageUrl ? [productMeta.heroImageUrl] : [],
-			type: 'website', // ✅ Next.js only supports 'website', 'article', 'book', etc.
-		},
-		alternates: {
-			canonical: `/${locale}/shop/${productMeta.productLineSlug}/${productMeta.categorySlug}/${productSlug}`,
-		},
-	};
+		image: productMeta.heroImageUrl || undefined,
+		type: 'website',
+	});
 }
+
+// ========================================
+// PAGE COMPONENT
+// ========================================
 
 export default async function ProductDetailPage({ params, searchParams }: ProductDetailPageProps) {
 	const { locale, productLine, categorySlug, productSlug } = await params;
@@ -294,7 +295,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 									</div>
 								)}
 
-								{/* Key Features - Keep in English for now as requested */}
+								{/* Key Features */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">
 										{t('sections.keyFeatures')}

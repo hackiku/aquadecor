@@ -2,6 +2,7 @@
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "~/i18n/routing";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { FAQClient } from "./FAQClient";
 
 type Props = {
@@ -11,13 +12,16 @@ type Props = {
 // 1. Generate Metadata for SEO
 export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
-	const t = await getTranslations({ locale, namespace: "faq" });
+	const t = await getTranslations({ locale, namespace: 'faq' });
 
-	return {
-		title: t("headline"),
-		description: t("subHeadline"),
-	};
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/faq',
+		title: t('headline'), // Already have this
+		description: t('subHeadline'), // Already have this
+	});
 }
+
 
 // 2. Generate static params for all locales
 export function generateStaticParams() {

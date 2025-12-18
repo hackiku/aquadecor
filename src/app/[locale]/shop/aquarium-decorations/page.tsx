@@ -13,6 +13,13 @@ import { Button } from "~/components/ui/button";
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
+export async function generateStaticParams() {
+	// Even though page is dynamic, this helps Next.js understand structure
+	// and can pre-render a "default" version at build time
+	return [{}]; // Empty object = generate this route once
+}
+
+
 type Props = {
 	params: Promise<{ locale: string }>;
 };

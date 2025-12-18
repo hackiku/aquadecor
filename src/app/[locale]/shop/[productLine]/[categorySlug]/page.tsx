@@ -1,18 +1,16 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
-
-// static build
-import { db } from "~/server/db";
-import { categories } from '~/server/db/schema';
-import { eq } from 'drizzle-orm';
-// apis
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
 import { api, HydrateClient } from "~/trpc/server";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { db } from '~/server/db';
+import { categories } from '~/server/db/schema';
+import { eq } from 'drizzle-orm';
 
 interface PageProps {
 	params: Promise<{
-		locale: string;  // ← CRITICAL: Must include locale!
+		locale: string;
 		productLine: string;
 		categorySlug: string;
 	}>;
@@ -20,6 +18,10 @@ interface PageProps {
 		market?: string;
 	}>;
 }
+
+// ========================================
+// STATIC GENERATION
+// ========================================
 
 export async function generateStaticParams() {
 	const allCategories = await db.query.categories.findMany({
@@ -33,8 +35,10 @@ export async function generateStaticParams() {
 	}));
 }
 
+// ========================================
+// SEO METADATA WITH HREFLANG
+// ========================================
 
-// Generate metadata from DB
 export async function generateMetadata({ params }: PageProps) {
 	const { locale, productLine, categorySlug } = await params;
 	const dbLocale = locale === 'us' ? 'en' : locale;
@@ -55,20 +59,20 @@ export async function generateMetadata({ params }: PageProps) {
 	const title = categoryMeta.metaTitle || categoryMeta.name || categorySlug;
 	const description = categoryMeta.metaDescription || categoryMeta.description || '';
 
-	return {
+	// ✅ Generate complete SEO metadata with hreflang
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: `/shop/${productLine}/${categorySlug}`,
 		title,
 		description,
-		openGraph: {
-			title,
-			description,
-			images: categoryMeta.heroImageUrl ? [categoryMeta.heroImageUrl] : [],
-			type: 'website',
-		},
-		alternates: {
-			canonical: `/${locale}/shop/${productLine}/${categorySlug}`,
-		},
-	};
+		image: categoryMeta.heroImageUrl || undefined,
+		type: 'website',
+	});
 }
+
+// ========================================
+// PAGE COMPONENT
+// ========================================
 
 export default async function CategoryProductsPage({ params, searchParams }: PageProps) {
 	const { locale, productLine, categorySlug } = await params;
@@ -83,7 +87,7 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 	// Fetch products using the category slug AND market
 	const result = await api.product.getByCategory({
 		categorySlug: categorySlug,
-		locale: dbLocale,  // ← Use dbLocale, not hardcoded "en"
+		locale: dbLocale,
 		userMarket: market,
 	});
 
@@ -96,7 +100,7 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 	// Fetch full category list to get metadata (name, description, etc)
 	const categories = await api.product.getCategoriesForProductLine({
 		productLineSlug: productLine,
-		locale: dbLocale,  // ← Use dbLocale
+		locale: dbLocale,
 	});
 
 	const currentCategory = categories.find((c) => c.slug === categorySlug);
@@ -122,7 +126,6 @@ export default async function CategoryProductsPage({ params, searchParams }: Pag
 		heroImageAlt: product.heroImageAlt ?? null,
 		categorySlug: categorySlug,
 		productLineSlug: productLine,
-		// V2 pricing fields
 		basePriceEurCents: product.unitPriceEurCents ?? null,
 		priceNote: null,
 		variantOptions: null,

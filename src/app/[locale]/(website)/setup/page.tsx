@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '~/i18n/routing';
 import Image from "next/image";
 import { Link } from '~/i18n/navigation'; // Use our i18n-aware Link
+import { generateSEOMetadata } from '~/i18n/seo/hreflang';
 
 type Props = {
 	params: Promise<{ locale: string }>;
@@ -14,10 +15,12 @@ export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'setup' });
 
-	return {
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/setup',
 		title: t('headline'),
 		description: t('subHeadline'),
-	};
+	});
 }
 
 // Generate static params for all locales

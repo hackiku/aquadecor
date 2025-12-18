@@ -5,7 +5,7 @@ import { categories, products } from '~/server/db/schema';
 import { routing } from '~/i18n/routing';
 import { eq } from 'drizzle-orm';
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecor.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	// Fetch all data in parallel for performance
@@ -47,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 				productLine: category.productLine,
 			};
 		})
-		.filter(Boolean); // Remove nulls
+		.filter((p): p is NonNullable<typeof p> => p !== null); // Remove nulls with type guard
 
 	const sitemapEntries: MetadataRoute.Sitemap = [];
 
