@@ -1,5 +1,10 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/[productSlug]/page.tsx
 
+// build time
+import { db } from '~/server/db';
+import { products, categories } from '~/server/db/schema';
+import { eq } from 'drizzle-orm';
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -13,6 +18,46 @@ import { LongDescriptionSection } from "~/components/shop/product/LongDescriptio
 import { ImageSliderWithModal } from "~/components/shop/product/ImageSliderWithModal";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
 
+// static build
+export async function generateStaticParams() {
+	// Fetch all active products with their category info
+	const allProducts = await db
+		.select({
+			productSlug: products.slug,
+			categoryId: products.categoryId,
+		})
+		.from(products)
+		.where(eq(products.isActive, true));
+
+	// Fetch all active categories to map IDs to slugs
+	const allCategories = await db.query.categories.findMany({
+		columns: { id: true, slug: true, productLine: true },
+		where: eq(categories.isActive, true)
+	});
+
+	// Create a map for quick lookup
+	const categoryMap = new Map(
+		allCategories.map(cat => [cat.id, { slug: cat.slug, productLine: cat.productLine }])
+	);
+
+	// Generate params for each product
+	return allProducts
+		.map(product => {
+			const category = categoryMap.get(product.categoryId);
+			if (!category) return null; // Skip if category not found
+
+			return {
+				productLine: category.productLine,
+				categorySlug: category.slug,
+				productSlug: product.productSlug,
+			};
+		})
+		.filter(Boolean); // Remove nulls
+}
+
+
+
+
 interface ProductDetailPageProps {
 	params: Promise<{
 		locale: string;  // ← CRITICAL: Must include locale!
@@ -24,6 +69,7 @@ interface ProductDetailPageProps {
 		market?: string;
 	}>;
 }
+
 
 // Generate metadata from DB
 export async function generateMetadata({ params }: ProductDetailPageProps) {

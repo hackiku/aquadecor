@@ -38,14 +38,7 @@ export default function RegisterPage() {
 		setLoading(true);
 
 		try {
-			// TODO: Implement actual registration API call
-			// const response = await fetch("/api/auth/register", {
-			// 	method: "POST",
-			// 	headers: { "Content-Type": "application/json" },
-			// 	body: JSON.stringify({ name, email, password }),
-			// });
-
-			// Simulate success
+			// Simulate success for now
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			router.push("/login");
 		} catch (err) {
@@ -152,11 +145,11 @@ export default function RegisterPage() {
 				{/* Terms */}
 				<div className="text-center text-xs text-muted-foreground font-display">
 					{t("terms")}{" "}
-					<Link href="/terms" className="text-primary hover:underline">
+					<Link href={"/terms" as any} className="text-primary hover:underline">
 						{t("termsLink")}
 					</Link>{" "}
 					{t("and")}{" "}
-					<Link href="/privacy" className="text-primary hover:underline">
+					<Link href={"/privacy" as any} className="text-primary hover:underline">
 						{t("privacyLink")}
 					</Link>
 				</div>

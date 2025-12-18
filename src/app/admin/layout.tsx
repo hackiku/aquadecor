@@ -1,4 +1,3 @@
-
 // src/app/admin/layout.tsx
 
 "use client";
@@ -8,7 +7,8 @@ import { Sidebar } from "./_components/layout/Sidebar";
 import { Header } from "./_components/layout/Header";
 import { motion } from "framer-motion";
 import { Toaster } from "sonner";
-import { TRPCReactProvider } from "~/trpc/react"; // <-- IMPORT TRPC PROVIDER
+import { TRPCReactProvider } from "~/trpc/react";
+import { SessionProvider } from "next-auth/react";
 
 export default function AdminLayout({
 	children,
@@ -42,26 +42,29 @@ export default function AdminLayout({
 
 	return (
 		// WRAP WITH TRPC PROVIDER
-		<TRPCReactProvider>
-			<div className="flex min-h-screen bg-background">
-				<Sidebar />
-				<motion.div
-					initial={false}
-					animate={{
-						marginLeft: sidebarWidth,
-					}}
-					transition={{ duration: 0.3, ease: "easeInOut" }}
-					className="flex-1 flex flex-col min-h-screen"
-				>
-					<Header />
-					<main className="flex-1 p-8">
-						<div className="max-w-[1600px] mx-auto">
-							{children}
-						</div>
-					</main>
-				</motion.div>
-				<Toaster position="top-right" />
-			</div>
-		</TRPCReactProvider>
+		<SessionProvider>
+
+			<TRPCReactProvider>
+				<div className="flex min-h-screen bg-background">
+					<Sidebar />
+					<motion.div
+						initial={false}
+						animate={{
+							marginLeft: sidebarWidth,
+						}}
+						transition={{ duration: 0.3, ease: "easeInOut" }}
+						className="flex-1 flex flex-col min-h-screen"
+					>
+						<Header />
+						<main className="flex-1 p-8">
+							<div className="max-w-[1600px] mx-auto">
+								{children}
+							</div>
+						</main>
+					</motion.div>
+					<Toaster position="top-right" />
+				</div>
+			</TRPCReactProvider>
+		</SessionProvider>
 	);
 }

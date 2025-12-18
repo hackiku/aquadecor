@@ -26,13 +26,15 @@ import { db } from "~/server/db";
  *
  * @see https://trpc.io/docs/server/context
  */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-	const session = await auth();
+export const createTRPCContext = async (opts?: { headers?: Headers }) => {
+	// ✅ FIX: During static generation (build time), opts might be undefined
+	// Only try to get session if we have a proper request context with headers
+	const session = opts?.headers ? await auth() : null;
 
 	return {
 		db,
 		session,
-		...opts,
+		...(opts || {}), // ✅ FIX: Spread safely even if opts is undefined
 	};
 };
 
@@ -140,14 +142,16 @@ export const protectedProcedure = t.procedure
  *
  * @see https://trpc.io/docs/procedures
  */
-export const adminProcedure = publicProcedure
 
+
+export const adminProcedure = publicProcedure;
 // export const adminProcedure = t.procedure
 // 	.use(timingMiddleware)
 // 	.use(({ ctx, next }) => {
 // 		if (!ctx.session?.user) {
 // 			throw new TRPCError({ code: "UNAUTHORIZED" });
 // 		}
+
 // 		// Check if user has admin role
 // 		if (ctx.session.user.role !== "admin") {
 // 			throw new TRPCError({
@@ -155,6 +159,7 @@ export const adminProcedure = publicProcedure
 // 				message: "Admin access required"
 // 			});
 // 		}
+
 // 		return next({
 // 			ctx: {
 // 				// infers the `session` as non-nullable with admin user

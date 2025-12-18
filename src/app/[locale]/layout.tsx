@@ -6,6 +6,7 @@ import { routing } from '~/i18n/routing';
 import { TRPCReactProvider } from '~/trpc/react';
 import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
+import { SessionProvider } from "next-auth/react";
 
 type Props = {
 	children: React.ReactNode;
@@ -27,13 +28,15 @@ export default async function LocaleLayout({ children, params }: Props) {
 	const messages = await getMessages();
 
 	return (
-		<TRPCReactProvider>
-			<NextIntlClientProvider messages={messages}>
-				<ConditionalNav navContent={<NavWithBanner />}>
-					{children}
-				</ConditionalNav>
-			</NextIntlClientProvider>
-		</TRPCReactProvider>
+		<SessionProvider>
+			<TRPCReactProvider>
+				<NextIntlClientProvider messages={messages}>
+					<ConditionalNav navContent={<NavWithBanner />}>
+						{children}
+					</ConditionalNav>
+				</NextIntlClientProvider>
+			</TRPCReactProvider>
+		</SessionProvider>
 	);
 }
 

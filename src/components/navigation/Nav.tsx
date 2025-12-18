@@ -16,15 +16,21 @@ import { ResourcesMegaMenu } from "./ResourcesMegaMenu";
 import { MobileNav } from "./MobileNav";
 import { enabledNavLinks } from "~/data/navigation";
 import { Button } from "../ui/button";
+import { useSession } from "next-auth/react";
 
 export function Nav() {
 	const router = useRouter();
 	const { translateNavLink } = useNavigationTranslations();
+	const { data: session, status } = useSession();
+
 	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
 	const [cartCount, setCartCount] = useState(0);
 	const [wishlistCount, setWishlistCount] = useState(0);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+	// Check if user is logged in
+	const isLoggedIn = status === "authenticated";
 
 	// Listen for cart updates
 	useEffect(() => {
@@ -116,12 +122,17 @@ export function Nav() {
 							>
 								<Search className="h-4 w-4" />
 							</button>
+
+							{/* Account Link - Show indicator if logged in */}
 							<Link
 								href="/account"
-								className="flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
+								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
 								aria-label="Account"
 							>
 								<User className="h-4 w-4" />
+								{isLoggedIn && (
+									<span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-black" />
+								)}
 							</Link>
 
 							<button
@@ -155,12 +166,16 @@ export function Nav() {
 						<div className="flex md:hidden items-center space-x-2">
 							<LanguageSwitcher />
 
+							{/* Account Link - Show indicator if logged in */}
 							<Link
 								href="/account"
-								className="flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
+								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
 								aria-label="Account"
 							>
 								<User className="h-4 w-4" />
+								{isLoggedIn && (
+									<span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-black" />
+								)}
 							</Link>
 
 							<button

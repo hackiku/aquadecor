@@ -11,25 +11,17 @@ import { countries } from "./countries";
 // ============================================================================
 
 export const users = createTable("user", (d) => ({
-	id: d
-		.varchar({ length: 255 })
-		.notNull()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
+	id: d.varchar({ length: 255 }).notNull().primaryKey().$defaultFn(() => crypto.randomUUID()),
 	name: d.varchar({ length: 255 }),
 	email: d.varchar({ length: 255 }).notNull(),
-	emailVerified: d
-		.timestamp({
-			mode: "date",
-			withTimezone: true,
-		})
-		.$defaultFn(() => new Date()),
+	emailVerified: d.timestamp({ mode: "date", withTimezone: true }).$defaultFn(() => new Date()),
 	image: d.varchar({ length: 255 }),
 
-	// --- E-commerce Extensions ---
-	role: d.text().default("customer").notNull(), // 'admin' | 'customer'
-	phone: d.text(),
+	// ADD THIS:
+	password: d.text(), // Nullable - OAuth users won't have password
 
+	role: d.text().default("customer").notNull(), // "admin" | "customer" | "promoter"
+	phone: d.text(),
 	createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
 }));
 
@@ -113,6 +105,38 @@ export const accounts = createTable(
 	],
 );
 
+export const verificationTokens = createTable(
+	"verification_token",
+	(d) => ({
+		identifier: d.varchar({ length: 255 }).notNull(),
+		token: d.varchar({ length: 255 }).notNull(),
+		expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
+	}),
+	(t) => [primaryKey({ columns: [t.identifier, t.token] })],
+);
+
+// ============================================================================
+// PASSWORD RESET
+// ============================================================================
+export const passwordResets = createTable(
+	"password_reset",
+	(d) => ({
+		id: d.text().primaryKey().$defaultFn(() => crypto.randomUUID()),
+		userId: d.varchar({ length: 255 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+		token: d.text().notNull().unique(), // Hashed token
+		expires: d.timestamp({ withTimezone: true }).notNull(),
+		createdAt: d.timestamp({ withTimezone: true }).$defaultFn(() => new Date()).notNull(),
+	}),
+	(t) => [
+		index("password_reset_token_idx").on(t.token),
+		index("password_reset_user_idx").on(t.userId),
+	]
+);
+
+// ============================================================================
+// RELATIONS
+// ============================================================================
+
 export const accountsRelations = relations(accounts, ({ one }) => ({
 	user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
@@ -134,15 +158,14 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 	user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const verificationTokens = createTable(
-	"verification_token",
-	(d) => ({
-		identifier: d.varchar({ length: 255 }).notNull(),
-		token: d.varchar({ length: 255 }).notNull(),
-		expires: d.timestamp({ mode: "date", withTimezone: true }).notNull(),
+
+export const passwordResetsRelations = relations(passwordResets, ({ one }) => ({
+	user: one(users, {
+		fields: [passwordResets.userId],
+		references: [users.id],
 	}),
-	(t) => [primaryKey({ columns: [t.identifier, t.token] })],
-);
+}));
+
 
 export type User = InferSelectModel<typeof users>;
 export type Address = InferSelectModel<typeof addresses>;
@@ -183,3 +206,5 @@ export type UserWithStats = UserProfile & {
 	addressCount?: number;
 	defaultAddress?: Address | null;
 };
+
+export type PasswordReset = InferSelectModel<typeof passwordResets>;

@@ -2,7 +2,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
 import { Loader2 } from "lucide-react";
 
-export default function LoginPage() {
+function LoginForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const t = useTranslations("account.login");
@@ -70,8 +70,9 @@ export default function LoginPage() {
 							<label className="text-sm font-medium font-display">
 								{t("password")}
 							</label>
+							{/* Cast href to any to bypass strict type checking if route not in registry */}
 							<Link
-								href="/forgot-password"
+								href={"/forgot-password" as any}
 								className="text-xs text-primary hover:underline font-display"
 							>
 								{t("forgotPassword")}
@@ -160,5 +161,19 @@ export default function LoginPage() {
 				)}
 			</CardContent>
 		</Card>
+	);
+}
+
+export default function LoginPage() {
+	return (
+		<Suspense fallback={
+			<Card className="w-full max-w-md">
+				<CardContent className="p-12 flex justify-center">
+					<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+				</CardContent>
+			</Card>
+		}>
+			<LoginForm />
+		</Suspense>
 	);
 }

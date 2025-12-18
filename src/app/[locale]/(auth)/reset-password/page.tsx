@@ -1,7 +1,6 @@
-// src/app/[locale]/(auth)/reset-password/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "~/i18n/navigation";
@@ -10,7 +9,8 @@ import { Input } from "~/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
-export default function ResetPasswordPage() {
+// 1. Move logic to a separate component
+function ResetPasswordForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
@@ -44,13 +44,7 @@ export default function ResetPasswordPage() {
 		setLoading(true);
 
 		try {
-			// TODO: Implement password reset API call
-			// const response = await fetch("/api/auth/reset-password", {
-			// 	method: "POST",
-			// 	headers: { "Content-Type": "application/json" },
-			// 	body: JSON.stringify({ token, password }),
-			// });
-
+			// Simulate API call
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			setSuccess(true);
 
@@ -165,5 +159,20 @@ export default function ResetPasswordPage() {
 				</div>
 			</CardContent>
 		</Card>
+	);
+}
+
+// 2. Wrap in Suspense
+export default function ResetPasswordPage() {
+	return (
+		<Suspense fallback={
+			<Card className="w-full max-w-md">
+				<CardContent className="p-12 flex justify-center">
+					<Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+				</CardContent>
+			</Card>
+		}>
+			<ResetPasswordForm />
+		</Suspense>
 	);
 }

@@ -40,10 +40,22 @@ export function AccountSidebar({ className }: { className?: string }) {
 		}
 	};
 
+	// Helper to check if route is active (handles locale prefix)
+	const isActiveRoute = (href: string) => {
+		// Extract path without locale (pathname includes locale like /en/account)
+		const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '');
+
+		// Exact match for /account, otherwise check if starts with href
+		if (href === "/account") {
+			return pathWithoutLocale === "/account";
+		}
+		return pathWithoutLocale.startsWith(href);
+	};
+
 	return (
 		<nav className={cn("space-y-1", className)}>
 			{navigationKeys.map((item) => {
-				const isActive = pathname === item.href;
+				const isActive = isActiveRoute(item.href);
 				return (
 					<Link
 						key={item.key}
@@ -51,7 +63,7 @@ export function AccountSidebar({ className }: { className?: string }) {
 						className={cn(
 							"flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-display font-medium transition-colors",
 							isActive
-								? "bg-primary/5 text-primary"
+								? "bg-primary/10 text-primary"
 								: "text-muted-foreground hover:bg-muted hover:text-foreground"
 						)}
 					>

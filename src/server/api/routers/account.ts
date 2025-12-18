@@ -1,44 +1,14 @@
 // src/server/api/routers/account.ts
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { users, addresses, type User, type Address, type UserProfile } from "~/server/db/schema";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { users, addresses, type Address, type UserProfile } from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import bcrypt from "bcryptjs";
 
-// ---------------------------------------------------------
-// Helper: Get Current User ID
-// ---------------------------------------------------------
-const getCurrentUserId = async (ctx: any): Promise<string> => {
-	// PRODUCTION VERSION (uncomment when auth is ready):
-	/*
-	if (!ctx.session?.user?.id) {
-		throw new TRPCError({ 
-			code: "UNAUTHORIZED",
-			message: "You must be logged in to access this resource" 
-		});
-	}
-	return ctx.session.user.id;
-	*/
-
-	// DEV VERSION (using seed data):
-	const user = await ctx.db.query.users.findFirst({
-		where: eq(users.email, "brankanemet15@gmail.com")
-	});
-
-	if (!user) {
-		throw new TRPCError({
-			code: "NOT_FOUND",
-			message: "Mock user not found. Run seed first."
-		});
-	}
-
-	return user.id;
-};
-
-// ---------------------------------------------------------
+// ============================================================================
 // Validation Schemas
-// ---------------------------------------------------------
+// ============================================================================
+
 const addressSchema = z.object({
 	label: z.string().min(1, "Label is required"),
 	firstName: z.string().min(1, "First name is required"),
@@ -59,69 +29,18 @@ const profileSchema = z.object({
 	phone: z.string().optional(),
 });
 
-const registerSchema = z.object({
-	name: z.string().min(1, "Name is required"),
-	email: z.string().email("Invalid email address"),
-	password: z.string().min(8, "Password must be at least 8 characters"),
-});
+// ============================================================================
+// Account Router - All Protected (Must be logged in)
+// ============================================================================
 
-// ---------------------------------------------------------
-// Account Router
-// ---------------------------------------------------------
 export const accountRouter = createTRPCRouter({
-
-	// ========================================================================
-	// REGISTRATION (Public - no auth needed)
-	// ========================================================================
-
-	register: publicProcedure
-		.input(registerSchema)
-		.mutation(async ({ ctx, input }): Promise<{ success: boolean; userId: string }> => {
-			// Check if user already exists
-			const existingUser = await ctx.db.query.users.findFirst({
-				where: eq(users.email, input.email.toLowerCase())
-			});
-
-			if (existingUser) {
-				throw new TRPCError({
-					code: "CONFLICT",
-					message: "An account with this email already exists"
-				});
-			}
-
-			// Hash password (for future Credentials provider)
-			const hashedPassword = await bcrypt.hash(input.password, 10);
-
-			// Create user
-			const [newUser] = await ctx.db
-				.insert(users)
-				.values({
-					name: input.name,
-					email: input.email.toLowerCase(),
-					role: "customer",
-					// TODO: Add hashedPassword field to schema for Credentials provider
-				})
-				.returning();
-
-			if (!newUser) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: "Failed to create account"
-				});
-			}
-
-			return {
-				success: true,
-				userId: newUser.id,
-			};
-		}),
 
 	// ========================================================================
 	// PROFILE MANAGEMENT
 	// ========================================================================
 
-	getProfile: publicProcedure.query(async ({ ctx }): Promise<UserProfile | null> => {
-		const userId = await getCurrentUserId(ctx);
+	getProfile: protectedProcedure.query(async ({ ctx }): Promise<UserProfile | null> => {
+		const userId = ctx.session.user.id; // Guaranteed to exist
 
 		const user = await ctx.db.query.users.findFirst({
 			where: eq(users.id, userId),
@@ -138,10 +57,10 @@ export const accountRouter = createTRPCRouter({
 		return user ?? null;
 	}),
 
-	updateProfile: publicProcedure
+	updateProfile: protectedProcedure
 		.input(profileSchema)
 		.mutation(async ({ ctx, input }): Promise<UserProfile> => {
-			const userId = await getCurrentUserId(ctx);
+			const userId = ctx.session.user.id;
 
 			const [updated] = await ctx.db
 				.update(users)
@@ -175,8 +94,8 @@ export const accountRouter = createTRPCRouter({
 
 	address: createTRPCRouter({
 
-		getAll: publicProcedure.query(async ({ ctx }): Promise<Address[]> => {
-			const userId = await getCurrentUserId(ctx);
+		getAll: protectedProcedure.query(async ({ ctx }): Promise<Address[]> => {
+			const userId = ctx.session.user.id;
 
 			return await ctx.db.query.addresses.findMany({
 				where: eq(addresses.userId, userId),
@@ -184,10 +103,10 @@ export const accountRouter = createTRPCRouter({
 			});
 		}),
 
-		getById: publicProcedure
+		getById: protectedProcedure
 			.input(z.object({ id: z.string() }))
 			.query(async ({ ctx, input }): Promise<Address | null> => {
-				const userId = await getCurrentUserId(ctx);
+				const userId = ctx.session.user.id;
 
 				const address = await ctx.db.query.addresses.findFirst({
 					where: and(
@@ -199,10 +118,10 @@ export const accountRouter = createTRPCRouter({
 				return address ?? null;
 			}),
 
-		create: publicProcedure
+		create: protectedProcedure
 			.input(addressSchema)
 			.mutation(async ({ ctx, input }): Promise<Address> => {
-				const userId = await getCurrentUserId(ctx);
+				const userId = ctx.session.user.id;
 
 				return await ctx.db.transaction(async (tx) => {
 					// If setting as default, unset others first
@@ -236,10 +155,10 @@ export const accountRouter = createTRPCRouter({
 				});
 			}),
 
-		update: publicProcedure
+		update: protectedProcedure
 			.input(addressSchema.extend({ id: z.string() }))
 			.mutation(async ({ ctx, input }): Promise<Address> => {
-				const userId = await getCurrentUserId(ctx);
+				const userId = ctx.session.user.id;
 				const { id, ...data } = input;
 
 				// Ensure user owns this address
@@ -277,10 +196,10 @@ export const accountRouter = createTRPCRouter({
 				});
 			}),
 
-		delete: publicProcedure
+		delete: protectedProcedure
 			.input(z.object({ id: z.string() }))
 			.mutation(async ({ ctx, input }) => {
-				const userId = await getCurrentUserId(ctx);
+				const userId = ctx.session.user.id;
 
 				// Check ownership
 				const existing = await ctx.db.query.addresses.findFirst({
@@ -298,10 +217,10 @@ export const accountRouter = createTRPCRouter({
 				return { success: true };
 			}),
 
-		setDefault: publicProcedure
+		setDefault: protectedProcedure
 			.input(z.object({ id: z.string() }))
 			.mutation(async ({ ctx, input }): Promise<Address> => {
-				const userId = await getCurrentUserId(ctx);
+				const userId = ctx.session.user.id;
 
 				// Verify ownership
 				const existing = await ctx.db.query.addresses.findFirst({
@@ -335,6 +254,96 @@ export const accountRouter = createTRPCRouter({
 					}
 
 					return updated;
+				});
+			}),
+	}),
+
+	// ========================================================================
+	// ORDER HISTORY (Protected)
+	// ========================================================================
+
+	orders: createTRPCRouter({
+		getAll: protectedProcedure.query(async ({ ctx }) => {
+			const userEmail = ctx.session.user.email;
+
+			// TODO: Add userId FK to orders table, then use:
+			// const userId = ctx.session.user.id;
+			// const orders = await ctx.db.query.orders.findMany({
+			// 	where: eq(orders.userId, userId),
+			// 	orderBy: desc(orders.createdAt)
+			// });
+
+			// For now, query by email
+			const { orders } = await import("~/server/db/schema");
+			const { desc, eq } = await import("drizzle-orm");
+
+			return await ctx.db.query.orders.findMany({
+				where: eq(orders.email, userEmail ?? ""),
+				orderBy: (o, { desc }) => [desc(o.createdAt)],
+				with: {
+					items: true,
+				},
+			});
+		}),
+
+		getById: protectedProcedure
+			.input(z.object({ id: z.string() }))
+			.query(async ({ ctx, input }) => {
+				const userEmail = ctx.session.user.email;
+				const { orders } = await import("~/server/db/schema");
+				const { eq, and } = await import("drizzle-orm");
+
+				const order = await ctx.db.query.orders.findFirst({
+					where: and(
+						eq(orders.id, input.id),
+						eq(orders.email, userEmail ?? "")
+					),
+					with: {
+						items: true,
+					},
+				});
+
+				if (!order) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: "Order not found"
+					});
+				}
+
+				return order;
+			}),
+	}),
+
+	// ========================================================================
+	// WISHLIST (Protected) - TODO: Implement when schema is ready
+	// ========================================================================
+
+	wishlist: createTRPCRouter({
+		getAll: protectedProcedure.query(async ({ ctx }) => {
+			// TODO: Implement when wishlist table exists
+			throw new TRPCError({
+				code: "NOT_IMPLEMENTED",
+				message: "Wishlist not yet implemented"
+			});
+		}),
+
+		add: protectedProcedure
+			.input(z.object({ productId: z.string() }))
+			.mutation(async ({ ctx, input }) => {
+				// TODO: Implement
+				throw new TRPCError({
+					code: "NOT_IMPLEMENTED",
+					message: "Wishlist not yet implemented"
+				});
+			}),
+
+		remove: protectedProcedure
+			.input(z.object({ productId: z.string() }))
+			.mutation(async ({ ctx, input }) => {
+				// TODO: Implement
+				throw new TRPCError({
+					code: "NOT_IMPLEMENTED",
+					message: "Wishlist not yet implemented"
 				});
 			}),
 	}),

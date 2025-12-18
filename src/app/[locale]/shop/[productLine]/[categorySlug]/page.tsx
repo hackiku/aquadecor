@@ -1,4 +1,10 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
+
+// static build
+import { db } from "~/server/db";
+import { categories } from '~/server/db/schema';
+import { eq } from 'drizzle-orm';
+// apis
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
@@ -14,6 +20,19 @@ interface PageProps {
 		market?: string;
 	}>;
 }
+
+export async function generateStaticParams() {
+	const allCategories = await db.query.categories.findMany({
+		columns: { slug: true, productLine: true },
+		where: eq(categories.isActive, true)
+	});
+
+	return allCategories.map(cat => ({
+		productLine: cat.productLine,
+		categorySlug: cat.slug,
+	}));
+}
+
 
 // Generate metadata from DB
 export async function generateMetadata({ params }: PageProps) {

@@ -1,5 +1,5 @@
 // @ts-nocheck
-// src/server/api/middleware/validatePrice.ts
+// src/server/api/helpers/validatePrice.ts
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";

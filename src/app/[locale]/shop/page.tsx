@@ -1,4 +1,5 @@
 // src/app/[locale]/shop/page.tsx
+
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Package } from "lucide-react";
@@ -6,10 +7,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { ProductCard } from "~/components/shop/product/ProductCard";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
-import { getLocale } from "~/i18n/utils";
-import type { Locale } from "~/i18n/routing";
+// import { getLocale } from "~/i18n/utils";
+// import type { Locale } from "~/i18n/routing";
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 
