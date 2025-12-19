@@ -2,43 +2,50 @@
 	"home": {
 		"meta": {
 			"title": "Aquadecor - Sfondi 3D Premium per Acquari",
-			"description": "Trasforma il tuo acquario con gli sfondi e le decorazioni 3D più realistici. Realizzati a mano in Europa da oltre 20 anni."
+			"description": "Trasforma il tuo acquario con gli sfondi e le decorazioni 3D più realistici. Artigianato europeo da oltre 20 anni."
 		},
 		"hero": {
 			"badge": "Prodotto in Europa",
-			"headline": "Gli Sfondi 3D per Acquari Più Realistici",
-			"subheadline": "Perfezione artigianale che trasforma il tuo acquario in un capolavoro vivente",
+			"headline": {
+				"part1": "Gli sfondi 3D e decorazioni per acquari",
+				"highlighted": "più realistici",
+				"part2": "al mondo"
+			},
+			"subheadline": {
+				"part1": "Il segreto",
+				"highlighted": "meno custodito",
+				"part2": "della comunità acquariofila per creare habitat naturali meravigliosi."
+			},
 			"cta": {
-				"primary": "Acquista Sfondi",
-				"secondary": "Prova il Calcolatore 3D"
+				"primary": "Acquista ora",
+				"secondary": "Ordina su misura"
 			}
 		},
 		"tagline": {
 			"headline": "Solo la natura può copiarci",
-			"subheadline": "Sfondi 3D artigianali così realistici che anche la natura prende appunti."
+			"subheadline": "Sfondi 3D artigianali così realistici che persino la natura prende appunti."
 		},
-		"trust": {
-			"tested": {
-				"emoji": "🔬",
-				"title": "Testato in Laboratorio"
+		"slider": {
+			"backgrounds": {
+				"title": "Sfondi 3D",
+				"subtitle": "Formazioni rocciose realistiche su misura",
+				"href": "/shop/3d-backgrounds",
+				"cta": "Vedi tutti"
 			},
-			"waterSafe": {
-				"emoji": "🌊",
-				"title": "100% Sicuro per l'Acqua"
-			},
-			"eco": {
-				"emoji": "♻️",
-				"title": "Materiali Eco-Sostenibili"
+			"decorations": {
+				"title": "Decorazioni per Acquari",
+				"subtitle": "Piante, rocce e legni che durano per sempre",
+				"href": "/shop/aquarium-decorations",
+				"cta": "Vedi tutti"
 			}
 		},
 		"features": {
-			"headline": "Costruito per Durare per Sempre",
-			"subheadline": "(e per Essere Bello)",
-			"description": "Repliche ossessivamente iper-realistiche, realizzate con miscele di poliuretano/resina. Non tossiche, resistenti alla temperatura e dotate di garanzie di 20 anni o a vita."
+			"headline": "Costruiti per durare (con uno stile impeccabile)",
+			"description": "Repliche iper-realistiche realizzate in miscele di poliuretano e resina. Atossiche, resistenti alla temperatura e con garanzia di 20 anni o a vita."
 		},
 		"social": {
-			"headline": "Scelto da oltre 20 anni da più di 200.000 Appassionati di Acquari",
-			"subheadline": "Allestimenti reali da appassionati di acquari di tutto il mondo."
+			"headline": "Scelti da oltre 20 anni da 200.000+ appassionati",
+			"subheadline": "Allestimenti incredibilmente reali da appassionati di tutto il mondo."
 		},
 		"stats": {
 			"years": {
@@ -59,13 +66,13 @@
 			}
 		},
 		"comparison": {
-			"headline": "Qualunque cosa scegliate, non ve ne pentirete!",
-			"subheadline": "Dimensioni standard per una configurazione rapida, o realizzati su misura per adattarsi alla vostra visione esatta."
+			"headline": "Crea il tuo acquario esattamente come vuoi",
+			"subheadline": "Dimensioni standard per un allestimento rapido, o su misura per adattarsi alla tua visione esatta."
 		},
 		"calculator": {
-			"headline": "Progetta il Tuo Sfondo Perfetto in 3D",
-			"description": "Il nostro calcolatore 3D interattivo ti consente di visualizzare e personalizzare ogni dettaglio prima di ordinare.",
-			"cta": "Prova il Calcolatore"
+			"headline": "Progetta il tuo sfondo perfetto in 3D",
+			"description": "Il nostro calcolatore interattivo 3D ti permette di visualizzare e personalizzare ogni dettaglio prima dell'ordine.",
+			"cta": "Prova il calcolatore"
 		}
 	}
 }

@@ -1,5 +1,16 @@
 {
 	"common": {
+		"cta": {
+			"shopNow": "Acquista ora",
+			"orderCustom": "Ordina personalizzato",
+			"viewAll": "Vedi tutti",
+			"tryAgain": "Riprova"
+		},
+		"trust": {
+			"handcrafted": "Realizzato a mano",
+			"warranty": "Garanzia a vita",
+			"perfectFit": "Vestibilità perfetta"
+		},
 		"nav": {
 			"shop": "Shop",
 			"shopDescription": "Sfoglia i nostri sfondi e decorazioni 3D",

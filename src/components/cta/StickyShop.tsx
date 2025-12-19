@@ -2,38 +2,30 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Hammer, Shield, Ruler } from "lucide-react";
 import { ShopButton } from "./ShopButton";
 
-const FEATURES = [
-	{ icon: Hammer, label: "Handcrafted" },
-	{ icon: Shield, label: "Lifetime warranty" },
-	{ icon: Ruler, label: "Perfect fit" },
-];
-
 interface StickyShopProps {
-	/** Optional: pass a ref to the section that should trigger visibility */
 	triggerRef?: React.RefObject<HTMLElement | null>;
-
 }
 
 export function StickyShop({ triggerRef }: StickyShopProps) {
+	const locale = useLocale();
+	const t = useTranslations('common.trust');
 	const [isCollapsed, setIsCollapsed] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 	const internalRef = useRef<HTMLDivElement>(null);
 
-	// Use either the passed triggerRef or create an internal one
 	const targetRef = triggerRef || internalRef;
 
-	// Only show when the target section is in view
 	const isInView = useInView(targetRef, {
-		margin: "-100px 0px -100px 0px", // Start showing 100px before it enters viewport
+		margin: "-100px 0px -100px 0px",
 	});
 
 	useEffect(() => {
 		const handleScroll = () => {
-			// Collapse after scrolling 300px down from when it first appears
 			if (isInView) {
 				setIsCollapsed(window.scrollY > 300);
 			}
@@ -45,10 +37,15 @@ export function StickyShop({ triggerRef }: StickyShopProps) {
 
 	const showBlurbs = !isCollapsed || isHovered;
 
-	// If using internal ref, render a marker div
 	if (!triggerRef) {
 		return <div ref={internalRef} className="absolute top-0 left-0 w-full h-px" />;
 	}
+
+	const FEATURES = [
+		{ icon: Hammer, label: t('handcrafted') },
+		{ icon: Shield, label: t('warranty') },
+		{ icon: Ruler, label: t('perfectFit') },
+	];
 
 	return (
 		<AnimatePresence>
@@ -98,7 +95,7 @@ export function StickyShop({ triggerRef }: StickyShopProps) {
 							)}
 						</AnimatePresence>
 
-						{/* Shop Button - Always visible when component is mounted */}
+						{/* Shop Button */}
 						<motion.div
 							animate={{
 								scale: isCollapsed && !isHovered ? 1.05 : 0.95,

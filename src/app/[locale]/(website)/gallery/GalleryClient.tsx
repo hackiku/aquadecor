@@ -13,7 +13,11 @@ import { Button } from "~/components/ui/button";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { Loader2, Images } from "lucide-react";
 
-export function GalleryClient() {
+interface GalleryClientProps {
+	locale: string;
+}
+
+export function GalleryClient({ locale }: GalleryClientProps) {
 	const t = useTranslations('gallery');
 	const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 	const [gridCols, setGridCols] = useState<GridCols>("3");

@@ -1,7 +1,8 @@
-// src/app/(website)/_components/HeroSection.tsx
+// src/app/[locale]/(website)/_components/HeroSection.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { QuickShoutout } from "~/components/proof/QuickShoutout";
@@ -9,19 +10,23 @@ import { HeroVideoWave } from "~/components/ui/water/hero-video-wave";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { ShopButton } from "~/components/cta/ShopButton";
 
-export function HeroSection() {
-	const [isUnderlineVisible, setIsUnderlineVisible] = useState(false);
-	const [isPaused, setIsPaused] = useState(false);
+interface HeroSectionProps {
+	locale: string;
+}
 
-	// Trigger underline animation when slide changes
-	const triggerUnderlineAnimation = () => {
-		setIsUnderlineVisible(true);
-		setTimeout(() => setIsUnderlineVisible(false), 600);
-	};
+export function HeroSection({ locale }: HeroSectionProps) {
+	const t = useTranslations('home.hero');
+	const [underlineKey, setUnderlineKey] = useState(0);
+
+	// Callback to trigger underline animation when testimonial changes
+	const handleTestimonialChange = useCallback(() => {
+		setUnderlineKey(prev => prev + 1);
+	}, []);
 
 	return (
 		<section className="relative overflow-hidden h-dvh -mt-16">
-			<WaveDivider position="bottom" color="black"/>
+			<WaveDivider position="bottom" color="black" />
+
 			{/* Full-width video with wave cutout */}
 			<div className="absolute inset-0 opacity-40">
 				<HeroVideoWave
@@ -32,7 +37,6 @@ export function HeroSection() {
 
 			{/* Gradient overlays */}
 			<div className="absolute inset-0 mb-12 bg-linear-to-b from-zinc-950/80 via-zinc-900/50 to-black" />
-			{/* <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" /> */}
 
 			{/* Hero Content */}
 			<div className="relative z-20 w-full h-full flex items-start justify-center pt-32 md:pt-40">
@@ -40,65 +44,63 @@ export function HeroSection() {
 					<div className="flex flex-col items-center text-center space-y-6 md:space-y-8">
 						{/* Headline */}
 						<h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-display font-extralight leading-tight tracking-tight">
-							World's{" "}
+							{t('headline.part1')}{" "}
 							<span className="relative inline-block">
-								<span className="relative z-10">most realistic</span>
-								{/* Animated underline */}
-								<motion.svg
-									className="absolute -bottom-2 left-0 w-full h-4"
-									viewBox="0 0 200 10"
-									preserveAspectRatio="none"
-									initial={{ pathLength: 0, opacity: 0 }}
-									animate={{
-										pathLength: isUnderlineVisible && !isPaused ? 1 : 0,
-										opacity: isUnderlineVisible && !isPaused ? 1 : 0
-									}}
-									transition={{ duration: 0.6, ease: "easeInOut" }}
+								<span className="relative z-10">{t('headline.highlighted')}</span>
+								{/* Animated underline - left to right on trigger */}
+								<motion.div
+									key={underlineKey}
+									className="absolute -bottom-2 left-0 right-0 h-1"
+									initial={{ scaleX: 0, transformOrigin: "left" }}
+									animate={{ scaleX: 1 }}
+									transition={{ duration: 0.6, ease: "easeOut" }}
 								>
-									<motion.path
-										d="M 0 5 Q 50 0, 100 5 T 200 5"
-										stroke="currentColor"
-										strokeWidth="3"
-										fill="none"
-										className="text-primary"
-										strokeLinecap="round"
-									/>
-								</motion.svg>
+									<svg
+										className="w-full h-full"
+										viewBox="0 0 200 10"
+										preserveAspectRatio="none"
+									>
+										<path
+											d="M 0 5 Q 50 3, 100 5 T 200 5"
+											stroke="currentColor"
+											strokeWidth="3"
+											fill="none"
+											className="text-primary"
+											strokeLinecap="round"
+										/>
+									</svg>
+								</motion.div>
 							</span>
-							{" "}3D Aquarium Backgrounds & Decorations
+							{" "}{t('headline.part2')}
 						</h1>
 
 						{/* Subheadline */}
 						<p className="text-lg md:text-xl text-zinc-400 font-display font-light max-w-xl mx-auto leading-relaxed">
-							The aquarium community's {' '}
+							{t('subheadline.part1')}{' '}
 							<span className="text-white italic font-regular">
-								least-kept secret
-							</span> {' '}
-							for creating gorgeously-looking natural habitats.
+								{t('subheadline.highlighted')}
+							</span>{' '}
+							{t('subheadline.part2')}
 						</p>
 
 						{/* CTAs */}
 						<div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-							{/* Shop Now - primary button */}
 							<ShopButton />
-							{/* Order Custom - outline button */}
 							<Link
 								href="/calculator"
 								className="inline-flex items-center justify-center px-8 py-3 bg-transparent hover:bg-white/10 text-white border-2 border-white rounded-full font-display font-medium text-base transition-all sm:w-auto"
 							>
-								Order custom
+								{t('cta.secondary')}
 							</Link>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			{/* QuickShoutout */}
-			<div className="absolute -bottom-2 right-4 md:bottom-36 md:right-8 lg:right-12">
+			{/* QuickShoutout - with animation callback */}
+			<div className="absolute z-30 -bottom-2 right-4 md:bottom-36 md:right-8 lg:right-12">
 				<QuickShoutout
-					onSlideChange={triggerUnderlineAnimation}
-					isPaused={isPaused}
-					onPauseChange={setIsPaused}
+					onSlideChange={handleTestimonialChange}
 				/>
 			</div>
 		</section>

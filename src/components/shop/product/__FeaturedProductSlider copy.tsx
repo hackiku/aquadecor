@@ -1,4 +1,4 @@
-// src/components/shop/product/FeaturedProductSlider.tsx
+// src/components/shop/product/ProductSlider.tsx
 "use client";
 
 import Link from "next/link";
@@ -10,32 +10,10 @@ import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 
-interface FeaturedProductSliderProps {
-	backgroundsTitle: string;
-	backgroundsSubtitle: string;
-	backgroundsHref: string;
-	backgroundsCta: string;
-	decorationsTitle: string;
-	decorationsSubtitle: string;
-	decorationsHref: string;
-	decorationsCta: string;
-	locale: string;
-}
-
-export function FeaturedProductSlider({
-	backgroundsTitle,
-	backgroundsSubtitle,
-	backgroundsHref,
-	backgroundsCta,
-	decorationsTitle,
-	decorationsSubtitle,
-	decorationsHref,
-	decorationsCta,
-	locale,
-}: FeaturedProductSliderProps) {
+export function FeaturedProductSlider() {
 	const { data: products, isLoading, isError, refetch } = api.product.getFeatured.useQuery(
 		{
-			locale: locale,
+			locale: "en",
 			limit: 12,
 			userMarket: "ROW",
 		},
@@ -69,10 +47,18 @@ export function FeaturedProductSlider({
 
 	const mappedProducts: FeaturedProduct[] = products
 		? products.map((product) => ({
+			// Map all the shared fields
 			...product,
+
+			// FIX: Map the unitPriceEurCents to basePriceEurCents
 			basePriceEurCents: product.unitPriceEurCents ?? null,
-			priceNote: null,
-			excludedMarkets: null,
+
+			// FIX: Set missing fields with defaults/placeholders
+			priceNote: null, // Assuming no price note in featured for simplicity
+			excludedMarkets: null, // Assuming this is not needed or fetched in this query
+
+			// You may need to cast the tRPC result type to 'any' here 
+			// to access unitPriceEurCents if you haven't fixed the tRPC return type yet.
 		}))
 		: [];
 
@@ -84,36 +70,36 @@ export function FeaturedProductSlider({
 		(p) => p.productLineSlug === "aquarium-decorations"
 	).slice(0, 6) || [];
 
+
 	return (
 		<div className="space-y-12">
 			<ProductRow
-				title={backgroundsTitle}
-				subtitle={backgroundsSubtitle}
+				title="3D Backgrounds"
+				subtitle="Custom-made realistic rock formations"
 				products={backgroundProducts}
 				isLoading={isLoading}
-				href={backgroundsHref}
-				ctaText={backgroundsCta}
+				href="/shop/3d-backgrounds"
 			/>
 
 			<ProductRow
-				title={decorationsTitle}
-				subtitle={decorationsSubtitle}
+				title="Aquarium Decorations"
+				subtitle="Plants, rocks, and driftwood that last forever"
 				products={decorationProducts}
 				isLoading={isLoading}
-				href={decorationsHref}
-				ctaText={decorationsCta}
+				href="/shop/aquarium-decorations"
 			/>
 		</div>
 	);
 }
 
+// Updated interface to match schema
 interface FeaturedProduct {
 	id: string;
 	slug: string;
 	sku: string | null;
 	basePriceEurCents: number | null;
 	priceNote: string | null;
-	excludedMarkets: string[] | null;
+	excludedMarkets: string[] | null; // UPDATED from availableMarkets
 	name: string | null;
 	shortDescription: string | null;
 	heroImageUrl: string | null;
@@ -128,10 +114,9 @@ interface ProductRowProps {
 	products: FeaturedProduct[];
 	isLoading: boolean;
 	href: string;
-	ctaText: string;
 }
 
-function ProductRow({ title, subtitle, products, isLoading, href, ctaText }: ProductRowProps) {
+function ProductRow({ title, subtitle, products, isLoading, href }: ProductRowProps) {
 	return (
 		<div className="space-y-6">
 			<div className="flex items-end justify-between">
@@ -147,7 +132,7 @@ function ProductRow({ title, subtitle, products, isLoading, href, ctaText }: Pro
 					href={href}
 					className="hidden mr-8 md:flex items-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
 				>
-					{ctaText}
+					View all
 					<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
 				</Link>
 			</div>
@@ -166,6 +151,7 @@ function ProductRow({ title, subtitle, products, isLoading, href, ctaText }: Pro
 						</div>
 					) : (
 						products.map((product) => (
+							
 							<FeaturedProductCard key={product.id} product={product} />
 						))
 					)}
@@ -176,7 +162,7 @@ function ProductRow({ title, subtitle, products, isLoading, href, ctaText }: Pro
 				href={href}
 				className="md:hidden flex items-center justify-center gap-2 text-sm text-primary hover:underline font-display font-medium group"
 			>
-				{ctaText}
+				View all {title}
 				<ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
 			</Link>
 		</div>
@@ -210,7 +196,7 @@ export function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
 						</div>
 					)}
 
-					{/* GRADIENT */}
+					{/* GRADIENT - Only bottom half */}
 					<div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-background/95 via-background/60 to-transparent dark:from-black/95 dark:via-black/60" />
 
 					{/* SKU BADGE */}
@@ -222,7 +208,7 @@ export function FeaturedProductCard({ product }: { product: FeaturedProduct }) {
 						</div>
 					)}
 
-					{/* TEXT CONTENT */}
+					{/* TEXT CONTENT - Bottom overlay */}
 					<div className="absolute bottom-0 left-0 right-0 p-4 space-y-1.5 z-10">
 						<h4 className="font-display font-medium text-base line-clamp-2 text-foreground">
 							{displayName}

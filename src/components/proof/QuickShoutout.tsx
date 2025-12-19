@@ -3,142 +3,120 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, ExternalLink, Play, Pause } from "lucide-react";
+import { useLocale } from "next-intl";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-
-interface QuickReview {
-	id: string;
-	quote: string;
-	author: string;
-	location?: string;
-	source: string;
-	sourceUrl?: string;
-	avatar?: string;
-}
-
-const REVIEWS: QuickReview[] = [
-	{
-		id: "1",
-		quote: "Every single person that has seen it has thought that it was real wood and rocks that I cut and assembled together",
-		author: "Kevin 'fishbubbles'",
-		location: "Florida",
-		source: "Forum",
-		sourceUrl: "https://forum.simplydiscus.com/forum/main-discus-topics/hardware-technical-and-do-it-yourself/tanks-and-equipment/101677-the-costs-of-setting-up-and-maintaining-a-265-gallon-discus-tank",
-		avatar: "/assets/avatars/kevin-fishbubbles.jpg",
-	},
-	{
-		id: "2",
-		quote: "The hand-painted details really stand out and make this background a work of art",
-		// quote: "It has a Styrofoam core, but on the surface it feels just like a rock.",
-		author: "Joey Mullen (King of DIY)",
-		location: "Canada",
-		source: "YouTube",
-		sourceUrl: "https://www.youtube.com/watch?v=1vYBlkf1zKo",
-		avatar: "/assets/avatars/king-of-diy.png",
-	},
-	{
-		id: "3",
-		quote: "The detail is insane. feels like real rock/wood, custom fit, and the painting is spot-on for a natural look",
-		author: "Joe (XPriceTagX)",
-		location: "Ohio, USA",
-		source: "YouTube",
-		sourceUrl: "https://www.youtube.com/watch?v=YgHs8n49ZYI",
-		avatar: "/assets/avatars/joe-XPriceTagX.webp",
-	},
-	{
-		id: "4",
-		quote: "Absolutely stunning craftsmanship. Looks so natural that my guests ask where I collected the rocks from",
-		author: "Marcus T.",
-		location: "Germany",
-		source: "Email",
-		avatar: "/media/avatars/placeholder-4.jpg",
-	},
-];
+import { REVIEWS_BY_LOCALE, type QuickReview } from "~/data/shoutouts";
 
 interface QuickShoutoutProps {
 	onSlideChange?: () => void;
-	isPaused?: boolean;
-	onPauseChange?: (paused: boolean) => void;
 }
 
-export function QuickShoutout({ onSlideChange, isPaused: externalPaused, onPauseChange }: QuickShoutoutProps) {
+export function QuickShoutout({ onSlideChange }: QuickShoutoutProps) {
+	const locale = useLocale();
+	// Get reviews for current locale, fallback to English
+	const reviews = REVIEWS_BY_LOCALE[locale] || REVIEWS_BY_LOCALE.en || [];
+
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [internalPaused, setInternalPaused] = useState(false);
+	const [progress, setProgress] = useState(0);
 
-	const isPaused = externalPaused !== undefined ? externalPaused : internalPaused;
-	const setPaused = onPauseChange || setInternalPaused;
-
-	const currentReview = REVIEWS[currentIndex];
+	const currentReview = reviews[currentIndex];
 
 	// Trigger callback when index changes
 	useEffect(() => {
 		onSlideChange?.();
 	}, [currentIndex, onSlideChange]);
 
-	// Auto-rotate every 4 seconds when not paused
+	// Progress animation (4 seconds)
 	useEffect(() => {
-		if (isPaused) return;
+		setProgress(0);
+		const duration = 4000;
+		const interval = 50;
+		const increment = (interval / duration) * 100;
 
-		const interval = setInterval(() => {
-			setCurrentIndex((prev) => (prev + 1) % REVIEWS.length);
-		}, 4000);
+		const timer = setInterval(() => {
+			setProgress(prev => {
+				if (prev >= 100) {
+					setCurrentIndex(prevIndex => (prevIndex + 1) % reviews.length);
+					return 0;
+				}
+				return prev + increment;
+			});
+		}, interval);
 
-		return () => clearInterval(interval);
-	}, [isPaused]);
+		return () => clearInterval(timer);
+	}, [currentIndex, reviews.length]);
 
 	const handlePrevious = () => {
-		setCurrentIndex((prev) => (prev - 1 + REVIEWS.length) % REVIEWS.length);
+		setProgress(0);
+		setCurrentIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
 	};
 
 	const handleNext = () => {
-		setCurrentIndex((prev) => (prev + 1) % REVIEWS.length);
-	};
-
-	const togglePause = () => {
-		setPaused(!isPaused);
+		setProgress(0);
+		setCurrentIndex((prev) => (prev + 1) % reviews.length);
 	};
 
 	if (!currentReview) return null;
 
 	return (
 		<div className="flex flex-col gap-4 w-[320px] md:w-[360px]">
-			{/* Quote box - text aligned left */}
-			<div className="relative  p-2 overflow-hidden">
-				<blockquote className="text-white font-display font-light text-sm leading-relaxed text-left mb-4">
+			{/* Quote box */}
+			<div className="relative p-2">
+				<blockquote className="text-white font-display font-light text-sm leading-relaxed text-left">
 					"{currentReview.quote}"
 				</blockquote>
-
-				{/* Animated underline at bottom of box */}
-				<motion.div
-					className="absolute bottom-0 left-0 h-0.5 bg-primary"
-					initial={{ width: "0%" }}
-					animate={{ width: isPaused ? "0%" : "100%" }}
-					transition={{ duration: 4, ease: "linear" }}
-					key={`underline-${currentIndex}-${isPaused}`}
-				/>
 			</div>
 
-			{/* Row: Avatar | Name/Location/Link | Controls */}
+			{/* Row: Avatar with circular progress | Name/Location/Link | Controls */}
 			<div className="flex items-center gap-3">
-				{/* Avatar */}
-				<div className="relative w-12 h-12 rounded-full bg-zinc-800 overflow-hidden shrink-0 border-2 border-primary shadow-lg">
-					{currentReview.avatar ? (
-						<Image
-							src={currentReview.avatar}
-							alt={currentReview.author}
-							fill
-							className="object-cover"
+				{/* Avatar with circular progress */}
+				<div className="relative shrink-0">
+					<svg className="absolute -inset-1 w-14 h-14" viewBox="0 0 56 56">
+						{/* Background circle */}
+						<circle
+							cx="28"
+							cy="28"
+							r="26"
+							fill="none"
+							stroke="rgba(255, 255, 255, 0.1)"
+							strokeWidth="2"
 						/>
-					) : (
-						<div className="w-full h-full flex items-center justify-center text-white text-lg font-display font-bold">
-							{currentReview.author[0]}
-						</div>
-					)}
+						{/* Progress circle - counterclockwise */}
+						<circle
+							cx="28"
+							cy="28"
+							r="26"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="3"
+							strokeLinecap="round"
+							className="text-primary"
+							strokeDasharray="163.36"
+							strokeDashoffset={163.36 - (163.36 * progress) / 100}
+							transform="rotate(-90 28 28)"
+							style={{ transition: 'stroke-dashoffset 50ms linear' }}
+						/>
+					</svg>
+
+					<div className="relative w-12 h-12 rounded-full bg-zinc-800 overflow-hidden border-2 border-primary shadow-lg">
+						{currentReview.avatar ? (
+							<Image
+								src={currentReview.avatar}
+								alt={currentReview.author}
+								fill
+								className="object-cover"
+							/>
+						) : (
+							<div className="w-full h-full flex items-center justify-center text-white text-lg font-display font-bold">
+								{currentReview.author[0]}
+							</div>
+						)}
+					</div>
 				</div>
 
-				{/* Name, Location, Link (2 rows) */}
+				{/* Name, Location, Link */}
 				<div className="flex flex-col items-start gap-0.5 flex-1 min-w-0">
 					<p className="text-white text-sm font-display font-medium truncate">
 						{currentReview.author}
@@ -166,28 +144,21 @@ export function QuickShoutout({ onSlideChange, isPaused: externalPaused, onPause
 					</div>
 				</div>
 
-				{/* Controls */}
-				<div className="flex items-center gap-1 shrink-0">
+				{/* Controls - larger chevrons */}
+				<div className="flex items-center gap-2 shrink-0">
 					<button
 						onClick={handlePrevious}
-						className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-sm"
+						className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-sm"
 						aria-label="Previous review"
 					>
-						<ChevronLeft className="h-4 w-4" />
-					</button>
-					<button
-						onClick={togglePause}
-						className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-sm"
-						aria-label={isPaused ? "Play" : "Pause"}
-					>
-						{isPaused ? <Play className="h-3 w-3 ml-0.5" /> : <Pause className="h-3 w-3" />}
+						<ChevronLeft className="h-6 w-6" />
 					</button>
 					<button
 						onClick={handleNext}
-						className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-sm"
+						className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors backdrop-blur-sm"
 						aria-label="Next review"
 					>
-						<ChevronRight className="h-4 w-4" />
+						<ChevronRight className="h-6 w-6" />
 					</button>
 				</div>
 			</div>

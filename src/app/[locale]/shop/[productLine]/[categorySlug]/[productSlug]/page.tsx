@@ -81,31 +81,27 @@ export async function generateMetadata({ params }: ProductDetailPageProps) {
 	const { locale, productLine, categorySlug, productSlug } = await params;
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
-	// Fetch product metadata
-	const productMeta = await api.product.getProductMetadataBySlug({
-		productSlug,
-		locale: dbLocale,
-	});
+	try {
+		const productMeta = await api.product.getProductMetadataBySlug({
+			productSlug,
+			locale: dbLocale,
+		});
 
-	if (!productMeta) {
-		return {
-			title: 'Product Not Found',
-		};
+		if (!productMeta) return { title: 'Product Not Found' };
+
+		return generateSEOMetadata({
+			currentLocale: locale,
+			path: `/shop/${productLine}/${categorySlug}/${productSlug}`,
+			title: productMeta.metaTitle || productMeta.name || productSlug,
+			description: productMeta.metaDescription || productMeta.shortDescription || '',
+			image: productMeta.heroImageUrl || undefined,
+			type: 'website',
+		});
+	} catch (error) {
+		// If DB is down, return a generic title so the Page Component 
+		// can render and trigger the actual Error Boundary
+		return { title: "AquaDecor" };
 	}
-
-	// Use DB translations for SEO
-	const title = productMeta.metaTitle || productMeta.name || productSlug;
-	const description = productMeta.metaDescription || productMeta.shortDescription || '';
-
-	// ✅ Generate complete SEO metadata with hreflang
-	return generateSEOMetadata({
-		currentLocale: locale,
-		path: `/shop/${productLine}/${categorySlug}/${productSlug}`,
-		title,
-		description,
-		image: productMeta.heroImageUrl || undefined,
-		type: 'website',
-	});
 }
 
 

@@ -1,5 +1,16 @@
 {
 	"common": {
+		"cta": {
+			"shopNow": "Nu shoppen",
+			"orderCustom": "Op maat bestellen",
+			"viewAll": "Alles bekijken",
+			"tryAgain": "Opnieuw proberen"
+		},
+		"trust": {
+			"handcrafted": "Handgemaakt",
+			"warranty": "Levenslange garantie",
+			"perfectFit": "Perfecte pasvorm"
+		},
 		"nav": {
 			"shop": "Shop",
 			"shopDescription": "Blader door onze 3D-achtergronden en decoraties",

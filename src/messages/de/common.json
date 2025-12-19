@@ -1,5 +1,16 @@
 {
 	"common": {
+		"cta": {
+			"shopNow": "Jetzt shoppen",
+			"orderCustom": "Custom bestellen",
+			"viewAll": "Alle ansehen",
+			"tryAgain": "Erneut versuchen"
+		},
+		"trust": {
+			"handcrafted": "Handgefertigt",
+			"warranty": "Lebenslange Garantie",
+			"perfectFit": "Perfekte Passform"
+		},
 		"nav": {
 			"shop": "Shop",
 			"shopDescription": "Durchsuchen Sie unsere 3D-Hintergründe und Dekorationen",

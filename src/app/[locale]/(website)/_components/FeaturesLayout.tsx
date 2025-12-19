@@ -1,38 +1,43 @@
-// src/app/(website)/_components/FeaturesLayout.tsx
+// src/app/[locale]/(website)/_components/FeaturesLayout.tsx
 "use client";
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
+import { MediaBlob } from "~/components/ui/water/media-blob-square";
+import { StickyShop } from "~/components/cta/StickyShop";
 
-// Editorial scattered layout - images positioned absolutely with annotations
+interface FeaturesLayoutProps {
+	headline: string;
+	subheadline: string;
+}
+
+// Features with real image paths from comparison table + fallbacks
 const FEATURES = [
 	{
 		label: "Acid Resistant",
 		description: "Zero limestone - won't affect pH",
-		// Image specs - you'll cut images to these exact sizes
 		image: {
-			src: "/media/images/feature-acid-zoom.webp",
+			src: "/media/images/standard-tank.webp", // Using actual image from comparison
+			fallback: "/media/images/feature-acid-zoom.webp",
 			width: 400,
 			height: 300,
 		},
-		// Position on page (desktop)
 		position: {
 			top: "80px",
 			left: "0px",
 		},
-		// Arrow annotation position relative to image
 		annotation: {
-			x: "60%",
-			y: "40%",
-			direction: "top-right", // where arrow points from
+			x: "110%", // Position label to the right of the blob
+			y: "30%",
+			direction: "left",
 		},
 	},
 	{
 		label: "Heat Proof",
 		description: "Boiling water safe",
 		image: {
-			src: "/media/images/feature-heat-detail.webp",
+			src: "/media/images/custom-tank.webp", // Using actual image from comparison
+			fallback: "/media/images/feature-heat-detail.webp",
 			width: 350,
 			height: 350,
 		},
@@ -41,16 +46,17 @@ const FEATURES = [
 			right: "40px",
 		},
 		annotation: {
-			x: "30%",
+			x: "-15%", // Position label to the left of the blob
 			y: "50%",
-			direction: "top-left",
+			direction: "right",
 		},
 	},
 	{
 		label: "Load Bearing",
 		description: "1500kg car tested",
 		image: {
-			src: "/media/images/feature-strength.webp",
+			src: "/media/images/standard-tank.webp",
+			fallback: "/media/images/feature-strength.webp",
 			width: 420,
 			height: 280,
 		},
@@ -59,16 +65,17 @@ const FEATURES = [
 			left: "80px",
 		},
 		annotation: {
-			x: "70%",
-			y: "30%",
-			direction: "bottom-right",
+			x: "110%",
+			y: "70%",
+			direction: "left",
 		},
 	},
 	{
 		label: "Never Degrades",
 		description: "Lifetime warranty",
 		image: {
-			src: "/media/images/feature-durability.webp",
+			src: "/media/images/custom-tank.webp",
+			fallback: "/media/images/feature-durability.webp",
 			width: 380,
 			height: 320,
 		},
@@ -77,78 +84,95 @@ const FEATURES = [
 			right: "0px",
 		},
 		annotation: {
-			x: "25%",
-			y: "60%",
-			direction: "bottom-left",
+			x: "-15%",
+			y: "40%",
+			direction: "right",
 		},
 	},
 	{
 		label: "Water Safe",
 		description: "100% non-toxic",
 		image: {
-			src: "/media/images/feature-watersafe.webp",
+			src: "/media/images/standard-tank.webp",
+			fallback: "/media/images/feature-watersafe.webp",
 			width: 340,
 			height: 260,
 		},
 		position: {
 			top: "860px",
 			left: "50%",
-			transform: "translateX(-50%)", // Center it
+			transform: "translateX(-50%)",
 		},
 		annotation: {
 			x: "50%",
-			y: "20%",
-			direction: "top",
+			y: "-10%",
+			direction: "bottom",
 		},
 	},
 ];
 
-export function FeaturesLayout() {
+export function FeaturesLayout({ headline, subheadline }: FeaturesLayoutProps) {
 	const ref = useRef<HTMLDivElement>(null);
+	const featuresRef = useRef<HTMLElement>(null);
+
 	const { scrollYProgress } = useScroll({
 		target: ref,
 		offset: ["start end", "end start"],
 	});
 
 	return (
-		<>
-			{/* Editorial Scrollytelling Section - Desktop only */}
-			<div ref={ref} className="hidden lg:block relative min-h-[1200px] -mx-4">
-				{FEATURES.map((feature, index) => (
-					<FeatureAnnotation
-						key={index}
-						feature={feature}
-						index={index}
-						scrollProgress={scrollYProgress}
-					/>
-				))}
+		<section ref={featuresRef} className="relative py-24 md:py-32 overflow-hidden">
+			<StickyShop triggerRef={featuresRef} />
+			
+
+			{/* Headline */}
+			<div className="text-center mb-16 px-4">
+				<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
+					{headline}
+				</h2>
+				<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
+					{subheadline}
+				</p>
 			</div>
 
-			{/* Mobile: Simple stacked layout */}
-			<div className="lg:hidden space-y-12">
-				{FEATURES.map((feature, index) => (
-					<div key={index} className="space-y-4">
-						<div className="relative rounded-2xl overflow-hidden border-2 border-border shadow-xl">
-							<Image
-								src={feature.image.src}
+			<div className="max-w-5xl mx-auto px-4">
+				{/* Editorial Scrollytelling Section - Desktop only */}
+				<div ref={ref} className="hidden lg:block relative min-h-[1200px] -mx-4">
+					{FEATURES.map((feature, index) => (
+						<FeatureAnnotation
+							key={index}
+							feature={feature}
+							index={index}
+							scrollProgress={scrollYProgress}
+						/>
+					))}
+				</div>
+
+				{/* Mobile: Simple stacked layout */}
+				<div className="lg:hidden space-y-12">
+					{FEATURES.map((feature, index) => (
+						<div key={index} className="space-y-4">
+							<MediaBlob
+								asset={feature.image.src}
+								type="image"
 								alt={feature.label}
-								width={feature.image.width}
-								height={feature.image.height}
-								className="w-full h-auto"
+								className="mx-auto"
+								amount={1.5}
+								duration={12}
 							/>
+							<div className="text-center">
+								<h3 className="text-xl font-display font-semibold text-primary mb-2">
+									{feature.label}
+								</h3>
+								<p className="text-sm text-muted-foreground font-display font-light">
+									{feature.description}
+								</p>
+							</div>
 						</div>
-						<div>
-							<h3 className="text-xl font-display font-semibold text-primary mb-2">
-								{feature.label}
-							</h3>
-							<p className="text-sm text-muted-foreground font-display font-light">
-								{feature.description}
-							</p>
-						</div>
-					</div>
-				))}
+					))}
+				</div>
 			</div>
-		</>
+		</section>
 	);
 }
 
@@ -172,26 +196,8 @@ function FeatureAnnotation({ feature, index, scrollProgress }: FeatureAnnotation
 		[40, 0]
 	);
 
-	// Subtle parallax
-	const imageY = useTransform(scrollProgress, [0, 1], ["0%", `${index % 2 === 0 ? '8%' : '-8%'}`]);
-
-	// Arrow path based on direction
-	const getArrowPath = (direction: string) => {
-		switch (direction) {
-			case "top-right":
-				return "M 10 60 Q 50 30, 90 10";
-			case "top-left":
-				return "M 90 60 Q 50 30, 10 10";
-			case "bottom-right":
-				return "M 10 10 Q 50 40, 90 60";
-			case "bottom-left":
-				return "M 90 10 Q 50 40, 10 60";
-			case "top":
-				return "M 50 60 Q 50 30, 50 10";
-			default:
-				return "M 10 60 Q 50 30, 90 10";
-		}
-	};
+	// Subtle parallax for the blob
+	const blobY = useTransform(scrollProgress, [0, 1], ["0%", `${index % 2 === 0 ? '8%' : '-8%'}`]);
 
 	return (
 		<motion.div
@@ -201,76 +207,78 @@ function FeatureAnnotation({ feature, index, scrollProgress }: FeatureAnnotation
 				position: "absolute",
 				...feature.position
 			}}
-			className="group"
+			className="group z-10"
 		>
-			{/* Image with parallax */}
+			{/* MediaBlob with parallax */}
 			<motion.div
-				style={{
-					y: imageY,
-					width: `${feature.image.width}px`,
-					height: `${feature.image.height}px`,
-				}}
-				className="relative rounded-2xl overflow-hidden border-2 border-border shadow-2xl"
+				style={{ y: blobY }}
+				className="relative"
 			>
-				<Image
-					src={feature.image.src}
+				<MediaBlob
+					asset={feature.image.src}
+					type="image"
 					alt={feature.label}
-					width={feature.image.width}
-					height={feature.image.height}
-					className="object-cover"
+					className="shadow-2xl"
+					amount={1.5}
+					duration={12}
 				/>
 
-				{/* Arrow + Label annotation */}
+				{/* Label callout - positioned OUTSIDE the blob */}
 				<div
-					className="absolute pointer-events-none"
+					className="absolute pointer-events-none z-20"
 					style={{
 						left: feature.annotation.x,
 						top: feature.annotation.y,
 						transform: "translate(-50%, -50%)",
 					}}
 				>
-					{/* Curved arrow */}
-					<svg
-						width="100"
-						height="70"
-						viewBox="0 0 100 70"
-						className="absolute -top-16 -left-12"
-					>
-						<defs>
-							<marker
-								id={`arrow-tip-${index}`}
-								viewBox="0 0 10 10"
-								refX="5"
-								refY="5"
-								markerWidth="6"
-								markerHeight="6"
-								orient="auto"
-							>
-								<circle cx="5" cy="5" r="4" className="fill-primary" />
-							</marker>
-						</defs>
-						<path
-							d={getArrowPath(feature.annotation.direction)}
-							className="stroke-primary stroke-[2.5]"
-							fill="none"
-							markerEnd={`url(#arrow-tip-${index})`}
-							strokeDasharray="4 6"
-							strokeLinecap="round"
+					<div className="relative">
+						{/* Connecting line */}
+						<svg
+							width="80"
+							height="3"
+							viewBox="0 0 80 3"
+							className={`absolute top-1/2 -translate-y-1/2 ${feature.annotation.direction === "left"
+									? "right-full mr-2"
+									: feature.annotation.direction === "right"
+										? "left-full ml-2"
+										: "hidden"
+								}`}
+						>
+							<line
+								x1="0"
+								y1="1.5"
+								x2="80"
+								y2="1.5"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeDasharray="4 4"
+								className="text-primary"
+							/>
+						</svg>
+
+						{/* Label box */}
+						<div className="bg-primary text-primary-foreground px-4 py-3 rounded-lg shadow-xl border-2 border-primary whitespace-nowrap">
+							<p className="text-sm font-display font-bold uppercase tracking-wider">
+								{feature.label}
+							</p>
+							<p className="text-xs font-display font-light opacity-90">
+								{feature.description}
+							</p>
+						</div>
+
+						{/* Dot indicator on blob edge */}
+						<div
+							className={`absolute w-3 h-3 bg-primary rounded-full ring-4 ring-primary/30 ${feature.annotation.direction === "left"
+									? "right-full mr-24"
+									: feature.annotation.direction === "right"
+										? "left-full ml-24"
+										: feature.annotation.direction === "bottom"
+											? "top-full mt-12 left-1/2 -translate-x-1/2"
+											: "bottom-full mb-12 left-1/2 -translate-x-1/2"
+								}`}
 						/>
-					</svg>
-
-					{/* Label callout */}
-					<div className="absolute -top-20 -left-16 bg-primary text-primary-foreground px-3 py-2 rounded-lg shadow-xl border-2 border-primary whitespace-nowrap">
-						<p className="text-xs font-display font-bold uppercase tracking-wider">
-							{feature.label}
-						</p>
-						<p className="text-[10px] font-display font-light opacity-90">
-							{feature.description}
-						</p>
 					</div>
-
-					{/* Dot on image */}
-					<div className="w-3 h-3 bg-primary rounded-full ring-4 ring-primary/30 animate-pulse" />
 				</div>
 			</motion.div>
 		</motion.div>

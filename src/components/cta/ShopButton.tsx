@@ -1,7 +1,8 @@
-
+// src/components/cta/ShopButton.tsx
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface ShopButtonProps {
@@ -12,10 +13,14 @@ interface ShopButtonProps {
 
 export function ShopButton({
 	href = "/shop",
-	children = "Shop Now",
-	className = ""
+	children,
+	className = "",
 }: ShopButtonProps) {
+	const locale = useLocale();
+	const t = useTranslations('common.cta');
 	const [isHovered, setIsHovered] = useState(false);
+
+	const buttonText = children || t('shopNow');
 
 	return (
 		<Link
@@ -30,7 +35,7 @@ export function ShopButton({
 					className="absolute inset-x-0 bottom-0 bg-[#3781C2]/85 transition-all duration-700 ease-in-out"
 					style={{ height: isHovered ? "100%" : "83%" }}
 				>
-					{/* Wave 1 - prominent, slow */}
+					{/* Wave 1 */}
 					<svg
 						className="absolute top-0 left-0 w-full"
 						style={{ height: "40px", transform: "translateY(-20px)" }}
@@ -54,7 +59,7 @@ export function ShopButton({
 						</path>
 					</svg>
 
-					{/* Wave 2 - offset, intersecting */}
+					{/* Wave 2 */}
 					<svg
 						className="absolute top-0 left-0 w-full"
 						style={{ height: "40px", transform: "translateY(-18px)" }}
@@ -79,7 +84,7 @@ export function ShopButton({
 						</path>
 					</svg>
 
-					{/* Bubbles - slower, more natural */}
+					{/* Bubbles */}
 					<span
 						className="absolute w-2.5 h-2.5 bg-white/50 rounded-full"
 						style={{
@@ -121,7 +126,7 @@ export function ShopButton({
 
 			{/* Button text */}
 			<span className="relative z-10 drop-shadow-sm">
-				{children}
+				{buttonText}
 			</span>
 
 			<style jsx>{`

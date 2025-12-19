@@ -1,49 +1,56 @@
 {
 	"home": {
 		"meta": {
-			"title": "Aquadecor - Premium 3D Aquarium Achterwanden",
-			"description": "Transformeer uw aquarium met de meest realistische 3D achterwanden en decoraties. Al meer dan 20 jaar handgemaakt in Europa."
+			"title": "Aquadecor - Premium 3D Aquarium Achtergronden",
+			"description": "Transformeer uw aquarium met de meest realistische 3D achtergronden en decoraties. Al meer dan 20 jaar handgemaakt in Europa."
 		},
 		"hero": {
 			"badge": "Gemaakt in Europa",
-			"headline": "De Meest Realistische 3D Aquarium Achterwanden",
-			"subheadline": "Handgemaakte perfectie die uw aquarium verandert in een levend meesterwerk",
+			"headline": {
+				"part1": "Werelds",
+				"highlighted": "meest realistische",
+				"part2": "3D Aquarium Achtergronden & Decoraties"
+			},
+			"subheadline": {
+				"part1": "Het",
+				"highlighted": "minst bewaarde geheim",
+				"part2": "van de aquariumgemeenschap voor het creëren van prachtige natuurlijke habitats."
+			},
 			"cta": {
-				"primary": "Achterwanden kopen",
-				"secondary": "Probeer de 3D-Calculator"
+				"primary": "Nu shoppen",
+				"secondary": "Op maat bestellen"
 			}
 		},
 		"tagline": {
 			"headline": "Alleen de natuur kan ons kopiëren",
-			"subheadline": "Handgemaakte 3D-achterwanden zo realistisch, zelfs de natuur neemt notities."
+			"subheadline": "Handgemaakte 3D-achtergronden die zo realistisch zijn dat zelfs de natuur notities maakt."
 		},
-		"trust": {
-			"tested": {
-				"emoji": "🔬",
-				"title": "Laboratorium Getest"
+		"slider": {
+			"backgrounds": {
+				"title": "3D Achtergronden",
+				"subtitle": "Op maat gemaakte realistische rotsformaties",
+				"href": "/shop/3d-backgrounds",
+				"cta": "Bekijk alles"
 			},
-			"waterSafe": {
-				"emoji": "🌊",
-				"title": "100% Veilig voor Water"
-			},
-			"eco": {
-				"emoji": "♻️",
-				"title": "Milieubewuste materialen"
+			"decorations": {
+				"title": "Aquarium Decoraties",
+				"subtitle": "Planten, rotsen en drijfhout die eeuwig meegaan",
+				"href": "/shop/aquarium-decorations",
+				"cta": "Bekijk alles"
 			}
 		},
 		"features": {
-			"headline": "Gebouwd om eeuwig mee te gaan",
-			"subheadline": "(en er goed uit te zien)",
-			"description": "Obsessief hyperrealistische replica's, gemaakt van polyurethaan/harsmengsels. Niet-toxisch, temperatuurbestendig en geleverd met 20 jaar of levenslange garantie."
+			"headline": "Gebouwd voor de eeuwigheid (en ziet er ook zo uit)",
+			"description": "Obsessief hyperrealistische replica's, gemaakt van polyurethaan/harsmengsels. Niet-giftig, temperatuurbestendig en voorzien van 20 jaar of levenslange garantie."
 		},
 		"social": {
-			"headline": "Al meer dan 20 jaar vertrouwd door 200K+ Tankheads",
-			"subheadline": "Real-as-rain opstellingen van aquariumliefhebbers wereldwijd."
+			"headline": "Al 20+ jaar vertrouwd door 200K+ hobbyisten",
+			"subheadline": "Levensechte opstellingen van aquariumliefhebbers wereldwijd."
 		},
 		"stats": {
 			"years": {
 				"number": "20+",
-				"label": "Jaren in bedrijf"
+				"label": "Jaren ervaring"
 			},
 			"shipped": {
 				"number": "50K+",
@@ -59,13 +66,13 @@
 			}
 		},
 		"comparison": {
-			"headline": "Wat u ook kiest, u zult er geen spijt van krijgen!",
-			"subheadline": "Standaardafmetingen voor snelle installatie, of op maat gemaakt om aan uw exacte visie te voldoen."
+			"headline": "Scaping op jouw manier",
+			"subheadline": "Standaard afmetingen voor snelle installatie, of op maat gemaakt voor jouw exacte visie."
 		},
 		"calculator": {
-			"headline": "Ontwerp Uw Perfecte Achterwand in 3D",
-			"description": "Met onze interactieve 3D-calculator kunt u elk detail visualiseren en aanpassen voordat u bestelt.",
-			"cta": "Probeer de Calculator"
+			"headline": "Ontwerp je perfecte achterwand in 3D",
+			"description": "Onze interactieve 3D-calculator laat je elk detail visualiseren en aanpassen voordat je bestelt.",
+			"cta": "Probeer de calculator"
 		}
 	}
 }

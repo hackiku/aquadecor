@@ -42,5 +42,5 @@ export default async function GalleryPage({ params }: Props) {
 	// Enable static rendering
 	setRequestLocale(locale);
 
-	return <GalleryClient />;
+	return <GalleryClient locale={locale} />;
 }

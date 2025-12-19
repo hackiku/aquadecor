@@ -11,7 +11,7 @@ export default function ShopError({
 	error,
 	reset,
 }: {
-	error: Error & { digest?: string };
+	error: Error & { digest?: string; cause?: any };
 	reset: () => void;
 }) {
 	const t = useTranslations('common.errors');
@@ -21,29 +21,40 @@ export default function ShopError({
 	}, [error]);
 
 	// Detect database connection errors
-	const isDbError = error.message?.includes('ECONNREFUSED') ||
-		error.message?.includes('connection') ||
-		error.message?.includes('database');
+	// const isDbError = error.message?.includes('ECONNREFUSED') ||
+	// 	error.message?.includes('connection') ||
+	// 	error.message?.includes('database');
+
+	const errorMessage = error.message?.toLowerCase() || '';
+	const causeMessage = JSON.stringify(error.cause || '').toLowerCase();
+
+	const isDbError =
+		errorMessage.includes('econnrefused') ||
+		errorMessage.includes('database') ||
+		errorMessage.includes('connection') ||
+		causeMessage.includes('econnrefused') ||
+		error.digest?.includes('database'); // Next.js digest sometimes helps
 
 	return (
-		<main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-muted/30 to-background">
+		<main className="min-h-[80vh] flex items-center justify-center p-4">
 			<div className="max-w-md w-full text-center space-y-8">
-				{/* Icon */}
-				<div className="relative">
-					<div className="absolute inset-0 bg-destructive/20 blur-3xl rounded-full" />
+				<div className="flex justify-center">
 					{isDbError ? (
-						<Database className="relative h-20 w-20 text-destructive mx-auto" strokeWidth={1.5} />
+						<div className="p-6 rounded-full bg-destructive/10">
+							<Database className="h-12 w-12 text-destructive" />
+						</div>
 					) : (
-						<AlertCircle className="relative h-20 w-20 text-destructive mx-auto" strokeWidth={1.5} />
+						<div className="p-6 rounded-full bg-destructive/10">
+							<AlertCircle className="h-12 w-12 text-destructive" />
+						</div>
 					)}
 				</div>
 
-				{/* Content */}
 				<div className="space-y-3">
-					<h1 className="text-3xl md:text-4xl font-display font-light">
+					<h1 className="text-2xl md:text-3xl font-display font-light">
 						{isDbError ? t('shop.dbError.title') : t('error.title')}
 					</h1>
-					<p className="text-muted-foreground font-display font-light leading-relaxed">
+					<p className="text-muted-foreground font-display font-light">
 						{isDbError ? t('shop.dbError.description') : t('error.description')}
 					</p>
 				</div>

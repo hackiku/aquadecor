@@ -1,61 +1,79 @@
 {
-	"common": {
-		"nav": {
-			"shop": "Shop",
-			"shopDescription": "Browse our 3D backgrounds and decorations",
-			"backgrounds": "3D Backgrounds",
-			"decorations": "Aquarium Decorations",
-			"gallery": "Gallery",
-			"calculator": "Price Calculator",
-			"calculatorDescription": "Design your custom background",
-			"resources": "Resources",
-			"faq": "FAQ",
-			"setup": "Setting Up",
-			"setupDescription": "10 installation configurations",
-			"support": "Customer Support",
-			"supportDescription": "Get help with your order",
-			"about": "About Us",
-			"blog": "Blog",
-			"reviews": "Reviews",
-			"distributors": "Distributors",
-			"contact": "Contact",
-			"terms": "Terms and Conditions",
-			"privacy": "Privacy Policy",
-			"shipping": "Shipping Policy",
-			"shippingReturns": "Shipping & Returns",
-			"shippingDescription": "Delivery and return policies",
-			"refund": "Refund Policy",
-			"faqDescription": "Common questions answered"
+"common": {
+	"cta": {
+		"shopNow": "Shop Now",
+		"orderCustom": "Order Custom",
+		"viewAll": "View all",
+		"tryAgain": "Try Again"
+	},
+	"trust": {
+		"handcrafted": "Handcrafted",
+		"warranty": "Lifetime warranty",
+		"perfectFit": "Perfect fit"
+	},
+	"nav": {
+		"shop": "Shop",
+		"shopDescription": "Browse our 3D backgrounds and decorations",
+		"backgrounds": "3D Backgrounds",
+		"decorations": "Aquarium Decorations",
+		"gallery": "Gallery",
+		"calculator": "Price Calculator",
+		"calculatorDescription": "Design your custom background",
+		"resources": "Resources",
+		"faq": "FAQ",
+		"setup": "Setting Up",
+		"setupDescription": "10 installation configurations",
+		"support": "Customer Support",
+		"supportDescription": "Get help with your order",
+		"about": "About Us",
+		"blog": "Blog",
+		"reviews": "Reviews",
+		"distributors": "Distributors",
+		"contact": "Contact",
+		"terms": "Terms and Conditions",
+		"privacy": "Privacy Policy",
+		"shipping": "Shipping Policy",
+		"shippingReturns": "Shipping & Returns",
+		"shippingDescription": "Delivery and return policies",
+		"refund": "Refund Policy",
+		"faqDescription": "Common questions answered"
+	},
+	"footer": {
+		"categoryShop": "Shop",
+		"categoryResources": "Resources",
+		"categoryCompany": "Company",
+		"categoryLegal": "Legal",
+		"copyright": "© {year} Aquadecor LLC. All rights reserved.",
+		"adminPanel": "Admin Panel",
+		"builtBy": "Web + Shop by",
+		"veenieTagline": "Aerospace-grade web dev"
+	},
+	"errors": {
+		"error": {
+			"title": "Something Went Wrong",
+			"description": "We're having trouble loading this page. This usually resolves itself quickly.",
+			"retry": "Try Again",
+			"goHome": "Go Home",
+			"details": "Error details"
 		},
-		"footer": {
-			"categoryShop": "Shop",
-			"categoryResources": "Resources",
-			"categoryCompany": "Company",
-			"categoryLegal": "Legal",
-			"copyright": "© {year} Aquadecor LLC. All rights reserved.",
-			"adminPanel": "Admin Panel",
-			"builtBy": "Web + Shop by",
-			"veenieTagline": "Aerospace-grade web dev"
+		"notFound": {
+			"title": "Page Not Found",
+			"description": "The page you're looking for doesn't exist or has been moved. Try one of these popular pages instead.",
+			"goBack": "Go Back",
+			"goHome": "Go Home",
+			"links": {
+				"shop": "Browse Shop",
+				"calculator": "Price Calculator",
+				"faq": "FAQ"
+			}
 		},
-		"errors": {
-			"error": {
-				"title": "Something Went Wrong",
-				"description": "We're having trouble loading this page...",
-				"retry": "Try Again",
-				"goHome": "Go Home",
-				"details": "Error details"
-			},
-			"notFound": {
-				"title": "Page Not Found",
-				"description": "The page you're looking for doesn't exist...",
-				"goBack": "Go Back",
-				"goHome": "Go Home",
-				"links": {
-					"shop": "Browse Shop",
-					"calculator": "Price Calculator",
-					"faq": "FAQ"
-				}
+		"shop": {
+			"dbError": {
+				"title": "Shop Temporarily Unavailable",
+				"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
+				"meanwhile": "Meanwhile, check out:"
 			}
 		}
 	}
+}
 }

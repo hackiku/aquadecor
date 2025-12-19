@@ -6,34 +6,41 @@
 		},
 		"hero": {
 			"badge": "Made in Europe",
-			"headline": "The Most Realistic 3D Aquarium Backgrounds",
-			"subheadline": "Handcrafted perfection that transforms your aquarium into a living masterpiece",
+			"headline": {
+				"part1": "World's",
+				"highlighted": "most realistic",
+				"part2": "3D Aquarium Backgrounds & Decorations"
+			},
+			"subheadline": {
+				"part1": "The aquarium community's",
+				"highlighted": "least-kept secret",
+				"part2": "for creating gorgeously-looking natural habitats."
+			},
 			"cta": {
-				"primary": "Shop Backgrounds",
-				"secondary": "Try 3D Calculator"
+				"primary": "Shop Now",
+				"secondary": "Order custom"
 			}
 		},
 		"tagline": {
 			"headline": "Only Nature Can Copy Us",
 			"subheadline": "Handcrafted 3D backgrounds so realistic, even nature takes notes."
 		},
-		"trust": {
-			"tested": {
-				"emoji": "🔬",
-				"title": "Laboratory Tested"
+		"slider": {
+			"backgrounds": {
+				"title": "3D Backgrounds",
+				"subtitle": "Custom-made realistic rock formations",
+				"href": "/shop/3d-backgrounds",
+				"cta": "View all"
 			},
-			"waterSafe": {
-				"emoji": "🌊",
-				"title": "100% Water-Safe"
-			},
-			"eco": {
-				"emoji": "♻️",
-				"title": "Eco-Conscious materials"
+			"decorations": {
+				"title": "Aquarium Decorations",
+				"subtitle": "Plants, rocks, and driftwood that last forever",
+				"href": "/shop/aquarium-decorations",
+				"cta": "View all"
 			}
 		},
 		"features": {
-			"headline": "Built to Last Forever",
-			"subheadline": "(and Look the Part)",
+			"headline": "Built to Last Forever (and Look the Part)",
 			"description": "Obsessively hyper-realistic replicas, made from polyurethane/resin blends. Non-toxic, temperature-resistant, and come with 20-year or lifetime warranties."
 		},
 		"social": {
@@ -59,7 +66,7 @@
 			}
 		},
 		"comparison": {
-			"headline": "Whatever you choose, you won't regret it!",
+			"headline": "Scape Exactly Your Way",
 			"subheadline": "Standard dimensions for quick setup, or custom-made to fit your exact vision."
 		},
 		"calculator": {

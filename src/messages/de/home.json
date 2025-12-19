@@ -1,49 +1,56 @@
 {
 	"home": {
 		"meta": {
-			"title": "Aquadecor - Premium 3D Aquarienrückwände",
+			"title": "Aquadecor - Erstklassige 3D-Aquarium-Rückwände",
 			"description": "Verwandeln Sie Ihr Aquarium mit den realistischsten 3D-Rückwänden und Dekorationen. Seit über 20 Jahren handgefertigt in Europa."
 		},
 		"hero": {
 			"badge": "Hergestellt in Europa",
-			"headline": "Die Realistischsten 3D Aquarienrückwände",
-			"subheadline": "Handgefertigte Perfektion, die Ihr Aquarium in ein lebendiges Meisterwerk verwandelt",
+			"headline": {
+				"part1": "Die weltweit",
+				"highlighted": "realistischsten",
+				"part2": "3D-Aquarium-Rückwände & Dekorationen"
+			},
+			"subheadline": {
+				"part1": "Das am",
+				"highlighted": "schlechtesten gehütete Geheimnis",
+				"part2": "der Aquaristik-Community für traumhafte, natürliche Lebensräume."
+			},
 			"cta": {
-				"primary": "Rückwände kaufen",
-				"secondary": "3D-Rechner testen"
+				"primary": "Jetzt shoppen",
+				"secondary": "Maßanfertigung"
 			}
 		},
 		"tagline": {
 			"headline": "Nur die Natur kann uns kopieren",
-			"subheadline": "Handgefertigte 3D-Rückwände, die so realistisch sind, dass sogar die Natur Notizen macht."
+			"subheadline": "Handgefertigte 3D-Rückwände, die so realistisch sind, dass selbst die Natur staunt."
 		},
-		"trust": {
-			"tested": {
-				"emoji": "🔬",
-				"title": "Laborgetestet"
+		"slider": {
+			"backgrounds": {
+				"title": "3D-Rückwände",
+				"subtitle": "Maßgeschneiderte, realistische Felsformationen",
+				"href": "/shop/3d-backgrounds",
+				"cta": "Alle ansehen"
 			},
-			"waterSafe": {
-				"emoji": "🌊",
-				"title": "100% Wassersicher"
-			},
-			"eco": {
-				"emoji": "♻️",
-				"title": "Umweltbewusste Materialien"
+			"decorations": {
+				"title": "Aquarium-Dekorationen",
+				"subtitle": "Pflanzen, Steine und Treibholz für die Ewigkeit",
+				"href": "/shop/aquarium-decorations",
+				"cta": "Alle ansehen"
 			}
 		},
 		"features": {
-			"headline": "Gebaut, um ewig zu halten",
-			"subheadline": "(und gut auszusehen)",
-			"description": "Zwanghaft hyperrealistische Repliken, hergestellt aus Polyurethan-/Harzmischungen. Ungiftig, temperaturbeständig und mit 20-Jahres- oder lebenslanger Garantie."
+			"headline": "Für die Ewigkeit gebaut (und sieht auch so aus)",
+			"description": "Besessen hyperrealistische Repliken aus Polyurethan-Resin-Mischungen. Ungiftig, temperaturbeständig und mit 20 Jahren oder lebenslanger Garantie."
 		},
 		"social": {
-			"headline": "Seit über 20 Jahren von über 200.000 Tankheads vertraut",
-			"subheadline": "Echte Setups von Aquarien-Enthusiasten weltweit."
+			"headline": "Seit 20+ Jahren von 200.000+ Aquarianern geschätzt",
+			"subheadline": "Täuschend echte Setups von Aquaristik-Enthusiasten weltweit."
 		},
 		"stats": {
 			"years": {
 				"number": "20+",
-				"label": "Jahre im Geschäft"
+				"label": "Jahre Erfahrung"
 			},
 			"shipped": {
 				"number": "50K+",
@@ -55,17 +62,17 @@
 			},
 			"countries": {
 				"number": "50+",
-				"label": "Länder bedient"
+				"label": "Belieferte Länder"
 			}
 		},
 		"comparison": {
-			"headline": "Was auch immer Sie wählen, Sie werden es nicht bereuen!",
-			"subheadline": "Standardmaße für eine schnelle Einrichtung oder maßgefertigt nach Ihrer genauen Vorstellung."
+			"headline": "Gestalten Sie es nach Ihren Wünschen",
+			"subheadline": "Standardmaße für eine schnelle Einrichtung oder Maßanfertigungen für Ihre exakte Vision."
 		},
 		"calculator": {
-			"headline": "Gestalten Sie Ihre perfekte Rückwand in 3D",
-			"description": "Unser interaktiver 3D-Rechner lässt Sie jedes Detail visualisieren und anpassen, bevor Sie bestellen.",
-			"cta": "Rechner testen"
+			"headline": "Planen Sie Ihre perfekte Rückwand in 3D",
+			"description": "Mit unserem interaktiven 3D-Rechner können Sie jedes Detail visualisieren und anpassen, bevor Sie bestellen.",
+			"cta": "Zum 3D-Rechner"
 		}
 	}
 }
