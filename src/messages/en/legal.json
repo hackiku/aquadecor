@@ -1,5 +1,147 @@
 {
-  "legal": {
-    "placeholder": "Translations for legal in en"
-  }
+	"legal": {
+		"title": "Legal Center",
+		"nav": {
+			"terms": "Terms & Conditions",
+			"privacy": "Privacy Policy",
+			"shipping": "Shipping Policy",
+			"refund": "Refund Policy"
+		},
+		"terms": {
+			"meta": {
+				"title": "Terms and Conditions | AquaDecor",
+				"description": "Comprehensive terms covering production, payments, and our 20-year structural warranty."
+			},
+			"title": "Terms and Conditions",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Payments and Pricing",
+					"content": "To initiate our handcrafted production process, a 100% advance payment is required. All prices displayed include product costs, professional packaging, and worldwide shipping. Please note that prices do NOT include local customs duties or import taxes."
+				},
+				{
+					"heading": "Customs and Import Duties",
+					"content": "We ship exclusively from Serbia. As customs tariffs vary globally, we recommend contacting your local customs office for specific duty information. AquaDecor is not responsible for, and will not cover, any additional import fees, taxes, or duties imposed by your government.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Production Timeline",
+					"content": "Standard production for a 3D background typically takes 10–12 business days. Large-scale custom projects or specialized setups may require additional time. We will notify you in advance if your order requires an extended production window. Once ready, we provide photo documentation for your review before the 1–3 day shipping preparation begins."
+				},
+				{
+					"heading": "Cancellation Policy",
+					"badge": "Non-Negotiable Fee",
+					"content": "If you choose to cancel your order before it has been shipped, a cancellation fee of 40% of the total order value will be applied. This covers the non-recoverable labor and material costs invested into your custom-sized project.",
+					"variant": "danger"
+				},
+				{
+					"heading": "Custom Measurements",
+					"content": "Precision is vital. Please provide exact internal measurements of your aquarium. Do not rely on standard brand dimensions, as aquarium glass thickness and internal bracing vary by region. If provided measurements are incorrect, you will be responsible for the cost of any necessary modifications."
+				},
+				{
+					"heading": "Review and Final Approval",
+					"content": "Before shipping, you will receive high-resolution photos of your completed order. Once you approve these photos and the order is dispatched, we cannot accept further claims regarding the color, shape, size, or design of the products."
+				},
+				{
+					"heading": "Damage Claims",
+					"content": "Inspect your delivery immediately. Damage must be reported within 48 hours of receipt. Please provide detailed photographic evidence of the packaging and the product. For minor damage, we will provide professional repair instructions. For major damage, we will arrange a free replacement upon the return of the damaged item."
+				},
+				{
+					"heading": "Warranty and Modifications",
+					"content": "Selected products include a 20-year structural warranty, while others carry a Lifetime Warranty. This warranty is void if damage is caused by mishandling, improper installation, contact with sharp objects, or exposure to harsh chemicals. Importantly, any modification of the product immediately terminates the warranty."
+				},
+				{
+					"heading": "Installation Safety",
+					"content": [
+						"Use only designated aquarium-safe silicone.",
+						"Verify the expiration date of your sealant before application.",
+						"Allow silicone to cure for at least 48 hours before adding water.",
+						"Ensure the aquarium is completely dry and clean before installation.",
+						"Never rinse or soak the background before applying silicone."
+					]
+				},
+				{
+					"heading": "Maintenance and Care",
+					"content": "Our products are chemically neutral and do not affect water parameters or algae growth. However, regular maintenance is required. Neglecting algae buildup can lead to structural surface damage during cleaning; such damage is not covered under warranty. Use only soft-bristle brushes for cleaning."
+				}
+			]
+		},
+		"privacy": {
+			"meta": {
+				"title": "Privacy Policy | AquaDecor",
+				"description": "How AquaDecor collects and protects your personal data."
+			},
+			"title": "Privacy Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Information Use",
+					"content": "We collect personally identifiable information (Name, Phone, Address) strictly to fulfill your orders and improve our service. We do not sell or share your data with unauthorized third parties."
+				},
+				{
+					"heading": "Log Data",
+					"content": "Whenever you visit our site, we collect standard browser information (IP address, browser version, pages visited) to analyze and optimize our website performance."
+				},
+				{
+					"heading": "Service Providers",
+					"content": "We utilize trusted third-party partners (e.g., DHL, FedEx, payment processors) to facilitate our service. These parties have access to your data only to perform specific tasks on our behalf and are legally obligated to keep it secure."
+				}
+			]
+		},
+		"shipping": {
+			"meta": {
+				"title": "Shipping Policy | AquaDecor",
+				"description": "International shipping details and delivery timeframes."
+			},
+			"title": "Shipping Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Shipping Jurisdictions",
+					"content": "We ship to over 80 countries including: USA, Canada, Australia, UK, Germany, France, Italy, UAE, Singapore, Japan, and more. If your country is not listed at checkout, please contact us for a custom quote."
+				},
+				{
+					"heading": "Carrier Information (Europe)",
+					"content": "Shipments to most European nations (including France, Italy, Spain, UK, Germany, and Netherlands) are handled via FedEx/TNT with a standard delivery window of 5–7 business days."
+				},
+				{
+					"heading": "Customs Warning",
+					"content": "As we ship from Serbia, your government may charge import duties before delivery. AquaDecor is not responsible for these costs. Please check with your local post office for tariff details.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Delivery Estimates",
+					"content": [
+						"Europe: 5–10 business days",
+						"USA/Canada/Australia: 10–20 business days",
+						"Rest of World: 10–20 business days"
+					]
+				},
+				{
+					"heading": "Lost or Delayed Packages",
+					"content": "Standard delivery takes 5–15 days on average. If 30 business days pass without delivery, we will initiate an official claim with the carrier. If confirmed lost, you are eligible for a full replacement or refund."
+				}
+			]
+		},
+		"refund": {
+			"meta": {
+				"title": "Refund Policy | AquaDecor",
+				"description": "Details on order cancellations and our final sale policy."
+			},
+			"title": "Refund Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Final Sale Policy",
+					"content": "Due to the custom-made nature of our 3D backgrounds, all sales are final. We do not accept returns or issue refunds for products that have already been manufactured or shipped."
+				},
+				{
+					"heading": "Order Cancellation",
+					"badge": "Restocking Fee",
+					"content": "Orders cancelled after production has begun but before shipment incur a 40% cancellation fee. This fee is necessary to cover the custom materials and specialized labor dedicated to your specific aquarium dimensions.",
+					"variant": "danger"
+				}
+			]
+		}
+	}
 }

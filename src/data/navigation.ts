@@ -137,7 +137,7 @@ export const mainNavLinks: NavLink[] = [
 	// Legal
 	{
 		labelKey: "terms",
-		href: "/legal/terms",
+		href: "/terms",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
@@ -145,7 +145,7 @@ export const mainNavLinks: NavLink[] = [
 	},
 	{
 		labelKey: "privacy",
-		href: "/legal/privacy",
+		href: "/privacy",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
@@ -153,7 +153,7 @@ export const mainNavLinks: NavLink[] = [
 	},
 	{
 		labelKey: "shipping",
-		href: "/legal/shipping",
+		href: "/shipping",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
@@ -161,7 +161,7 @@ export const mainNavLinks: NavLink[] = [
 	},
 	{
 		labelKey: "refund",
-		href: "/legal/refund",
+		href: "/refund",
 		enabled: true,
 		showInNav: false,
 		showInFooter: true,
@@ -192,7 +192,7 @@ export const resourceLinks: ResourceLink[] = [
 	},
 	{
 		labelKey: "shippingReturns",  // Different key for nav
-		href: "/legal/shipping",
+		href: "/shipping",
 		descriptionKey: "shippingDescription",
 		icon: "truck",
 	},

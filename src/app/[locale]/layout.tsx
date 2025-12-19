@@ -8,6 +8,8 @@ import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
 import { SessionProvider } from "next-auth/react";
 
+import { ViewportSize } from '~/components/dev/ViewportSize';
+
 type Props = {
 	children: React.ReactNode;
 	params: Promise<{ locale: string }>;
@@ -32,7 +34,10 @@ export default async function LocaleLayout({ children, params }: Props) {
 			<TRPCReactProvider>
 				<NextIntlClientProvider messages={messages}>
 					<ConditionalNav navContent={<NavWithBanner />}>
+
+						{process.env.NODE_ENV === "development" && <ViewportSize />}
 						{children}
+					
 					</ConditionalNav>
 				</NextIntlClientProvider>
 			</TRPCReactProvider>

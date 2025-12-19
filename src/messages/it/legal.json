@@ -1,5 +1,88 @@
 {
-  "legal": {
-    "placeholder": "Translations for legal in it"
-  }
+	"legal": {
+		"title": "Legal Information",
+		"nav": {
+			"terms": "Terms of Service",
+			"privacy": "Privacy Policy",
+			"shipping": "Shipping Policy",
+			"refund": "Refund Policy"
+		},
+		"terms": {
+			"meta": {
+				"title": "Terms and Conditions | AquaDecor",
+				"description": "Handcrafted aquarium backgrounds terms, 20-year warranty, and payment policies."
+			},
+			"title": "Terms and Conditions",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Payments",
+					"content": "All payments are made in advance. Aquadecor has the right to require advance payment of 100% of the order value to start the handcrafted production process."
+				},
+				{
+					"heading": "20-Year Warranty",
+					"content": "Our products come with a 20-year structural warranty. This covers the integrity of the material and color under normal aquarium use.",
+					"variant": "info"
+				}
+			]
+		},
+		"privacy": {
+			"meta": {
+				"title": "Privacy Policy | AquaDecor",
+				"description": "How we handle your data and protect your privacy."
+			},
+			"title": "Privacy Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Information Collection",
+					"content": "We collect your name, address, and email solely to process orders and provide shipping updates. We do not sell your data to third parties."
+				},
+				{
+					"heading": "Cookies",
+					"content": "We use essential cookies to keep track of your cart and session. By using our site, you agree to this usage."
+				}
+			]
+		},
+		"shipping": {
+			"meta": {
+				"title": "Shipping Policy | AquaDecor",
+				"description": "Worldwide shipping via DHL Express and FedEx. Information on customs and duties."
+			},
+			"title": "Shipping Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Customs and Import Fees",
+					"badge": "Important Notice",
+					"content": "We ship from Serbia. All prices shown on the website include product cost, packaging, and shipping, but DO NOT include potential customs/import fees. You may be charged import duties by your government prior to delivery. Aquadecor is not responsible for these costs.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Delivery Times",
+					"content": "Production takes 10-12 business days. Once shipped via DHL Express, delivery typically takes 3-5 business days worldwide."
+				}
+			]
+		},
+		"refund": {
+			"meta": {
+				"title": "Refund Policy | AquaDecor",
+				"description": "Order cancellation fees and return policies for custom backgrounds."
+			},
+			"title": "Refund Policy",
+			"lastUpdated": "Last Updated: February 2025",
+			"sections": [
+				{
+					"heading": "Cancellation Policy",
+					"badge": "Important Notice",
+					"content": "If you want to cancel your order before we ship it, you will be charged a cancellation fee of 40% of the total value of your order. This covers the non-recoverable labor and material costs of your custom-sized product.",
+					"variant": "danger"
+				},
+				{
+					"heading": "Returns",
+					"content": "Due to the nature of custom-made aquarium backgrounds, we do not accept returns for correctly manufactured items that match your provided dimensions."
+				}
+			]
+		}
+	}
 }

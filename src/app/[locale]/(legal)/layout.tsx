@@ -1,68 +1,69 @@
 // src/app/[locale]/(legal)/layout.tsx
+"use client";
 
-import Link from "next/link";
-import { dictionaries, type Locale } from "~/lib/i18n/dictionaries";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 
-export default async function LegalLayout({
-	children,
-	params,
-}: {
-	children: React.ReactNode;
-	// Fix: Change 'Locale' to 'string' here to match Next.js types
-	params: Promise<{ locale: string }>;
-}) {
-	const { locale: rawLocale } = await params;
-	// Fix: Cast string to Locale for internal use
-	const locale = rawLocale as Locale;
-
-	const t = dictionaries[locale] || dictionaries.us;
+export default function LegalLayout({ children }: { children: React.ReactNode }) {
+	const t = useTranslations("legal");
+	const pathname = usePathname();
 
 	const navItems = [
-		{ href: "terms", label: t.legal.nav.terms },
-		{ href: "privacy", label: t.legal.nav.privacy },
-		{ href: "shipping", label: t.legal.nav.shipping },
-		{ href: "refund", label: t.legal.nav.refund },
-	];
+		{ href: "/terms", label: t("nav.terms") },
+		{ href: "/privacy", label: t("nav.privacy") },
+		{ href: "/shipping", label: t("nav.shipping") },
+		{ href: "/refund", label: t("nav.refund") },
+	] as const;
 
 	return (
 		<div className="min-h-screen bg-background pt-32 pb-24">
 			<div className="container max-w-7xl px-4 mx-auto">
 				<div className="flex flex-col lg:flex-row gap-12">
 
-					{/* Sidebar */}
+					{/* Sidebar Navigation */}
 					<aside className="lg:w-64 shrink-0">
 						<div className="sticky top-32 space-y-6">
 							<div>
 								<h3 className="font-display font-medium text-lg mb-4 px-3 text-primary">
-									{t.legal.title}
+									{t("title")}
 								</h3>
 								<nav className="space-y-1">
-									{navItems.map((item) => (
-										<Link
-											key={item.href}
-											href={`/${locale}/${item.href}`}
-											className={cn(
-												"block px-3 py-2 text-sm rounded-md transition-colors",
-												"text-muted-foreground hover:text-foreground hover:bg-muted/50 border-l-2 border-transparent hover:border-primary/20"
-											)}
-										>
-											{item.label}
-										</Link>
-									))}
+									{navItems.map((item) => {
+										// next-intl usePathname() returns the internal key (e.g. "/terms")
+										// which makes this check very clean.
+										const isActive = pathname === item.href;
+
+										return (
+											<Link
+												key={item.href}
+												href={item.href as any}
+												className={cn(
+													"flex items-center px-4 py-2.5 text-sm font-display font-medium rounded-lg transition-all duration-200",
+													isActive
+														? "bg-primary/10 text-primary"
+														: "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
+												)}
+											>
+												{item.label}
+											</Link>
+										);
+									})}
 								</nav>
 							</div>
 						</div>
 					</aside>
 
-					{/* Content */}
+					{/* Policy Content */}
 					<main className="flex-1 max-w-3xl min-w-0">
-						<div className="prose prose-slate dark:prose-invert max-w-none 
-              prose-headings:font-display prose-headings:font-light 
-              prose-h1:text-4xl prose-h2:text-2xl prose-a:text-primary 
-              prose-li:marker:text-primary">
+						<article className="prose prose-slate dark:prose-invert max-w-none 
+							prose-headings:font-display prose-headings:font-light 
+							prose-h1:text-4xl md:prose-h1:text-5xl prose-h2:text-2xl 
+							prose-p:text-lg prose-p:leading-relaxed prose-p:text-muted-foreground
+							prose-li:text-lg prose-li:text-muted-foreground
+							prose-strong:text-foreground prose-strong:font-medium">
 							{children}
-						</div>
+						</article>
 					</main>
 				</div>
 			</div>

@@ -188,11 +188,34 @@ export const routing = defineRouting({
 		// Legal
 		// ================================================
 
-		// Legal pages (NO /legal prefix needed)
-		'/terms': '/terms',
-		'/privacy': '/privacy',
-		'/shipping': '/shipping',
-		'/refund': '/refund',
+		'/terms': {
+			en: '/terms-of-service',
+			de: '/nutzungsbedingungen',
+			nl: '/algemene-voorwaarden',
+			it: '/termini-e-condizioni',
+			us: '/terms-of-service'
+		},
+		'/privacy': {
+			en: '/privacy-policy',
+			de: '/datenschutzerklarung',
+			nl: '/privacybeleid',
+			it: '/informativa-sulla-privacy',
+			us: '/privacy-policy'
+		},
+		'/shipping': {
+			en: '/shipping-policy',
+			de: '/versandrichtlinien',
+			nl: '/verzending-en-bezorging',
+			it: '/politica-di-spedizione',
+			us: '/shipping-policy'
+		},
+		'/refund': {
+			en: '/refund-policy',
+			de: '/ruckerstattungsrichtlinie',
+			nl: '/retourbeleid',
+			it: '/politica-di-rimborso',
+			us: '/refund-policy'
+		},
 	}
 });
 
