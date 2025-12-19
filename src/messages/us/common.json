@@ -36,6 +36,26 @@
 			"adminPanel": "Admin Panel",
 			"builtBy": "Web + Shop by",
 			"veenieTagline": "Aerospace-grade web dev"
+		},
+		"errors": {
+			"error": {
+				"title": "Something Went Wrong",
+				"description": "We're having trouble loading this page...",
+				"retry": "Try Again",
+				"goHome": "Go Home",
+				"details": "Error details"
+			},
+			"notFound": {
+				"title": "Page Not Found",
+				"description": "The page you're looking for doesn't exist...",
+				"goBack": "Go Back",
+				"goHome": "Go Home",
+				"links": {
+					"shop": "Browse Shop",
+					"calculator": "Price Calculator",
+					"faq": "FAQ"
+				}
+			}
 		}
 	}
 }

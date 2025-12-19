@@ -36,6 +36,33 @@
 			"adminPanel": "Pannello Admin",
 			"builtBy": "Web + Shop da",
 			"veenieTagline": "Sviluppo web con standard aerospaziali"
+		},
+		"errors": {
+			"error": {
+				"title": "Qualcosa è andato storto",
+				"description": "Abbiamo problemi a caricare questa pagina. Di solito il problema si risolve rapidamente.",
+				"retry": "Riprova",
+				"goHome": "Torna alla Home",
+				"details": "Dettagli dell'errore"
+			},
+			"notFound": {
+				"title": "Pagina non trovata",
+				"description": "La pagina che stai cercando non esiste o è stata spostata. Prova invece una di queste pagine popolari.",
+				"goBack": "Torna indietro",
+				"goHome": "Torna alla Home",
+				"links": {
+					"shop": "Sfoglia lo Shop",
+					"calculator": "Calcolatore Prezzi",
+					"faq": "FAQ"
+				}
+			},
+			"shop": {
+				"dbError": {
+					"title": "Shop temporaneamente non disponibile",
+					"description": "Abbiamo problemi a connetterci al database dei prodotti. Il nostro team è stato informato e sta lavorando per risolvere il problema.",
+					"meanwhile": "Nel frattempo, dai un'occhiata a:"
+				}
+			}
 		}
 	}
 }

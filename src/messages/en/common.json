@@ -36,6 +36,33 @@
 			"adminPanel": "Admin Panel",
 			"builtBy": "Web + Shop by",
 			"veenieTagline": "Aerospace-grade web dev"
+		},
+		"errors": {
+			"error": {
+				"title": "Something Went Wrong",
+				"description": "We're having trouble loading this page. This usually resolves itself quickly.",
+				"retry": "Try Again",
+				"goHome": "Go Home",
+				"details": "Error details"
+			},
+			"notFound": {
+				"title": "Page Not Found",
+				"description": "The page you're looking for doesn't exist or has been moved. Try one of these popular pages instead.",
+				"goBack": "Go Back",
+				"goHome": "Go Home",
+				"links": {
+					"shop": "Browse Shop",
+					"calculator": "Price Calculator",
+					"faq": "FAQ"
+				}
+			},
+			"shop": {
+				"dbError": {
+					"title": "Shop Temporarily Unavailable",
+					"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
+					"meanwhile": "Meanwhile, check out:"
+				}
+			}
 		}
 	}
 }

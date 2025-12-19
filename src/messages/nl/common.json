@@ -36,6 +36,33 @@
 			"adminPanel": "Adminpaneel",
 			"builtBy": "Web + Shop door",
 			"veenieTagline": "Webontwikkeling op aerospace-niveau"
+		},
+		"errors": {
+			"error": {
+				"title": "Er is iets misgegaan",
+				"description": "We hebben problemen met het laden van deze pagina. Dit lost zichzelf meestal snel op.",
+				"retry": "Opnieuw proberen",
+				"goHome": "Naar Home",
+				"details": "Foutdetails"
+			},
+			"notFound": {
+				"title": "Pagina niet gevonden",
+				"description": "De pagina die u zoekt bestaat niet of is verplaatst. Probeer in plaats daarvan een van deze populaire pagina's.",
+				"goBack": "Ga terug",
+				"goHome": "Naar Home",
+				"links": {
+					"shop": "Bekijk Shop",
+					"calculator": "Prijsberekenaar",
+					"faq": "Veelgestelde vragen"
+				}
+			},
+			"shop": {
+				"dbError": {
+					"title": "Shop tijdelijk niet beschikbaar",
+					"description": "We hebben problemen met het maken van verbinding met onze productdatabase. Ons team is op de hoogte gesteld en werkt eraan.",
+					"meanwhile": "Bekijk in de tussentijd:"
+				}
+			}
 		}
 	}
 }

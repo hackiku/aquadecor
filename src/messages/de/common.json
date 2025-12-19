@@ -36,6 +36,33 @@
 			"adminPanel": "Admin-Panel",
 			"builtBy": "Web + Shop von",
 			"veenieTagline": "Webentwicklung nach Aerospace-Standard"
+		},
+		"errors": {
+			"error": {
+				"title": "Etwas ist schiefgelaufen",
+				"description": "Wir haben Probleme beim Laden dieser Seite. Normalerweise lässt sich das schnell beheben.",
+				"retry": "Erneut versuchen",
+				"goHome": "Zur Startseite",
+				"details": "Fehlerdetails"
+			},
+			"notFound": {
+				"title": "Seite nicht gefunden",
+				"description": "Die von Ihnen gesuchte Seite existiert nicht oder wurde verschoben. Versuchen Sie stattdessen eine dieser beliebten Seiten.",
+				"goBack": "Zurückgehen",
+				"goHome": "Zur Startseite",
+				"links": {
+					"shop": "Shop durchsuchen",
+					"calculator": "Preisrechner",
+					"faq": "FAQ"
+				}
+			},
+			"shop": {
+				"dbError": {
+					"title": "Shop vorübergehend nicht erreichbar",
+					"description": "Wir haben Probleme, eine Verbindung zu unserer Produktdatenbank herzustellen. Unser Team wurde benachrichtigt und arbeitet daran.",
+					"meanwhile": "In der Zwischenzeit könnten Sie Folgendes ansehen:"
+				}
+			}
 		}
 	}
 }
