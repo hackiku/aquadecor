@@ -1,0 +1,33 @@
+{
+	"distributors": {
+		"meta": {
+			"title": "Offizielle Vertriebspartner | Aquadecor Partner Weltweit",
+			"description": "Finden Sie autorisierte Aquadecor-Händler in Ihrer Nähe. Kontaktieren Sie unsere vertrauenswürdigen Partner in Spanien, Indien, Israel, Polen und weiteren Ländern."
+		},
+		"hero": {
+			"badge": "Globales Netzwerk",
+			"title": "Offizielle Vertriebspartner",
+			"subtitle": "Unsere vertrauenswürdigen Partner weltweit. Bei Fragen oder Anliegen wenden Sie sich an"
+		},
+		"alerts": {
+			"scam": {
+				"title": "Vorsicht vor gefälschten Vertretern",
+				"description": "Es sind vermehrt gefälschte Aquadecor-Vertreter aufgetaucht, die Rabatte und Angebote versprechen und behaupten, offiziell zu sein. Bitte nehmen Sie sich vor diesen Betrügern in Acht!"
+			},
+			"official": {
+				"title": "Originalprodukte nur hier",
+				"description": "Authentische Aquadecor-Rückwände können nur bestellt werden über",
+				"and": "und unsere unten aufgeführten registrierten Vertriebspartner."
+			}
+		},
+		"grid": {
+			"title": "Weltweite Partner",
+			"subtitle": "Kontaktieren Sie Ihren nächstgelegenen Händler für lokalen Support und schnelleren Versand"
+		},
+		"cta": {
+			"title": "Möchten Sie Vertriebspartner werden?",
+			"subtitle": "Haben Sie Interesse, Aquadecor in Ihrer Region zu vertreten? Kontaktieren Sie unser Team.",
+			"button": "Kontaktieren Sie uns"
+		}
+	}
+}

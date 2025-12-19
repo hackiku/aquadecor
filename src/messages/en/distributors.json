@@ -1,0 +1,33 @@
+{
+	"distributors": {
+		"meta": {
+			"title": "Official Distributors | Aquadecor Partners Worldwide",
+			"description": "Find authorized Aquadecor distributors near you. Contact our trusted partners in Spain, India, Israel, Poland, Portugal, Philippines, Saudi Arabia, and Hungary."
+		},
+		"hero": {
+			"badge": "Global Network",
+			"title": "Official Distributors",
+			"subtitle": "Our trusted partners around the world. For questions or concerns, contact"
+		},
+		"alerts": {
+			"scam": {
+				"title": "Beware of Fake Representatives",
+				"description": "A number of fake Aquadecor representatives have appeared, offering discounts and quotes while claiming to be official. Please be aware of these scammers!"
+			},
+			"official": {
+				"title": "Original Products Only Here",
+				"description": "Authentic Aquadecor backgrounds can only be ordered through",
+				"and": "and our registered distributors listed below."
+			}
+		},
+		"grid": {
+			"title": "Worldwide Partners",
+			"subtitle": "Contact your nearest distributor for local support and faster shipping"
+		},
+		"cta": {
+			"title": "Want to Become a Distributor?",
+			"subtitle": "Interested in representing Aquadecor in your region? Get in touch with our team.",
+			"button": "Contact Us"
+		}
+	}
+}

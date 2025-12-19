@@ -15,6 +15,7 @@ import legal from '~/messages/en/legal.json';
 import account from '~/messages/en/account.json';
 import faq from '~/messages/en/faq.json';
 import contact from '~/messages/en/contact.json';
+import distributors from '~/messages/en/distributors.json';
 
 /**
  * Combine all individual namespace files into one Messages type.
@@ -36,7 +37,8 @@ export type Messages =
 	typeof legal &
 	typeof account &
 	typeof faq & 
-	typeof contact;
+	typeof contact &
+	typeof distributors;
 
 /**
  * Recursively get all nested keys from an object

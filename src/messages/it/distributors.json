@@ -1,0 +1,33 @@
+{
+	"distributors": {
+		"meta": {
+			"title": "Distributori Ufficiali | Partner Aquadecor nel Mondo",
+			"description": "Trova i distributori autorizzati Aquadecor più vicini a te. Contatta i nostri partner di fiducia in Spagna, India, Israele, Polonia, Portogallo e altri paesi."
+		},
+		"hero": {
+			"badge": "Rete Globale",
+			"title": "Distributori Ufficiali",
+			"subtitle": "I nostri partner di fiducia in tutto il mondo. Per domande o dubbi, contatta"
+		},
+		"alerts": {
+			"scam": {
+				"title": "Attenzione ai Falsi Rappresentanti",
+				"description": "Sono comparsi diversi falsi rappresentanti Aquadecor che offrono sconti e preventivi spacciandosi per ufficiali. Vi preghiamo di prestare la massima attenzione a questi truffatori!"
+			},
+			"official": {
+				"title": "Prodotti Originali Solo Qui",
+				"description": "Gli sfondi autentici Aquadecor possono essere ordinati solo tramite",
+				"and": "e i nostri distributori registrati elencati di seguito."
+			}
+		},
+		"grid": {
+			"title": "Partner Mondiali",
+			"subtitle": "Contatta il distributore più vicino per supporto locale e spedizioni più rapide"
+		},
+		"cta": {
+			"title": "Vuoi Diventare un Distributore?",
+			"subtitle": "Ti interessa rappresentare Aquadecor nella tua regione? Contatta il nostro team.",
+			"button": "Contattaci"
+		}
+	}
+}

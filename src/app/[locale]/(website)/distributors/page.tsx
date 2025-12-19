@@ -1,30 +1,69 @@
-// src/app/distributors/page.tsx
+// src/app/[locale]/(website)/distributors/page.tsx
 
-import { AlertTriangle, Info } from "lucide-react";
+import { setRequestLocale, getTranslations } from "next-intl/server";
+import { routing } from "~/i18n/routing";
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import type { Metadata } from "next";
 import { DistributorsGrid } from "./DistributorsGrid";
+import { AlertTriangle, Info, Mail } from "lucide-react";
 
-export default function DistributorsPage() {
+type Props = {
+	params: Promise<{ locale: string }>;
+};
+
+// ========================================
+// SEO METADATA
+// ========================================
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	const { locale } = await params;
+	const t = await getTranslations({ locale, namespace: 'distributors' });
+
+	return generateSEOMetadata({
+		currentLocale: locale,
+		path: '/distributors',
+		title: t('meta.title'),
+		description: t('meta.description'),
+		type: 'website',
+	});
+}
+
+// ========================================
+// STATIC GENERATION
+// ========================================
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function DistributorsPage({ params }: Props) {
+	const { locale } = await params;
+
+	// Enable static rendering
+	setRequestLocale(locale);
+
+	const t = await getTranslations({ locale, namespace: 'distributors' });
+
 	return (
 		<main className="min-h-screen">
 			{/* Hero */}
-			<section className="relative pt-32 md:pt-40 pb-16 md:pb-24 bg-gradient-to-b from-muted/50 to-transparent">
+			<section className="relative pt-16 md:pt-24 pb-12 bg-linear-to-b from-muted/50 to-transparent">
 				<div className="container px-4 max-w-5xl mx-auto">
 					<div className="space-y-6">
 						<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 backdrop-blur-sm rounded-full border border-primary/20">
 							<span className="text-sm text-primary font-display font-medium">
-								Global Network
+								{t('hero.badge')}
 							</span>
 						</div>
 						<h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extralight tracking-tight">
-							Official Distributors
+							{t('hero.title')}
 						</h1>
 						<p className="text-lg md:text-xl text-muted-foreground font-display font-light max-w-3xl leading-relaxed">
-							Our trusted partners around the world. For questions or concerns, contact{" "}
+							{t('hero.subtitle')}{" "}
 							<a
 								href="mailto:support@aquadecorbackgrounds.com"
-								className="text-primary hover:underline font-medium"
+								className="text-primary hover:underline font-medium inline-flex items-center gap-1"
 							>
 								support@aquadecorbackgrounds.com
+								<Mail className="h-4 w-4" />
 							</a>
 						</p>
 					</div>
@@ -33,17 +72,17 @@ export default function DistributorsPage() {
 
 			{/* Alerts */}
 			<section className="py-8 bg-accent/5">
-				<div className="container px-4 max-w-5xl mx-auto space-y-4">
+				<div className="gap-4 flex flex-col md:flex-row px-4 max-w-5xl mx-auto">
 					{/* Scam Warning */}
 					<div className="bg-red-500/10 border-2 border-red-500/20 rounded-2xl p-6">
 						<div className="flex items-start gap-4">
 							<AlertTriangle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
 							<div className="space-y-2">
 								<h3 className="font-display font-medium text-red-500">
-									Beware of Fake Representatives
+									{t('alerts.scam.title')}
 								</h3>
 								<p className="text-sm font-display font-light text-muted-foreground leading-relaxed">
-									A number of fake Aquadecor representatives have appeared, offering discounts and quotes while claiming to be official. Please be aware of these scammers!
+									{t('alerts.scam.description')}
 								</p>
 							</div>
 						</div>
@@ -55,14 +94,14 @@ export default function DistributorsPage() {
 							<Info className="h-5 w-5 text-primary shrink-0 mt-0.5" />
 							<div className="space-y-2">
 								<h3 className="font-display font-medium text-primary">
-									Original Products Only Here
+									{t('alerts.official.title')}
 								</h3>
 								<p className="text-sm font-display font-light text-muted-foreground leading-relaxed">
-									Authentic Aquadecor backgrounds can only be ordered through{" "}
+									{t('alerts.official.description')}{" "}
 									<strong className="text-foreground font-medium">
 										www.aquadecorbackgrounds.com
 									</strong>{" "}
-									and our registered distributors listed below.
+									{t('alerts.official.and')}
 								</p>
 							</div>
 						</div>
@@ -71,14 +110,14 @@ export default function DistributorsPage() {
 			</section>
 
 			{/* Distributors Grid */}
-			<section className="py-16 md:py-24">
+			<section className="py-8 md:py-16">
 				<div className="container px-4 max-w-7xl mx-auto">
 					<div className="mb-12">
 						<h2 className="text-3xl md:text-4xl font-display font-light mb-4">
-							Worldwide Partners
+							{t('grid.title')}
 						</h2>
 						<p className="text-lg text-muted-foreground font-display font-light">
-							Contact your nearest distributor for local support and faster shipping
+							{t('grid.subtitle')}
 						</p>
 					</div>
 
@@ -91,17 +130,17 @@ export default function DistributorsPage() {
 				<div className="container px-4 max-w-4xl mx-auto text-center">
 					<div className="space-y-6">
 						<h2 className="text-3xl md:text-4xl font-display font-light">
-							Want to Become a Distributor?
+							{t('cta.title')}
 						</h2>
 						<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
-							Interested in representing Aquadecor in your region? Get in touch with our team.
+							{t('cta.subtitle')}
 						</p>
 						<div className="pt-4">
 							<a
 								href="mailto:support@aquadecorbackgrounds.com?subject=Distributor Inquiry"
-								className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
+								className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
 							>
-								Contact Us
+								{t('cta.button')}
 							</a>
 						</div>
 					</div>

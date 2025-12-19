@@ -1,0 +1,33 @@
+{
+	"distributors": {
+		"meta": {
+			"title": "Authorized Channels | Aquadecor USA & Global Partners",
+			"description": "Ensure your Aquadecor products are authentic and US-Customs compliant. View our authorized global distribution network and official inquiry channels."
+		},
+		"hero": {
+			"badge": "Verified Network",
+			"title": "Authorized Channels",
+			"subtitle": "To ensure safe transit and tariff compliance for the US market, please use only official partners or contact"
+		},
+		"alerts": {
+			"scam": {
+				"title": "Urgent: US Tariff Scams",
+				"description": "Third parties claiming to offer 'tariff-free' Aquadecor products for the US market are fraudulent. Scammers are posing as agents to collect unauthorized payments. Only use the channels listed on this page."
+			},
+			"official": {
+				"title": "Official US Procurement",
+				"description": "Genuine Aquadecor setups for US customers are exclusively managed through",
+				"and": "our verified international partners listed below."
+			}
+		},
+		"grid": {
+			"title": "Verified Global Partners",
+			"subtitle": "For regions with local stock, these partners provide the most reliable logistics"
+		},
+		"cta": {
+			"title": "Partner with Aquadecor",
+			"subtitle": "Interested in establishing a verified distribution point for Aquadecor products? Let's discuss a partnership.",
+			"button": "Inquire Here"
+		}
+	}
+}

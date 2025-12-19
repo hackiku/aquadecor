@@ -1,0 +1,33 @@
+{
+	"distributors": {
+		"meta": {
+			"title": "Officiële Distributeurs | Aquadecor Partners Wereldwijd",
+			"description": "Vind geautoriseerde Aquadecor-distributeurs bij u in de buurt. Neem contact op met onze vertrouwde partners in Spanje, India, Israël, Polen en meer."
+		},
+		"hero": {
+			"badge": "Wereldwijd Netwerk",
+			"title": "Officiële Distributeurs",
+			"subtitle": "Onze vertrouwde partners over de hele wereld. Voor vragen of opmerkingen, neem contact op met"
+		},
+		"alerts": {
+			"scam": {
+				"title": "Pas op voor valse vertegenwoordigers",
+				"description": "Er zijn een aantal nep-vertegenwoordigers van Aquadecor verschenen die kortingen en offertes aanbieden terwijl ze beweren officieel te zijn. Wees alert op deze oplichters!"
+			},
+			"official": {
+				"title": "Originele producten alleen hier",
+				"description": "Authentieke Aquadecor achterwanden kunnen alleen worden besteld via",
+				"and": "en onze geregistreerde distributeurs die hieronder vermeld staan."
+			}
+		},
+		"grid": {
+			"title": "Wereldwijde Partners",
+			"subtitle": "Neem contact op met uw dichtstbijzijnde distributeur voor lokale ondersteuning en snellere verzending"
+		},
+		"cta": {
+			"title": "Distributeur worden?",
+			"subtitle": "Heeft u interesse om Aquadecor in uw regio te vertegenwoordigen? Neem contact op met ons team.",
+			"button": "Neem contact op"
+		}
+	}
+}
