@@ -1,86 +1,186 @@
 {
 	"legal": {
-		"title": "Legal Information",
+		"title": "Juridisch Centrum",
 		"nav": {
-			"terms": "Terms of Service",
-			"privacy": "Privacy Policy",
-			"shipping": "Shipping Policy",
-			"refund": "Refund Policy"
+			"terms": "Algemene Voorwaarden",
+			"privacy": "Privacybeleid",
+			"shipping": "Verzendbeleid",
+			"refund": "Terugbetalingsbeleid"
 		},
 		"terms": {
 			"meta": {
-				"title": "Terms and Conditions | AquaDecor",
-				"description": "Handcrafted aquarium backgrounds terms, 20-year warranty, and payment policies."
+				"title": "Algemene Voorwaarden | AquaDecor",
+				"description": "Uitgebreide voorwaarden met betrekking tot productie, betalingen en onze 20-jarige structurele garantie."
 			},
-			"title": "Terms and Conditions",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Algemene Voorwaarden",
+			"lastUpdated": "Laatst bijgewerkt: februari 2025",
 			"sections": [
 				{
-					"heading": "Payments",
-					"content": "All payments are made in advance. Aquadecor has the right to require advance payment of 100% of the order value to start the handcrafted production process."
+					"heading": "Betaling en Productie",
+					"content": "Alle producten worden met de hand op bestelling gemaakt en vereisen een vooruitbetaling van 100% om het productieproces te starten. De standaard productietijd bedraagt doorgaans 10–12 werkdagen. Voor grootschalige of zeer complexe projecten kan de productie langer duren; in dergelijke gevallen wordt u vooraf geïnformeerd over de geschatte tijdlijn."
 				},
 				{
-					"heading": "20-Year Warranty",
-					"content": "Our products come with a 20-year structural warranty. This covers the integrity of the material and color under normal aquarium use.",
+					"heading": "Verantwoordelijkheid voor Afmetingen",
+					"badge": "Cruciaal: Interne Afmetingen",
+					"content": "Omdat wij niet werken met standaardmodellen van andere merken, dient u de exacte interne afmetingen van uw aquarium door te geven. Deze afmetingen worden gebruikt voor de uiteindelijke productie van uw achterwand. AquaDecor is niet verantwoordelijk voor pasvormproblemen die voortvloeien uit onjuiste afmetingen die door de klant zijn verstrekt. Eventuele aanpassingen na productie brengen extra arbeids- en verzendkosten met zich mee.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Het Goedkeuringsproces",
+					"content": "Voorafgaand aan de verzending verstrekken wij foto's in hoge resolutie van uw voltooide product ter beoordeling. Uw goedkeuring van deze foto's vormt de definitieve aanvaarding van de kleur, vorm, grootte en het ontwerp. Na goedkeuring en verzending kunnen wij geen esthetische claims of verzoeken voor aanpassingen aan het ontwerp meer accepteren."
+				},
+				{
+					"heading": "Communicatiebeleid",
+					"content": "Om een nauwkeurige administratie en orderverwerking te garanderen, moet alle officiële communicatie via e-mail verlopen. Onze social media teams (Facebook, Instagram, etc.) hebben geen toegang tot de orderdatabase en kunnen geen statusupdates geven of formele verzoeken verwerken."
+				},
+				{
+					"heading": "Verzending en Douane",
+					"content": "Wij verzenden wereldwijd vanuit Servië. Alle prijzen op onze website zijn inclusief verpakkings- en verzendkosten, maar EXCLUSIEF eventuele douanerechten of invoerbelastingen. Deze kosten worden bepaald door uw lokale overheid en zijn de exclusieve verantwoordelijkheid van de klant. Wij raden u aan contact op te nemen met uw lokale douanekantoor voor informatie over tarieven voordat u bestelt."
+				},
+				{
+					"heading": "Schadeclaims",
+					"badge": "Meldingsvenster van 48 uur",
+					"content": "Inspecteer uw artikelen onmiddellijk bij levering. Eventuele schade moet binnen 48 uur na ontvangst aan ons worden gemeld met duidelijk fotobewijs van de schade en de verpakking. Meldingen die na dit venster van 48 uur worden gedaan, komen niet in aanmerking voor een claim. Wij zullen reparatie-instructies geven voor kleine problemen of een vervanging regelen voor grote, onherstelbare schade.",
+					"variant": "danger"
+				},
+				{
+					"heading": "20 Jaar Structurele Garantie",
+					"content": "Onze producten bevatten een structurele garantie van 20 jaar (of levenslang, indien gespecificeerd) op de integriteit van het materiaal en de kleurvastheid onder normale aquariumomstandigheden. Deze garantie is alleen geldig als het product in de oorspronkelijke, ongewijzigde staat blijft.",
 					"variant": "info"
+				},
+				{
+					"heading": "Garantie-uitsluitingen",
+					"content": [
+						"Schade veroorzaakt door verkeerd gebruik, onjuiste installatie of het gebruik van scherpe voorwerpen.",
+						"Blootstelling aan agressieve chemicaliën of rood gepigmenteerde additieven (zoals bepaald visvoer met rode kleurstoffen of kaliumpermanganaat) die het materiaal kunnen vlekken.",
+						"Modificaties die na levering aan de achterwand zijn aangebracht.",
+						"Schade aan het aquariumglas of de structuur tijdens het installatieproces.",
+						"Het niet gebruiken van aquariumgeschikte siliconen die niet over de houdbaarheidsdatum zijn."
+					]
+				},
+				{
+					"heading": "Onderhoud en Veiligheid",
+					"content": [
+						"Installatie: Volg de meegeleverde instructies strikt op. Gebruik alleen aquariumveilige siliconen en laat deze minstens 48 uur uitharden voordat u water toevoegt.",
+						"Onderhoud: Achterwanden vereisen regelmatige reiniging. Overmatige algenopbouw die niet wordt beheerd, kan de beschermende coating beschadigen als deze agressief wordt verwijderd.",
+						"Veiligheid: Let bij achterwanden met diepe grotten en spleten op dat de gekozen vissoorten de juiste grootte hebben om te voorkomen dat ze vast komen te zitten."
+					]
 				}
 			]
 		},
 		"privacy": {
 			"meta": {
-				"title": "Privacy Policy | AquaDecor",
-				"description": "How we handle your data and protect your privacy."
+				"title": "Privacybeleid | AquaDecor",
+				"description": "Hoe wij omgaan met uw persoonlijke gegevens, verzendinformatie en onze inzet voor uw privacy."
 			},
-			"title": "Privacy Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Privacybeleid",
+			"lastUpdated": "Laatst bijgewerkt: februari 2025",
 			"sections": [
 				{
-					"heading": "Information Collection",
-					"content": "We collect your name, address, and email solely to process orders and provide shipping updates. We do not sell your data to third parties."
+					"heading": "Inleiding",
+					"content": "Dit beleid beschrijft hoe AquaDecor uw persoonlijke gegevens verzamelt, gebruikt en beschermt. Door onze website te gebruiken, gaat u akkoord met de verzameling en het gebruik van informatie in overeenstemming met dit beleid. Wij doen er alles aan om ervoor te zorgen dat uw gegevens veilig en transparant worden behandeld."
+				},
+				{
+					"heading": "Informatieverzameling en Gebruik",
+					"content": "Om een vlotte winkelervaring te bieden en maatwerkorders uit te voeren, kunnen wij u vragen om bepaalde persoonlijk identificeerbare informatie te verstrekken, waaronder maar niet beperkt tot uw naam, telefoonnummer en postadres. Deze informatie wordt strikt gebruikt voor het identificeren van u als klant, het verwerken van betalingen en het regelen van internationale verzending."
+				},
+				{
+					"heading": "Loggegevens en Analyse",
+					"content": "Wanneer u onze site bezoekt, verzamelen wij informatie die uw browser naar ons verzendt, bekend als 'Loggegevens'. Dit kan uw IP-adres, browserversie, de pagina's die u bezoekt, de tijd en datum van uw bezoek en andere statistieken omvatten. Wij gebruiken deze gegevens uitsluitend om onze websiteprestaties te verbeteren."
 				},
 				{
 					"heading": "Cookies",
-					"content": "We use essential cookies to keep track of your cart and session. By using our site, you agree to this usage."
+					"content": "Onze website gebruikt 'cookies' om uw winkelwagentje en sessie te beheren. U heeft de mogelijkheid om deze cookies te accepteren of te weigeren via uw browserinstellingen. Let op: het weigeren van cookies kan ertoe leiden dat u sommige functies van onze winkel niet kunt gebruiken."
+				},
+				{
+					"heading": "Externe Dienstverleners",
+					"content": "Wij maken gebruik van externe bedrijven (zoals transporteurs zoals DHL en FedEx, en betalingsverwerkers) om onze dienstverlening te faciliteren. Deze partijen hebben alleen toegang tot uw persoonlijke informatie om specifieke taken namens ons uit te voeren — zoals het bezorgen van uw pakket — en zijn strikt verplicht deze niet voor andere doeleinden te gebruiken."
+				},
+				{
+					"heading": "Beveiliging",
+					"content": "Wij waarderen uw vertrouwen in het verstrekken van uw persoonlijke gegevens en streven ernaar commercieel aanvaardbare middelen te gebruiken om deze te beschermen. Houd er echter rekening mee dat geen enkele methode van overdracht via internet 100% veilig is.",
+					"variant": "info"
+				},
+				{
+					"heading": "Privacy van Kinderen",
+					"badge": "Leeftijdsvereiste",
+					"content": "Onze diensten zijn niet bedoeld voor personen onder de 13 jaar. Wij verzamelen niet bewust persoonlijke informatie van kinderen. Als wij ontdekken dat een kind onder de 13 jaar ons persoonlijke gegevens heeft verstrekt, zullen wij deze onmiddellijk van onze servers verwijderen.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Externe Links",
+					"content": "Onze website kan links naar andere sites bevatten. Als u op een link van een derde partij klikt, wordt u naar die site geleid. Wij raden u ten zeerste aan het privacybeleid van deze externe websites te beoordelen, aangezien wij geen controle hebben over hun inhoud of praktijken."
 				}
 			]
 		},
 		"shipping": {
 			"meta": {
-				"title": "Shipping Policy | AquaDecor",
-				"description": "Worldwide shipping via DHL Express and FedEx. Information on customs and duties."
+				"title": "Verzendbeleid | AquaDecor",
+				"description": "Wereldwijde verzendinformatie, levertijden en belangrijke mededelingen over douanerechten."
 			},
-			"title": "Shipping Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Verzendbeleid",
+			"lastUpdated": "Laatst bijgewerkt: februari 2025",
 			"sections": [
 				{
-					"heading": "Customs and Import Fees",
-					"badge": "Important Notice",
-					"content": "We ship from Serbia. All prices shown on the website include product cost, packaging, and shipping, but DO NOT include potential customs/import fees. You may be charged import duties by your government prior to delivery. Aquadecor is not responsible for these costs.",
+					"heading": "Wereldwijde Verzending",
+					"content": "Wij verzenden onze handgemaakte achterwanden naar meer dan 80 landen wereldwijd. Alle bestellingen worden verzonden vanuit onze studio in Servië met behulp van premium vervoerders om de veiligheid van uw artikelen te garanderen."
+				},
+				{
+					"heading": "Europese Levering (FedEx/TNT)",
+					"content": "Bestellingen naar de meeste Europese landen (waaronder Nederland en België) worden verzonden via FedEx TNT. De levering duurt doorgaans 5–7 werkdagen zodra de productie is voltooid."
+				},
+				{
+					"heading": "Douane en Invoerrechten",
+					"badge": "Belangrijk voor Internationale Kopers",
+					"content": "Alle prijzen op onze website zijn inclusief productkosten en verzendkosten, maar EXCLUSIEF eventuele douanetarieven of invoerbelastingen. Als importeur kan het zijn dat u invoerrechten moet betalen aan uw lokale overheid vóór levering. AquaDecor is niet verantwoordelijk voor deze extra kosten.",
 					"variant": "warning"
 				},
 				{
-					"heading": "Delivery Times",
-					"content": "Production takes 10-12 business days. Once shipped via DHL Express, delivery typically takes 3-5 business days worldwide."
+					"heading": "Geschatte Transittijden",
+					"content": [
+						"Europa: 5–10 werkdagen",
+						"USA, Canada & Australië: 10–20 werkdagen",
+						"Rest van de wereld: 10–20 werkdagen",
+						"Let op: Deze tijden zijn schattingen en kunnen worden beïnvloed door feestdagen of vertragingen bij de vervoerder."
+					]
+				},
+				{
+					"heading": "Verloren of Vertraagde Pakketten",
+					"content": "Als uw pakket niet binnen 30 werkdagen is aangekomen, zullen wij een officieel onderzoek instellen bij de vervoerder. Indien het onderzoek bevestigt dat het pakket verloren is gegaan of onherstelbaar beschadigd is, heeft u recht op een volledige vervanging of een terugbetaling.",
+					"variant": "info"
+				},
+				{
+					"heading": "Verzendbestemmingen",
+					"content": "Wij verzenden momenteel naar: Nederland, België, USA, Canada, Australië, Verenigd Koninkrijk, EU-lidstaten, Zwitserland, Noorwegen, Nieuw-Zeeland, Singapore, VAE, Saudi-Arabië, Japan, Zuid-Korea, Brazilië, Mexico en vele andere landen. Als uw land niet in de lijst staat bij het afrekenen, neem dan contact met ons op voor een offerte op maat."
 				}
 			]
 		},
 		"refund": {
 			"meta": {
-				"title": "Refund Policy | AquaDecor",
-				"description": "Order cancellation fees and return policies for custom backgrounds."
+				"title": "Terugbetalingsbeleid | AquaDecor",
+				"description": "Details over orderannuleringen, retourneren van maatwerk en ons vervangingsbeleid."
 			},
-			"title": "Refund Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Terugbetalingsbeleid",
+			"lastUpdated": "Laatst bijgewerkt: februari 2025",
 			"sections": [
 				{
-					"heading": "Cancellation Policy",
-					"badge": "Important Notice",
-					"content": "If you want to cancel your order before we ship it, you will be charged a cancellation fee of 40% of the total value of your order. This covers the non-recoverable labor and material costs of your custom-sized product.",
+					"heading": "Annulering van Bestelling",
+					"badge": "40% Annuleringskosten",
+					"content": "Indien u uw bestelling wilt annuleren nadat de productie is gestart maar voordat deze is verzonden, wordt een annuleringsvergoeding van 40% van de totale orderwaarde in rekening gebracht. Deze vergoeding dekt de niet-recupererbare kosten van gespecialiseerde arbeid en materialen die zijn gebruikt om uw maatwerkproduct te vervaardigen.",
 					"variant": "danger"
 				},
 				{
-					"heading": "Returns",
-					"content": "Due to the nature of custom-made aquarium backgrounds, we do not accept returns for correctly manufactured items that match your provided dimensions."
+					"heading": "Retourneren en Definitieve Verkoop",
+					"content": "Vanwege de hoogwaardige aanpassing van onze producten (gemaakt volgens uw specifieke aquariumafmetingen), zijn alle verkopen definitief zodra ze zijn verzonden. Wij accepteren geen retourzendingen en verlenen geen terugbetalingen voor artikelen die correct zijn vervaardigd volgens de door u verstrekte afmetingen en goedgekeurde foto's."
+				},
+				{
+					"heading": "Vervanging bij Schade",
+					"content": "Hoewel wij geen terugbetalingen aanbieden voor verzendschade, garanderen wij de veilige aankomst van uw bestelling. Als uw product met grote schade aankomt, zullen wij kosteloos een vervangend product vervaardigen en verzenden, mits de schade binnen 48 uur na levering wordt gemeld.",
+					"variant": "info"
+				},
+				{
+					"heading": "Aanpassingen en Fouten",
+					"content": "Als een product niet past door een fout in de door de klant verstrekte afmetingen, kunnen wij geen terugbetaling aanbieden. Wij geven echter graag advies over hoe u het materiaal thuis kunt aanpassen of bespreken betaalde opties voor aanpassingen in onze studio."
 				}
 			]
 		}

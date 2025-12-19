@@ -1,86 +1,186 @@
 {
 	"legal": {
-		"title": "Legal Information",
+		"title": "Centro Legale",
 		"nav": {
-			"terms": "Terms of Service",
-			"privacy": "Privacy Policy",
-			"shipping": "Shipping Policy",
-			"refund": "Refund Policy"
+			"terms": "Termini e Condizioni",
+			"privacy": "Informativa sulla Privacy",
+			"shipping": "Politica di Spedizione",
+			"refund": "Politica di Rimborso"
 		},
 		"terms": {
 			"meta": {
-				"title": "Terms and Conditions | AquaDecor",
-				"description": "Handcrafted aquarium backgrounds terms, 20-year warranty, and payment policies."
+				"title": "Termini e Condizioni | AquaDecor",
+				"description": "Termini completi su produzione, pagamenti e la nostra garanzia strutturale di 20 anni."
 			},
-			"title": "Terms and Conditions",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Termini e Condizioni",
+			"lastUpdated": "Ultimo aggiornamento: Febbraio 2025",
 			"sections": [
 				{
-					"heading": "Payments",
-					"content": "All payments are made in advance. Aquadecor has the right to require advance payment of 100% of the order value to start the handcrafted production process."
+					"heading": "Pagamento e Produzione",
+					"content": "Tutti i prodotti sono realizzati artigianalmente su ordinazione e richiedono il pagamento anticipato del 100% per avviare il processo di produzione. La produzione standard richiede tipicamente 10–12 giorni lavorativi. Per progetti personalizzati su larga scala o altamente complessi, i tempi potrebbero prolungarsi; in tali casi, il cliente sarà informato preventivamente sulla tempistica stimata."
 				},
 				{
-					"heading": "20-Year Warranty",
-					"content": "Our products come with a 20-year structural warranty. This covers the integrity of the material and color under normal aquarium use.",
+					"heading": "Responsabilità delle Misure",
+					"badge": "Critico: Dimensioni Interne",
+					"content": "Poiché non lavoriamo con modelli standard predefiniti di altri marchi, è responsabilità del cliente fornire le misure interne esatte del proprio acquario. Queste dimensioni verranno utilizzate per il taglio finale dello sfondo. AquaDecor non è responsabile per problemi di adattamento derivanti da misurazioni errate fornite dal cliente. Qualsiasi modifica richiesta dopo la produzione comporterà costi aggiuntivi di manodopera e spedizione.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Processo di Approvazione",
+					"content": "Prima della spedizione, forniremo foto ad alta risoluzione del setup completato per revisione. L'approvazione di queste foto costituisce l'accettazione finale di colore, forma, dimensioni e design. Una volta approvato e spedito, non potremo accettare reclami estetici o richieste di modifiche al design."
+				},
+				{
+					"heading": "Politica di Comunicazione",
+					"content": "Per garantire una corretta archiviazione dei dati e il monitoraggio degli ordini, tutte le comunicazioni ufficiali devono avvenire esclusivamente via email. I nostri team sui social media (Facebook, Instagram, ecc.) non hanno accesso al database degli ordini e non possono fornire aggiornamenti o gestire richieste formali."
+				},
+				{
+					"heading": "Spedizione e Dogana",
+					"content": "Spediamo in tutto il mondo dalla Serbia. Tutti i prezzi indicati sul nostro sito includono i costi di imballaggio e spedizione, ma NON includono eventuali dazi doganali o tasse d'importazione. Tali oneri sono stabiliti dal governo locale e sono di esclusiva responsabilità del cliente. Consigliamo di contattare l'ufficio doganale locale per informazioni sulle tariffe applicabili prima di procedere con l'ordine."
+				},
+				{
+					"heading": "Reclami per Danni",
+					"badge": "Finestra di 48 Ore",
+					"content": "Al momento della consegna, ispezionare immediatamente gli articoli. Eventuali danni devono esserci segnalati entro 48 ore dalla ricezione, allegando prove fotografiche chiare del danno e dell'imballaggio. Le segnalazioni effettuate oltre questa finestra temporale non saranno idonee per il reclamo. Forniremo istruzioni per la riparazione in caso di problemi minori o organizzeremo una sostituzione per danni gravi e irreparabili.",
+					"variant": "danger"
+				},
+				{
+					"heading": "Garanzia Strutturale di 20 Anni",
+					"content": "I nostri prodotti includono una garanzia strutturale di 20 anni (o a vita, dove specificato) che copre l'integrità del materiale e la stabilità del colore in normali condizioni d'uso in acquario. Questa garanzia è valida solo se il prodotto rimane nel suo stato originale e non modificato.",
 					"variant": "info"
+				},
+				{
+					"heading": "Esclusioni dalla Garanzia",
+					"content": [
+						"Danni causati da uso improprio, installazione errata o utilizzo di oggetti appuntiti.",
+						"Esposizione a sostanze chimiche aggressive o additivi con pigmenti rossi (come certi mangimi o permanganato di potassio) che possono macchiare il materiale.",
+						"Modifiche apportate allo sfondo dopo la consegna.",
+						"Danni al vetro dell'acquario o alla struttura durante il processo di installazione.",
+						"Mancato utilizzo di silicone per acquari non scaduto per l'installazione."
+					]
+				},
+				{
+					"heading": "Manutenzione e Sicurezza",
+					"content": [
+						"Installazione: Seguire rigorosamente le istruzioni fornite. Utilizzare solo silicone specifico per acquari e lasciarlo polimerizzare per almeno 48 ore prima di aggiungere l'acqua.",
+						"Manutenzione: Gli sfondi richiedono una pulizia regolare. Un accumulo eccessivo di alghe non gestito può danneggiare il rivestimento protettivo se rimosso in modo aggressivo.",
+						"Sicurezza: Per gli sfondi con grotte profonde e anfratti, assicurarsi che le specie ittiche scelte siano di dimensioni adeguate per evitare che rimangano intrappolate."
+					]
 				}
 			]
 		},
 		"privacy": {
 			"meta": {
-				"title": "Privacy Policy | AquaDecor",
-				"description": "How we handle your data and protect your privacy."
+				"title": "Informativa sulla Privacy | AquaDecor",
+				"description": "Come gestiamo i tuoi dati personali, le informazioni di spedizione e il nostro impegno per la tua privacy."
 			},
-			"title": "Privacy Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Informativa sulla Privacy",
+			"lastUpdated": "Ultimo aggiornamento: Febbraio 2025",
 			"sections": [
 				{
-					"heading": "Information Collection",
-					"content": "We collect your name, address, and email solely to process orders and provide shipping updates. We do not sell your data to third parties."
+					"heading": "Introduzione",
+					"content": "La presente informativa descrive come AquaDecor raccoglie, utilizza e protegge le tue informazioni personali quando utilizzi il nostro servizio. Utilizzando il nostro sito web, accetti la raccolta e l'uso delle informazioni in conformità con questa politica. Ci impegniamo a garantire che i tuoi dati siano gestiti in modo sicuro e trasparente."
 				},
 				{
-					"heading": "Cookies",
-					"content": "We use essential cookies to keep track of your cart and session. By using our site, you agree to this usage."
+					"heading": "Raccolta e Utilizzo delle Informazioni",
+					"content": "Per offrire un'esperienza di acquisto ottimale e completare ordini personalizzati, potremmo richiederti alcune informazioni identificative, inclusi tra l'altro nome, numero di telefono e indirizzo postale. Queste informazioni sono utilizzate esclusivamente per identificarti come cliente, elaborare i pagamenti e organizzare la spedizione internazionale."
+				},
+				{
+					"heading": "Dati di Registro e Analitica",
+					"content": "Ogni volta che visiti il nostro sito, raccogliamo informazioni che il tuo browser ci invia, chiamate 'Dati di Registro'. Questi possono includere il tuo indirizzo IP, la versione del browser, le pagine visitate, l'ora e la data della visita e altre statistiche di utilizzo. Utilizziamo questi dati esclusivamente per migliorare le prestazioni del sito e l'esperienza utente."
+				},
+				{
+					"heading": "Cookie",
+					"content": "Il nostro sito web utilizza i 'cookie' per gestire il carrello e la sessione. Hai la possibilità di accettare o rifiutare questi cookie tramite le impostazioni del browser. Ti preghiamo di notare che il rifiuto dei cookie potrebbe impedirti di utilizzare alcune funzionalità del nostro negozio, come il mantenimento degli articoli nel carrello."
+				},
+				{
+					"heading": "Fornitori di Servizi Terzi",
+					"content": "Ci avvaliamo di società terze (come corrieri quali DHL e FedEx e processori di pagamento) per facilitare il nostro servizio. Tali soggetti hanno accesso alle tue informazioni personali solo per eseguire compiti specifici per nostro conto — come la consegna del pacco — e sono strettamente obbligati a non divulgarle o utilizzarle per altri scopi."
+				},
+				{
+					"heading": "Sicurezza",
+					"content": "Apprezziamo la fiducia che riponi nel fornirci i tuoi dati e ci sforziamo di utilizzare mezzi commercialmente accettabili per proteggerli. Tuttavia, ricorda che nessun metodo di trasmissione via Internet è sicuro al 100% e non possiamo garantirne la sicurezza assoluta.",
+					"variant": "info"
+				},
+				{
+					"heading": "Privacy dei Minori",
+					"badge": "Requisito di Età",
+					"content": "I nostri servizi non sono rivolti a persone di età inferiore ai 13 anni. Non raccogliamo consapevolmente informazioni da minori. Se dovessimo scoprire che un minore di 13 anni ci ha fornito dati personali, provvederemo all'immediata cancellazione dai nostri server. Invitiamo i genitori a contattarci in caso di necessità.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Link Esterni",
+					"content": "Il nostro sito potrebbe contenere link a siti esterni non gestiti da noi. Ti consigliamo vivamente di consultare le informative sulla privacy di tali siti, poiché non abbiamo alcun controllo sui loro contenuti o pratiche."
 				}
 			]
 		},
 		"shipping": {
 			"meta": {
-				"title": "Shipping Policy | AquaDecor",
-				"description": "Worldwide shipping via DHL Express and FedEx. Information on customs and duties."
+				"title": "Politica di Spedizione | AquaDecor",
+				"description": "Informazioni sulla spedizione globale, tempi di consegna e avvisi importanti sui dazi doganali."
 			},
-			"title": "Shipping Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Politica di Spedizione",
+			"lastUpdated": "Ultimo aggiornamento: Febbraio 2025",
 			"sections": [
 				{
-					"heading": "Customs and Import Fees",
-					"badge": "Important Notice",
-					"content": "We ship from Serbia. All prices shown on the website include product cost, packaging, and shipping, but DO NOT include potential customs/import fees. You may be charged import duties by your government prior to delivery. Aquadecor is not responsible for these costs.",
+					"heading": "Spedizione Globale",
+					"content": "Spediamo i nostri sfondi artigianali in oltre 80 paesi. Tutti gli ordini vengono spediti dal nostro studio in Serbia utilizzando corrieri premium per garantire la massima sicurezza dei tuoi articoli."
+				},
+				{
+					"heading": "Consegne in Europa (FedEx/TNT)",
+					"content": "Gli ordini verso la maggior parte dei paesi europei vengono spediti tramite FedEx TNT. La consegna richiede tipicamente 5–7 giorni lavorativi dopo il completamento della produzione. I paesi interessati includono: Italia, Francia, Spagna, Germania, Regno Unito, Svizzera, Svezia, Lussemburgo, Paesi Bassi, Slovacchia, Polonia, Repubblica Ceca, Ungheria, Croazia, Slovenia, Romania, Bulgaria, Austria, Belgio."
+				},
+				{
+					"heading": "Dazi Doganali e Importazione",
+					"badge": "Importante per Acquirenti Internazionali",
+					"content": "Tutti i prezzi sul nostro sito includono il prodotto e la spedizione, ma NON includono eventuali dazi doganali o tasse d'importazione. In qualità di importatore, il cliente potrebbe dover pagare oneri stabiliti dal proprio governo prima della consegna. AquaDecor non è responsabile per questi costi aggiuntivi.",
 					"variant": "warning"
 				},
 				{
-					"heading": "Delivery Times",
-					"content": "Production takes 10-12 business days. Once shipped via DHL Express, delivery typically takes 3-5 business days worldwide."
+					"heading": "Tempi di Transito Stimati",
+					"content": [
+						"Europa: 5–10 giorni lavorativi",
+						"USA, Canada e Australia: 10–20 giorni lavorativi",
+						"Resto del mondo: 10–20 giorni lavorativi",
+						"Nota: Questi tempi sono stime e possono variare a causa di festività o ritardi dei corrieri."
+					]
+				},
+				{
+					"heading": "Pacchi Smarriti o in Ritardo",
+					"content": "Se il pacco non arriva entro 30 giorni lavorativi, avvieremo un reclamo ufficiale con il corriere. Se l'indagine conferma lo smarrimento o il danneggiamento irreparabile, avrai diritto a una sostituzione completa o a un rimborso.",
+					"variant": "info"
+				},
+				{
+					"heading": "Destinazioni di Spedizione",
+					"content": "Attualmente spediamo in: Italia, USA, Canada, Australia, Regno Unito, Stati membri UE, Svizzera, Norvegia, Nuova Zelanda, Singapore, Emirati Arabi Uniti, Arabia Saudita, Giappone, Corea del Sud, Brasile, Messico e molti altri. Se il tuo paese non è elencato al checkout, contattaci per un preventivo."
 				}
 			]
 		},
 		"refund": {
 			"meta": {
-				"title": "Refund Policy | AquaDecor",
-				"description": "Order cancellation fees and return policies for custom backgrounds."
+				"title": "Politica di Rimborso | AquaDecor",
+				"description": "Dettagli su cancellazione ordini, resi di prodotti personalizzati e politica di sostituzione."
 			},
-			"title": "Refund Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Politica di Rimborso",
+			"lastUpdated": "Ultimo aggiornamento: Febbraio 2025",
 			"sections": [
 				{
-					"heading": "Cancellation Policy",
-					"badge": "Important Notice",
-					"content": "If you want to cancel your order before we ship it, you will be charged a cancellation fee of 40% of the total value of your order. This covers the non-recoverable labor and material costs of your custom-sized product.",
+					"heading": "Cancellazione dell'Ordine",
+					"badge": "Commissione di Cancellazione del 40%",
+					"content": "Se desideri annullare l'ordine dopo l'inizio della produzione ma prima della spedizione, verrà applicata una commissione di cancellazione pari al 40% del valore totale dell'ordine. Questa quota copre i costi non recuperabili di manodopera specializzata e materiali utilizzati per il tuo prodotto su misura.",
 					"variant": "danger"
 				},
 				{
-					"heading": "Returns",
-					"content": "Due to the nature of custom-made aquarium backgrounds, we do not accept returns for correctly manufactured items that match your provided dimensions."
+					"heading": "Resi e Vendita Finale",
+					"content": "Data la natura altamente personalizzata dei nostri prodotti (realizzati su misure specifiche), tutte le vendite sono considerate definitive una volta spedite. Non accettiamo resi né emettiamo rimborsi per articoli prodotti correttamente in base alle misure e alle foto approvate dal cliente."
+				},
+				{
+					"heading": "Sostituzione per Danni",
+					"content": "Sebbene non offriamo rimborsi monetari per danni da spedizione, garantiamo la consegna sicura del tuo ordine. Se il prodotto arriva con danni gravi, produrremo e spediremo una sostituzione gratuitamente, a condizione che il danno venga segnalato entro 48 ore dalla consegna.",
+					"variant": "info"
+				},
+				{
+					"heading": "Modifiche ed Errori",
+					"content": "Se un prodotto non si adatta a causa di un errore nelle misure fornite dal cliente, non è possibile emettere un rimborso. Tuttavia, siamo lieti di fornire assistenza su come modificare il materiale a casa o discutere opzioni di modifica a pagamento presso il nostro studio."
 				}
 			]
 		}

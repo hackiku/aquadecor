@@ -1,86 +1,156 @@
 {
 	"legal": {
-		"title": "Legal Information",
+		"title": "US Legal Center",
 		"nav": {
-			"terms": "Terms of Service",
+			"terms": "Terms & Conditions",
 			"privacy": "Privacy Policy",
-			"shipping": "Shipping Policy",
+			"shipping": "Shipping & Tariffs",
 			"refund": "Refund Policy"
 		},
 		"terms": {
 			"meta": {
-				"title": "Terms and Conditions | AquaDecor",
-				"description": "Handcrafted aquarium backgrounds terms, 20-year warranty, and payment policies."
+				"title": "Terms and Conditions | AquaDecor USA",
+				"description": "US-specific terms covering product availability, manual inquiries, and Serbian export regulations."
 			},
-			"title": "Terms and Conditions",
+			"title": "Terms and Conditions (USA)",
 			"lastUpdated": "Last Updated: February 2025",
 			"sections": [
 				{
-					"heading": "Payments",
-					"content": "All payments are made in advance. Aquadecor has the right to require advance payment of 100% of the order value to start the handcrafted production process."
+					"heading": "US Market Availability",
+					"badge": "Service Notice",
+					"content": "Due to current international trade dynamics and import tariffs affecting shipments from Serbia to the United States, our online catalog and direct-purchase options for the US market are restricted to select items. These items are priced to include necessary import duties where possible to ensure a seamless delivery experience.",
+					"variant": "warning"
 				},
 				{
-					"heading": "20-Year Warranty",
-					"content": "Our products come with a 20-year structural warranty. This covers the integrity of the material and color under normal aquarium use.",
+					"heading": "Manual Inquiry Process",
+					"content": "The automated price calculator is currently disabled for US-based customers. For custom-sized backgrounds or products not listed in the US store, we provide a personalized inquiry service. Please contact us at office@aquadecorbackgrounds.com with your aquarium dimensions for a manual quote that accounts for current logistics and tariff variables.",
 					"variant": "info"
+				},
+				{
+					"heading": "Payment and Production",
+					"content": "All US orders are handcrafted in our Serbian studio and require 100% advance payment. Once a manual quote is accepted and paid via our secure invoice link, the production process (typically 10–12 business days) begins. Large or highly complex custom projects may require additional time."
+				},
+				{
+					"heading": "Measurement Responsibility",
+					"badge": "Accuracy Required",
+					"content": "AquaDecor is not responsible for fitment issues resulting from incorrect measurements provided by the customer. Because shipping and return logistics between Serbia and the US are extremely costly, we urge you to double-check all internal dimensions before finalizing your inquiry.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Communication Policy",
+					"content": "All official US inquiries and order tracking must be handled via email at office@aquadecorbackgrounds.com. Our social media channels are for gallery purposes only and cannot provide binding logistical quotes or order status for the US market."
+				},
+				{
+					"heading": "20-Year Structural Warranty",
+					"content": "Our 20-year structural warranty remains fully valid for the US market, covering material integrity and colorfastness. However, please note that while we provide replacement parts/items free of charge under warranty, the customer may be responsible for the international shipping costs associated with moving the replacement from Serbia to the USA.",
+					"variant": "info"
+				},
+				{
+					"heading": "Maintenance and Safety",
+					"content": [
+						"Installation: Use only non-expired, aquarium-grade silicone. AquaDecor is not responsible for tank damage caused by improper installation.",
+						"Cleaning: Do not use harsh bristles or chemicals. Regular maintenance prevents algae buildup that could damage the protective coating.",
+						"Safety: Ensure fish species are size-appropriate for backgrounds with deep crevices to prevent entrapment."
+					]
 				}
 			]
 		},
 		"privacy": {
 			"meta": {
-				"title": "Privacy Policy | AquaDecor",
-				"description": "How we handle your data and protect your privacy."
+				"title": "Privacy Policy | AquaDecor USA",
+				"description": "How we handle data for our US customers in compliance with international standards."
 			},
 			"title": "Privacy Policy",
 			"lastUpdated": "Last Updated: February 2025",
 			"sections": [
 				{
-					"heading": "Information Collection",
-					"content": "We collect your name, address, and email solely to process orders and provide shipping updates. We do not sell your data to third parties."
+					"heading": "Data Usage for US Orders",
+					"content": "We collect your name, postal address, and email solely to facilitate international shipping and customs documentation required by US Customs and Border Protection. We do not sell or share your data with third-party marketers."
 				},
 				{
-					"heading": "Cookies",
-					"content": "We use essential cookies to keep track of your cart and session. By using our site, you agree to this usage."
+					"heading": "Cookies and Tracking",
+					"content": "We use essential cookies to manage your session and regional settings (ensuring you see US-available products). You may disable these in your browser, though it may affect site functionality."
+				},
+				{
+					"heading": "Service Providers",
+					"content": "Your data is shared with trusted logistics partners (DHL Express, FedEx) and payment processors (Stripe, PayPal) to fulfill your order. These parties are contractually prohibited from using your data for any other purpose."
+				},
+				{
+					"heading": "Children’s Privacy (COPPA)",
+					"badge": "Compliance Notice",
+					"content": "AquaDecor does not knowingly collect personal information from children under the age of 13. If we become aware of such data collection, it will be immediately purged from our servers.",
+					"variant": "warning"
+				},
+				{
+					"heading": "External Links",
+					"content": "Our website may contain links to other sites. If you click on a third-party link, you will be directed to that site. We strongly advise you to review the privacy policies of these external websites, as we have no control over their content or practices."
 				}
 			]
 		},
 		"shipping": {
 			"meta": {
-				"title": "Shipping Policy | AquaDecor",
-				"description": "Worldwide shipping via DHL Express and FedEx. Information on customs and duties."
+				"title": "Shipping and Tariffs | AquaDecor USA",
+				"description": "Logistics from Serbia to the US, including tariff-inclusive pricing and delivery times."
 			},
-			"title": "Shipping Policy",
+			"title": "Shipping and Tariffs (USA)",
 			"lastUpdated": "Last Updated: February 2025",
 			"sections": [
 				{
-					"heading": "Customs and Import Fees",
-					"badge": "Important Notice",
-					"content": "We ship from Serbia. All prices shown on the website include product cost, packaging, and shipping, but DO NOT include potential customs/import fees. You may be charged import duties by your government prior to delivery. Aquadecor is not responsible for these costs.",
+					"heading": "The Serbian-US Logistics Path",
+					"content": "All AquaDecor products are shipped directly from our manufacturing studio in Serbia. Due to the 'Handcrafted in Serbia' designation, shipments are subject to US import regulations. We utilize premium air express carriers (DHL/FedEx) to ensure the fastest possible transit across these borders."
+				},
+				{
+					"heading": "Tariff-Inclusive Pricing",
+					"badge": "Hassle-Free Shipping",
+					"content": "For products available for direct purchase in our US store, we have adjusted the pricing to include estimated federal import tariffs. This 'Direct-Ship' model is designed to minimize administrative delays at the US border. However, please note that US Customs reserves the right to apply secondary inspections which are outside our control.",
+					"variant": "info"
+				},
+				{
+					"heading": "Estimated Transit Times",
+					"content": [
+						"Production: 10–12 business days (standard items).",
+						"Transit: 5–15 business days via DHL Express/FedEx.",
+						"Note: US Customs processing may occasionally add 3–5 days to the final delivery date."
+					]
+				},
+				{
+					"heading": "Custom Inquiry Shipping",
+					"content": "For custom orders handled via email, shipping costs and tariff estimates will be calculated individually based on the volume and weight of the crate. These will be clearly itemized in your manual invoice.",
 					"variant": "warning"
 				},
 				{
-					"heading": "Delivery Times",
-					"content": "Production takes 10-12 business days. Once shipped via DHL Express, delivery typically takes 3-5 business days worldwide."
+					"heading": "Lost or Damaged Shipments",
+					"content": "We guarantee the safe arrival of your items. If a package is declared lost by the carrier after 30 business days, or if major damage is reported within 48 hours of receipt (with photo evidence), we will manufacture and ship a replacement from our studio."
 				}
 			]
 		},
 		"refund": {
 			"meta": {
-				"title": "Refund Policy | AquaDecor",
-				"description": "Order cancellation fees and return policies for custom backgrounds."
+				"title": "Refund Policy | AquaDecor USA",
+				"description": "Cancellation fees and return policies for the US market."
 			},
 			"title": "Refund Policy",
 			"lastUpdated": "Last Updated: February 2025",
 			"sections": [
 				{
-					"heading": "Cancellation Policy",
-					"badge": "Important Notice",
-					"content": "If you want to cancel your order before we ship it, you will be charged a cancellation fee of 40% of the total value of your order. This covers the non-recoverable labor and material costs of your custom-sized product.",
+					"heading": "Order Cancellation",
+					"badge": "40% Cancellation Fee",
+					"content": "Once production has begun on your custom order, it cannot be fully refunded. Cancellations made prior to shipping incur a 40% fee to cover the specialized labor and materials already invested in your custom-sized background.",
 					"variant": "danger"
 				},
 				{
-					"heading": "Returns",
-					"content": "Due to the nature of custom-made aquarium backgrounds, we do not accept returns for correctly manufactured items that match your provided dimensions."
+					"heading": "Final Sale Policy",
+					"content": "Due to the extreme costs associated with return shipping from the US to Serbia and the non-recoverable nature of import tariffs, all sales are final once the product has been dispatched. We do not accept returns for correctly manufactured items."
+				},
+				{
+					"heading": "Damage Claims",
+					"badge": "Strict 48-Hour Reporting",
+					"content": "Any damage occurred during transit must be reported within 48 hours of delivery. This is a strict requirement from our international carriers. Reports made after this window cannot be processed for replacement.",
+					"variant": "danger"
+				},
+				{
+					"heading": "Inquiry Withdrawal",
+					"content": "If you have requested a manual quote via email, you are under no obligation to purchase until the invoice is paid. Once the invoice is paid, the standard 40% cancellation fee applies if production has started."
 				}
 			]
 		}

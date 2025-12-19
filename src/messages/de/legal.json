@@ -1,86 +1,186 @@
 {
 	"legal": {
-		"title": "Legal Information",
+		"title": "Rechtliches Zentrum",
 		"nav": {
-			"terms": "Terms of Service",
-			"privacy": "Privacy Policy",
-			"shipping": "Shipping Policy",
-			"refund": "Refund Policy"
+			"terms": "AGB",
+			"privacy": "Datenschutz",
+			"shipping": "Versand",
+			"refund": "Erstattung"
 		},
 		"terms": {
 			"meta": {
-				"title": "Terms and Conditions | AquaDecor",
-				"description": "Handcrafted aquarium backgrounds terms, 20-year warranty, and payment policies."
+				"title": "Allgemeine Geschäftsbedingungen | AquaDecor",
+				"description": "Umfassende AGB zu Produktion, Zahlung und unserer 20-jährigen strukturellen Garantie."
 			},
-			"title": "Terms and Conditions",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Allgemeine Geschäftsbedingungen",
+			"lastUpdated": "Zuletzt aktualisiert: Februar 2025",
 			"sections": [
 				{
-					"heading": "Payments",
-					"content": "All payments are made in advance. Aquadecor has the right to require advance payment of 100% of the order value to start the handcrafted production process."
+					"heading": "Zahlung und Produktion",
+					"content": "Alle Produkte werden auf Bestellung handgefertigt und erfordern eine 100%ige Vorauszahlung, um den Produktionsprozess zu starten. Die Standardfertigung dauert in der Regel 10–12 Werktage. Bei großflächigen oder hochkomplexen Sonderanfertigungen kann die Produktion länger dauern; in solchen Fällen werden Sie vorab über den geschätzten Zeitrahmen informiert."
 				},
 				{
-					"heading": "20-Year Warranty",
-					"content": "Our products come with a 20-year structural warranty. This covers the integrity of the material and color under normal aquarium use.",
+					"heading": "Verantwortung für Maßangaben",
+					"badge": "Kritisch: Innenmaße",
+					"content": "Da wir nicht mit Standardvorlagen anderer Marken arbeiten, müssen Sie die exakten Innenmaße Ihres Aquariums angeben. Diese Maße dienen als Grundlage für den endgültigen Zuschnitt Ihrer Rückwand. AquaDecor haftet nicht für Passformprobleme, die auf fehlerhafte Maßangaben des Kunden zurückzuführen sind. Jegliche Änderungen, die nach der Produktion erforderlich werden, sind mit zusätzlichen Arbeits- und Versandkosten verbunden.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Der Freigabeprozess",
+					"content": "Vor dem Versand stellen wir Ihnen hochauflösende Fotos Ihres fertigen Setups zur Prüfung zur Verfügung. Ihre Freigabe dieser Fotos gilt als endgültige Abnahme von Farbe, Form, Größe und Design. Nach der Freigabe und dem Versand können wir keine ästhetischen Reklamationen oder Änderungswünsche am Design mehr berücksichtigen."
+				},
+				{
+					"heading": "Kommunikationsrichtlinie",
+					"content": "Um eine lückenlose Dokumentation und Auftragsverfolgung zu gewährleisten, muss die gesamte offizielle Kommunikation per E-Mail erfolgen. Unsere Social-Media-Teams (Facebook, Instagram usw.) haben keinen Zugriff auf die Auftragsdatenbanken und können keine Auskünfte zum Status oder zu formellen Anfragen geben."
+				},
+				{
+					"heading": "Versand und Zoll",
+					"content": "Wir versenden weltweit aus Serbien. Alle auf unserer Website angegebenen Preise beinhalten Verpackungs- und Versandkosten, jedoch KEINE potenziellen Zollgebühren oder Einfuhrsteuern. Diese Gebühren werden von Ihrer lokalen Regierung festgelegt und liegen in der alleinigen Verantwortung des Kunden. Wir empfehlen Ihnen, sich vor der Bestellung bei Ihrem zuständigen Zollamt über die geltenden Tarife zu informieren."
+				},
+				{
+					"heading": "Schadensmeldungen",
+					"badge": "48-Stunden-Meldefrist",
+					"content": "Bitte prüfen Sie Ihre Artikel sofort nach Erhalt. Jegliche Schäden müssen uns innerhalb von 48 Stunden nach Zustellung mit eindeutigen Fotobeweisen des Schadens und der Verpackung gemeldet werden. Meldungen, die nach dieser Frist eingehen, können nicht mehr berücksichtigt werden. Wir stellen Reparaturanleitungen für kleinere Probleme zur Verfügung oder veranlassen Ersatz bei größeren, irreparablen Schäden.",
+					"variant": "danger"
+				},
+				{
+					"heading": "20 Jahre strukturelle Garantie",
+					"content": "Unsere Produkte beinhalten eine 20-jährige strukturelle Garantie (oder lebenslang, sofern angegeben), die die Integrität des Materials und die Farbechtheit unter normalen Aquarienbedingungen abdeckt. Diese Garantie ist nur gültig, wenn das Produkt in seinem ursprünglichen, unveränderten Zustand verbleibt.",
 					"variant": "info"
+				},
+				{
+					"heading": "Garantieausschluss",
+					"content": [
+						"Schäden durch unsachgemäße Handhabung, fehlerhafte Installation oder Verwendung scharfer Gegenstände.",
+						"Einwirkung von aggressiven Chemikalien oder rot pigmentierten Zusätzen (wie bestimmte Fischfutter mit Farbstoffen oder Kaliumpermanganat), die das Material verfärben können.",
+						"Modifikationen, die nach der Lieferung an der Rückwand vorgenommen wurden.",
+						"Schäden am Aquarienglas oder der Struktur während des Installationsprozesses.",
+						"Nichtverwendung von aquariengeignetem, nicht abgelaufenem Silikon für die Installation."
+					]
+				},
+				{
+					"heading": "Wartung und Sicherheit",
+					"content": [
+						"Installation: Befolgen Sie die mitgelieferten Anweisungen genau. Verwenden Sie nur aquariensicheres Silikon und lassen Sie es mindestens 48 Stunden aushärten, bevor Sie Wasser hinzufügen.",
+						"Wartung: Rückwände erfordern eine regelmäßige Reinigung. Starke Algenablagerungen, die unbehandelt bleiben, können die Schutzschicht beschädigen, wenn sie aggressiv entfernt werden.",
+						"Sicherheit: Bei Rückwänden mit tiefen Höhlen und Spalten achten Sie bitte darauf, dass die gewählten Fischarten eine angemessene Größe haben, um ein Einklemmen zu verhindern."
+					]
 				}
 			]
 		},
 		"privacy": {
 			"meta": {
-				"title": "Privacy Policy | AquaDecor",
-				"description": "How we handle your data and protect your privacy."
+				"title": "Datenschutzerklärung | AquaDecor",
+				"description": "Informationen darüber, wie wir Ihre personenbezogenen Daten und Versandinformationen handhaben."
 			},
-			"title": "Privacy Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Datenschutzerklärung",
+			"lastUpdated": "Zuletzt aktualisiert: Februar 2025",
 			"sections": [
 				{
-					"heading": "Information Collection",
-					"content": "We collect your name, address, and email solely to process orders and provide shipping updates. We do not sell your data to third parties."
+					"heading": "Einleitung",
+					"content": "Diese Richtlinie beschreibt, wie AquaDecor Ihre personenbezogenen Daten sammelt, verwendet und schützt. Durch die Nutzung unserer Website erklären Sie sich mit der Erhebung und Nutzung von Informationen gemäß dieser Richtlinie einverstanden. Wir verpflichten uns, Ihre Daten sicher und transparent zu behandeln."
+				},
+				{
+					"heading": "Datenerhebung und -verwendung",
+					"content": "Um ein reibungsloses Einkaufserlebnis zu ermöglichen und individuelle Bestellungen auszuführen, bitten wir Sie um die Angabe bestimmter personenbezogener Daten, wie Name, Telefonnummer und Postanschrift. Diese Informationen werden ausschließlich zur Identifizierung, Zahlungsabwicklung und Organisation des internationalen Versands verwendet."
+				},
+				{
+					"heading": "Protokolldaten und Analysen",
+					"content": "Bei jedem Besuch unserer Website erfassen wir Informationen, die Ihr Browser an uns sendet (sog. 'Log Data'). Dies kann Ihre IP-Adresse, Browserversion, die besuchten Seiten sowie Zeit und Datum Ihres Besuchs umfassen. Wir nutzen diese Daten ausschließlich zur Verbesserung der Website-Performance."
 				},
 				{
 					"heading": "Cookies",
-					"content": "We use essential cookies to keep track of your cart and session. By using our site, you agree to this usage."
+					"content": "Unsere Website verwendet 'Cookies', um Ihren Warenkorb und Ihre Sitzung zu verwalten. Sie können diese Cookies über Ihre Browsereinstellungen ablehnen. Bitte beachten Sie, dass dies die Funktionalität des Shops einschränken kann."
+				},
+				{
+					"heading": "Drittanbieter",
+					"content": "Wir beauftragen Drittunternehmen (z. B. Versanddienstleister wie DHL und FedEx sowie Zahlungsdienstleister), um unseren Service auszuführen. Diese Parteien haben nur Zugriff auf Ihre Daten, um Aufgaben in unserem Auftrag zu erfüllen – wie die Zustellung Ihres Pakets – und sind verpflichtet, diese nicht für andere Zwecke weiterzugeben."
+				},
+				{
+					"heading": "Sicherheit",
+					"content": "Wir schätzen Ihr Vertrauen und setzen kommerziell akzeptable Mittel ein, um Ihre Daten zu schützen. Beachten Sie jedoch, dass keine Übertragungsmethode über das Internet zu 100 % sicher ist.",
+					"variant": "info"
+				},
+				{
+					"heading": "Schutz von Minderjährigen",
+					"badge": "Altersanforderung",
+					"content": "Unsere Dienste richten sich nicht an Personen unter 13 Jahren. Wir sammeln nicht wissentlich Daten von Kindern. Sollten wir feststellen, dass ein Kind unter 13 Jahren uns Daten übermittelt hat, werden wir diese sofort löschen.",
+					"variant": "warning"
+				},
+				{
+					"heading": "Externe Links",
+					"content": "Unsere Website kann Links zu anderen Websites enthalten. Wenn Sie auf einen Drittanbieter-Link klicken, werden Sie auf diese Website weitergeleitet. Wir empfehlen Ihnen dringend, die Datenschutzrichtlinien dieser externen Websites zu überprüfen, da wir keine Kontrolle über deren Inhalte oder Praktiken haben."
 				}
 			]
 		},
 		"shipping": {
 			"meta": {
-				"title": "Shipping Policy | AquaDecor",
-				"description": "Worldwide shipping via DHL Express and FedEx. Information on customs and duties."
+				"title": "Versandrichtlinien | AquaDecor",
+				"description": "Informationen zum weltweiten Versand, Lieferzeiten und wichtigen Zollhinweisen."
 			},
-			"title": "Shipping Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Versandrichtlinien",
+			"lastUpdated": "Zuletzt aktualisiert: Februar 2025",
 			"sections": [
 				{
-					"heading": "Customs and Import Fees",
-					"badge": "Important Notice",
-					"content": "We ship from Serbia. All prices shown on the website include product cost, packaging, and shipping, but DO NOT include potential customs/import fees. You may be charged import duties by your government prior to delivery. Aquadecor is not responsible for these costs.",
+					"heading": "Weltweiter Versand",
+					"content": "Wir versenden unsere handgefertigten Rückwände in über 80 Länder weltweit. Alle Bestellungen werden von unserem Studio in Serbien aus mit Premium-Versanddienstleistern verschickt."
+				},
+				{
+					"heading": "Lieferung innerhalb Europas (FedEx/TNT)",
+					"content": "Bestellungen in die meisten europäischen Länder werden per FedEx TNT versandt. Die Zustellung dauert in der Regel 5–7 Werktage nach Fertigstellung der Produktion. Zu den belieferten Ländern gehören: Deutschland, Österreich, Schweiz, Frankreich, Italien, Spanien, Vereinigtes Königreich, Luxemburg, Niederlande, Slowakei, Polen, Tschechische Republik, Ungarn, Kroatien, Slowenien, Rumänien, Bulgarien und Belgien."
+				},
+				{
+					"heading": "Zoll und Einfuhrabgaben",
+					"badge": "Wichtig für internationale Käufer",
+					"content": "Alle Preise auf unserer Website beinhalten die Produkt- und Versandkosten, aber KEINE Zollgebühren oder Einfuhrsteuern. Als Importeur sind Sie gegebenenfalls verpflichtet, Abgaben an Ihre lokale Regierung zu leisten. AquaDecor ist nicht für diese zusätzlichen Kosten verantwortlich.",
 					"variant": "warning"
 				},
 				{
-					"heading": "Delivery Times",
-					"content": "Production takes 10-12 business days. Once shipped via DHL Express, delivery typically takes 3-5 business days worldwide."
+					"heading": "Geschätzte Transitzeiten",
+					"content": [
+						"Europa: 5–10 Werktage",
+						"USA, Kanada & Australien: 10–20 Werktage",
+						"Rest der Welt: 10–20 Werktage",
+						"Hinweis: Dies sind Schätzwerte, die durch Feiertage oder Verzögerungen beim Versanddienstleister beeinflusst werden können."
+					]
+				},
+				{
+					"heading": "Verlorene oder verzögerte Pakete",
+					"content": "Sollte Ihr Paket nicht innerhalb von 30 Werktagen eingetroffen sein, leiten wir eine offizielle Nachforschung beim Versanddienstleister ein. Wird das Paket als verloren bestätigt, haben Sie Anspruch auf Ersatz oder Erstattung.",
+					"variant": "info"
+				},
+				{
+					"heading": "Versandziele",
+					"content": "Wir versenden derzeit unter anderem nach: Deutschland, Österreich, Schweiz, USA, Kanada, Australien, Vereinigtes Königreich, EU-Mitgliedstaaten, Norwegen, Neuseeland, Singapur, VAE, Saudi-Arabien, Japan, Südkorea, Brasilien und Mexiko. Sollte Ihr Land beim Checkout nicht aufgeführt sein, kontaktieren Sie uns bitte für ein individuelles Angebot."
 				}
 			]
 		},
 		"refund": {
 			"meta": {
-				"title": "Refund Policy | AquaDecor",
-				"description": "Order cancellation fees and return policies for custom backgrounds."
+				"title": "Widerrufs- und Erstattungsrichtlinien | AquaDecor",
+				"description": "Details zu Auftragsstornierungen, Rückgaben von Maßanfertigungen und Ersatzlieferungen."
 			},
-			"title": "Refund Policy",
-			"lastUpdated": "Last Updated: February 2025",
+			"title": "Widerrufs- und Erstattungsrichtlinien",
+			"lastUpdated": "Zuletzt aktualisiert: Februar 2025",
 			"sections": [
 				{
-					"heading": "Cancellation Policy",
-					"badge": "Important Notice",
-					"content": "If you want to cancel your order before we ship it, you will be charged a cancellation fee of 40% of the total value of your order. This covers the non-recoverable labor and material costs of your custom-sized product.",
+					"heading": "Stornierung der Bestellung",
+					"badge": "40% Stornogebühr",
+					"content": "Falls Sie Ihre Bestellung stornieren möchten, nachdem die Produktion bereits begonnen hat, aber noch vor dem Versand, fällt eine Stornogebühr von 40 % des Gesamtwerts an. Diese Gebühr deckt die nicht erstattungsfähigen Kosten für die spezialisierte Handarbeit und die für Ihre Maßanfertigung verwendeten Materialien.",
 					"variant": "danger"
 				},
 				{
-					"heading": "Returns",
-					"content": "Due to the nature of custom-made aquarium backgrounds, we do not accept returns for correctly manufactured items that match your provided dimensions."
+					"heading": "Rückgaben und Ausschluss des Widerrufsrechts",
+					"content": "Aufgrund der hohen Individualisierung unserer Produkte (Maßanfertigung nach Ihren spezifischen Aquarienmaßen) sind alle Verkäufe nach dem Versand endgültig. Wir akzeptieren keine Rücksendungen für Artikel, die korrekt nach Ihren Maßen und den freigegebenen Fotos gefertigt wurden."
+				},
+				{
+					"heading": "Ersatz bei Transportschäden",
+					"content": "Wir bieten zwar keine Geld-zurück-Garantie für Transportschäden an, garantieren jedoch die sichere Ankunft Ihrer Bestellung. Bei erheblichen Schäden fertigen wir kostenlos Ersatz an, sofern der Schaden innerhalb von 48 Stunden gemeldet wurde.",
+					"variant": "info"
+				},
+				{
+					"heading": "Fehlerhafte Maßangaben",
+					"content": "Sollte ein Produkt aufgrund fehlerhafter Maße des Kunden nicht passen, können wir keine Erstattung anbieten. Wir beraten Sie jedoch gerne bei der manuellen Anpassung des Materials oder besprechen kostenpflichtige Änderungen in unserem Studio."
 				}
 			]
 		}
