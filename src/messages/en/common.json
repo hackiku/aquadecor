@@ -1,81 +1,101 @@
 {
-"common": {
-	"cta": {
-		"shopNow": "Shop Now",
-		"orderCustom": "Order Custom",
-		"viewAll": "View all",
-		"tryAgain": "Try Again"
-	},
-	"trust": {
-		"handcrafted": "Handcrafted",
-		"warranty": "Lifetime warranty",
-		"perfectFit": "Perfect fit"
-	},
-	"nav": {
-		"shop": "Shop",
-		"shopDescription": "Browse our 3D backgrounds and decorations",
-		"backgrounds": "3D Backgrounds",
-		"backgroundsDescription": "Handmade realistic backgrounds",
-		"decorations": "Aquarium Decorations",
-		"decorationsDescription": "Plants, rocks, wood and more",
-		"gallery": "Gallery",
-		"calculator": "Price Calculator",
-		"calculatorDescription": "Design your custom background",
-		"resources": "Resources",
-		"faq": "FAQ",
-		"setup": "Setting Up",
-		"setupDescription": "10 installation configurations",
-		"support": "Customer Support",
-		"supportDescription": "Get help with your order",
-		"about": "About Us",
-		"blog": "Blog",
-		"reviews": "Reviews",
-		"distributors": "Distributors",
-		"contact": "Contact",
-		"terms": "Terms and Conditions",
-		"privacy": "Privacy Policy",
-		"shipping": "Shipping Policy",
-		"shippingReturns": "Shipping & Returns",
-		"shippingDescription": "Delivery and return policies",
-		"refund": "Refund Policy",
-		"faqDescription": "Common questions answered"
-	},
-	"footer": {
-		"categoryShop": "Shop",
-		"categoryResources": "Resources",
-		"categoryCompany": "Company",
-		"categoryLegal": "Legal",
-		"copyright": "© {year} Aquadecor LLC. All rights reserved.",
-		"adminPanel": "Admin Panel",
-		"builtBy": "Web + Shop by",
-		"veenieTagline": "Aerospace-grade web dev"
-	},
-	"errors": {
-		"error": {
-			"title": "Something Went Wrong",
-			"description": "We're having trouble loading this page. This usually resolves itself quickly.",
-			"retry": "Try Again",
-			"goHome": "Go Home",
-			"details": "Error details"
+	"common": {
+		"cta": {
+			"shopNow": "Shop Now",
+			"orderCustom": "Order Custom",
+			"viewAll": "View all",
+			"tryAgain": "Try Again"
 		},
-		"notFound": {
-			"title": "Page Not Found",
-			"description": "The page you're looking for doesn't exist or has been moved. Try one of these popular pages instead.",
-			"goBack": "Go Back",
-			"goHome": "Go Home",
-			"links": {
-				"shop": "Browse Shop",
-				"calculator": "Price Calculator",
-				"faq": "FAQ"
+		"email": {
+			"newsletter": {
+				"heading": "Experience Nature First",
+				"description": "Get exclusive updates, custom design previews, and special offers delivered to your inbox.",
+				"placeholder": "Enter your email",
+				"subscribe": "Subscribe",
+				"subscribing": "Subscribing...",
+				"success": "Thanks for subscribing! Check your inbox.",
+				"error": "Something went wrong. Please try again.",
+				"subscribers": "Join 10,000+ aquarium enthusiasts. Unsubscribe anytime"
+			},
+			"small": {
+				"heading": "Join 10,000+ aquascapers",
+				"placeholder": "Email address...",
+				"cta": "Join now"
 			}
 		},
-		"shop": {
-			"dbError": {
-				"title": "Shop Temporarily Unavailable",
-				"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
-				"meanwhile": "Meanwhile, check out:"
+		"trust": {
+			"handcrafted": "Handcrafted",
+			"warranty": "Lifetime warranty",
+			"perfectFit": "Perfect fit",
+			"companies": {
+				"heading": "Compatible with leading aquarium brands"
+			}
+		},
+		"nav": {
+			"shop": "Shop",
+			"shopDescription": "Browse our 3D backgrounds and decorations",
+			"backgrounds": "3D Backgrounds",
+			"backgroundsDescription": "Handmade realistic backgrounds",
+			"decorations": "Aquarium Decorations",
+			"decorationsDescription": "Plants, rocks, wood and more",
+			"gallery": "Gallery",
+			"calculator": "Price Calculator",
+			"calculatorDescription": "Design your custom background",
+			"resources": "Resources",
+			"faq": "FAQ",
+			"setup": "Setting Up",
+			"setupDescription": "10 installation configurations",
+			"support": "Customer Support",
+			"supportDescription": "Get help with your order",
+			"about": "About Us",
+			"blog": "Blog",
+			"reviews": "Reviews",
+			"distributors": "Distributors",
+			"contact": "Contact",
+			"terms": "Terms and Conditions",
+			"privacy": "Privacy Policy",
+			"shipping": "Shipping Policy",
+			"shippingReturns": "Shipping & Returns",
+			"shippingDescription": "Delivery and return policies",
+			"refund": "Refund Policy",
+			"faqDescription": "Common questions answered"
+		},
+		"footer": {
+			"categoryShop": "Shop",
+			"categoryResources": "Resources",
+			"categoryCompany": "Company",
+			"categoryLegal": "Legal",
+			"copyright": "© {year} Aquadecor LLC. All rights reserved.",
+			"adminPanel": "Admin Panel",
+			"builtBy": "Web + Shop by",
+			"veenieTagline": "Aerospace-grade web dev"
+		},
+		"errors": {
+			"error": {
+				"title": "Something Went Wrong",
+				"description": "We're having trouble loading this page. This usually resolves itself quickly.",
+				"retry": "Try Again",
+				"goHome": "Go Home",
+				"details": "Error details"
+			},
+			"notFound": {
+				"title": "Page Not Found",
+				"description": "The page you're looking for doesn't exist or has been moved. Try one of these popular pages instead.",
+				"goBack": "Go Back",
+				"goHome": "Go Home",
+				"links": {
+					"shop": "Browse Shop",
+					"calculator": "Price Calculator",
+					"faq": "FAQ"
+				}
+			},
+			"shop": {
+				"dbError": {
+					"title": "Shop Temporarily Unavailable",
+					"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
+					"meanwhile": "Meanwhile, check out:"
+				}
 			}
 		}
 	}
-}
 }

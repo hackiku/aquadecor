@@ -1,15 +1,35 @@
 {
 	"common": {
 		"cta": {
-			"shopNow": "Jetzt shoppen",
-			"orderCustom": "Custom bestellen",
-			"viewAll": "Alle ansehen",
+			"shopNow": "Jetzt kaufen",
+			"orderCustom": "Individuell bestellen",
+			"viewAll": "Alle anzeigen",
 			"tryAgain": "Erneut versuchen"
+		},
+		"email": {
+			"newsletter": {
+				"heading": "Natur hautnah erleben",
+				"description": "Erhalte exklusive Updates, Vorschauen individueller Designs und Sonderangebote direkt in dein Postfach.",
+				"placeholder": "E-Mail-Adresse eingeben",
+				"subscribe": "Abonnieren",
+				"subscribing": "Wird abonniert...",
+				"success": "Danke fürs Abonnieren! Prüfe dein Postfach.",
+				"error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+				"subscribers": "Schließe dich über 10.000 Aquarien-Enthusiasten an. Abmeldung jederzeit möglich"
+			},
+			"small": {
+				"heading": "Schließe dich über 10.000 Aquascapern an",
+				"placeholder": "E-Mail-Adresse...",
+				"cta": "Jetzt beitreten"
+			}
 		},
 		"trust": {
 			"handcrafted": "Handgefertigt",
 			"warranty": "Lebenslange Garantie",
-			"perfectFit": "Perfekte Passform"
+			"perfectFit": "Perfekte Passform",
+			"companies": {
+				"heading": "Kompatibel mit führenden Aquarienmarken"
+			}
 		},
 		"nav": {
 			"shop": "Shop",

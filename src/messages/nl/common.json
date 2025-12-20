@@ -6,10 +6,30 @@
 			"viewAll": "Alles bekijken",
 			"tryAgain": "Opnieuw proberen"
 		},
+		"email": {
+			"newsletter": {
+				"heading": "Ervaar de natuur van dichtbij",
+				"description": "Ontvang exclusieve updates, previews van maatwerkontwerpen en speciale aanbiedingen in je inbox.",
+				"placeholder": "Voer je e-mailadres in",
+				"subscribe": "Abonneren",
+				"subscribing": "Bezig met abonneren...",
+				"success": "Bedankt voor je aanmelding! Controleer je inbox.",
+				"error": "Er is iets misgegaan. Probeer het opnieuw.",
+				"subscribers": "Sluit je aan bij 10.000+ aquariumliefhebbers. Altijd uitschrijven mogelijk"
+			},
+			"small": {
+				"heading": "Sluit je aan bij 10.000+ aquascapers",
+				"placeholder": "E-mailadres...",
+				"cta": "Nu deelnemen"
+			}
+		},
 		"trust": {
 			"handcrafted": "Handgemaakt",
 			"warranty": "Levenslange garantie",
-			"perfectFit": "Perfecte pasvorm"
+			"perfectFit": "Perfecte pasvorm",
+			"companies": {
+				"heading": "Compatibel met toonaangevende aquariummerken"
+			}
 		},
 		"nav": {
 			"shop": "Shop",

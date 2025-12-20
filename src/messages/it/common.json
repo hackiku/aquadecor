@@ -2,14 +2,34 @@
 	"common": {
 		"cta": {
 			"shopNow": "Acquista ora",
-			"orderCustom": "Ordina personalizzato",
-			"viewAll": "Vedi tutti",
+			"orderCustom": "Ordina su misura",
+			"viewAll": "Visualizza tutto",
 			"tryAgain": "Riprova"
 		},
+		"email": {
+			"newsletter": {
+				"heading": "Vivi la natura da vicino",
+				"description": "Ricevi aggiornamenti esclusivi, anteprime di design personalizzati e offerte speciali direttamente nella tua casella email.",
+				"placeholder": "Inserisci la tua email",
+				"subscribe": "Iscriviti",
+				"subscribing": "Iscrizione in corso...",
+				"success": "Grazie per l’iscrizione! Controlla la tua email.",
+				"error": "Qualcosa è andato storto. Riprova.",
+				"subscribers": "Unisciti a oltre 10.000 appassionati di acquari. Disiscriviti in qualsiasi momento"
+			},
+			"small": {
+				"heading": "Unisciti a oltre 10.000 aquascaper",
+				"placeholder": "Indirizzo email...",
+				"cta": "Unisciti ora"
+			}
+		},
 		"trust": {
-			"handcrafted": "Realizzato a mano",
+			"handcrafted": "Fatto a mano",
 			"warranty": "Garanzia a vita",
-			"perfectFit": "Vestibilità perfetta"
+			"perfectFit": "Vestibilità perfetta",
+			"companies": {
+				"heading": "Compatibile con i principali marchi di acquari"
+			}
 		},
 		"nav": {
 			"shop": "Shop",

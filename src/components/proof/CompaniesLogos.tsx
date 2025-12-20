@@ -1,6 +1,7 @@
 // src/components/proof/CompaniesLogos.tsx
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const COMPANIES = [
 	{ name: "Fluval", logo: "/logos/companies/logo-fluval.svg", darkInvert: true },
@@ -8,9 +9,7 @@ const COMPANIES = [
 	{ name: "Tetra", logo: "/logos/companies/tetra_logo.svg" },
 	{ name: "Juwel", logo: "/logos/companies/juwel-logo.svg", brighten: true },
 	{ name: "Aqueon", logo: "/logos/companies/aqueon_logo.png" },
-	// { name: "Marineland", logo: "/logos/companies/marineland_logo.png" },
 	{ name: "Red Sea", logo: "/logos/companies/red-sea_logo.png", brighten: true },
-	// { name: "Oase", logo: "/logos/companies/oase_logo.svg", brighten: true },
 	{ name: "Oase", logo: "/logos/companies/oase_logo.svg", brighten: true, extraPadding: true },
 	{ name: "Ultum Nature Systems", logo: "/logos/companies/ultum_logo.png", darkInvert: true },
 ];
@@ -21,11 +20,13 @@ interface CompaniesLogosProps {
 }
 
 export function CompaniesLogos({ grayscale = false, className = "" }: CompaniesLogosProps) {
+	const t = useTranslations('common.trust.companies');
+
 	return (
 		<div className={`py-12 md:py-16 ${className}`}>
 			<div className="text-center mb-8">
 				<p className="uppercase tracking-widest text-sm md:text-base text-muted-foreground/60 font-display font-light">
-					Compatible with leading aquarium brands
+					{t('heading')}
 				</p>
 			</div>
 

@@ -78,6 +78,8 @@ export default async function HomePage({ params }: Props) {
 				subheadline={t('features.description')}
 			/>
 
+			<CompaniesLogos />
+
 			<StickyShop />
 			{/* Social Proof - Customer Content */}
 			<section className="relative py-24 md:py-36 bg-linear-to-b from-card/80 to-transparent overflow-hidden">

@@ -3,12 +3,14 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
 export function NewsletterForm() {
 	const [email, setEmail] = useState("");
 	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const t = useTranslations('common.email.newsletter');
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -30,17 +32,17 @@ export function NewsletterForm() {
 			<div className="rounded-2xl border bg-card p-8 md:p-12 text-center space-y-6">
 				<div className="space-y-3">
 					<h2 className="text-3xl md:text-4xl font-display font-light tracking-tight">
-						Experience Nature First
+						{t('heading')}
 					</h2>
 					<p className="text-lg text-muted-foreground font-display font-light">
-						Get exclusive updates, custom design previews, and special offers delivered to your inbox.
+						{t('description')}
 					</p>
 				</div>
 
 				<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
 					<Input
 						type="email"
-						placeholder="Enter your email"
+						placeholder={t('placeholder')}
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						required
@@ -51,26 +53,26 @@ export function NewsletterForm() {
 						type="submit"
 						size="lg"
 						disabled={status === "loading"}
-						className="rounded-full shrink-0"
+						className="rounded-full shrink-0 text-white"
 					>
-						{status === "loading" ? "Subscribing..." : "Subscribe"}
+						{status === "loading" ? t('subscribing') : t('subscribe')}
 					</Button>
 				</form>
 
 				{status === "success" && (
 					<p className="text-sm text-primary font-display">
-						Thanks for subscribing! Check your inbox.
+						{t('success')}
 					</p>
 				)}
 
 				{status === "error" && (
 					<p className="text-sm text-destructive font-display">
-						Something went wrong. Please try again.
+						{t('error')}
 					</p>
 				)}
 
 				<p className="text-xs text-muted-foreground font-display font-light">
-					Join 10,000+ aquarium enthusiasts. Unsubscribe anytime.
+					{t('subscribers')}
 				</p>
 			</div>
 		</div>
