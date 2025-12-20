@@ -6,25 +6,31 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { api } from "~/trpc/react"; // ADD THIS
 
 export function NewsletterForm() {
 	const [email, setEmail] = useState("");
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [discountCode, setDiscountCode] = useState<string | null>(null);
 	const t = useTranslations('common.email.newsletter');
+
+	// ADD THIS - tRPC mutation
+	const subscribe = api.newsletter.subscribe.useMutation({
+		onSuccess: (data) => {
+			if (data.success) {
+				setDiscountCode(data.discountCode || null);
+				setEmail("");
+			}
+		},
+	});
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setStatus("loading");
 
-		// TODO: Integrate with Resend API
-		try {
-			// Simulate API call
-			await new Promise(resolve => setTimeout(resolve, 1000));
-			setStatus("success");
-			setEmail("");
-		} catch (error) {
-			setStatus("error");
-		}
+		// REPLACE the old implementation with:
+		subscribe.mutate({
+			email,
+			source: 'newsletter-form', // or 'footer', 'popup', etc.
+		});
 	};
 
 	return (
@@ -46,28 +52,38 @@ export function NewsletterForm() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						required
-						disabled={status === "loading"}
+						disabled={subscribe.isPending}
 						className="rounded-full text-base"
 					/>
 					<Button
 						type="submit"
 						size="lg"
-						disabled={status === "loading"}
-						className="rounded-full shrink-0 text-white"
+						disabled={subscribe.isPending}
+						className="rounded-full shrink-0"
 					>
-						{status === "loading" ? t('subscribing') : t('subscribe')}
+						{subscribe.isPending ? t('subscribing') : t('subscribe')}
 					</Button>
 				</form>
 
-				{status === "success" && (
-					<p className="text-sm text-primary font-display">
-						{t('success')}
-					</p>
+				{/* SUCCESS - Show discount code */}
+				{discountCode && (
+					<div className="p-4 bg-primary/10 rounded-lg">
+						<p className="text-sm text-primary font-display font-medium mb-2">
+							{t('success')}
+						</p>
+						<p className="text-2xl font-display font-bold text-primary">
+							{discountCode}
+						</p>
+						<p className="text-xs text-muted-foreground mt-2">
+							Use this code at checkout for 10% off your first order!
+						</p>
+					</div>
 				)}
 
-				{status === "error" && (
+				{/* ERROR */}
+				{subscribe.isError && (
 					<p className="text-sm text-destructive font-display">
-						{t('error')}
+						{subscribe.error.message || t('error')}
 					</p>
 				)}
 

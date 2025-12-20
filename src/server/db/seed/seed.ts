@@ -25,6 +25,9 @@ import {
 	productAddons,
 	customizationOptions, selectOptions,
 	productMarketExclusions,
+	
+	// email
+	emailSubscribers,
 
 } from "../schema";
 
@@ -45,6 +48,8 @@ import { reviewData } from "./data/seed-reviews";
 import { faqsSeedData } from "./data/seed-faqs";
 import { shippingZonesSeedData, countriesSeedData } from "./data/seed-countries";
 
+// email
+import { subscribersSeedData } from "./data/seed-subscribers";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -585,6 +590,25 @@ async function seedOrders(productIdMap: Map<string, string>) {
 	console.log(`✅ Seeded ${ordersSeedData.length} orders\n`);
 }
 
+async function seedSubscribers() {
+	console.log("🌱 Seeding email subscribers...");
+
+	for (const subscriber of subscribersSeedData) {
+		const existing = await db
+			.select()
+			.from(emailSubscribers)
+			.where(eq(emailSubscribers.email, subscriber.email))
+			.limit(1);
+
+		if (existing.length === 0) {
+			await db.insert(emailSubscribers).values(subscriber);
+		}
+	}
+
+	console.log(`✅ Seeded ${subscribersSeedData.length} email subscribers\n`);
+}
+
+
 async function main() {
 	console.log("\n🚀 Starting database seed...\n");
 
@@ -599,6 +623,8 @@ async function main() {
 		await seedShippingAndCountries();
 		await seedOrders(productIdMap);
 		await seedPromoters();
+		
+		await seedSubscribers();
 
 		console.log("✨ Database seeding complete!\n");
 	} catch (error) {

@@ -11,3 +11,4 @@ export * from "./promoters";
 export * from "./reviews";
 export * from "./sales";
 export * from "./shop";
+export * from "./subscribers";

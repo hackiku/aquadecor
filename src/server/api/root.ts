@@ -6,6 +6,7 @@ import { reviewsRouter } from "~/server/api/routers/reviews";
 import { calculatorRouter } from "~/server/api/routers/calculator";
 // content
 import { faqRouter } from "~/server/api/routers/faq";
+import { newsletterRouter } from "~/server/api/routers/newsletter"; // NEW
 import { countryRouter, publicCountryRouter } from "./routers/admin/country";
 import { mediaRouter } from "./routers/media";
 import { adminMediaRouter } from "./routers/admin/media";
@@ -34,6 +35,7 @@ export const appRouter = createTRPCRouter({
 	media: mediaRouter, // Public media (old CDN)
 	reviews: reviewsRouter,
 	faq: faqRouter,
+	newsletter: newsletterRouter, // NEW
 	publicCountry: publicCountryRouter,
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,

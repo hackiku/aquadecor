@@ -7,28 +7,36 @@ export const env = createEnv({
 	 * isn't built with invalid env vars.
 	 */
 	server: {
-
+		// Auth
 		AUTH_SECRET: z.string().min(1),
-		// AUTH_SECRET:
-		// 	process.env.NODE_ENV === "development"
-		// 		? z.string()
-		// 		: z.string().optional(),
 		AUTH_DISCORD_ID: z.string().optional(), // rm optional() in prod
 		AUTH_DISCORD_SECRET: z.string().optional(), // rm optional() in prod
-
 		AUTH_GOOGLE_ID: z.string().optional(), // scaffold
 		AUTH_GOOGLE_SECRET: z.string().optional(), // scaffold
 
-
+		// Database
 		DATABASE_URL: z.string().url(),
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
+
+		// CMS
 		STRAPI_URL: z.string().url(),
 		STRAPI_API_TOKEN: z.string(),
 
 		// Supabase Storage (server-side S3)
 		SUPABASE_SECRET_API_KEY: z.string(),
+
+		// Email Service Configuration
+		EMAIL_PROVIDER: z.enum(['brevo', 'resend', 'mock']).default('mock'),
+
+		// Brevo (Sendinblue) - if using
+		BREVO_API_KEY: z.string().optional(),
+		BREVO_LIST_ID: z.string().optional(), // Newsletter list ID
+
+		// Resend - if using (future)
+		RESEND_API_KEY: z.string().optional(),
+		RESEND_AUDIENCE_ID: z.string().optional(),
 	},
 
 	/**
@@ -47,14 +55,18 @@ export const env = createEnv({
 	 * middlewares) or client-side so we need to destruct manually.
 	 */
 	runtimeEnv: {
+		// Auth
 		AUTH_SECRET: process.env.AUTH_SECRET,
 		AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
 		AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
 		AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
 		AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
 
+		// Database
 		DATABASE_URL: process.env.DATABASE_URL,
 		NODE_ENV: process.env.NODE_ENV,
+
+		// CMS
 		STRAPI_URL: process.env.STRAPI_URL,
 		STRAPI_API_TOKEN: process.env.STRAPI_API_TOKEN,
 
@@ -62,6 +74,13 @@ export const env = createEnv({
 		SUPABASE_SECRET_API_KEY: process.env.SUPABASE_SECRET_API_KEY,
 		NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
 		NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+
+		// Email Service
+		EMAIL_PROVIDER: process.env.EMAIL_PROVIDER,
+		BREVO_API_KEY: process.env.BREVO_API_KEY,
+		BREVO_LIST_ID: process.env.BREVO_LIST_ID,
+		RESEND_API_KEY: process.env.RESEND_API_KEY,
+		RESEND_AUDIENCE_ID: process.env.RESEND_AUDIENCE_ID,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
