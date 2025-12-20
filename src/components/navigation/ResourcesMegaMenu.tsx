@@ -50,7 +50,7 @@ export function ResourcesMegaMenu({ router }: ResourcesMegaMenuProps) {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						className="absolute top-full -right-4 -mt-px w-[340px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
+						className="absolute top-full -right-4 mt-5 -translate-y-px w-[340px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
 						<div className="p-2">
 							{resourceLinks.map((resource, index) => {

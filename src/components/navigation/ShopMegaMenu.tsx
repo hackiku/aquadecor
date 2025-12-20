@@ -43,16 +43,16 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						className="absolute top-full -left-4 mt-5 -translate-y-px _-mt-px w-[540px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
+						className="absolute top-full -left-4 mt-5 -translate-y-px w-[540px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
 						<div className="p-6">
 							{/* Main Grid: Shop All + Product Categories */}
-							<div className="grid grid-cols-3 gap-4">
+							<div className="grid grid-cols-5 gap-4">
 								{/* Left Column: Shop Homepage (Tall Vertical Rectangle) */}
 								<Link
 									href="/shop"
 									onMouseEnter={() => handleMouseEnter("/shop")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 row-span-2 flex flex-col"
+									className="group col-span-2 relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 row-span-2 flex flex-col"
 								>
 									{/* Background Image */}
 									<div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10">
@@ -88,7 +88,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 								<Link
 									href="/shop/3d-backgrounds"
 									onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex min-h-[120px]"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex min-h-[120px]"
 								>
 									{/* Background Image */}
 									<div className="absolute inset-0">
@@ -119,7 +119,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 								<Link
 									href="/shop/aquarium-decorations"
 									onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex min-h-[120px]"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex min-h-[120px]"
 								>
 									{/* Background Image */}
 									<div className="absolute inset-0">
@@ -150,7 +150,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 								<Link
 									href="/calculator"
 									onMouseEnter={() => handleMouseEnter("/calculator")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-5 flex"
 								>
 									<div className="relative z-10 p-4 flex items-center gap-3 w-full bg-gradient-to-r from-primary/5 to-transparent">
 										<div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors flex-shrink-0">

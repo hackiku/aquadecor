@@ -83,7 +83,7 @@ export function Nav() {
 						</Link>
 
 						{/* Desktop Navigation */}
-						<nav className="hidden md:flex items-center space-x-6">
+						<nav className="hidden md:flex md:items-start lg:items-center space-x-6">
 							{/* Shop Mega Menu */}
 							<ShopMegaMenu router={router} />
 
@@ -109,7 +109,7 @@ export function Nav() {
 						</nav>
 
 						{/* Right Side Actions - Desktop */}
-						<div className="hidden md:flex items-center space-x-4">
+						<div className="hidden md:flex items-center space-x-2">
 							<LanguageSwitcher />
 							<ModeToggle />
 							<NavButtons

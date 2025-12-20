@@ -13,11 +13,12 @@ export function ModeToggle() {
 
 	return (
 		<Button
-			variant="outline"
+			variant="ghost"
 			size="icon"
 			onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+			className="hover:bg-white/10 rounded-full aspect-square"
 		>
-			<Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+			<Sun className="text-white h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
 			<Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
 			<span className="sr-only">Toggle theme</span>
 		</Button>
