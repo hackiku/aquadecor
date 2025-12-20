@@ -8,29 +8,25 @@ import { Link } from '~/i18n/navigation';
 import { useNavigationTranslations } from '~/i18n/useNavigationTranslations';
 import { ModeToggle } from "../ui/mode-toggle";
 import { LanguageSwitcher } from "~/i18n/LanguageSwitcher";
-import { ShoppingCart, Search, User, Menu, X, Heart } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { CartDrawer } from "~/components/shop/cart/CartDrawer";
 import { WishlistDrawer } from "~/components/shop/wishlist/WishlistDrawer";
 import { ShopMegaMenu } from "./ShopMegaMenu";
 import { ResourcesMegaMenu } from "./ResourcesMegaMenu";
 import { MobileNav } from "./MobileNav";
+import { NavButtons } from "./NavButtons";
 import { enabledNavLinks } from "~/data/navigation";
 import { Button } from "../ui/button";
-import { useSession } from "next-auth/react";
 
 export function Nav() {
 	const router = useRouter();
 	const { translateNavLink } = useNavigationTranslations();
-	const { data: session, status } = useSession();
 
 	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
 	const [cartCount, setCartCount] = useState(0);
 	const [wishlistCount, setWishlistCount] = useState(0);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-	// Check if user is logged in
-	const isLoggedIn = status === "authenticated";
 
 	// Listen for cart updates
 	useEffect(() => {
@@ -92,21 +88,22 @@ export function Nav() {
 							<ShopMegaMenu router={router} />
 
 							{/* Regular Links */}
-							{regularLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href as any}
-									className="text-md font-light transition-colors hover:text-blue-400 text-white font-display relative group"
-								>
-									{link.label}
-									{link.badge && (
-										<span className="absolute -top-2 -right-6 px-1.5 py-0.5 text-[10px] bg-blue-500/20 text-blue-400 rounded-full font-normal">
-											{link.badge}
-										</span>
-									)}
-								</Link>
-							))}
-
+							<div className="hidden lg:flex items-center space-x-6">
+								{regularLinks.map((link) => (
+									<Link
+										key={link.href}
+										href={link.href as any}
+										className="text-md font-light transition-colors hover:text-blue-400 text-white font-display relative group"
+									>
+										{link.label}
+										{link.badge && (
+											<span className="absolute -top-2 -right-6 px-1.5 py-0.5 text-[10px] bg-blue-500/20 text-blue-400 rounded-full font-normal">
+												{link.badge}
+											</span>
+										)}
+									</Link>
+								))}
+							</div>
 							{/* Resources Mega Menu */}
 							<ResourcesMegaMenu router={router} />
 						</nav>
@@ -115,94 +112,25 @@ export function Nav() {
 						<div className="hidden md:flex items-center space-x-4">
 							<LanguageSwitcher />
 							<ModeToggle />
-
-							<button
-								className="flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Search"
-							>
-								<Search className="h-4 w-4" />
-							</button>
-
-							{/* Account Link - Show indicator if logged in */}
-							<Link
-								href="/account"
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Account"
-							>
-								<User className="h-4 w-4" />
-								{isLoggedIn && (
-									<span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-black" />
-								)}
-							</Link>
-
-							<button
-								onClick={() => setWishlistOpen(true)}
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Wishlist"
-							>
-								<Heart className="h-4 w-4" />
-								{wishlistCount > 0 && (
-									<span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-500 text-[10px] font-semibold text-white flex items-center justify-center">
-										{wishlistCount}
-									</span>
-								)}
-							</button>
-
-							<button
-								onClick={() => setCartOpen(true)}
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Shopping cart"
-							>
-								<ShoppingCart className="h-4 w-4" />
-								{cartCount > 0 && (
-									<span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-500 text-[10px] font-semibold text-white flex items-center justify-center">
-										{cartCount}
-									</span>
-								)}
-							</button>
+							<NavButtons
+								cartCount={cartCount}
+								wishlistCount={wishlistCount}
+								onCartClick={() => setCartOpen(true)}
+								onWishlistClick={() => setWishlistOpen(true)}
+							/>
 						</div>
 
 						{/* Mobile Actions */}
 						<div className="flex md:hidden items-center space-x-2">
 							<LanguageSwitcher />
-
-							{/* Account Link - Show indicator if logged in */}
-							<Link
-								href="/account"
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Account"
-							>
-								<User className="h-4 w-4" />
-								{isLoggedIn && (
-									<span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 ring-2 ring-black" />
-								)}
-							</Link>
-
-							<button
-								onClick={() => setWishlistOpen(true)}
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Wishlist"
-							>
-								<Heart className="h-4 w-4" />
-								{wishlistCount > 0 && (
-									<span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-500 text-[10px] font-semibold text-white flex items-center justify-center">
-										{wishlistCount}
-									</span>
-								)}
-							</button>
-
-							<button
-								onClick={() => setCartOpen(true)}
-								className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
-								aria-label="Shopping cart"
-							>
-								<ShoppingCart className="h-4 w-4" />
-								{cartCount > 0 && (
-									<span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-blue-500 text-[10px] font-semibold text-white flex items-center justify-center">
-										{cartCount}
-									</span>
-								)}
-							</button>
+							<NavButtons
+								cartCount={cartCount}
+								wishlistCount={wishlistCount}
+								onCartClick={() => setCartOpen(true)}
+								onWishlistClick={() => setWishlistOpen(true)}
+								showSearch={false}
+								showAccount={false}
+							/>
 
 							<Button
 								variant="ghost"

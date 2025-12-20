@@ -2,6 +2,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Footer } from "~/components/navigation/Footer";
 import { Link, usePathname } from "~/i18n/navigation";
 import { cn } from "~/lib/utils";
 
@@ -17,7 +18,8 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 	] as const;
 
 	return (
-		<div className="min-h-screen bg-background pt-32 pb-24">
+		<>
+		<div className="min-h-screen bg-background pt-16 pb-24">
 			<div className="container max-w-7xl px-4 mx-auto">
 				<div className="flex flex-col lg:flex-row gap-12">
 
@@ -68,5 +70,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 				</div>
 			</div>
 		</div>
+		<Footer />
+		</>
 	);
 }

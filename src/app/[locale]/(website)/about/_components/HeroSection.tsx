@@ -5,7 +5,7 @@
 import { useTranslations } from 'next-intl';
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -42,7 +42,7 @@ export function HeroSection() {
 			</motion.div>
 
 			{/* Content */}
-			<div className="container px-4 max-w-5xl mx-auto relative z-20 pt-32 pb-16">
+			<div className="container px-4 max-w-xl md:max-w-3xl mx-auto relative z-20 pt-32 pb-16">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -58,7 +58,7 @@ export function HeroSection() {
 					</div>
 
 					{/* Headline */}
-					<h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-extralight tracking-tight leading-tight">
+					<h1 className="text-4xl md:text-6xl _lg:text-6xl font-display font-extralight tracking-tight leading-tight">
 						{t('hero.title')}
 					</h1>
 
@@ -68,20 +68,20 @@ export function HeroSection() {
 					</p>
 
 					{/* CTA Buttons */}
-					<div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-						<a
-							href="#story"
-							className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
-						>
-							{t('hero.ctaStory')}
-							<ArrowRight className="h-4 w-4" />
-						</a>
+					<div className="flex flex-col sm:flex-row gap-4 justify-center">
 						<Link
 							href="/shop"
-							className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-border rounded-full font-display font-medium hover:border-primary/50 hover:bg-accent/30 transition-all"
+							className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-display font-medium hover:bg-primary/90 transition-all hover:scale-105"
 						>
 							{t('hero.ctaShop')}
 						</Link>
+						<a
+							href="#story"
+							className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-border rounded-full font-display font-medium hover:border-primary/50 hover:bg-accent/30 hover:text-primary/90 transition-all"
+						>
+							{t('hero.ctaStory')}
+							<ArrowDown className="h-4 w-4" />
+						</a>
 					</div>
 				</motion.div>
 

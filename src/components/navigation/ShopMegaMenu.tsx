@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Sparkles, ArrowRight } from "lucide-react";
+import { ChevronDown, Rotate3D, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from 'next-intl';
 import { Link } from '~/i18n/navigation';
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
@@ -14,6 +15,7 @@ interface ShopMegaMenuProps {
 
 export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const t = useTranslations('common.nav');
 
 	const handleMouseEnter = (href: string) => {
 		router.prefetch(href);
@@ -27,7 +29,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 		>
 			{/* Trigger */}
 			<button className="flex items-center gap-1 text-md font-light transition-colors hover:text-blue-400 text-white font-display outline-none h-full">
-				Shop
+				{t('shop')}
 				<ChevronDown
 					className={`h-3.5 w-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`}
 				/>
@@ -41,13 +43,12 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -5 }}
 						transition={{ duration: 0.2 }}
-						// Perfect alignment: -left-4 to align with Shop text, -mt-px to overlap nav border
-						className="absolute top-full -left-4 -mt-px w-[520px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
+						className="absolute top-full -left-4 mt-5 -translate-y-px _-mt-px w-[540px] bg-black border border-white/10 border-t-black rounded-b-lg shadow-xl z-30 overflow-hidden"
 					>
 						<div className="p-6">
 							{/* Main Grid: Shop All + Product Categories */}
-							<div className="grid grid-cols-3 gap-4 mb-6">
-								{/* Left Column: Shop Homepage (Tall) */}
+							<div className="grid grid-cols-3 gap-4">
+								{/* Left Column: Shop Homepage (Tall Vertical Rectangle) */}
 								<Link
 									href="/shop"
 									onMouseEnter={() => handleMouseEnter("/shop")}
@@ -64,13 +65,13 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 									</div>
 
 									{/* Content */}
-									<div className="relative z-10 p-4 flex flex-col justify-between h-full">
+									<div className="relative z-10 p-5 flex flex-col justify-between h-full">
 										<div>
 											<h3 className="text-lg font-display font-medium text-white mb-2">
-												Shop All
+												{t('shop')}
 											</h3>
 											<p className="text-xs text-gray-400 font-display font-light leading-relaxed">
-												Explore our complete collection of 3D backgrounds and decorations
+												{t('shopDescription')}
 											</p>
 										</div>
 
@@ -81,13 +82,13 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 									</div>
 								</Link>
 
-								{/* Right Column: Product Categories (2 rows) */}
+								{/* Right Column: Product Categories (2 taller rows) */}
 
 								{/* 3D Backgrounds */}
 								<Link
 									href="/shop/3d-backgrounds"
 									onMouseEnter={() => handleMouseEnter("/shop/3d-backgrounds")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex min-h-[120px]"
 								>
 									{/* Background Image */}
 									<div className="absolute inset-0">
@@ -97,20 +98,17 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 											fill
 											className="object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
 										/>
-										<div className="absolute inset-0 bg-linear-to-r from-black/80 to-black/40" />
+										<div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40" />
 									</div>
 
 									{/* Content */}
 									<div className="relative z-10 p-4 flex items-center gap-3 w-full">
-										<div className="shrink-0 w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-											<span className="text-2xl">🪨</span>
-										</div>
 										<div className="flex-1 min-w-0">
 											<h4 className="font-display font-medium text-white mb-0.5">
-												3D Backgrounds
+												{t('backgrounds')}
 											</h4>
 											<p className="text-xs text-gray-400 font-display font-light">
-												Custom realistic backgrounds
+												{t('backgroundsDescription')}
 											</p>
 										</div>
 										<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
@@ -121,7 +119,7 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 								<Link
 									href="/shop/aquarium-decorations"
 									onMouseEnter={() => handleMouseEnter("/shop/aquarium-decorations")}
-									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-2 flex min-h-[120px]"
 								>
 									{/* Background Image */}
 									<div className="absolute inset-0">
@@ -136,46 +134,38 @@ export function ShopMegaMenu({ router }: ShopMegaMenuProps) {
 
 									{/* Content */}
 									<div className="relative z-10 p-4 flex items-center gap-3 w-full">
-										<div className="flex-shrink-0 w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
-											<span className="text-2xl">🌿</span>
-										</div>
 										<div className="flex-1 min-w-0">
 											<h4 className="font-display font-medium text-white mb-0.5">
-												Decorations
+												{t('decorations')}
 											</h4>
 											<p className="text-xs text-gray-400 font-display font-light">
-												Plants, rocks & driftwood
+												{t('decorationsDescription')}
 											</p>
 										</div>
 										<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
 									</div>
 								</Link>
-							</div>
 
-							{/* Bottom CTA: Custom Calculator */}
-							<div className="pt-4 border-t border-white/10">
+								{/* Custom Calculator - Full Width Bottom Row */}
 								<Link
 									href="/calculator"
 									onMouseEnter={() => handleMouseEnter("/calculator")}
-									className="group flex items-center justify-between p-3 -mx-3 rounded-lg hover:bg-white/5 transition-colors"
+									className="group relative rounded-lg overflow-hidden border border-white/10 hover:border-primary/50 transition-all duration-300 col-span-3 flex"
 								>
-									<div className="flex items-center gap-3">
-										<div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-											<Sparkles className="h-5 w-5 text-primary" />
+									<div className="relative z-10 p-4 flex items-center gap-3 w-full bg-gradient-to-r from-primary/5 to-transparent">
+										<div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors flex-shrink-0">
+											<Rotate3D className="h-5 w-5 text-primary" />
 										</div>
-										<div>
-											<h4 className="font-display font-medium text-white text-sm flex items-center gap-2">
-												Custom Designer
-												<span className="px-1.5 py-0.5 text-[10px] bg-primary/20 text-primary rounded-full font-normal">
-													New
-												</span>
+										<div className="flex-1 min-w-0">
+											<h4 className="font-display font-medium text-white text-sm">
+												{t('calculator')}
 											</h4>
 											<p className="text-xs text-gray-400 font-display font-light">
-												Design your perfect background in 3D
+												{t('calculatorDescription')}
 											</p>
 										</div>
+										<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
 									</div>
-									<ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
 								</Link>
 							</div>
 						</div>

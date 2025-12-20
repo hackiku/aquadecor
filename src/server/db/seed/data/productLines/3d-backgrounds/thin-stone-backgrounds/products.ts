@@ -244,7 +244,7 @@ export const products = [
 		"productionTime": "10-12 business days"
 	},
 	{
-		"categorySlug": "thin-stonee-backgrounds",
+		"categorySlug": "thin-stone-backgrounds",
 		"slug": "g-44-thin-stone-backgrounds",
 		"sku": "G44",
 		"stockStatus": "requires_quote",

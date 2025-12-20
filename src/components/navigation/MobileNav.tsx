@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Home, Search, ShoppingBag } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { Link } from '~/i18n/navigation';
 import { enabledNavLinks, resourceLinks } from "~/data/navigation";
@@ -28,7 +28,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 	const regularLinks = translatedLinks.filter(link => link.labelKey !== "shop");
 
 	return (
-		<div className="md:hidden fixed top-16 left-0 right-0 bottom-0 bg-zinc-900 border-b border-white/10 shadow-lg overflow-y-auto z-40">
+		<div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-zinc-900 border-b border-white/10 shadow-lg overflow-y-auto z-40">
 			<nav className="px-4 py-6 space-y-4">
 				{/* Shop Collapsible */}
 				<div>
@@ -45,15 +45,23 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 					{shopOpen && (
 						<div className="pl-4 space-y-3 mt-2">
 							<Link
+								href="/shop"
+								onClick={onClose}
+								className="flex gap-2 items-center py-2 text-md text-white hover:text-blue-400 font-display font-light"
+							>
+								<Home size={16}/>
+								{t('shop')}
+							</Link>
+							<Link
 								href="/shop/3d-backgrounds"
 								onClick={onClose}
-								className="block py-2"
+								className="block py-2 group "
 							>
-								<span className="text-sm font-display font-normal text-white">
+								<span className="text-sm font-display font-normal text-white group-hover:text-primary">
 									{t('backgrounds')}
 								</span>
-								<span className="block text-xs text-gray-400 font-display font-light mt-0.5">
-									Custom-made realistic backgrounds
+								<span className="block text-xs text-gray-400 font-display font-light mt-0.5 group-hover:text-primary/50">
+									{t('backgroundsDescription')}
 								</span>
 							</Link>
 							<Link
@@ -61,27 +69,14 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 								onClick={onClose}
 								className="block py-2"
 							>
-								<span className="text-sm font-display font-normal text-white">
+								<span className="text-sm font-display font-normal text-white group-hover:text-primary">
 									{t('decorations')}
 								</span>
-								<span className="block text-xs text-gray-400 font-display font-light mt-0.5">
-									Plants, rocks & driftwood
+								<span className="block text-xs text-gray-400 font-display font-light mt-0.5 group-hover:text-primary/50">
+									{t('decorationsDescription')}
 								</span>
 							</Link>
-							<Link
-								href="/shop"
-								onClick={onClose}
-								className="block py-2 text-sm text-gray-400 hover:text-blue-400 font-display font-light"
-							>
-								View All Products
-							</Link>
-							<Link
-								href="/calculator"
-								onClick={onClose}
-								className="block py-2 text-sm text-blue-400 font-display font-normal"
-							>
-								✨ {t('calculator')}
-							</Link>
+
 						</div>
 					)}
 				</div>
