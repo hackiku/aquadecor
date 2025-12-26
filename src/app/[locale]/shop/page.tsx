@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Package } from "lucide-react";
+import { ArrowRight, Package, TreePalm } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { ProductCard } from "~/components/shop/product/ProductCard";
@@ -107,11 +107,12 @@ export default async function ShopPage({ params }: Props) {
 								fill
 								className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-80"
 							/>
-							<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end">
+							<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent p-6 flex flex-col justify-end">
 								<h2 className="text-3xl font-display font-light text-white mb-2">
-									3D Backgrounds
+									{t('hero.backgrounds.title')}
 								</h2>
 								<p className="text-sm text-gray-300">
+									
 									Custom-made realism, built to your tank specs.
 								</p>
 								<div className="mt-4 inline-flex items-center gap-2 text-primary font-display font-medium">
@@ -152,19 +153,15 @@ export default async function ShopPage({ params }: Props) {
 				<section id="3d-backgrounds" className="relative py-24 md:py-32 bg-card">
 					<WaveDivider position="top" color="black" className="text-muted/30" />
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						<div className="text-center space-y-4">
-							<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
-								<Package className="h-4 w-4 text-primary" />
-								<span className="text-sm text-primary font-display font-medium">
-									{t('sections.featured')}
-								</span>
+						<div className="text-center space-y-4 mb-16">
+							<div className="inline-flex items-center gap-2 p-4 aspect-square bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
+								<Package className="h-6 w-6 text-primary" />
 							</div>
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-extralight tracking-tight">
-								3D Aquarium Backgrounds
+								{t('sections.featured')} • {t('hero.backgrounds.title')}
+								{/* 3D Aquarium Backgrounds */}
 							</h2>
-							<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								See our most popular custom designs and get a quote.
-							</p>
+
 						</div>
 
 						{!error && backgroundProducts.length > 0 && (
@@ -208,13 +205,13 @@ export default async function ShopPage({ params }: Props) {
 				{/* Decorations Featured Section */}
 				<section id="aquarium-decorations" className="relative py-24 md:py-32 bg-linear-to-b from-muted/20 to-transparent">
 					<div className="px-4 max-w-7xl mx-auto space-y-12">
-						<div className="text-center space-y-4">
+						<div className="text-center space-y-4 mb-16">
+							<div className="inline-flex items-center gap-2 p-4 aspect-square bg-primary/20 backdrop-blur-sm rounded-full border border-primary/30">
+								<TreePalm className="h-6 w-6 text-primary" />
+							</div>
 							<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-extralight tracking-tight">
-								Aquarium Decorations
+								{t('sections.featured')} • {t('hero.decorations.title')}
 							</h2>
-							<p className="text-xl text-muted-foreground font-display font-light max-w-2xl mx-auto">
-								Plants, rocks, and driftwood that last forever
-							</p>
 						</div>
 
 						{!error && decorationProducts.length > 0 && (
