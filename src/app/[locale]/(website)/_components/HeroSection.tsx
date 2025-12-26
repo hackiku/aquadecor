@@ -24,11 +24,11 @@ export function HeroSection({ locale }: HeroSectionProps) {
 	}, []);
 
 	return (
-		<section className="relative overflow-hidden h-dvh -mt-16 bg-black">
-			<WaveDivider position="bottom" color="currentColor" />
+		<section className="relative overflow-hidden h-dvh -mt-20 __bg-black">
+			{/* <WaveDivider position="bottom" color="currentColor" /> */}
 
 			{/* Full-width video with wave cutout */}
-			<div className="absolute inset-0 opacity-40">
+			<div className="absolute inset-0 __opacity-40 _bg-black">
 				<HeroVideoWave
 					videoSrc="/media/videos/banner-video.mp4"
 					posterSrc="/media/images/video-poster.jpg"
@@ -36,7 +36,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
 			</div>
 
 			{/* Gradient overlays */}
-			{/* <div className="absolute inset-0 mb-12 bg-linear-to-b from-black/80 via-neutral-950/50 to-black" /> */}
+			{/* <div className="absolute inset-0 mb-12 bg-linear-to-b from-black/80 via-neutral-950/50 to-transparent" /> */}
 
 			{/* Hero Content */}
 			<div className="relative z-20 w-full h-full flex items-start justify-center pt-32 md:pt-40">
@@ -84,7 +84,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
 						</p>
 
 						{/* CTAs */}
-						<div className="flex flex-col sm:flex-row justify-center gap-4 pt-4">
+						<div className="flex +_flex-col sm:flex-row justify-center gap-4 pt-4">
 							<ShopButton />
 							<Link
 								href="/calculator"
@@ -98,7 +98,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
 			</div>
 
 			{/* QuickShoutout - with animation callback */}
-			<div className="absolute z-30 -bottom-2 right-4 md:bottom-36 md:right-8 lg:right-12">
+			<div className="absolute z-30 bottom-6 right-4 md:bottom-24 md:right-8 lg:right-12">
 				<QuickShoutout
 					onSlideChange={handleTestimonialChange}
 				/>
