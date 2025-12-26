@@ -1,5 +1,77 @@
 {
-  "checkout": {
-    "placeholder": "Translations for checkout in en"
-  }
+	"checkout": {
+		"meta": {
+			"title": "Checkout | Aquadecor",
+			"description": "Secure checkout for your aquarium background."
+		},
+		"header": {
+			"title": "Checkout",
+			"subtitle": "Complete your purchase by providing shipping details."
+		},
+		"cart": {
+			"title": "Cart Summary",
+			"quantity": "Quantity:",
+			"unknownProduct": "Unknown Product",
+			"gift": {
+				"badge": "Aquadecor Premium Gift!",
+				"label": "Free"
+			},
+			"subtotal": "Subtotal:",
+			"total": "Total:"
+		},
+		"discount": {
+			"label": "Discount code",
+			"placeholder": "Enter discount code",
+			"apply": "Apply",
+			"applying": "Applying..."
+		},
+		"shipping": {
+			"title": "Shipping Information",
+			"subtitle": "Enter your shipping details or select a saved address.",
+			"fields": {
+				"firstName": "First name",
+				"lastName": "Last name",
+				"email": "Email",
+				"phone": "Phone number",
+				"address": "Address",
+				"apartment": "Apartment, suite, etc. (optional)",
+				"zip": "ZIP code",
+				"city": "City",
+				"state": "State (optional)",
+				"country": "Country",
+				"selectCountry": "Select country"
+			}
+		},
+		"payment": {
+			"stripe": "Pay with debit card",
+			"paypal": "PayPal",
+			"error": "Please enter valid shipping address to proceed"
+		},
+		"success": {
+			"title": "Order Confirmed!",
+			"subtitle": "Thank you for your purchase",
+			"orderNumber": "Order Number",
+			"email": {
+				"title": "Confirmation Email Sent",
+				"desc": "We've sent order details and receipt to your email address."
+			},
+			"production": {
+				"title": "Production Starts Soon",
+				"desc": "Your custom backgrounds will be ready for shipping in 10-12 business days."
+			},
+			"tracking": {
+				"title": "Tracking Updates",
+				"desc": "We'll email you tracking information once your order ships."
+			},
+			"actions": {
+				"status": "View Order Status",
+				"shop": "Continue Shopping",
+				"contact": "Contact Support"
+			},
+			"help": {
+				"title": "Need Help?",
+				"desc": "Our team is here to answer any questions about your order."
+			}
+		}
+	}
 }

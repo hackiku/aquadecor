@@ -4,7 +4,7 @@
 import Image from 'next/image'
 import { X, Package, Gift, PlusCircle } from 'lucide-react'
 import { Button } from '~/components/ui/button'
-import { useCheckout } from './CheckoutContext'
+import { useCheckout } from '../_context/CheckoutContext'
 import { api } from '~/trpc/react'
 
 export function CartSummary() {

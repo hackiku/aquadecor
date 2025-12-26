@@ -161,6 +161,25 @@ export const routing = defineRouting({
 		},
 
 		// ================================================
+		// Payments
+		// ================================================
+
+		'/checkout': {
+			en: '/checkout',
+			de: '/kasse',
+			nl: '/afrekenen',
+			it: '/cassa',
+			us: '/checkout'
+		},
+		'/success': {
+			en: '/success',
+			de: '/erfolg', // or /bestellung-abgeschlossen
+			nl: '/succes', // or /bedankt
+			it: '/successo',
+			us: '/success'
+		},
+
+		// ================================================
 		// Admin
 		// ================================================
 

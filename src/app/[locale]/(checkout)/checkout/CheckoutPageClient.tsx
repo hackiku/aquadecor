@@ -1,28 +1,21 @@
-// src/app/[locale]/(checkout)/page.tsx
-import { setRequestLocale } from 'next-intl/server'
-import { routing } from '~/i18n/routing'
+// src/app/[locale]/(checkout)/checkout/CheckoutPageClient.tsx
+'use client'
+
 import { CartSummary } from '../_components/CartSummary'
 import { EnterDiscountCode } from '../_components/EnterDiscountCode'
 import { ShippingInformation } from '../_components/ShippingInformation'
 import { CheckoutButtons } from '../_components/CheckoutButtons'
+import { StripeProvider } from '../_context/StripeProvider'
+import { useCheckout } from '../_context/CheckoutContext'
 
-type Props = {
-	params: Promise<{ locale: string }>
-}
-
-export function generateStaticParams() {
-	return routing.locales.map((locale) => ({ locale }))
-}
-
-export default async function CheckoutPage({ params }: Props) {
-	const { locale } = await params
-	setRequestLocale(locale)
+export function CheckoutPageClient() {
+	const { total } = useCheckout()
 
 	return (
-		<section className="max-w-7xl mx-auto px-4 py-16 lg:py-20">
+		<section className="max-w-7xl mx-auto px-4 py-24 lg:py-32">
 			{/* Header */}
 			<div className="space-y-4 mb-8">
-				<h1 className="text-4xl md:text-7xl font-extralight font-display">
+				<h1 className="text-2xl md:text-5xl font-extralight font-display">
 					Checkout
 				</h1>
 				<p className="md:text-lg font-display font-light text-base text-muted-foreground">
@@ -42,7 +35,11 @@ export default async function CheckoutPage({ params }: Props) {
 				{/* RIGHT: Shipping + Payment */}
 				<div className="space-y-6">
 					<ShippingInformation />
-					<CheckoutButtons />
+
+					{/* Wrap payment buttons with Stripe provider - pass cart total */}
+					<StripeProvider amount={total} currency="eur">
+						<CheckoutButtons />
+					</StripeProvider>
 				</div>
 			</div>
 		</section>

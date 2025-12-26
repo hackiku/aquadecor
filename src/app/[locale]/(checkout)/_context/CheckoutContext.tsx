@@ -1,4 +1,4 @@
-// src/app/[locale]/(checkout)/_components/CheckoutContext.tsx
+// src/app/[locale]/(checkout)/_context/CheckoutContext.tsx
 'use client'
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'

@@ -1,7 +1,6 @@
 // src/app/[locale]/(checkout)/layout.tsx
-import { notFound } from 'next/navigation';
 import { SessionProvider } from "next-auth/react";
-import { CheckoutProvider } from './_components/CheckoutContext';
+import { CheckoutProvider } from './_context/CheckoutContext';
 
 type Props = {
 	children: React.ReactNode;

@@ -1,9 +1,10 @@
 // src/app/[locale]/(checkout)/_context/StripeProvider.tsx
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { type ReactNode } from 'react'
+import { useEffect, useState } from 'react'
 import { Elements } from '@stripe/react-stripe-js'
-import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
+import { loadStripe, type StripeElementsOptions } from '@stripe/stripe-js'
 
 // Load Stripe outside component to avoid recreating instance
 const stripePromise = loadStripe(
