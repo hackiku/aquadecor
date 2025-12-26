@@ -556,11 +556,76 @@ export const productRouter = createTRPCRouter({
 					return { ...p, salePrice, activeSale };
 				});
 		}),
-
+	
 	// ============================================================================
 	// CART & WISHLIST (Get by IDs)
 	// ============================================================================
 
+	getByIds: publicProcedure
+		.input(z.object({
+			ids: z.array(z.string()),
+			locale: z.string().default("en"),
+		}))
+		.query(async ({ ctx, input }) => {
+			if (!input.ids.length) return []
+
+			return await ctx.db
+				.select({
+					// Core product fields
+					id: products.id,
+					slug: products.slug,
+					sku: products.sku,
+					stockStatus: products.stockStatus,
+					categoryId: products.categoryId,
+
+					// Category info
+					categorySlug: categories.slug,
+					productLineSlug: categories.productLine,
+
+					// Pricing (ROW market only for now)
+					pricingType: productPricing.pricingType,
+					unitPriceEurCents: productPricing.unitPriceEurCents,
+
+					// Media
+					heroImageUrl: media.storageUrl,
+
+					// Translations
+					name: productTranslations.name,
+					shortDescription: productTranslations.shortDescription,
+				})
+				.from(products)
+				.leftJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(
+					productPricing,
+					and(
+						eq(productPricing.productId, products.id),
+						eq(productPricing.market, 'ROW'), // Always ROW for cart
+						eq(productPricing.isActive, true)
+					)
+				)
+				.leftJoin(
+					productTranslations,
+					and(
+						eq(productTranslations.productId, products.id),
+						eq(productTranslations.locale, input.locale)
+					)
+				)
+				.leftJoin(
+					media,
+					and(
+						eq(media.productId, products.id),
+						eq(media.usageType, 'product'),
+						eq(media.sortOrder, 0)
+					)
+				)
+				.where(
+					and(
+						eq(products.isActive, true),
+						inArray(products.id, input.ids)
+					)
+				)
+		}),
+	/*
 	getByIds: publicProcedure
 		.input(z.object({
 			ids: z.array(z.string()),
@@ -663,6 +728,8 @@ export const productRouter = createTRPCRouter({
 				});
 		}),
 
+	*/
+	
 	// ============================================================================
 	// MARKET AVAILABILITY
 	// ============================================================================
