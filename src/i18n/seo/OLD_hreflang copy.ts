@@ -9,9 +9,9 @@ interface HreflangOptions {
 	path: string; /** Path without locale prefix, e.g., "/shop/3d-backgrounds" */
 	defaultLocale?: string;
 	/** 
-	 * Optional: Specific paths for other locales 
-	 * e.g. { de: '/blog/fische', nl: '/blog/vissen' }
-	 */
+		 * Optional: Specific paths for other locales 
+		 * e.g. { de: '/blog/fische', nl: '/blog/vissen' }
+		 */
 	localizedPaths?: Record<string, string>;
 }
 
@@ -39,8 +39,6 @@ export function generateHreflang(options: HreflangOptions) {
 	const languages: Record<string, string> = {};
 
 	for (const locale of routing.locales) {
-		// ✅ Map locale codes to valid hreflang codes
-		// 'us' becomes 'en-US', others stay as-is
 		const hreflangCode = locale === 'us' ? 'en-US' : locale;
 
 		// Use specific localized path if available, otherwise fallback to standard pattern
@@ -49,23 +47,21 @@ export function generateHreflang(options: HreflangOptions) {
 		languages[hreflangCode] = `${baseUrl}/${locale}${localePath}`;
 	}
 
-	// x-default logic: points to the primary/default language version
-	// Usually this should be 'en' not 'us' for international sites
+	// x-default logic
 	const defaultPath = localizedPaths?.[defaultLocale] || path;
 	languages['x-default'] = `${baseUrl}/${defaultLocale}${defaultPath}`;
 
-	// ✅ CRITICAL: Canonical URL must ALWAYS point to the CURRENT locale
-	// This tells Google "this is the authoritative URL for this language version"
+	// Determine canonical URL for THIS page
 	const currentPath = localizedPaths?.[currentLocale] || path;
-	const canonical = `${baseUrl}/${currentLocale}${currentPath}`;
 
 	return {
 		alternates: {
-			canonical,
+			canonical: `${baseUrl}/${currentLocale}${currentPath}`,
 			languages,
 		},
 	};
 }
+
 
 /**
  * Extract clean path from full URL path
@@ -80,19 +76,8 @@ export function cleanPath(fullPath: string): string {
 }
 
 /**
- * Generate complete SEO metadata with hreflang and OpenGraph
+ * Generate OpenGraph metadata with hreflang
  * Combines OG tags with hreflang in one call
- * 
- * @example
- * ```ts
- * return generateSEOMetadata({
- *   currentLocale: 'en',
- *   path: '/shop/3d-backgrounds',
- *   title: 'Custom 3D Backgrounds',
- *   description: 'Realistic aquarium backgrounds...',
- *   image: '/images/hero.jpg'
- * });
- * ```
  */
 export function generateSEOMetadata(options: {
 	currentLocale: string;
@@ -101,7 +86,7 @@ export function generateSEOMetadata(options: {
 	description: string;
 	image?: string;
 	type?: 'website' | 'article';
-	localizedPaths?: Record<string, string>; // for blog posts with translated slugs
+	localizedPaths?: Record<string, string>; // for blog
 }) {
 	const { currentLocale, path, title, description, image, type = 'website', localizedPaths } = options;
 
@@ -115,14 +100,7 @@ export function generateSEOMetadata(options: {
 			description,
 			type,
 			url: hreflang.alternates.canonical,
-			...(image && {
-				images: [{
-					url: image,
-					width: 1200,
-					height: 630,
-					alt: title,
-				}]
-			}),
+			...(image && { images: [image] }),
 		},
 		twitter: {
 			card: 'summary_large_image',
