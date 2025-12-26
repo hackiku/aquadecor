@@ -6,12 +6,14 @@ import Link from 'next/link'
 import { CheckCircle, Package, Truck, Mail, ArrowRight } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import confetti from 'canvas-confetti'
+import { useTranslations } from 'next-intl'
 
 interface OrderConfirmationProps {
 	orderId: string
 }
 
 export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
+	const t = useTranslations('checkout.success')
 	// TODO: Fetch order details with tRPC
 	// const { data: order } = api.order.getById.useQuery({ orderId })
 
@@ -56,10 +58,10 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 					<CheckCircle className="h-10 w-10 text-primary" />
 				</div>
 				<h1 className="text-3xl md:text-4xl font-display font-light tracking-tight mb-3">
-					Order Confirmed!
+					{t('title')}
 				</h1>
 				<p className="text-lg text-muted-foreground font-display font-light">
-					Thank you for your purchase
+					{t('subtitle')}
 				</p>
 			</div>
 
@@ -68,7 +70,7 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 				{/* Order Number */}
 				<div className="text-center pb-6 border-b">
 					<p className="text-sm text-muted-foreground font-display font-light mb-1">
-						Order Number
+						{t('orderNumber')}
 					</p>
 					<p className="text-2xl font-display font-medium font-mono">
 						{orderId}
@@ -81,9 +83,9 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 						<Mail className="h-5 w-5 text-primary" />
 					</div>
 					<div>
-						<h3 className="font-display font-medium mb-1">Confirmation Email Sent</h3>
+						<h3 className="font-display font-medium mb-1">{t('email.title')}</h3>
 						<p className="text-sm text-muted-foreground font-display font-light">
-							We've sent order details and receipt to your email address.
+							{t('email.desc')}
 						</p>
 					</div>
 				</div>
@@ -94,9 +96,9 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 						<Package className="h-5 w-5 text-primary" />
 					</div>
 					<div>
-						<h3 className="font-display font-medium mb-1">Production Starts Soon</h3>
+						<h3 className="font-display font-medium mb-1">{t('production.title')}</h3>
 						<p className="text-sm text-muted-foreground font-display font-light">
-							Your custom backgrounds will be ready for shipping in 10-12 business days.
+							{t('production.desc')}
 						</p>
 					</div>
 				</div>
@@ -107,9 +109,9 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 						<Truck className="h-5 w-5 text-primary" />
 					</div>
 					<div>
-						<h3 className="font-display font-medium mb-1">Tracking Updates</h3>
+						<h3 className="font-display font-medium mb-1">{t('tracking.title')}</h3>
 						<p className="text-sm text-muted-foreground font-display font-light">
-							We'll email you tracking information once your order ships.
+							{t('tracking.desc')}
 						</p>
 					</div>
 				</div>
@@ -124,7 +126,7 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 					className="rounded-full"
 				>
 					<Link href="/account/orders">
-						View Order Status
+						{t('actions.status')}
 						<ArrowRight className="h-4 w-4 ml-2" />
 					</Link>
 				</Button>
@@ -135,7 +137,7 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 					className="rounded-full"
 				>
 					<Link href="/shop">
-						Continue Shopping
+						{t('actions.shop')}
 						<ArrowRight className="h-4 w-4 ml-2" />
 					</Link>
 				</Button>
@@ -143,9 +145,9 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 
 			{/* Support CTA */}
 			<div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border-2 border-primary/20 p-6 text-center">
-				<h3 className="text-lg font-display font-medium mb-2">Need Help?</h3>
+				<h3 className="text-lg font-display font-medium mb-2">{t('help.title')}</h3>
 				<p className="text-sm text-muted-foreground font-display font-light mb-4">
-					Our team is here to answer any questions about your order.
+					{t('help.desc')}
 				</p>
 				<Button
 					asChild
@@ -153,7 +155,7 @@ export function OrderConfirmation({ orderId }: OrderConfirmationProps) {
 					size="sm"
 					className="rounded-full"
 				>
-					<Link href="/support">Contact Support</Link>
+					<Link href="/support">{t('actions.contact')}</Link>
 				</Button>
 			</div>
 		</div>

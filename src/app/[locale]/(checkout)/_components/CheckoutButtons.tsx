@@ -10,8 +10,10 @@ import { createOrder } from '~/app/actions/checkout/create-order'
 import { createStripePayment } from '~/app/actions/checkout/create-stripe-payment'
 import { createPayPalPayment } from '~/app/actions/checkout/create-paypal-payment'
 import { useElements, useStripe, PaymentElement } from '@stripe/react-stripe-js'
+import { useTranslations } from 'next-intl'
 
 export function CheckoutButtons() {
+	const t = useTranslations('checkout.payment')
 	const router = useRouter()
 	const stripe = useStripe()
 	const elements = useElements()
@@ -54,7 +56,7 @@ export function CheckoutButtons() {
 			})
 
 			if (!orderResult.success) {
-				setError(orderResult.error || 'Failed to create order')
+				setError(orderResult.error || t('errors.createOrder'))
 				setIsProcessing(false)
 				return
 			}
@@ -66,7 +68,7 @@ export function CheckoutButtons() {
 			})
 
 			if (!paymentResult.success) {
-				setError(paymentResult.error || 'Failed to initialize payment')
+				setError(paymentResult.error || t('errors.initPayment'))
 				setIsProcessing(false)
 				return
 			}
@@ -80,16 +82,15 @@ export function CheckoutButtons() {
 			})
 
 			if (stripeError) {
-				setError(stripeError.message || 'Payment failed')
+				setError(stripeError.message || t('errors.paymentFailed'))
 				setIsProcessing(false)
 			}
 
 			// Note: If successful, Stripe redirects automatically
-			// No need to manually redirect
 
 		} catch (err) {
 			console.error('Stripe checkout error:', err)
-			setError('An unexpected error occurred')
+			setError(t('errors.unexpected'))
 			setIsProcessing(false)
 		}
 	}
@@ -125,7 +126,7 @@ export function CheckoutButtons() {
 			})
 
 			if (!orderResult.success) {
-				setError(orderResult.error || 'Failed to create order')
+				setError(orderResult.error || t('errors.createOrder'))
 				setIsProcessing(false)
 				return
 			}
@@ -136,7 +137,7 @@ export function CheckoutButtons() {
 			})
 
 			if (!paypalResult.success || !paypalResult.approvalUrl) {
-				setError(paypalResult.error || 'Failed to initialize PayPal')
+				setError(paypalResult.error || t('errors.initPayment'))
 				setIsProcessing(false)
 				return
 			}
@@ -146,7 +147,7 @@ export function CheckoutButtons() {
 
 		} catch (err) {
 			console.error('PayPal checkout error:', err)
-			setError('An unexpected error occurred')
+			setError(t('errors.unexpected'))
 			setIsProcessing(false)
 		}
 	}
@@ -165,11 +166,11 @@ export function CheckoutButtons() {
 					size="lg"
 				>
 					{isProcessing ? (
-						<span className="animate-pulse">Processing...</span>
+						<span className="animate-pulse">{t('processing')}</span>
 					) : (
 						<>
 							<CreditCard className="w-4 mr-2" />
-							Pay with debit card
+							{t('stripe')}
 						</>
 					)}
 				</Button>
@@ -184,7 +185,7 @@ export function CheckoutButtons() {
 
 			{isDisabled && !error && (
 				<p className="text-red-500 text-center text-sm">
-					Please enter valid shipping address to proceed
+					{t('errors.invalidAddress')}
 				</p>
 			)}
 
@@ -195,7 +196,7 @@ export function CheckoutButtons() {
 				</div>
 				<div className="relative flex justify-center text-xs uppercase">
 					<span className="bg-background px-2 text-muted-foreground">
-						Or pay with
+						{t('orPayWith')}
 					</span>
 				</div>
 			</div>
@@ -207,7 +208,7 @@ export function CheckoutButtons() {
 				className={`w-full bg-[#FFC439] hover:bg-[#FFD166] disabled:opacity-50 rounded-full h-[52px] flex items-center justify-center font-semibold text-[#003087] transition-colors ${isDisabled ? 'opacity-40 pointer-events-none' : ''
 					}`}
 			>
-				{isProcessing ? 'Processing...' : 'PayPal'}
+				{isProcessing ? t('processing') : t('paypal')}
 			</button>
 		</div>
 	)

@@ -1,5 +1,6 @@
 // src/app/[locale]/(checkout)/layout.tsx
 import { SessionProvider } from "next-auth/react";
+import { Footer } from "~/components/navigation/Footer";
 
 type Props = {
 	children: React.ReactNode;
@@ -14,7 +15,7 @@ export default async function CheckoutLayout({ children, params }: Props) {
 			<div className="min-h-screen">
 				{children}
 			</div>
-
+		<Footer />
 		</SessionProvider>
 	);
 }

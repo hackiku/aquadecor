@@ -4,8 +4,10 @@
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { useCheckout } from '~/app/_context/CheckoutContext'
+import { useTranslations } from 'next-intl'
 
 export function ShippingInformation() {
+	const t = useTranslations('checkout.shipping')
 	const { cartItems } = useCheckout()
 	const isDisabled = cartItems.length === 0
 
@@ -14,10 +16,10 @@ export function ShippingInformation() {
 			{/* Header */}
 			<div className="p-6 border-b">
 				<h3 className="font-display font-light text-xl">
-					Shipping Information
+					{t('title')}
 				</h3>
 				<p className="text-muted-foreground font-display font-light text-base mt-1">
-					Enter your shipping details or select a saved address.
+					{t('subtitle')}
 				</p>
 			</div>
 
@@ -26,7 +28,7 @@ export function ShippingInformation() {
 				{/* First Name */}
 				<div className="space-y-2">
 					<Label htmlFor="firstName" className="text-sm font-medium">
-						First name<span className="text-red-400">*</span>
+						{t('fields.firstName')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="firstName"
@@ -38,7 +40,7 @@ export function ShippingInformation() {
 				{/* Last Name */}
 				<div className="space-y-2">
 					<Label htmlFor="lastName" className="text-sm font-medium">
-						Last name<span className="text-red-400">*</span>
+						{t('fields.lastName')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="lastName"
@@ -50,7 +52,7 @@ export function ShippingInformation() {
 				{/* Email */}
 				<div className="space-y-2">
 					<Label htmlFor="email" className="text-sm font-medium">
-						Email<span className="text-red-400">*</span>
+						{t('fields.email')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="email"
@@ -63,7 +65,7 @@ export function ShippingInformation() {
 				{/* Phone */}
 				<div className="space-y-2">
 					<Label htmlFor="phoneNumber" className="text-sm font-medium">
-						Phone number<span className="text-red-400">*</span>
+						{t('fields.phone')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="phoneNumber"
@@ -76,7 +78,7 @@ export function ShippingInformation() {
 				{/* Address */}
 				<div className="space-y-2">
 					<Label htmlFor="addressLine1" className="text-sm font-medium">
-						Address<span className="text-red-400">*</span>
+						{t('fields.address')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="addressLine1"
@@ -88,7 +90,7 @@ export function ShippingInformation() {
 				{/* Apartment */}
 				<div className="space-y-2">
 					<Label htmlFor="addressLine2" className="text-sm font-medium">
-						Apartment, suite, etc. (optional)
+						{t('fields.apartment')}
 					</Label>
 					<Input
 						id="addressLine2"
@@ -100,7 +102,7 @@ export function ShippingInformation() {
 				{/* ZIP */}
 				<div className="space-y-2">
 					<Label htmlFor="postalCode" className="text-sm font-medium">
-						ZIP code<span className="text-red-400">*</span>
+						{t('fields.zip')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="postalCode"
@@ -112,7 +114,7 @@ export function ShippingInformation() {
 				{/* City */}
 				<div className="space-y-2">
 					<Label htmlFor="city" className="text-sm font-medium">
-						City<span className="text-red-400">*</span>
+						{t('fields.city')}<span className="text-red-400">*</span>
 					</Label>
 					<Input
 						id="city"
@@ -124,7 +126,7 @@ export function ShippingInformation() {
 				{/* State */}
 				<div className="space-y-2">
 					<Label htmlFor="state" className="text-sm font-medium">
-						State (optional)
+						{t('fields.state')}
 					</Label>
 					<Input
 						id="state"
@@ -136,14 +138,14 @@ export function ShippingInformation() {
 				{/* Country */}
 				<div className="space-y-2 self-end">
 					<Label htmlFor="country" className="text-sm font-medium">
-						Country<span className="text-red-400">*</span>
+						{t('fields.country')}<span className="text-red-400">*</span>
 					</Label>
 					<select
 						id="country"
 						disabled={isDisabled}
 						className="flex h-10 w-full rounded-2xl border border-input bg-transparent px-3 py-6 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-muted-foreground"
 					>
-						<option value="">Select country</option>
+						<option value="">{t('fields.selectCountry')}</option>
 						<option value="US">United States</option>
 						<option value="RS">Serbia</option>
 						<option value="DE">Germany</option>

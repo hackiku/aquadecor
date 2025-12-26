@@ -1,5 +1,106 @@
 {
-  "checkout": {
-    "placeholder": "Translations for checkout in it"
-  }
+	"checkout": {
+		"meta": {
+			"title": "Cassa | Aquadecor",
+			"description": "Pagamento sicuro per il tuo sfondo per acquario."
+		},
+		"header": {
+			"title": "Cassa",
+			"subtitle": "Completa il tuo acquisto fornendo i dettagli di spedizione."
+		},
+		"cart": {
+			"title": "Riepilogo carrello",
+			"clear": "Svuota",
+			"quantity": "Quantità:",
+			"unknownProduct": "Prodotto sconosciuto",
+			"gift": {
+				"badge": "Regalo Premium Aquadecor!",
+				"label": "Gratis"
+			},
+			"subtotal": "Subtotale:",
+			"discount": "Sconto:",
+			"total": "Totale:"
+		},
+		"discount": {
+			"label": "Codice sconto",
+			"placeholder": "Inserisci codice",
+			"apply": "Applica",
+			"applying": "Applicazione..."
+		},
+		"shipping": {
+			"title": "Informazioni di spedizione",
+			"subtitle": "Inserisci i tuoi dati di spedizione o seleziona un indirizzo salvato.",
+			"fields": {
+				"firstName": "Nome",
+				"lastName": "Cognome",
+				"email": "Email",
+				"phone": "Numero di telefono",
+				"address": "Indirizzo",
+				"apartment": "Appartamento, interno, ecc. (opzionale)",
+				"zip": "CAP",
+				"city": "Città",
+				"state": "Provincia (opzionale)",
+				"country": "Paese",
+				"selectCountry": "Seleziona paese"
+			}
+		},
+		"payment": {
+			"stripe": "Paga con carta",
+			"paypal": "PayPal",
+			"orPayWith": "O paga con",
+			"processing": "Elaborazione...",
+			"loading": "Caricamento opzioni di pagamento...",
+			"errors": {
+				"invalidAddress": "Inserisci un indirizzo di spedizione valido per procedere",
+				"createOrder": "Impossibile creare l'ordine",
+				"initPayment": "Impossibile inizializzare il pagamento",
+				"paymentFailed": "Pagamento fallito",
+				"unexpected": "Si è verificato un errore imprevisto"
+			}
+		},
+		"success": {
+			"title": "Ordine confermato!",
+			"subtitle": "Grazie per il tuo acquisto",
+			"orderNumber": "Numero ordine",
+			"email": {
+				"title": "Email di conferma inviata",
+				"desc": "Abbiamo inviato i dettagli dell'ordine e la ricevuta al tuo indirizzo email."
+			},
+			"production": {
+				"title": "La produzione inizia presto",
+				"desc": "I tuoi sfondi personalizzati saranno pronti per la spedizione in 10-12 giorni lavorativi."
+			},
+			"tracking": {
+				"title": "Aggiornamenti spedizione",
+				"desc": "Ti invieremo le informazioni di tracciamento una volta spedito l'ordine."
+			},
+			"actions": {
+				"status": "Visualizza stato ordine",
+				"shop": "Continua lo shopping",
+				"contact": "Contatta il supporto"
+			},
+			"help": {
+				"title": "Bisogno di aiuto?",
+				"desc": "Il nostro team è qui per rispondere a qualsiasi domanda sul tuo ordine."
+			}
+		},
+		"gift": {
+			"modal": {
+				"addedToCart": "✓ {product} aggiunto al carrello!",
+				"unlockedTitle": "🎉 Hai sbloccato un regalo GRATUITO!",
+				"awayTitle": "Ti mancano solo <bold>{amount}</bold> per un regalo GRATUITO!",
+				"maxTitle": "🎉 Ricompense massime sbloccate!",
+				"unlockedBadge": "Regalo sbloccato: {gift}",
+				"nextBadge": "Prossima ricompensa: {gift}",
+				"viewCart": "Vedi Carrello",
+				"continue": "Continua lo Shopping",
+				"autoAdded": "Il regalo è stato aggiunto automaticamente al carrello"
+			},
+			"tiers": {
+				"moss": "Pacchetto Muschio Premium",
+				"tools": "Set Strumenti Aquascaping",
+				"upgrade": "Upgrade Sfondo Personalizzato"
+			}
+		}
+	}
 }

@@ -12,6 +12,7 @@ import {
 import { Button } from '~/components/ui/button'
 import { Progress } from '~/components/ui/progress'
 import { Gift, ShoppingCart } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface GiftModalProps {
 	isOpen: boolean
@@ -20,27 +21,31 @@ interface GiftModalProps {
 	justAdded?: string // Product name that was just added
 }
 
-// Gift thresholds (in cents)
+// We store keys here instead of hardcoded strings to allow translation
 const GIFT_THRESHOLDS = [
-	{ amount: 25000, label: '€250', gift: 'Premium Moss Pack' },
-	{ amount: 50000, label: '€500', gift: 'Aquascaping Tools Set' },
-	{ amount: 100000, label: '€1000', gift: 'Custom Background Upgrade' },
-]
+	{ amount: 25000, label: '€250', giftKey: 'moss' },
+	{ amount: 50000, label: '€500', giftKey: 'tools' },
+	{ amount: 100000, label: '€1000', giftKey: 'upgrade' },
+] as const
 
 export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalProps) {
+	// Hook into the 'checkout.gift' namespace
+	const t = useTranslations('checkout.gift')
 	const router = useRouter()
 	const [progress, setProgress] = useState(0)
 
 	// Find next gift threshold
-	const nextThreshold = GIFT_THRESHOLDS.find(t => cartTotal < t.amount)
-	const currentThreshold = GIFT_THRESHOLDS.findLast(t => cartTotal >= t.amount)
+	const nextThreshold = GIFT_THRESHOLDS.find(threshold => cartTotal < threshold.amount)
+	// Find current (last unlocked) threshold
+	const currentThreshold = GIFT_THRESHOLDS.findLast(threshold => cartTotal >= threshold.amount)
+
 	const amountNeeded = nextThreshold ? nextThreshold.amount - cartTotal : 0
 	const maxThreshold = GIFT_THRESHOLDS[GIFT_THRESHOLDS.length - 1]!.amount
 
 	// Calculate progress percentage (0-100)
 	const progressPercent = Math.min(100, (cartTotal / maxThreshold) * 100)
 
-	// Has user unlocked a gift?
+	// Has user unlocked the first gift?
 	const hasUnlockedGift = cartTotal >= GIFT_THRESHOLDS[0]!.amount
 
 	useEffect(() => {
@@ -52,9 +57,7 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 
 	const handleViewCart = () => {
 		onClose()
-		// Open cart drawer via context
-		// You'll need to add openCart to the modal props or use context here
-		router.push('/checkout') // Or open drawer
+		router.push('/checkout')
 	}
 
 	const handleShopMore = () => {
@@ -69,21 +72,23 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 					<DialogTitle className="font-light text-xl leading-none tracking-tight md:text-xl mb-6 text-center">
 						{justAdded && (
 							<div className="mb-4 text-green-600">
-								✓ {justAdded} added to cart!
+								{t('modal.addedToCart', { product: justAdded })}
 							</div>
 						)}
 
 						{hasUnlockedGift ? (
 							<>
-								🎉 You've unlocked a FREE gift!
+								{t('modal.unlockedTitle')}
 							</>
 						) : nextThreshold ? (
-							<>
-								You're <span className="font-semibold">€{(amountNeeded / 100).toFixed(2)}</span> away from a FREE gift!
-							</>
+							// Rich text formatting: "You're <bold>€10.00</bold> away..."
+							t.rich('modal.awayTitle', {
+								amount: `€${(amountNeeded / 100).toFixed(2)}`,
+								bold: (chunks) => <span className="font-semibold">{chunks}</span>
+							})
 						) : (
 							<>
-								🎉 Maximum rewards unlocked!
+								{t('modal.maxTitle')}
 							</>
 						)}
 					</DialogTitle>
@@ -104,44 +109,48 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 
 					{/* Milestone Dots */}
 					<div className="absolute top-7 left-0 w-4 h-4 bg-primary z-30 rounded-full -translate-y-1/2" />
-					<div
-						className={`absolute top-7 left-1/4 -translate-x-1/2 z-30 w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[0]!.amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
-							}`}
-					/>
-					<div
-						className={`absolute top-7 left-1/2 -translate-x-1/2 z-30 w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[1]!.amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
-							}`}
-					/>
-					<div
-						className={`absolute top-7 left-3/4 -translate-x-1/2 z-30 w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[2]!.amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
-							}`}
-					/>
+
+					{/* Render dots dynamically based on thresholds */}
+					{GIFT_THRESHOLDS.map((threshold, index) => {
+						// Calculate left position (25%, 50%, 75%, or dynamic based on max)
+						const leftPos = (threshold.amount / maxThreshold) * 100
+
+						return (
+							<div
+								key={threshold.amount}
+								className={`absolute top-7 w-4 h-4 rounded-full -translate-y-1/2 z-30 transition-colors duration-500 ${cartTotal >= threshold.amount
+										? 'bg-primary'
+										: 'dark:bg-zinc-500 bg-zinc-200'
+									}`}
+								style={{ left: `${leftPos}%`, transform: 'translate(-50%, -50%)' }}
+							/>
+						)
+					})}
 				</div>
 
-				{/* Current Gift Info */}
-				{currentThreshold && (
+				{/* Current Gift Info (Last unlocked) */}
+				{/* {currentThreshold && (
 					<div className="text-center mb-6">
 						<div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-full">
 							<Gift className="h-4 w-4 text-green-600 dark:text-green-400" />
 							<span className="text-sm font-display font-medium text-green-700 dark:text-green-300">
-								Gift unlocked: {currentThreshold.gift}
+								{t('modal.unlockedBadge', {
+									gift: t(`tiers.${currentThreshold.giftKey}`)
+								})}
 							</span>
 						</div>
 					</div>
-				)}
+				)} */}
 
+				{/* Next Gift Info (If not all unlocked) */}
 				{nextThreshold && !hasUnlockedGift && (
 					<div className="text-center mb-6">
 						<div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
 							<Gift className="h-4 w-4 text-primary" />
 							<span className="text-sm font-display font-medium text-primary">
-								Next reward: {nextThreshold.gift}
+								{t('modal.nextBadge', {
+									gift: t(`tiers.${nextThreshold.giftKey}`)
+								})}
 							</span>
 						</div>
 					</div>
@@ -154,22 +163,22 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 						className="rounded-full px-9 py-3.5 gap-2"
 					>
 						<ShoppingCart className="h-4 w-4" />
-						View Cart
+						{t('modal.viewCart')}
 					</Button>
 					<Button
 						onClick={handleShopMore}
 						variant="outline"
 						className="rounded-full px-9 py-3.5"
 					>
-						Continue Shopping
+						{t('modal.continue')}
 					</Button>
 				</div>
 
-				{/* Note */}
+				{/* Footer Note */}
 				{hasUnlockedGift && (
 					<div className="text-center mt-4">
 						<span className="text-xs text-muted-foreground">
-							Gift has been automatically added to your cart
+							{t('modal.autoAdded')}
 						</span>
 					</div>
 				)}

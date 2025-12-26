@@ -1,5 +1,106 @@
 {
-  "checkout": {
-    "placeholder": "Translations for checkout in de"
-  }
+	"checkout": {
+		"meta": {
+			"title": "Kasse | Aquadecor",
+			"description": "Sichere Kaufabwicklung für Ihre Aquarium-Rückwand."
+		},
+		"header": {
+			"title": "Kasse",
+			"subtitle": "Schließen Sie Ihren Kauf ab, indem Sie die Versanddaten eingeben."
+		},
+		"cart": {
+			"title": "Warenkorb",
+			"clear": "Leeren",
+			"quantity": "Menge:",
+			"unknownProduct": "Unbekanntes Produkt",
+			"gift": {
+				"badge": "Aquadecor Premium Geschenk!",
+				"label": "Gratis"
+			},
+			"subtotal": "Zwischensumme:",
+			"discount": "Rabatt:",
+			"total": "Gesamt:"
+		},
+		"discount": {
+			"label": "Rabattcode",
+			"placeholder": "Code eingeben",
+			"apply": "Anwenden",
+			"applying": "Wird angewendet..."
+		},
+		"shipping": {
+			"title": "Versandinformationen",
+			"subtitle": "Geben Sie Ihre Versanddaten ein oder wählen Sie eine gespeicherte Adresse.",
+			"fields": {
+				"firstName": "Vorname",
+				"lastName": "Nachname",
+				"email": "E-Mail",
+				"phone": "Telefonnummer",
+				"address": "Adresse",
+				"apartment": "Wohnung, Zimmer, etc. (optional)",
+				"zip": "Postleitzahl",
+				"city": "Stadt",
+				"state": "Bundesland (optional)",
+				"country": "Land",
+				"selectCountry": "Land auswählen"
+			}
+		},
+		"payment": {
+			"stripe": "Mit Karte bezahlen",
+			"paypal": "PayPal",
+			"orPayWith": "Oder bezahlen mit",
+			"processing": "Verarbeitung...",
+			"loading": "Zahlungsoptionen werden geladen...",
+			"errors": {
+				"invalidAddress": "Bitte geben Sie eine gültige Lieferadresse ein, um fortzufahren",
+				"createOrder": "Bestellung konnte nicht erstellt werden",
+				"initPayment": "Zahlung konnte nicht initialisiert werden",
+				"paymentFailed": "Zahlung fehlgeschlagen",
+				"unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+			}
+		},
+		"success": {
+			"title": "Bestellung bestätigt!",
+			"subtitle": "Vielen Dank für Ihren Einkauf",
+			"orderNumber": "Bestellnummer",
+			"email": {
+				"title": "Bestätigungs-E-Mail gesendet",
+				"desc": "Wir haben die Bestelldetails und den Beleg an Ihre E-Mail-Adresse gesendet."
+			},
+			"production": {
+				"title": "Produktion beginnt bald",
+				"desc": "Ihre individuellen Rückwände sind in 10-12 Werktagen versandbereit."
+			},
+			"tracking": {
+				"title": "Sendungsverfolgung",
+				"desc": "Wir senden Ihnen die Tracking-Informationen, sobald Ihre Bestellung versandt wurde."
+			},
+			"actions": {
+				"status": "Bestellstatus ansehen",
+				"shop": "Weiter einkaufen",
+				"contact": "Support kontaktieren"
+			},
+			"help": {
+				"title": "Brauchen Sie Hilfe?",
+				"desc": "Unser Team ist hier, um alle Fragen zu Ihrer Bestellung zu beantworten."
+			}
+		},
+		"gift": {
+			"modal": {
+				"addedToCart": "✓ {product} zum Warenkorb hinzugefügt!",
+				"unlockedTitle": "🎉 Sie haben ein GRATIS Geschenk freigeschaltet!",
+				"awayTitle": "Nur noch <bold>{amount}</bold> bis zum GRATIS Geschenk!",
+				"maxTitle": "🎉 Maximale Belohnungen freigeschaltet!",
+				"unlockedBadge": "Geschenk freigeschaltet: {gift}",
+				"nextBadge": "Nächste Belohnung: {gift}",
+				"viewCart": "Warenkorb ansehen",
+				"continue": "Weiter einkaufen",
+				"autoAdded": "Geschenk wurde automatisch zum Warenkorb hinzugefügt"
+			},
+			"tiers": {
+				"moss": "Premium Moos-Paket",
+				"tools": "Aquascaping Werkzeug-Set",
+				"upgrade": "Individuelles Rückwand-Upgrade"
+			}
+		}
+	}
 }

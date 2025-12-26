@@ -7,8 +7,10 @@ import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
 import { useCheckout } from '~/app/_context/CheckoutContext'
+import { useTranslations } from 'next-intl'
 
 export function EnterDiscountCode() {
+	const t = useTranslations('checkout.discount')
 	const [code, setCode] = useState('')
 	const [isApplying, setIsApplying] = useState(false)
 	const {
@@ -33,7 +35,7 @@ export function EnterDiscountCode() {
 		<div className="border rounded-3xl p-6">
 			<Label className="text-sm font-display font-normal flex gap-x-2 items-center mb-3">
 				<Tag className="w-5 h-5" />
-				Discount code
+				{t('label')}
 			</Label>
 
 			{discountCode ? (
@@ -60,7 +62,7 @@ export function EnterDiscountCode() {
 						value={code}
 						onChange={(e) => setCode(e.target.value.toUpperCase())}
 						onKeyDown={(e) => e.key === 'Enter' && handleApply()}
-						placeholder="Enter code"
+						placeholder={t('placeholder')}
 						className="rounded-2xl px-3 py-6 text-base"
 					/>
 					<Button
@@ -68,7 +70,7 @@ export function EnterDiscountCode() {
 						disabled={!code || isApplying}
 						className="rounded-full px-9 py-3.5"
 					>
-						{isApplying ? 'Applying...' : 'Apply'}
+						{isApplying ? t('applying') : t('apply')}
 					</Button>
 				</div>
 			)}
@@ -76,8 +78,8 @@ export function EnterDiscountCode() {
 			{/* Feedback message */}
 			{discountMessage && (
 				<p className={`text-sm mt-2 ${discountCode
-						? 'text-green-600 dark:text-green-400'
-						: 'text-red-600 dark:text-red-400'
+					? 'text-green-600 dark:text-green-400'
+					: 'text-red-600 dark:text-red-400'
 					}`}>
 					{discountMessage}
 				</p>

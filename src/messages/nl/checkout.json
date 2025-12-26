@@ -1,5 +1,106 @@
 {
-  "checkout": {
-    "placeholder": "Translations for checkout in nl"
-  }
+	"checkout": {
+		"meta": {
+			"title": "Afrekenen | Aquadecor",
+			"description": "Veilig afrekenen voor uw aquarium achterwand."
+		},
+		"header": {
+			"title": "Afrekenen",
+			"subtitle": "Voltooi uw aankoop door uw verzendgegevens in te vullen."
+		},
+		"cart": {
+			"title": "Winkelwagen",
+			"clear": "Leegmaken",
+			"quantity": "Aantal:",
+			"unknownProduct": "Onbekend product",
+			"gift": {
+				"badge": "Aquadecor Premium Cadeau!",
+				"label": "Gratis"
+			},
+			"subtotal": "Subtotaal:",
+			"discount": "Korting:",
+			"total": "Totaal:"
+		},
+		"discount": {
+			"label": "Kortingscode",
+			"placeholder": "Voer kortingscode in",
+			"apply": "Toepassen",
+			"applying": "Toepassen..."
+		},
+		"shipping": {
+			"title": "Verzendgegevens",
+			"subtitle": "Voer uw verzendgegevens in of selecteer een opgeslagen adres.",
+			"fields": {
+				"firstName": "Voornaam",
+				"lastName": "Achternaam",
+				"email": "E-mail",
+				"phone": "Telefoonnummer",
+				"address": "Adres",
+				"apartment": "Appartement, suite, enz. (optioneel)",
+				"zip": "Postcode",
+				"city": "Stad",
+				"state": "Provincie (optioneel)",
+				"country": "Land",
+				"selectCountry": "Selecteer land"
+			}
+		},
+		"payment": {
+			"stripe": "Betalen met kaart",
+			"paypal": "PayPal",
+			"orPayWith": "Of betaal met",
+			"processing": "Verwerken...",
+			"loading": "Betaalopties laden...",
+			"errors": {
+				"invalidAddress": "Voer een geldig verzendadres in om door te gaan",
+				"createOrder": "Bestelling aanmaken mislukt",
+				"initPayment": "Betaling initialiseren mislukt",
+				"paymentFailed": "Betaling mislukt",
+				"unexpected": "Er is een onverwachte fout opgetreden"
+			}
+		},
+		"success": {
+			"title": "Bestelling bevestigd!",
+			"subtitle": "Bedankt voor uw aankoop",
+			"orderNumber": "Bestelnummer",
+			"email": {
+				"title": "Bevestigingsmail verzonden",
+				"desc": "We hebben de bestelgegevens en het betalingsbewijs naar uw e-mailadres gestuurd."
+			},
+			"production": {
+				"title": "Productie start binnenkort",
+				"desc": "Uw aangepaste achterwanden zijn klaar voor verzending in 10-12 werkdagen."
+			},
+			"tracking": {
+				"title": "Tracking updates",
+				"desc": "We sturen u trackinginformatie zodra uw bestelling is verzonden."
+			},
+			"actions": {
+				"status": "Bekijk bestelstatus",
+				"shop": "Verder winkelen",
+				"contact": "Contact opnemen"
+			},
+			"help": {
+				"title": "Hulp nodig?",
+				"desc": "Ons team staat klaar om al uw vragen over uw bestelling te beantwoorden."
+			}
+		},
+		"gift": {
+			"modal": {
+				"addedToCart": "✓ {product} toegevoegd aan winkelwagen!",
+				"unlockedTitle": "🎉 U heeft een GRATIS cadeau ontgrendeld!",
+				"awayTitle": "U bent <bold>{amount}</bold> verwijderd van een GRATIS cadeau!",
+				"maxTitle": "🎉 Maximale beloningen ontgrendeld!",
+				"unlockedBadge": "Cadeau ontgrendeld: {gift}",
+				"nextBadge": "Volgende beloning: {gift}",
+				"viewCart": "Winkelwagen bekijken",
+				"continue": "Verder winkelen",
+				"autoAdded": "Cadeau is automatisch aan uw winkelwagen toegevoegd"
+			},
+			"tiers": {
+				"moss": "Premium Mos Pakket",
+				"tools": "Aquascaping Gereedschapset",
+				"upgrade": "Achterwand Upgrade op Maat"
+			}
+		}
+	}
 }

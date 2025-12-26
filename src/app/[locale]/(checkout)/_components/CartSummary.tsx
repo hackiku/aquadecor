@@ -6,8 +6,10 @@ import { X, Package, Gift, PlusCircle, Trash2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { useCheckout } from '~/app/_context/CheckoutContext'
 import { api } from '~/trpc/react'
+import { useTranslations } from 'next-intl'
 
 export function CartSummary() {
+	const t = useTranslations('checkout.cart')
 	const { cartItems, removeItem, clearCart, subtotal, discount, total } = useCheckout()
 
 	// Fetch product details
@@ -25,7 +27,7 @@ export function CartSummary() {
 			{/* Header */}
 			<div className="p-6 border-b flex items-center justify-between">
 				<h3 className="font-display font-light text-lg flex gap-x-2 items-center">
-					Cart Summary
+					{t('title')}
 					<span className="font-display text-sm text-muted-foreground">
 						({cartItems.length})
 					</span>
@@ -38,7 +40,7 @@ export function CartSummary() {
 						className="text-muted-foreground hover:text-destructive"
 					>
 						<Trash2 className="w-4 h-4 mr-2" />
-						Clear
+						{t('clear')}
 					</Button>
 				)}
 			</div>
@@ -76,7 +78,7 @@ export function CartSummary() {
 								<div className="flex flex-col w-full">
 									<div className="flex justify-between gap-x-6 items-start">
 										<p className="font-light w-full text-base">
-											{product.name ?? 'Unknown Product'}
+											{product.name ?? t('unknownProduct')}
 										</p>
 										<Button
 											variant="ghost"
@@ -91,7 +93,7 @@ export function CartSummary() {
 									{/* Options/Variants */}
 									<ul className="flex flex-col text-xs mt-2 space-y-1">
 										<li className="text-muted-foreground">
-											<span>Quantity: </span>
+											<span>{t('quantity')} </span>
 											<b className="font-normal text-foreground">{cartItem.quantity}</b>
 										</li>
 									</ul>
@@ -118,9 +120,9 @@ export function CartSummary() {
 						</div>
 						<div className="flex items-center gap-x-2">
 							<Gift className="text-primary w-5 h-5 flex-shrink-0" />
-							<span className="text-sm">Aquadecor Premium Gift!</span>
+							<span className="text-sm">{t('gift.badge')}</span>
 						</div>
-						<span className="text-xs text-muted-foreground">Free</span>
+						<span className="text-xs text-muted-foreground">{t('gift.label')}</span>
 					</div>
 				</div>
 			)}
@@ -131,19 +133,19 @@ export function CartSummary() {
 			{/* Totals */}
 			<div className="p-6 flex flex-col font-display gap-y-2 bg-muted/30">
 				<div className="flex items-center justify-between text-muted-foreground">
-					<span>Subtotal:</span>
+					<span>{t('subtotal')}</span>
 					<span>€{(subtotal / 100).toFixed(2)}</span>
 				</div>
 
 				{discount > 0 && (
 					<div className="flex items-center justify-between text-green-600">
-						<span>Discount:</span>
+						<span>{t('discount')}</span>
 						<span>-€{(discount / 100).toFixed(2)}</span>
 					</div>
 				)}
 
 				<div className="flex justify-between text-xl font-light pt-2 border-t">
-					<span>Total:</span>
+					<span>{t('total')}</span>
 					<span>€{(total / 100).toFixed(2)}</span>
 				</div>
 			</div>

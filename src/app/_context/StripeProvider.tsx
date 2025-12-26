@@ -1,4 +1,4 @@
-// src/app/[locale]/(checkout)/_context/StripeProvider.tsx
+// src/app/_context/StripeProvider.tsx
 'use client'
 
 import { type ReactNode } from 'react'

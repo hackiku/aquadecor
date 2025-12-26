@@ -10,6 +10,7 @@
 		},
 		"cart": {
 			"title": "Cart Summary",
+			"clear": "Clear",
 			"quantity": "Quantity:",
 			"unknownProduct": "Unknown Product",
 			"gift": {
@@ -17,6 +18,7 @@
 				"label": "Free"
 			},
 			"subtotal": "Subtotal:",
+			"discount": "Discount:",
 			"total": "Total:"
 		},
 		"discount": {
@@ -45,7 +47,16 @@
 		"payment": {
 			"stripe": "Pay with debit card",
 			"paypal": "PayPal",
-			"error": "Please enter valid shipping address to proceed"
+			"orPayWith": "Or pay with",
+			"processing": "Processing...",
+			"loading": "Loading payment options...",
+			"errors": {
+				"invalidAddress": "Please enter valid shipping address to proceed",
+				"createOrder": "Failed to create order",
+				"initPayment": "Failed to initialize payment",
+				"paymentFailed": "Payment failed",
+				"unexpected": "An unexpected error occurred"
+			}
 		},
 		"success": {
 			"title": "Order Confirmed!",
@@ -71,6 +82,24 @@
 			"help": {
 				"title": "Need Help?",
 				"desc": "Our team is here to answer any questions about your order."
+			}
+		},
+		"gift": {
+			"modal": {
+				"addedToCart": "✓ {product} added to cart!",
+				"unlockedTitle": "🎉 You've unlocked a FREE gift!",
+				"awayTitle": "You're <bold>{amount}</bold> away from a FREE gift!",
+				"maxTitle": "🎉 Maximum rewards unlocked!",
+				"unlockedBadge": "Gift unlocked: {gift}",
+				"nextBadge": "Next reward: {gift}",
+				"viewCart": "View Cart",
+				"continue": "Continue Shopping",
+				"autoAdded": "Gift has been automatically added to your cart"
+			},
+			"tiers": {
+				"moss": "Premium Moss Pack",
+				"tools": "Aquascaping Tools Set",
+				"upgrade": "Custom Background Upgrade"
 			}
 		}
 	}

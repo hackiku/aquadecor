@@ -7,19 +7,21 @@ import { ShippingInformation } from '../_components/ShippingInformation'
 import { CheckoutButtons } from '../_components/CheckoutButtons'
 import { StripeProvider } from '~/app/_context/StripeProvider'
 import { useCheckout } from '~/app/_context/CheckoutContext'
+import { useTranslations } from 'next-intl'
 
 export function CheckoutPageClient() {
+	const t = useTranslations('checkout')
 	const { total } = useCheckout()
 
 	return (
-		<section className="max-w-7xl mx-auto px-4 py-24 lg:py-32">
+		<section className="max-w-7xl mx-auto px-4 py-16 lg:py-20">
 			{/* Header */}
 			<div className="space-y-4 mb-8">
-				<h1 className="text-2xl md:text-5xl font-extralight font-display">
-					Checkout
+				<h1 className="text-4xl md:text-6xl font-extralight font-display">
+					{t('header.title')}
 				</h1>
 				<p className="md:text-lg font-display font-light text-base text-muted-foreground">
-					Complete your purchase by providing shipping details.
+					{t('header.subtitle')}
 				</p>
 			</div>
 
@@ -43,7 +45,7 @@ export function CheckoutPageClient() {
 						</StripeProvider>
 					) : (
 						<div className="border rounded-3xl p-6 text-center text-muted-foreground">
-							Loading payment options...
+							{t('payment.loading')}
 						</div>
 					)}
 				</div>
