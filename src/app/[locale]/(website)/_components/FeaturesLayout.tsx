@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MediaBlob } from "~/components/ui/water/media-blob-square";
 import { StickyShop } from "~/components/cta/StickyShop";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 interface FeaturesLayoutProps {
 	headline: string;
@@ -121,16 +122,18 @@ export function FeaturesLayout({ headline, subheadline }: FeaturesLayoutProps) {
 	});
 
 	return (
-		<section ref={featuresRef} className="relative py-24 md:py-32 overflow-hidden">
+		<section ref={featuresRef} className="relative py-24 md:py-32 overflow-hidden bg-black _bg-linear-to-b from-neutral-900/80 to-black">
 			<StickyShop triggerRef={featuresRef} />
+			<WaveDivider position="top" color="currentColor" className="text-background" />
+
 			
 
 			{/* Headline */}
 			<div className="text-center mb-16 px-4">
-				<h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-light tracking-normal mb-4">
+				<h2 className="text-3xl md:text-4xl lg:text-5xl text-white font-display font-light tracking-normal mb-4">
 					{headline}
 				</h2>
-				<p className="text-lg text-muted-foreground font-display font-light max-w-2xl mx-auto">
+				<p className="text-lg text-white/50 font-display font-light max-w-2xl mx-auto">
 					{subheadline}
 				</p>
 			</div>
@@ -218,7 +221,7 @@ function FeatureAnnotation({ feature, index, scrollProgress }: FeatureAnnotation
 					asset={feature.image.src}
 					type="image"
 					alt={feature.label}
-					className="shadow-2xl"
+					// className="shadow-2xl"
 					amount={1.5}
 					duration={12}
 				/>

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Hammer, Shield, Ruler } from "lucide-react";
 import { FeaturedProductSlider } from "~/components/shop/product/FeaturedProductSlider";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 // import { StickyShop } from "~/components/cta/StickyShop";
 
 interface ProductSliderSectionProps {
@@ -50,7 +51,7 @@ export function ProductSliderSection({
 
 	return (
 		// <section ref={sliderRef}
-		<section ref={sliderRef} className="relative overflow-hidden py-24 bg-linear-to-b from-card/50 to-transparent">
+		<section ref={sliderRef} className="relative overflow-hidden py-24 bg-linear-to-b from-card/80 via-primary/10 _dark:via-blue-900/20 to-transparent">
 			{/* <StickyShop triggerRef={sliderRef} /> */}
 
 			<div className="pl-4 lg:pl-8 _max-w-7xl mx-auto">

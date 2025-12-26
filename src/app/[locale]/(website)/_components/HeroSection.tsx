@@ -24,8 +24,8 @@ export function HeroSection({ locale }: HeroSectionProps) {
 	}, []);
 
 	return (
-		<section className="relative overflow-hidden h-dvh -mt-16">
-			<WaveDivider position="bottom" color="black" />
+		<section className="relative overflow-hidden h-dvh -mt-16 bg-black">
+			<WaveDivider position="bottom" color="currentColor" />
 
 			{/* Full-width video with wave cutout */}
 			<div className="absolute inset-0 opacity-40">
@@ -36,7 +36,7 @@ export function HeroSection({ locale }: HeroSectionProps) {
 			</div>
 
 			{/* Gradient overlays */}
-			<div className="absolute inset-0 mb-12 bg-linear-to-b from-zinc-950/80 via-zinc-900/50 to-black" />
+			{/* <div className="absolute inset-0 mb-12 bg-linear-to-b from-black/80 via-neutral-950/50 to-black" /> */}
 
 			{/* Hero Content */}
 			<div className="relative z-20 w-full h-full flex items-start justify-center pt-32 md:pt-40">
