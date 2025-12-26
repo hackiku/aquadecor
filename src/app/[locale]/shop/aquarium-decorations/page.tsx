@@ -1,6 +1,5 @@
 // src/app/[locale]/shop/aquarium-decorations/page.tsx
 
-import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -10,36 +9,32 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
 import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { Link } from '~/i18n/navigation'; // ✅ i18n-aware Link
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	// Even though page is dynamic, this helps Next.js understand structure
-	// and can pre-render a "default" version at build time
-	return [{}]; // Empty object = generate this route once
+	return [{}];
 }
-
 
 type Props = {
 	params: Promise<{ locale: string }>;
 };
 
-// Generate metadata
 export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'shop' });
 
 	return generateSEOMetadata({
 		currentLocale: locale,
-		path: '/shop/aquarium-decorations', // Canonical path (no locale)
+		path: '/shop/aquarium-decorations',
 		title: t('metadata.decorations.title'),
 		description: t('metadata.decorations.description'),
-		image: '/media/images/additional-items_500px.webp', // Automatically adds to OpenGraph & Twitter
+		image: '/media/images/additional-items_500px.webp',
 		type: 'website',
 	});
 }
-
 
 export default async function AquariumDecorationsPage({ params }: Props) {
 	const { locale } = await params;
@@ -48,7 +43,6 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 	const t = await getTranslations('shop');
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
-	// Load categories for aquarium decorations
 	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];
 	let error = false;
 
@@ -75,7 +69,7 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -93,13 +87,15 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 										{t('hero.decorations.subtitle')}
 									</p>
 									<div className="flex flex-wrap gap-3">
-										<Link
+										{/* ✅ Anchor link - stays as regular 'a' */}
+										<a
 											href="#categories"
 											className="inline-flex text-white items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 rounded-full font-display font-medium transition-all hover:scale-105"
 										>
 											{t('hero.decorations.ctaPrimary')}
 											<ArrowRight className="h-4 w-4" />
-										</Link>
+										</a>
+										{/* ✅ i18n Link - auto handles locale */}
 										<Link
 											href="/shop/3d-backgrounds"
 											className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full font-display font-medium transition-colors border border-white/20"
@@ -114,10 +110,9 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 				</section>
 
 				{/* Categories Section */}
-				<section id="categories" className="relative md:pt-6 pb-24 bg-linear-to-b from-muted/30 to-background">
+				<section id="categories" className="relative md:pt-6 pb-24 bg-gradient-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" />
 					<div className="px-4 max-w-7xl mx-auto">
-						{/* Error State */}
 						{error ? (
 							<div className="py-16 text-center space-y-4">
 								<AlertCircle className="h-12 w-12 text-muted-foreground/50 mx-auto" />
@@ -152,8 +147,7 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 
 				{/* Safe for All Species */}
 				<section className="relative py-16 md:py-20 overflow-hidden">
-					{/* Gradient orb background */}
-					<div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
+					<div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
 					<div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 					<div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
 
@@ -240,6 +234,7 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 								size="lg"
 								className="bg-white hover:bg-white/90 text-cyan-900 rounded-full font-display font-medium text-base px-8 py-6"
 							>
+								{/* ✅ i18n Link - auto handles locale */}
 								<Link href="/shop/3d-backgrounds" className="inline-flex items-center gap-2">
 									{t('ctas.exploreBackgrounds')}
 									<ArrowRight className="h-4 w-4" />

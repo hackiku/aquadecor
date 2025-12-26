@@ -17,7 +17,26 @@ export default auth(async (req) => {
 
 	// Extract locale from path (format: /[locale]/path)
 	const localeMatch = pathname.match(/^\/([^/]+)/);
-	const locale = localeMatch?.[1] || 'en';
+	const potentialLocale = localeMatch?.[1];
+
+	// Check if URL has a valid locale
+	const hasValidLocale = potentialLocale && routing.locales.includes(potentialLocale as any);
+
+	// If no valid locale, let next-intl middleware handle the redirect
+	if (!hasValidLocale) {
+		const intlResponse = intlMiddleware(req);
+		if (intlResponse) {
+			// Add locale header even for redirects
+			const locale = intlResponse.headers.get('x-middleware-rewrite')?.match(/\/([^/]+)/)?.[1] || routing.defaultLocale;
+			if (routing.locales.includes(locale as any)) {
+				intlResponse.headers.set('x-locale', locale);
+			}
+			return intlResponse;
+		}
+	}
+
+	// URL has valid locale - proceed with normal flow
+	const locale = potentialLocale || routing.defaultLocale;
 
 	// Let next-intl handle locale routing first
 	const intlResponse = intlMiddleware(req);

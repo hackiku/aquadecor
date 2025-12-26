@@ -561,6 +561,7 @@ export const productRouter = createTRPCRouter({
 	// CART & WISHLIST (Get by IDs)
 	// ============================================================================
 
+
 	getByIds: publicProcedure
 		.input(z.object({
 			ids: z.array(z.string()),
@@ -625,6 +626,9 @@ export const productRouter = createTRPCRouter({
 					)
 				)
 		}),
+
+
+	
 	/*
 	getByIds: publicProcedure
 		.input(z.object({

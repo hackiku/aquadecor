@@ -20,6 +20,8 @@ import { getTranslations } from "next-intl/server";
 import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { generateProductSchema, generateBreadcrumbSchema } from "~/i18n/seo/json-ld";
 
+// ⚡ ISR: Regenerate pages every hour, but serve stale while revalidating
+export const revalidate = 3600; // 1 hour
 
 interface ProductDetailPageProps {
 	params: Promise<{
@@ -62,7 +64,7 @@ export async function generateStaticParams() {
 	return allProducts
 		.map(product => {
 			const category = categoryMap.get(product.categoryId);
-			if (!category) return null; // Skip if category not found
+			if (!category) return null;
 
 			return {
 				productLine: category.productLine,
@@ -70,7 +72,7 @@ export async function generateStaticParams() {
 				productSlug: product.productSlug,
 			};
 		})
-		.filter((p): p is NonNullable<typeof p> => p !== null); // Remove nulls with type guard
+		.filter((p): p is NonNullable<typeof p> => p !== null);
 }
 
 // ========================================
@@ -98,13 +100,9 @@ export async function generateMetadata({ params }: ProductDetailPageProps) {
 			type: 'website',
 		});
 	} catch (error) {
-		// If DB is down, return a generic title so the Page Component 
-		// can render and trigger the actual Error Boundary
 		return { title: "AquaDecor" };
 	}
 }
-
-
 
 // ========================================
 // PAGE COMPONENT
@@ -114,34 +112,31 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 	const { locale, productLine, categorySlug, productSlug } = await params;
 	const { market = "ROW" } = await searchParams;
 
-	// Enable static rendering
 	setRequestLocale(locale);
 
 	const t = await getTranslations('shop.productDetail');
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
-	// 1. Fetch Data in Parallel
-	const productPromise = api.product.getBySlug({
-		slug: productSlug,
-		locale: dbLocale,
-		userMarket: market,
-	});
-
-	const relatedProductsPromise = api.product.getByCategory({
-		categorySlug,
-		locale: dbLocale,
-		userMarket: market,
-	});
-
-	const [product, relatedProductsResult] = await Promise.all([productPromise, relatedProductsPromise]);
+	// Fetch Data in Parallel
+	const [product, relatedProductsResult] = await Promise.all([
+		api.product.getBySlug({
+			slug: productSlug,
+			locale: dbLocale,
+			userMarket: market,
+		}),
+		api.product.getByCategory({
+			categorySlug,
+			locale: dbLocale,
+			userMarket: market,
+		}),
+	]);
 
 	if (!product) {
 		notFound();
 	}
 
-	// 2. Logic & Transformations
 	const isCustomOnly =
-		product.pricing?.pricingType === "configuration" || // Updated to match schema enum
+		product.pricing?.pricingType === "configuration" ||
 		product.stockStatus === "requires_quote" ||
 		!product.pricing;
 
@@ -152,7 +147,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		name: product.name ?? "Product",
 	};
 
-	// 3. Related Products Logic
 	const relatedProducts =
 		"products" in relatedProductsResult
 			? relatedProductsResult.products.filter((p) => p.slug !== productSlug).slice(0, 4)
@@ -180,12 +174,10 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
 		.join(" ");
 
-	// ==================================================================
-	// 4. SEO & STRUCTURED DATA (JSON-LD)
-	// ==================================================================
+	// ========================================
+	// SEO & STRUCTURED DATA (JSON-LD)
+	// ========================================
 
-	// Calculate final price for Schema (or null if custom/calculator)
-	// If it's custom only, we intentionally send null so Google hides the price (avoids "€0.00")
 	const schemaPrice = isCustomOnly
 		? null
 		: (product.pricing?.salePrice ?? product.pricing?.unitPriceEurCents ?? null);
@@ -193,7 +185,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://aquadecorbackgrounds.com';
 	const canonicalUrl = `${baseUrl}/${locale}/shop/${productLine}/${categorySlug}/${productSlug}`;
 
-	// Generate Product Schema
 	const productJsonLd = generateProductSchema({
 		name: product.name ?? "Product",
 		description: product.shortDescription || product.name || "",
@@ -205,7 +196,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 		url: canonicalUrl
 	});
 
-	// Generate Breadcrumb Schema
 	const breadcrumbJsonLd = generateBreadcrumbSchema([
 		{ name: "Home", url: `${baseUrl}/${locale}` },
 		{ name: "Shop", url: `${baseUrl}/${locale}/shop` },
@@ -215,7 +205,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 
 	return (
 		<HydrateClient>
-			{/* ✅ SEO: Inject JSON-LD Scripts */}
+			{/* ✅ Clean JSON-LD injection */}
 			<script
 				type="application/ld+json"
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
@@ -224,8 +214,9 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 				type="application/ld+json"
 				dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
 			/>
+
 			<main className="min-h-screen">
-				{/* Hero Section - Full Width Image */}
+				{/* Hero Section */}
 				<section className="relative h-[40vh] md:h-[50vh] border-b bg-black">
 					{product.images && product.images[0] ? (
 						<Image
@@ -241,10 +232,8 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 						</div>
 					)}
 
-					{/* Gradient overlay */}
-					<div className="absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent" />
+					<div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
 
-					{/* Quick info overlay */}
 					<div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
 						<div className="max-w-7xl mx-auto space-y-3">
 							<div className="flex items-center gap-3 mb-4">
@@ -275,18 +264,16 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 					</div>
 				</section>
 
-				{/* Main Content - Two Column */}
+				{/* Main Content */}
 				<section className="py-12 md:py-16">
 					<div className="px-4 max-w-7xl mx-auto">
 						<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-							{/* Left Column - Info */}
 							<div className="lg:col-span-2 space-y-8">
 								<ImageSliderWithModal
 									images={product.images || []}
 									productName={product.name ?? "Product"}
 								/>
 
-								{/* Description */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">
 										{t('sections.productDetails')}
@@ -294,7 +281,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 									<LongDescriptionSection longDescription={product.longDescription} />
 								</div>
 
-								{/* Specifications */}
 								{product.material && (
 									<div className="space-y-4">
 										<h2 className="text-2xl font-display font-normal">
@@ -303,33 +289,25 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 										<div className="grid gap-3">
 											{product.material && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">
-														{t('specs.material')}
-													</span>
+													<span className="text-muted-foreground">{t('specs.material')}</span>
 													<span className="font-medium">{product.material}</span>
 												</div>
 											)}
 											{product.widthCm && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">
-														{t('specs.width')}
-													</span>
+													<span className="text-muted-foreground">{t('specs.width')}</span>
 													<span className="font-medium">{product.widthCm} cm</span>
 												</div>
 											)}
 											{product.heightCm && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">
-														{t('specs.height')}
-													</span>
+													<span className="text-muted-foreground">{t('specs.height')}</span>
 													<span className="font-medium">{product.heightCm} cm</span>
 												</div>
 											)}
 											{product.productionTime && (
 												<div className="flex justify-between py-2 border-b">
-													<span className="text-muted-foreground">
-														{t('specs.productionTime')}
-													</span>
+													<span className="text-muted-foreground">{t('specs.productionTime')}</span>
 													<span className="font-medium">{product.productionTime}</span>
 												</div>
 											)}
@@ -337,7 +315,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 									</div>
 								)}
 
-								{/* Key Features */}
 								<div className="space-y-4">
 									<h2 className="text-2xl font-display font-normal">
 										{t('sections.keyFeatures')}
@@ -348,9 +325,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 												<Shield className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">
-													Lifetime Warranty
-												</h3>
+												<h3 className="font-display font-medium">Lifetime Warranty</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Chemical-resistant materials that never leach or affect water chemistry
 												</p>
@@ -362,9 +337,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 												<Zap className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">
-													Easy Installation
-												</h3>
+												<h3 className="font-display font-medium">Easy Installation</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Modular design with numbered sections for seamless assembly
 												</p>
@@ -376,9 +349,7 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 												<CheckCircle2 className="h-5 w-5 text-primary" />
 											</div>
 											<div className="space-y-1">
-												<h3 className="font-display font-medium">
-													Maintenance Free
-												</h3>
+												<h3 className="font-display font-medium">Maintenance Free</h3>
 												<p className="text-sm text-muted-foreground font-display font-light">
 													Scrub-safe surface - algae wipes off easily without damage
 												</p>
@@ -387,7 +358,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 									</div>
 								</div>
 
-								{/* Image Gallery */}
 								{product.images && product.images.length > 1 && (
 									<div className="space-y-4">
 										<h2 className="text-2xl font-display font-normal">
@@ -412,7 +382,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 								)}
 							</div>
 
-							{/* Right Column - Sticky Pricing Card */}
 							<div className="lg:col-span-1">
 								<PricingCard
 									productId={product.id}
@@ -424,7 +393,6 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 					</div>
 				</section>
 
-				{/* Related Products Section */}
 				{productsForGrid.length > 0 && (
 					<section className="py-12 md:py-16 bg-muted/10">
 						<div className="px-4 max-w-7xl mx-auto space-y-8">
