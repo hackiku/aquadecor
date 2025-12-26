@@ -49,7 +49,7 @@ export function CheckoutButtons() {
 					postalCode: shippingAddress.postalCode,
 					countryCode: shippingAddress.countryCode,
 				},
-				discountCode,
+				discountCode: discountCode || undefined,
 				locale: 'en', // TODO: Get from useLocale()
 			})
 
@@ -120,7 +120,7 @@ export function CheckoutButtons() {
 					postalCode: shippingAddress.postalCode,
 					countryCode: shippingAddress.countryCode,
 				},
-				discountCode,
+				discountCode: discountCode || undefined,
 				locale: 'en',
 			})
 

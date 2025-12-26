@@ -36,10 +36,16 @@ export function CheckoutPageClient() {
 				<div className="space-y-6">
 					<ShippingInformation />
 
-					{/* Wrap payment buttons with Stripe provider - pass cart total */}
-					<StripeProvider amount={total} currency="eur">
-						<CheckoutButtons />
-					</StripeProvider>
+					{/* Only render Stripe when we have a valid amount */}
+					{total > 0 ? (
+						<StripeProvider amount={total} currency="eur">
+							<CheckoutButtons />
+						</StripeProvider>
+					) : (
+						<div className="border rounded-3xl p-6 text-center text-muted-foreground">
+							Loading payment options...
+						</div>
+					)}
 				</div>
 			</div>
 		</section>

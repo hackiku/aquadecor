@@ -22,15 +22,38 @@ export function StripeProvider({
 	amount,
 	currency = 'eur'
 }: StripeProviderProps) {
-	const [clientSecret, setClientSecret] = useState<string | null>(null)
+	const [clientSecret, setClientSecret] = useState<string>('')
 
-	// For now, we'll create the PaymentIntent when user submits form
-	// This is just the wrapper that provides Stripe context
+	// Create PaymentIntent on mount
+	useEffect(() => {
+		if (amount <= 0) return
+
+		// Create PaymentIntent
+		fetch('/api/create-payment-intent', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ amount, currency }),
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.clientSecret) {
+					setClientSecret(data.clientSecret)
+				}
+			})
+			.catch(err => console.error('Failed to create PaymentIntent:', err))
+	}, [amount, currency])
+
+	// Don't render until we have clientSecret
+	if (!clientSecret) {
+		return (
+			<div className="border rounded-3xl p-6 text-center text-muted-foreground">
+				Initializing payment...
+			</div>
+		)
+	}
 
 	const options: StripeElementsOptions = {
-		mode: 'payment',
-		amount,
-		currency,
+		clientSecret,
 		appearance: {
 			theme: 'stripe',
 			variables: {

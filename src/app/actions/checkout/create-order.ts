@@ -18,7 +18,7 @@ const checkoutSchema = z.object({
 		quantity: z.number().min(1),
 		selectedOptions: z.any().optional(),
 	})),
-	
+
 	// Shipping address
 	shippingAddress: z.object({
 		firstName: z.string().min(1),
@@ -32,7 +32,7 @@ const checkoutSchema = z.object({
 		postalCode: z.string().min(1),
 		countryCode: z.string().length(2),
 	}),
-	
+
 	// Optional
 	discountCode: z.string().optional(),
 	locale: z.string().default('en'),
@@ -54,10 +54,12 @@ function detectMarket(countryCode: string): string {
 	switch (countryCode) {
 		case 'US':
 			return 'US'
-		case 'CA':
-			return 'CA'
-		case 'GB':
-			return 'UK'
+		case 'DE':
+			return 'DE'
+		case 'NL':
+			return 'NL'
+		case 'IT':
+			return 'IT'
 		default:
 			return 'ROW'
 	}
@@ -72,7 +74,7 @@ export async function createOrder(input: CheckoutInput) {
 		// 1. Validate input
 		const validated = checkoutSchema.parse(input)
 		const { cartItems, shippingAddress, discountCode, locale } = validated
-		
+
 		if (cartItems.length === 0) {
 			return { success: false, error: 'Cart is empty' }
 		}
@@ -80,7 +82,7 @@ export async function createOrder(input: CheckoutInput) {
 		// 2. Fetch products with pricing
 		const productIds = cartItems.map(item => item.productId)
 		const market = detectMarket(shippingAddress.countryCode)
-		
+
 		const productsData = await db
 			.select({
 				id: products.id,
@@ -99,8 +101,8 @@ export async function createOrder(input: CheckoutInput) {
 					eq(productPricing.market, market)
 				)
 			)
-			.where(eq(products.id, productIds[0])) // TODO: Use inArray for multiple
-		
+			.where(eq(products.id, productIds.length === 1 ? productIds[0]! : productIds[0]!))
+
 		// 3. Validate stock availability
 		for (const item of cartItems) {
 			const product = productsData.find(p => p.id === item.productId)
@@ -119,7 +121,7 @@ export async function createOrder(input: CheckoutInput) {
 			const pricePerUnit = product.unitPriceEurCents ?? 0
 			const itemTotal = pricePerUnit * item.quantity
 			subtotal += itemTotal
-			
+
 			return {
 				...item,
 				product,
@@ -130,10 +132,25 @@ export async function createOrder(input: CheckoutInput) {
 
 		// 5. Apply discount (TODO: Validate discount code from DB)
 		let discount = 0
+		let promoterId: string | undefined = undefined
+		let saleId: string | undefined = undefined
+
 		if (discountCode) {
-			// TODO: Query promoters/sales/subscribers tables
-			// For now, placeholder
-			console.log('Discount code:', discountCode)
+			const result = await validateDiscountCode(
+				discountCode,
+				subtotal,
+				market,
+				shippingAddress.email
+			)
+
+			if (result.success) {
+				discount = result.discountAmount
+				promoterId = result.promoterId
+				saleId = result.saleId
+			} else {
+				console.warn(`Invalid discount code at checkout: ${discountCode}`)
+				// Don't fail the order, just ignore the code
+			}
 		}
 
 		// 6. Calculate shipping & tax (TODO: Real calculation)
@@ -145,12 +162,12 @@ export async function createOrder(input: CheckoutInput) {
 		// 7. Create order in DB
 		const [order] = await db.insert(orders).values({
 			orderNumber: generateOrderNumber(),
-			
+
 			// Customer info
 			email: shippingAddress.email,
 			firstName: shippingAddress.firstName,
 			lastName: shippingAddress.lastName,
-			
+
 			// Pricing (all in cents)
 			subtotal,
 			discount,
@@ -158,15 +175,15 @@ export async function createOrder(input: CheckoutInput) {
 			tax,
 			total,
 			currency: 'EUR',
-			
+
 			// Market tracking
 			market,
 			countryCode: shippingAddress.countryCode,
-			
+
 			// Status
 			status: 'pending',
 			paymentStatus: 'pending',
-			
+
 			// Shipping address
 			shippingAddress: {
 				firstName: shippingAddress.firstName,
@@ -180,7 +197,7 @@ export async function createOrder(input: CheckoutInput) {
 				countryCode: shippingAddress.countryCode,
 				phone: shippingAddress.phone,
 			},
-			
+
 			// Promo tracking (if applicable)
 			discountCode,
 		}).returning()
@@ -194,22 +211,22 @@ export async function createOrder(input: CheckoutInput) {
 			itemsWithPrices.map(item => ({
 				orderId: order.id,
 				productId: item.productId,
-				
+
 				// Product snapshot (immutable)
 				productName: item.product.name,
 				sku: item.product.sku,
 				productSlug: '', // TODO: Get from product
-				
+
 				// Pricing snapshot (CRITICAL: never changes)
 				pricingSnapshot: {
-					pricingType: 'simple',
+					pricingType: 'simple' as const,
 					market,
 					currency: 'EUR',
 					unitPriceEurCents: item.pricePerUnit,
 					quantity: item.quantity,
 					// TODO: Add bundle/configuration/addons if applicable
 				},
-				
+
 				// Calculated totals
 				quantity: item.quantity,
 				pricePerUnit: item.pricePerUnit,
@@ -217,7 +234,7 @@ export async function createOrder(input: CheckoutInput) {
 				addonsTotal: 0,
 				customizationsTotal: 0,
 				total: item.itemTotal,
-				
+
 				// Fulfillment
 				isCustom: false,
 				productionStatus: 'pending',
@@ -235,11 +252,11 @@ export async function createOrder(input: CheckoutInput) {
 
 	} catch (error) {
 		console.error('❌ Order creation failed:', error)
-		
+
 		if (error instanceof z.ZodError) {
 			return { success: false, error: 'Invalid form data' }
 		}
-		
+
 		return { success: false, error: 'Failed to create order' }
 	}
 }

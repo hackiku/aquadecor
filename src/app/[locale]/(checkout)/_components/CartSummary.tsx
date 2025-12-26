@@ -123,11 +123,21 @@ export function CartSummary() {
 					<span>Subtotal:</span>
 					<span>€{(subtotal / 100).toFixed(2)}</span>
 				</div>
+
+				{/* Show discount if applied */}
+				{discount > 0 && (
+					<div className="flex items-center justify-between text-green-600">
+						<span>Discount:</span>
+						<span>-€{(discount / 100).toFixed(2)}</span>
+					</div>
+				)}
+
 				<div className="flex justify-between text-xl font-light pt-2 border-t">
 					<span>Total:</span>
 					<span>€{(total / 100).toFixed(2)}</span>
 				</div>
 			</div>
+
 		</div>
 	)
 }

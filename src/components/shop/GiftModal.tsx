@@ -33,7 +33,7 @@ export function GiftModal({ isOpen, onClose, cartTotal }: GiftModalProps) {
 	// Find next gift threshold
 	const nextThreshold = GIFT_THRESHOLDS.find(t => cartTotal < t.amount)
 	const amountNeeded = nextThreshold ? nextThreshold.amount - cartTotal : 0
-	const maxThreshold = GIFT_THRESHOLDS[GIFT_THRESHOLDS.length - 1].amount
+	const maxThreshold = GIFT_THRESHOLDS[GIFT_THRESHOLDS.length - 1]!.amount
 
 	// Calculate progress percentage (0-100)
 	const progressPercent = Math.min(100, (cartTotal / maxThreshold) * 100)
@@ -87,21 +87,21 @@ export function GiftModal({ isOpen, onClose, cartTotal }: GiftModalProps) {
 					{/* Milestone Dots */}
 					<div className="absolute top-1/2 left-0 w-4 h-4 bg-primary z-[30] rounded-full -translate-y-1/2" />
 					<div
-						className={`absolute top-1/2 left-1/4 z-[30] w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[0].amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
+						className={`absolute top-1/2 left-1/4 z-[30] w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[0]!.amount
+							? 'bg-primary'
+							: 'dark:bg-zinc-500 bg-zinc-200'
 							}`}
 					/>
 					<div
-						className={`absolute top-1/2 right-1/2 z-[30] w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[1].amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
+						className={`absolute top-1/2 right-1/2 z-[30] w-4 h-4 rounded-full -translate-y-1/2 ${cartTotal >= GIFT_THRESHOLDS[1]!.amount
+							? 'bg-primary'
+							: 'dark:bg-zinc-500 bg-zinc-200'
 							}`}
 					/>
 					<div
-						className={`absolute top-1/2 w-4 h-4 right-0 -translate-y-1/2 rounded-full z-[30] ${cartTotal >= GIFT_THRESHOLDS[2].amount
-								? 'bg-primary'
-								: 'dark:bg-zinc-500 bg-zinc-200'
+						className={`absolute top-1/2 w-4 h-4 right-0 -translate-y-1/2 rounded-full z-[30] ${cartTotal >= GIFT_THRESHOLDS[2]!.amount
+							? 'bg-primary'
+							: 'dark:bg-zinc-500 bg-zinc-200'
 							}`}
 					/>
 

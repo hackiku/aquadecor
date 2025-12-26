@@ -19,6 +19,8 @@ import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
 import { adminFaqRouter } from "./routers/admin/faq";
+// payments
+import { checkoutRouter } from "./routers/checkout";
 // TEMPORARY: Supabase testing router (delete after migration)
 import { supabaseTestRouter } from "./routers/test/supabase-test";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
@@ -37,6 +39,7 @@ export const appRouter = createTRPCRouter({
 	faq: faqRouter,
 	newsletter: newsletterRouter, // NEW
 	publicCountry: publicCountryRouter,
+	checkout: checkoutRouter,
 	admin: createTRPCRouter({
 		category: adminCategoryRouter,
 		product: adminProductRouter,
