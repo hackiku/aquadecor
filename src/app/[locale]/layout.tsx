@@ -8,17 +8,8 @@ import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
 import { SessionProvider } from "next-auth/react";
 import { CheckoutProvider } from '~/app/_context/CheckoutContext';
-import { ThemeProvider } from '~/components/theme-provider';
-import { Geist } from "next/font/google";
 import { ViewportSize } from '~/components/dev/ViewportSize';
 import { generateHreflang } from '~/i18n/seo/hreflang';
-
-import "~/styles/globals.css";
-
-const geist = Geist({
-	subsets: ["latin"],
-	variable: "--font-geist-sans",
-});
 
 type Props = {
 	children: React.ReactNode;
@@ -26,24 +17,38 @@ type Props = {
 };
 
 // ========================================
-// METADATA - HREFLANG FOR ALL PAGES
+// METADATA GENERATION - HREFLANG FOR ALL PAGES
 // ========================================
+
+/**
+ * Generate hreflang alternates for ALL pages under [locale]
+ * 
+ * Individual pages will MERGE their specific metadata (title, description, images)
+ * with these hreflang alternates automatically via Next.js metadata cascade.
+ * 
+ * This prevents duplicate hreflang code across every page.
+ */
 export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 
-	// Generate hreflang alternates for all pages
-	// Individual pages will merge their specific metadata with these
+	// Generate base hreflang alternates
+	// Individual pages override with their specific path
 	const hreflang = generateHreflang({
 		currentLocale: locale,
-		path: '/', // Base path - pages override with their actual path
+		path: '/', // Base path - pages override this
 	});
 
 	return {
 		...hreflang,
-		// Other metadata from root layout cascades down
-		// Pages can override title/description but keep hreflang
+		// Pages merge their metadata with these alternates:
+		// - title, description, images come from page
+		// - alternates (hreflang + canonical) come from here
 	};
 }
+
+// ========================================
+// LAYOUT COMPONENT
+// ========================================
 
 export default async function LocaleLayout({ children, params }: Props) {
 	const { locale } = await params;
@@ -53,45 +58,27 @@ export default async function LocaleLayout({ children, params }: Props) {
 		notFound();
 	}
 
-	// Enable static rendering
+	// Enable static rendering (next-intl requirement)
 	setRequestLocale(locale);
 
 	// Get messages for this locale
+	// Note: Your messages come from src/messages/{locale}/*.json
+	// and are loaded via src/i18n/request.ts configuration
 	const messages = await getMessages();
 
-	// Map locale to valid HTML lang attribute
-	// 'us' → 'en-US', others stay as-is ('en', 'de', 'nl', 'it')
-	const htmlLang = locale === 'us' ? 'en-US' : locale;
-
 	return (
-		<html
-			lang={htmlLang}
-			className={geist.variable}
-			data-scroll-behavior="smooth"
-			suppressHydrationWarning
-		>
-			<body>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="dark"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<SessionProvider>
-						<TRPCReactProvider>
-							<CheckoutProvider>
-								<NextIntlClientProvider messages={messages}>
-									<ConditionalNav navContent={<NavWithBanner />}>
-										{process.env.NODE_ENV === "development" && <ViewportSize />}
-										{children}
-									</ConditionalNav>
-								</NextIntlClientProvider>
-							</CheckoutProvider>
-						</TRPCReactProvider>
-					</SessionProvider>
-				</ThemeProvider>
-			</body>
-		</html>
+		<SessionProvider>
+			<TRPCReactProvider>
+				<CheckoutProvider>
+					<NextIntlClientProvider messages={messages}>
+						<ConditionalNav navContent={<NavWithBanner />}>
+							{process.env.NODE_ENV === "development" && <ViewportSize />}
+							{children}
+						</ConditionalNav>
+					</NextIntlClientProvider>
+				</CheckoutProvider>
+			</TRPCReactProvider>
+		</SessionProvider>
 	);
 }
 

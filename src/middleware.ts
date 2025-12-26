@@ -13,15 +13,20 @@ const PROTECTED_ROUTES = ['/account'];
 const AUTH_ROUTES = ['/login', '/register'];
 
 export default auth(async (req) => {
-	// Let next-intl handle locale routing first
-	const intlResponse = intlMiddleware(req);
-	if (intlResponse) return intlResponse;
-
 	const { pathname } = req.nextUrl;
 
 	// Extract locale from path (format: /[locale]/path)
 	const localeMatch = pathname.match(/^\/([^/]+)/);
 	const locale = localeMatch?.[1] || 'en';
+
+	// Let next-intl handle locale routing first
+	const intlResponse = intlMiddleware(req);
+
+	// If intlResponse exists, add locale header before returning
+	if (intlResponse && routing.locales.includes(locale as any)) {
+		intlResponse.headers.set('x-locale', locale);
+		return intlResponse;
+	}
 
 	// Remove locale prefix for route matching
 	const pathWithoutLocale = pathname.replace(/^\/[^/]+/, '') || '/';
@@ -48,7 +53,12 @@ export default auth(async (req) => {
 		return NextResponse.redirect(new URL(`/${locale}/account`, req.url));
 	}
 
-	return NextResponse.next();
+	// Create response with locale header for root layout
+	const response = NextResponse.next();
+	if (routing.locales.includes(locale as any)) {
+		response.headers.set('x-locale', locale);
+	}
+	return response;
 });
 
 export const config = {

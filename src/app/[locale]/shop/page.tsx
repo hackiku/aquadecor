@@ -7,28 +7,36 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { ProductCard } from "~/components/shop/product/ProductCard";
 import { WaveDivider } from "~/components/ui/water/wave-divider";
-// import { getLocale } from "~/i18n/utils";
-// import type { Locale } from "~/i18n/routing";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	// Even though page is dynamic, this helps Next.js understand structure
-	// and can pre-render a "default" version at build time
-	return [{}]; // Empty object = generate this route once
+	return [{}];
 }
-
 
 type Props = {
 	params: Promise<{ locale: string }>;
 };
 
-// Generate metadata
+// ========================================
+// METADATA - SIMPLIFIED
+// ========================================
+
+/**
+ * Generate page-specific metadata
+ * 
+ * ✅ SIMPLIFIED: No more inline hreflang generation!
+ * Hreflang is automatically inherited from locale layout.
+ * We just need to provide page-specific title/description.
+ */
 export async function generateMetadata({ params }: Props) {
 	const { locale } = await params;
 	const t = await getTranslations({ locale, namespace: 'shop' });
 
+	// Next.js will MERGE this with locale layout metadata:
+	// - title & description from here
+	// - hreflang & canonical from locale layout
 	return {
 		title: t('metadata.shopHome.title'),
 		description: t('metadata.shopHome.description'),
@@ -39,6 +47,10 @@ export async function generateMetadata({ params }: Props) {
 		},
 	};
 }
+
+// ========================================
+// PAGE COMPONENT
+// ========================================
 
 export default async function ShopPage({ params }: Props) {
 	const { locale } = await params;
