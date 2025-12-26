@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, Calculator, ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import { GiftModal } from "~/components/shop/GiftModal";
 import { cn } from "~/lib/utils";
 
 // Product info needed to add to cart (simple type, not tied to schema)
@@ -23,9 +24,7 @@ interface AddToCartButtonProps {
 	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 	size?: "default" | "sm" | "lg" | "icon";
 	className?: string;
-	disabled?: boolean; // NEW: Support disabled state
-
-	// For variant/option check (used by ProductCard)
+	disabled?: boolean;
 	requiresSelection?: boolean;
 	productUrl?: string;
 }
@@ -40,6 +39,8 @@ export function AddToCartButton({
 	productUrl
 }: AddToCartButtonProps) {
 	const [isLoading, setIsLoading] = useState(false);
+	const [showGiftModal, setShowGiftModal] = useState(false);
+	const [cartTotal, setCartTotal] = useState(0);
 
 	const hasPrice = product.basePriceEurCents !== null;
 	const isQuoteProduct = !hasPrice;
@@ -61,6 +62,11 @@ export function AddToCartButton({
 		)
 	}
 
+	const calculateCartTotal = (items: any[]) => {
+		return items.reduce((sum, item) => {
+			return sum + ((item.price ?? 0) * item.quantity)
+		}, 0)
+	}
 
 	const handleClick = async (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -90,6 +96,11 @@ export function AddToCartButton({
 			localStorage.setItem("cart", JSON.stringify(items));
 			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items } }));
 
+			// Calculate total and show gift modal
+			const total = calculateCartTotal(items);
+			setCartTotal(total);
+			setShowGiftModal(true);
+
 			console.log("Added to cart:", product);
 		}
 
@@ -97,26 +108,35 @@ export function AddToCartButton({
 	};
 
 	return (
-		<Button
-			variant={variant}
-			size={size}
-			className={cn("gap-2 shadow-sm transition-all active:scale-95", className)}
-			onClick={handleClick}
-			disabled={isLoading || disabled}
-		>
-			{isLoading ? (
-				<span className="animate-pulse">Processing...</span>
-			) : isQuoteProduct ? (
-				<>
-					<Calculator className="h-4 w-4" />
-					Request Quote
-				</>
-			) : (
-				<>
-					<ShoppingCart className="h-4 w-4" />
-					Add to Cart
-				</>
-			)}
-		</Button>
+		<>
+			<Button
+				variant={variant}
+				size={size}
+				className={cn("gap-2 shadow-sm transition-all active:scale-95", className)}
+				onClick={handleClick}
+				disabled={isLoading || disabled}
+			>
+				{isLoading ? (
+					<span className="animate-pulse">Processing...</span>
+				) : isQuoteProduct ? (
+					<>
+						<Calculator className="h-4 w-4" />
+						Request Quote
+					</>
+				) : (
+					<>
+						<ShoppingCart className="h-4 w-4" />
+						Add to Cart
+					</>
+				)}
+			</Button>
+
+			{/* Gift Progress Modal */}
+			<GiftModal
+				isOpen={showGiftModal}
+				onClose={() => setShowGiftModal(false)}
+				cartTotal={cartTotal}
+			/>
+		</>
 	);
 }
