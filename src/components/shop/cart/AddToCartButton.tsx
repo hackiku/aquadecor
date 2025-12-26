@@ -79,7 +79,7 @@ export function AddToCartButton({
 			product.selectedOptions
 		)
 
-		// Show gift modal
+		// Show gift modal with product name
 		setShowGiftModal(true)
 
 		setTimeout(() => setIsLoading(false), 500)
@@ -114,6 +114,7 @@ export function AddToCartButton({
 				isOpen={showGiftModal}
 				onClose={() => setShowGiftModal(false)}
 				cartTotal={subtotal}
+				justAdded={product.name} // Pass product name
 			/>
 		</>
 	)

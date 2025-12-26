@@ -173,7 +173,7 @@ export function CheckoutProvider({ children }: { children: ReactNode }) {
 			selectedOptions: options
 		}
 		setCartItems(prev => [...prev, newItem])
-		setIsCartOpen(true) // Auto-open cart on add
+		// setIsCartOpen(true) // Auto-open cart on add
 	}
 
 	const updateQuantity = (itemId: string, newQuantity: number) => {
