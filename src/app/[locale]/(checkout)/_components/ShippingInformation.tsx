@@ -3,7 +3,7 @@
 
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
-import { useCheckout } from '../_context/CheckoutContext'
+import { useCheckout } from '~/app/_context/CheckoutContext'
 
 export function ShippingInformation() {
 	const { cartItems } = useCheckout()

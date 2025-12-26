@@ -1,6 +1,5 @@
 // src/app/[locale]/(checkout)/layout.tsx
 import { SessionProvider } from "next-auth/react";
-import { CheckoutProvider } from './_context/CheckoutContext';
 
 type Props = {
 	children: React.ReactNode;
@@ -12,11 +11,10 @@ export default async function CheckoutLayout({ children, params }: Props) {
 
 	return (
 		<SessionProvider>
-			<CheckoutProvider>
-				<div className="min-h-screen">
-					{children}
-				</div>
-			</CheckoutProvider>
+			<div className="min-h-screen">
+				{children}
+			</div>
+
 		</SessionProvider>
 	);
 }

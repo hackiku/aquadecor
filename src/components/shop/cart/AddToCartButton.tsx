@@ -1,32 +1,32 @@
 // src/components/shop/cart/AddToCartButton.tsx
-"use client";
+"use client"
 
-import { useState } from "react";
-import Link from "next/link";
-import { ShoppingCart, Calculator, ArrowRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { GiftModal } from "~/components/shop/GiftModal";
-import { cn } from "~/lib/utils";
+import { useState } from "react"
+import Link from "next/link"
+import { ShoppingCart, Calculator, ArrowRight } from "lucide-react"
+import { Button } from "~/components/ui/button"
+import { GiftModal } from "~/components/shop/GiftModal"
+import { useCheckout } from "~/app/_context/CheckoutContext"
+import { cn } from "~/lib/utils"
 
-// Product info needed to add to cart (simple type, not tied to schema)
 type ProductForAddToCart = {
-	id: string;
-	slug: string;
-	name: string;
-	sku: string;
-	basePriceEurCents: number | null;
-	quantity?: number;
-	selectedOptions?: any[];
-};
+	id: string
+	slug: string
+	name: string
+	sku: string
+	basePriceEurCents: number | null
+	quantity?: number
+	selectedOptions?: any[]
+}
 
 interface AddToCartButtonProps {
-	product: ProductForAddToCart;
-	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
-	size?: "default" | "sm" | "lg" | "icon";
-	className?: string;
-	disabled?: boolean;
-	requiresSelection?: boolean;
-	productUrl?: string;
+	product: ProductForAddToCart
+	variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+	size?: "default" | "sm" | "lg" | "icon"
+	className?: string
+	disabled?: boolean
+	requiresSelection?: boolean
+	productUrl?: string
 }
 
 export function AddToCartButton({
@@ -38,15 +38,14 @@ export function AddToCartButton({
 	requiresSelection = false,
 	productUrl
 }: AddToCartButtonProps) {
-	const [isLoading, setIsLoading] = useState(false);
-	const [showGiftModal, setShowGiftModal] = useState(false);
-	const [cartTotal, setCartTotal] = useState(0);
+	const [isLoading, setIsLoading] = useState(false)
+	const [showGiftModal, setShowGiftModal] = useState(false)
+	const { addToCart, subtotal } = useCheckout()
 
-	const hasPrice = product.basePriceEurCents !== null;
-	const isQuoteProduct = !hasPrice;
+	const hasPrice = product.basePriceEurCents !== null
+	const isQuoteProduct = !hasPrice
 
-	// If product requires selection (variants/addons) or is a quote product,
-	// the button becomes a navigation button.
+	// If product requires selection or is quote product, show navigation button
 	if (requiresSelection && productUrl) {
 		return (
 			<Button asChild
@@ -62,50 +61,29 @@ export function AddToCartButton({
 		)
 	}
 
-	const calculateCartTotal = (items: any[]) => {
-		return items.reduce((sum, item) => {
-			return sum + ((item.price ?? 0) * item.quantity)
-		}, 0)
-	}
-
 	const handleClick = async (e: React.MouseEvent) => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		setIsLoading(true);
+		e.preventDefault()
+		e.stopPropagation()
 
 		if (isQuoteProduct) {
-			console.log("Redirecting to calculator/quote page for:", product.id);
-		} else {
-			// --- ADD TO CART LOGIC ---
-			const cart = localStorage.getItem("cart");
-			const items = cart ? JSON.parse(cart) : [];
-			const quantity = product.quantity || 1;
-
-			items.push({
-				id: crypto.randomUUID(),
-				productId: product.id,
-				name: product.name,
-				sku: product.sku,
-				price: product.basePriceEurCents,
-				quantity: quantity,
-				selectedOptions: product.selectedOptions,
-				addedAt: new Date().toISOString(),
-			});
-
-			localStorage.setItem("cart", JSON.stringify(items));
-			window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items } }));
-
-			// Calculate total and show gift modal
-			const total = calculateCartTotal(items);
-			setCartTotal(total);
-			setShowGiftModal(true);
-
-			console.log("Added to cart:", product);
+			console.log("Redirecting to calculator/quote page for:", product.id)
+			return
 		}
 
-		setTimeout(() => setIsLoading(false), 500);
-	};
+		setIsLoading(true)
+
+		// Add to cart via context
+		addToCart(
+			product.id,
+			product.quantity || 1,
+			product.selectedOptions
+		)
+
+		// Show gift modal
+		setShowGiftModal(true)
+
+		setTimeout(() => setIsLoading(false), 500)
+	}
 
 	return (
 		<>
@@ -117,7 +95,7 @@ export function AddToCartButton({
 				disabled={isLoading || disabled}
 			>
 				{isLoading ? (
-					<span className="animate-pulse">Processing...</span>
+					<span className="animate-pulse">Adding...</span>
 				) : isQuoteProduct ? (
 					<>
 						<Calculator className="h-4 w-4" />
@@ -135,8 +113,8 @@ export function AddToCartButton({
 			<GiftModal
 				isOpen={showGiftModal}
 				onClose={() => setShowGiftModal(false)}
-				cartTotal={cartTotal}
+				cartTotal={subtotal}
 			/>
 		</>
-	);
+	)
 }

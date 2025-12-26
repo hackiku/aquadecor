@@ -1,182 +1,99 @@
 // src/components/shop/cart/CartDrawer.tsx
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { X, ShoppingCart, ArrowRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { CartItem } from "./CartItem";
-import { CartSummary } from "./CartSummary";
-import { SignupIncentive } from "~/components/cta/SignupIncentive";
-import { api } from "~/trpc/react";
-import type { Product } from "~/server/db/schema/shop";
+import { useEffect } from "react"
+import { X, ShoppingCart, ArrowRight, Trash2 } from "lucide-react"
+import { Button } from "~/components/ui/button"
+import { CartItem } from "./CartItem"
+import { CartSummary } from "./CartSummary"
+import { SignupIncentive } from "~/components/cta/SignupIncentive"
+import { useCheckout } from "~/app/_context/CheckoutContext"
+import { api } from "~/trpc/react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
-// ============================================================================
-// CLIENT-ONLY TYPES (localStorage cart state)
-// ============================================================================
+export function CartDrawer() {
+	const router = useRouter()
+	const [showSignup, setShowSignup] = useState(false)
+	const { 
+		cartItems, 
+		updateQuantity, 
+		removeItem, 
+		clearCart,
+		subtotal,
+		isCartOpen,
+		closeCart
+	} = useCheckout()
 
-// Raw cart item stored in localStorage
-interface CartItemData {
-	id: string;           // Unique cart item ID (generated client-side)
-	productId: string;    // Reference to Product.id
-	quantity: number;
-	addedAt: Date;
-}
-
-// Product data from tRPC getByIds endpoint
-type ProductForCart = Pick<Product, 'id' | 'slug' | 'stockStatus'> & { // Removed 'sku', 'basePriceEurCents', 'priceNote'
-
-	// Explicitly define the missing fields:
-	sku: string; // Enforced non-null for Drizzle integrity
-	basePriceEurCents: number | null; // Mapped from unitPriceEurCents
-	priceNote: string | null;
-
-	// Remaining required fields from the tRPC join
-	categoryId: string;
-	name: string | null;
-	shortDescription: string | null;
-	heroImageUrl: string | null;
-	categorySlug: string | null;
-	productLineSlug: string | null;
-};
-
-
-// Enriched cart item (after fetching product data)
-interface EnrichedCartItem extends CartItemData {
-	product: ProductForCart;
-}
-
-// ============================================================================
-// COMPONENT
-// ============================================================================
-
-interface CartDrawerProps {
-	isOpen: boolean;
-	onClose: () => void;
-}
-
-export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-	const [cartItems, setCartItems] = useState<CartItemData[]>([]);
-	const [showSignup, setShowSignup] = useState(false);
-
-	// Load cart from localStorage on mount
 	useEffect(() => {
-		const loadCart = () => {
-			const cart = localStorage.getItem("cart");
-			if (cart) {
-				try {
-					const parsed = JSON.parse(cart);
-					// Convert date strings back to Date objects
-					const items = parsed.map((item: any) => ({
-						...item,
-						addedAt: new Date(item.addedAt),
-					}));
-					setCartItems(items);
-				} catch (error) {
-					console.error("Failed to parse cart:", error);
-					localStorage.removeItem("cart");
-				}
-			}
-		};
-
-		if (isOpen) {
-			loadCart();
+		if (isCartOpen) {
+			document.body.style.overflow = 'hidden'
+		} else {
+			document.body.style.overflow = 'unset'
 		}
-	}, [isOpen]);
 
-	// Listen for cart updates from other components
-	useEffect(() => {
-		const handleCartUpdate = (e: CustomEvent<{ items: CartItemData[] }>) => {
-			setCartItems(e.detail.items);
-		};
+		// Cleanup on unmount
+		return () => {
+			document.body.style.overflow = 'unset'
+		}
+	}, [isCartOpen])
 
-		window.addEventListener("cart-updated", handleCartUpdate as EventListener);
-		return () => window.removeEventListener("cart-updated", handleCartUpdate as EventListener);
-	}, []);
-
-	// Fetch product details for all cart items
-	const productIds = cartItems.map(item => item.productId);
+	
+	// Fetch product details
+	const productIds = cartItems.map(item => item.productId)
 	const { data: products, isLoading } = api.product.getByIds.useQuery(
 		{ ids: productIds, locale: "en" },
-		{ enabled: productIds.length > 0 && isOpen }
-	);
+		{ enabled: productIds.length > 0 && isCartOpen }
+	)
 
-	// Merge cart items with product data
-	const enrichedItems: EnrichedCartItem[] = cartItems
+	// Enrich cart items with product data
+	const enrichedItems = cartItems
 		.map(cartItem => {
-			const product = products?.find(p => p.id === cartItem.productId);
-			if (!product) return null;
-
-			// *** FIX: Explicitly map the properties from the API result to the required ProductForCart type ***
-			const productForCart: ProductForCart = {
-				// Core fields from the API result
-				id: product.id,
-				slug: product.slug,
-				sku: product.sku, // Assuming you've fixed tRPC to make this non-null (string)
-				stockStatus: product.stockStatus,
-
-				// Fields from translations/joins
-				categoryId: product.categoryId,
-				name: product.name,
-				shortDescription: product.shortDescription,
-				heroImageUrl: product.heroImageUrl,
-				categorySlug: product.categorySlug,
-				productLineSlug: product.productLineSlug,
-
-				// Mapped pricing fields (The actual fix)
-				basePriceEurCents: product.unitPriceEurCents ?? null, // <<< MAPPING unitPriceEurCents >>>
-				priceNote: null, // <<< SETTING missing field to null/default >>>
-			};
-
+			const product = products?.find(p => p.id === cartItem.productId)
+			if (!product) return null
+			
 			return {
 				...cartItem,
-				product: productForCart // Now it's the correct type, no cast needed
-			};
+				product: {
+					id: product.id,
+					slug: product.slug,
+					sku: product.sku,
+					stockStatus: product.stockStatus,
+					categoryId: product.categoryId,
+					name: product.name,
+					shortDescription: product.shortDescription,
+					heroImageUrl: product.heroImageUrl,
+					categorySlug: product.categorySlug,
+					productLineSlug: product.productLineSlug,
+					basePriceEurCents: product.unitPriceEurCents ?? null,
+					priceNote: null,
+				}
+			}
 		})
-		.filter((item): item is EnrichedCartItem => item !== null);
+		.filter((item): item is NonNullable<typeof item> => item !== null)
 
-	// Cart actions
-	const updateQuantity = (itemId: string, newQuantity: number) => {
-		const updatedItems = cartItems
-			.map(item => (item.id === itemId ? { ...item, quantity: newQuantity } : item))
-			.filter(item => item.quantity > 0);
+	const isEmpty = cartItems.length === 0
 
-		setCartItems(updatedItems);
-		localStorage.setItem("cart", JSON.stringify(updatedItems));
-		window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: updatedItems } }));
-	};
-
-	const removeItem = (itemId: string) => {
-		updateQuantity(itemId, 0);
-	};
-
-	const clearCart = () => {
-		setCartItems([]);
-		localStorage.removeItem("cart");
-		window.dispatchEvent(new CustomEvent("cart-updated", { detail: { items: [] } }));
-	};
-
-	// Calculate totals (prices in cents)
-	const subtotal = enrichedItems.reduce(
-		(sum, item) => sum + ((item.product.basePriceEurCents ?? 0) * item.quantity),
-		0
-	);
-
-	const isEmpty = cartItems.length === 0;
+	const handleCheckout = () => {
+		closeCart()
+		router.push('/checkout')
+	}
 
 	return (
 		<>
 			{/* Backdrop */}
-			{isOpen && (
+			{isCartOpen && (
 				<div
-					className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
-					onClick={onClose}
+					className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity overflow-clip"
+					onClick={closeCart}
 				/>
 			)}
 
 			{/* Drawer */}
 			<div
-				className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-background border-l shadow-2xl z-50 transition-transform duration-300 flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
-					}`}
+				className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-background border-l shadow-2xl z-50 transition-transform duration-300 flex flex-col ${
+					isCartOpen ? "translate-x-0" : "translate-x-full"
+				}`}
 			>
 				{/* Header */}
 				<div className="flex items-center justify-between p-6 border-b">
@@ -186,9 +103,21 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 							Cart ({cartItems.length})
 						</h2>
 					</div>
-					<Button variant="ghost" size="icon" onClick={onClose}>
-						<X className="h-5 w-5" />
-					</Button>
+					<div className="flex items-center gap-2">
+						{!isEmpty && (
+							<Button 
+								variant="ghost" 
+								size="icon"
+								onClick={clearCart}
+								title="Clear cart"
+							>
+								<Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive" />
+							</Button>
+						)}
+						<Button variant="ghost" size="icon" onClick={closeCart}>
+							<X className="h-5 w-5" />
+						</Button>
+					</div>
 				</div>
 
 				{/* Items */}
@@ -208,7 +137,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 									Add some aquarium magic
 								</p>
 							</div>
-							<Button onClick={onClose} variant="outline" className="rounded-full">
+							<Button onClick={closeCart} variant="outline" className="rounded-full">
 								Browse Products
 							</Button>
 						</div>
@@ -261,9 +190,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 						<Button
 							className="w-full rounded-full gap-2"
 							size="lg"
-							onClick={() => {
-								console.log("Proceed to checkout");
-							}}
+							onClick={handleCheckout}
 						>
 							Checkout
 							<ArrowRight className="h-4 w-4" />
@@ -276,5 +203,5 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 				)}
 			</div>
 		</>
-	);
+	)
 }

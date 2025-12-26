@@ -1,14 +1,14 @@
-// src/app/[locale]/(checkout)/_components/CartSummary.tsx
+// Update src/app/[locale]/(checkout)/_components/CartSummary.tsx
 'use client'
 
 import Image from 'next/image'
-import { X, Package, Gift, PlusCircle } from 'lucide-react'
+import { X, Package, Gift, PlusCircle, Trash2 } from 'lucide-react'
 import { Button } from '~/components/ui/button'
-import { useCheckout } from '../_context/CheckoutContext'
+import { useCheckout } from '~/app/_context/CheckoutContext'
 import { api } from '~/trpc/react'
 
 export function CartSummary() {
-	const { cartItems, removeItem, subtotal, total } = useCheckout()
+	const { cartItems, removeItem, clearCart, subtotal, discount, total } = useCheckout()
 
 	// Fetch product details
 	const productIds = cartItems.map(item => item.productId)
@@ -18,18 +18,29 @@ export function CartSummary() {
 	)
 
 	// Check if qualifies for gift (over €1000)
-	const qualifiesForGift = subtotal >= 100000 // 1000 EUR in cents
+	const qualifiesForGift = subtotal >= 100000
 
 	return (
 		<div className="border rounded-3xl h-max">
 			{/* Header */}
-			<div className="p-6 border-b">
+			<div className="p-6 border-b flex items-center justify-between">
 				<h3 className="font-display font-light text-lg flex gap-x-2 items-center">
 					Cart Summary
 					<span className="font-display text-sm text-muted-foreground">
 						({cartItems.length})
 					</span>
 				</h3>
+				{cartItems.length > 0 && (
+					<Button
+						variant="ghost"
+						size="sm"
+						onClick={clearCart}
+						className="text-muted-foreground hover:text-destructive"
+					>
+						<Trash2 className="w-4 h-4 mr-2" />
+						Clear
+					</Button>
+				)}
 			</div>
 
 			{/* Items List */}
@@ -77,7 +88,7 @@ export function CartSummary() {
 										</Button>
 									</div>
 
-									{/* Options/Variants - if any */}
+									{/* Options/Variants */}
 									<ul className="flex flex-col text-xs mt-2 space-y-1">
 										<li className="text-muted-foreground">
 											<span>Quantity: </span>
@@ -124,7 +135,6 @@ export function CartSummary() {
 					<span>€{(subtotal / 100).toFixed(2)}</span>
 				</div>
 
-				{/* Show discount if applied */}
 				{discount > 0 && (
 					<div className="flex items-center justify-between text-green-600">
 						<span>Discount:</span>
@@ -137,7 +147,6 @@ export function CartSummary() {
 					<span>€{(total / 100).toFixed(2)}</span>
 				</div>
 			</div>
-
 		</div>
 	)
 }

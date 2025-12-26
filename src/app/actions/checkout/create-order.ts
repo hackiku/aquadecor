@@ -5,6 +5,7 @@ import { db } from '~/server/db'
 import { orders, orderItems } from '~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { products, productPricing } from '~/server/db/schema/shop'
+import { validateDiscountCode } from '~/lib/discount-validation'
 import { z } from 'zod'
 
 // ============================================================================

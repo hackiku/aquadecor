@@ -22,28 +22,10 @@ export function Nav() {
 	const router = useRouter();
 	const { translateNavLink } = useNavigationTranslations();
 
-	const [cartOpen, setCartOpen] = useState(false);
 	const [wishlistOpen, setWishlistOpen] = useState(false);
-	const [cartCount, setCartCount] = useState(0);
 	const [wishlistCount, setWishlistCount] = useState(0);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-	// Listen for cart updates
-	useEffect(() => {
-		const updateCartCount = () => {
-			const cart = localStorage.getItem("cart");
-			if (cart) {
-				const items = JSON.parse(cart);
-				setCartCount(items.length);
-			} else {
-				setCartCount(0);
-			}
-		};
-
-		updateCartCount();
-		window.addEventListener("cart-updated", updateCartCount);
-		return () => window.removeEventListener("cart-updated", updateCartCount);
-	}, []);
 
 	// Listen for wishlist updates
 	useEffect(() => {
@@ -113,9 +95,7 @@ export function Nav() {
 							<LanguageSwitcher />
 							<ModeToggle />
 							<NavButtons
-								cartCount={cartCount}
 								wishlistCount={wishlistCount}
-								onCartClick={() => setCartOpen(true)}
 								onWishlistClick={() => setWishlistOpen(true)}
 							/>
 						</div>
@@ -124,9 +104,7 @@ export function Nav() {
 						<div className="flex md:hidden items-center space-x-2">
 							<LanguageSwitcher />
 							<NavButtons
-								cartCount={cartCount}
 								wishlistCount={wishlistCount}
-								onCartClick={() => setCartOpen(true)}
 								onWishlistClick={() => setWishlistOpen(true)}
 								showSearch={false}
 								showAccount={false}
@@ -153,7 +131,7 @@ export function Nav() {
 			/>
 
 			{/* Drawers */}
-			<CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+			<CartDrawer />
 			<WishlistDrawer isOpen={wishlistOpen} onClose={() => setWishlistOpen(false)} />
 		</>
 	);

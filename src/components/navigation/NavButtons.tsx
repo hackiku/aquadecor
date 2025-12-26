@@ -1,29 +1,28 @@
 // src/components/navigation/NavButtons.tsx
-"use client";
+"use client"
 
-import { Link } from '~/i18n/navigation';
-import { Search, User, Heart, ShoppingCart } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Link } from '~/i18n/navigation'
+import { useCheckout } from "~/app/_context/CheckoutContext"
+import { Search, User, Heart, ShoppingCart } from "lucide-react"
+import { useSession } from "next-auth/react"
 
 interface NavButtonsProps {
-	cartCount: number;
-	wishlistCount: number;
-	onCartClick: () => void;
-	onWishlistClick: () => void;
-	showSearch?: boolean;
-	showAccount?: boolean;
+	wishlistCount: number
+	onWishlistClick: () => void
+	showSearch?: boolean
+	showAccount?: boolean
 }
 
 export function NavButtons({
-	cartCount,
 	wishlistCount,
-	onCartClick,
 	onWishlistClick,
 	showSearch = true,
 	showAccount = true,
 }: NavButtonsProps) {
-	const { status } = useSession();
-	const isLoggedIn = status === "authenticated";
+	const { status } = useSession()
+	const { cartItems, openCart } = useCheckout()
+	const isLoggedIn = status === "authenticated"
+	const cartCount = cartItems.length
 
 	return (
 		<>
@@ -63,7 +62,7 @@ export function NavButtons({
 			</button>
 
 			<button
-				onClick={onCartClick}
+				onClick={openCart}
 				className="relative flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 transition-colors text-white"
 				aria-label="Shopping cart"
 			>
@@ -75,5 +74,5 @@ export function NavButtons({
 				)}
 			</button>
 		</>
-	);
+	)
 }

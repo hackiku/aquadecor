@@ -7,6 +7,7 @@ import { TRPCReactProvider } from '~/trpc/react';
 import { ConditionalNav } from '~/components/navigation/ConditionalNav';
 import { NavWithBanner } from '~/components/navigation/NavWithBanner';
 import { SessionProvider } from "next-auth/react";
+import { CheckoutProvider } from '~/app/_context/CheckoutContext'
 
 import { ViewportSize } from '~/components/dev/ViewportSize';
 
@@ -32,14 +33,14 @@ export default async function LocaleLayout({ children, params }: Props) {
 	return (
 		<SessionProvider>
 			<TRPCReactProvider>
-				<NextIntlClientProvider messages={messages}>
-					<ConditionalNav navContent={<NavWithBanner />}>
-
-						{process.env.NODE_ENV === "development" && <ViewportSize />}
-						{children}
-					
-					</ConditionalNav>
-				</NextIntlClientProvider>
+				<CheckoutProvider>
+					<NextIntlClientProvider messages={messages}>
+						<ConditionalNav navContent={<NavWithBanner />}>
+							{process.env.NODE_ENV === "development" && <ViewportSize />}
+							{children}
+						</ConditionalNav>
+					</NextIntlClientProvider>
+				</CheckoutProvider>
 			</TRPCReactProvider>
 		</SessionProvider>
 	);

@@ -6,7 +6,7 @@ import { Tag, X } from 'lucide-react'
 import { Input } from '~/components/ui/input'
 import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
-import { useCheckout } from '../_context/CheckoutContext'
+import { useCheckout } from '~/app/_context/CheckoutContext'
 
 export function EnterDiscountCode() {
 	const [code, setCode] = useState('')

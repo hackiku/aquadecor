@@ -5,8 +5,8 @@ import { CartSummary } from '../_components/CartSummary'
 import { EnterDiscountCode } from '../_components/EnterDiscountCode'
 import { ShippingInformation } from '../_components/ShippingInformation'
 import { CheckoutButtons } from '../_components/CheckoutButtons'
-import { StripeProvider } from '../_context/StripeProvider'
-import { useCheckout } from '../_context/CheckoutContext'
+import { StripeProvider } from '~/app/_context/StripeProvider'
+import { useCheckout } from '~/app/_context/CheckoutContext'
 
 export function CheckoutPageClient() {
 	const { total } = useCheckout()
