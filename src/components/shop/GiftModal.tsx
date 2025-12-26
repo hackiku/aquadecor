@@ -1,4 +1,3 @@
-// @ts-nocheck
 // src/components/shop/GiftModal.tsx
 'use client'
 
@@ -36,18 +35,23 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 	const [progress, setProgress] = useState(0)
 
 	// Find next gift threshold
-	const nextThreshold = GIFT_THRESHOLDS.find(threshold => cartTotal < threshold.amount)
-	// Find current (last unlocked) threshold
-	const currentThreshold = GIFT_THRESHOLDS.findLast(threshold => cartTotal >= threshold.amount)
+	const nextThreshold = GIFT_THRESHOLDS.find((threshold) => cartTotal < threshold.amount)
+
+	// FIX: Use filter + index instead of findLast for better compatibility
+	const unlockedThresholds = GIFT_THRESHOLDS.filter((threshold) => cartTotal >= threshold.amount)
+	const currentThreshold = unlockedThresholds[unlockedThresholds.length - 1]
 
 	const amountNeeded = nextThreshold ? nextThreshold.amount - cartTotal : 0
-	const maxThreshold = GIFT_THRESHOLDS[GIFT_THRESHOLDS.length - 1]!.amount
+	// Use type-safe access for the max amount
+	const maxThreshold = GIFT_THRESHOLDS[GIFT_THRESHOLDS.length - 1]?.amount ?? 100000
 
 	// Calculate progress percentage (0-100)
 	const progressPercent = Math.min(100, (cartTotal / maxThreshold) * 100)
 
 	// Has user unlocked the first gift?
-	const hasUnlockedGift = cartTotal >= GIFT_THRESHOLDS[0]!.amount
+	// Use safe access with fallback
+	const firstThresholdAmount = GIFT_THRESHOLDS[0]?.amount ?? 25000
+	const hasUnlockedGift = cartTotal >= firstThresholdAmount
 
 	useEffect(() => {
 		if (isOpen) {
@@ -112,7 +116,7 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 					<div className="absolute top-7 left-0 w-4 h-4 bg-primary z-30 rounded-full -translate-y-1/2" />
 
 					{/* Render dots dynamically based on thresholds */}
-					{GIFT_THRESHOLDS.map((threshold, index) => {
+					{GIFT_THRESHOLDS.map((threshold) => {
 						// Calculate left position (25%, 50%, 75%, or dynamic based on max)
 						const leftPos = (threshold.amount / maxThreshold) * 100
 
@@ -120,8 +124,8 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 							<div
 								key={threshold.amount}
 								className={`absolute top-7 w-4 h-4 rounded-full -translate-y-1/2 z-30 transition-colors duration-500 ${cartTotal >= threshold.amount
-										? 'bg-primary'
-										: 'dark:bg-zinc-500 bg-zinc-200'
+									? 'bg-primary'
+									: 'dark:bg-zinc-500 bg-zinc-200'
 									}`}
 								style={{ left: `${leftPos}%`, transform: 'translate(-50%, -50%)' }}
 							/>
@@ -129,22 +133,10 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 					})}
 				</div>
 
-				{/* Current Gift Info (Last unlocked) */}
-				{/* {currentThreshold && (
-					<div className="text-center mb-6">
-						<div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-full">
-							<Gift className="h-4 w-4 text-green-600 dark:text-green-400" />
-							<span className="text-sm font-display font-medium text-green-700 dark:text-green-300">
-								{t('modal.unlockedBadge', {
-									gift: t(`tiers.${currentThreshold.giftKey}`)
-								})}
-							</span>
-						</div>
-					</div>
-				)} */}
+				{/* FAKE INFO - hidden, dont show gift name */}
 
 				{/* Next Gift Info (If not all unlocked) */}
-				{nextThreshold && !hasUnlockedGift && (
+				{/* {nextThreshold && !hasUnlockedGift && (
 					<div className="text-center mb-6">
 						<div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
 							<Gift className="h-4 w-4 text-primary" />
@@ -155,7 +147,7 @@ export function GiftModal({ isOpen, onClose, cartTotal, justAdded }: GiftModalPr
 							</span>
 						</div>
 					</div>
-				)}
+				)} */}
 
 				{/* Action Buttons */}
 				<div className="flex flex-col gap-3">
