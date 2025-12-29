@@ -1,7 +1,7 @@
 // src/app/[locale]/shop/[productLine]/[categorySlug]/page.tsx
 
-import { notFound } from "next/navigation";
-import { ArrowRight, Package, AlertCircle } from "lucide-react";
+// import { notFound } from "next/navigation";
+import { Package, AlertCircle } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";

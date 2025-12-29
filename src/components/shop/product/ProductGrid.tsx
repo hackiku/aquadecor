@@ -63,8 +63,8 @@ export function ProductGrid({
 		<div className="space-y-6">
 			{/* Grid Controls - Floating Top Right */}
 			{showControls && (
-				<div className="hidden md:flex justify-end mb-2 relative z-10 pointer-events-none">
-					<div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm border rounded-lg p-1 pointer-events-auto shadow-sm">
+				<div className="hidden md:flex justify-end mb-2 relative z-10">
+					<div className="flex items-center gap-1 bg-background/80 backdrop-blur-sm border rounded-lg p-1 shadow-sm">
 						<Button
 							variant="ghost"
 							size="icon"

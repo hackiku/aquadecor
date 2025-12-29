@@ -1,6 +1,5 @@
 // src/app/[locale]/shop/3d-backgrounds/page.tsx
 
-import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Package, AlertCircle } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -10,16 +9,14 @@ import { WaveDivider } from "~/components/ui/water/wave-divider";
 import { WaveContainer } from "~/components/ui/water/wave-container";
 import { Button } from "~/components/ui/button";
 import { generateSEOMetadata } from "~/i18n/seo/hreflang";
+import { Link } from '~/i18n/navigation'; // ✅ i18n-aware Link
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-	// Even though page is dynamic, this helps Next.js understand structure
-	// and can pre-render a "default" version at build time
-	return [{}]; // Empty object = generate this route once
+	return [{}];
 }
-
 
 type Props = {
 	params: Promise<{ locale: string }>;
@@ -31,13 +28,13 @@ export async function generateMetadata({ params }: Props) {
 
 	return generateSEOMetadata({
 		currentLocale: locale,
-		path: '/shop/3d-backgrounds', // Canonical path (no locale)
+		path: '/shop/3d-backgrounds',
 		title: t('metadata.backgrounds.title'),
 		description: t('metadata.backgrounds.description'),
-		image: '/media/images/3d-backgrounds_500px.webp', // Automatically adds to OpenGraph & Twitter
+		image: '/media/images/3d-backgrounds_500px.webp',
 		type: 'website',
 	});
-};
+}
 
 export default async function BackgroundsPage({ params }: Props) {
 	const { locale } = await params;
@@ -46,7 +43,6 @@ export default async function BackgroundsPage({ params }: Props) {
 	const t = await getTranslations('shop');
 	const dbLocale = locale === 'us' ? 'en' : locale;
 
-	// Load categories
 	let categories: Awaited<ReturnType<typeof api.product.getCategoriesForProductLine>> = [];
 	let error = false;
 
@@ -73,7 +69,7 @@ export default async function BackgroundsPage({ params }: Props) {
 							className="object-cover"
 							priority
 						/>
-						<div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-black/30" />
+						<div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/30" />
 
 						<div className="absolute inset-0 flex items-end">
 							<div className="px-4 pb-16 md:pb-20 max-w-7xl mx-auto w-full">
@@ -91,13 +87,15 @@ export default async function BackgroundsPage({ params }: Props) {
 										{t('hero.backgrounds.subtitle')}
 									</p>
 									<div className="flex flex-wrap gap-3">
-										<Link
+										{/* ✅ Anchor link - stays as regular 'a' */}
+										<a
 											href="#categories"
 											className="inline-flex text-white items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 rounded-full font-display font-medium transition-all hover:scale-105"
 										>
 											{t('hero.backgrounds.ctaPrimary')}
 											<ArrowRight className="h-4 w-4" />
-										</Link>
+										</a>
+										{/* ✅ i18n Link - auto handles locale */}
 										<Link
 											href="/shop/aquarium-decorations"
 											className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white rounded-full font-display font-medium transition-colors border border-white/20"
@@ -112,7 +110,7 @@ export default async function BackgroundsPage({ params }: Props) {
 				</section>
 
 				{/* Categories Section */}
-				<section id="categories" className="relative md:pt-6 pb-24 bg-linear-to-b from-muted/30 to-background">
+				<section id="categories" className="relative md:pt-6 pb-24 bg-gradient-to-b from-muted/30 to-background">
 					<WaveDivider position="top" color="black" />
 					<div className="px-4 max-w-7xl mx-auto">
 						{error ? (
@@ -145,7 +143,7 @@ export default async function BackgroundsPage({ params }: Props) {
 
 
 
-				<WaveContainer className="relative -mt-16">
+				<WaveContainer className="relative mt-16">
 					<div className="max-w-7xl mx-auto px-4 pb-24">
 						<div className="text-center space-y-8 mb-12">
 							<div className="max-w-2xl mx-auto space-y-4">
@@ -159,6 +157,7 @@ export default async function BackgroundsPage({ params }: Props) {
 								size="lg"
 								className="bg-white hover:bg-white/90 text-cyan-900 rounded-full font-display font-medium text-base px-8 py-6"
 							>
+								{/* ✅ i18n Link - auto handles locale */}
 								<Link href="/shop/aquarium-decorations" className="inline-flex items-center gap-2">
 									{t('ctas.exploreDecorations')}
 									<ArrowRight className="h-4 w-4" />
@@ -166,21 +165,6 @@ export default async function BackgroundsPage({ params }: Props) {
 							</Button>
 						</div>
 
-						{/* Trust signals */}
-						{/* <div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
-							<div className="flex items-center gap-2">
-								<span className="text-cyan-300 text-lg">✓</span>
-								<span>{t('trustSignals.freeShipping')}</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-cyan-300 text-lg">✓</span>
-								<span>{t('trustSignals.inStock')}</span>
-							</div>
-							<div className="flex items-center gap-2">
-								<span className="text-cyan-300 text-lg">✓</span>
-								<span>{t('trustSignals.lifetimeWarranty')}</span>
-							</div>
-						</div> */}
 					</div>
 				</WaveContainer>
 			</main>

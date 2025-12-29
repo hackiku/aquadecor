@@ -3,7 +3,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ShoppingCart, Calculator, ArrowRight } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { ShoppingCart, Calculator, ArrowRight, Loader2, Check } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import { GiftModal } from "~/components/shop/GiftModal"
 import { useCheckout } from "~/app/_context/CheckoutContext"
@@ -38,24 +39,31 @@ export function AddToCartButton({
 	requiresSelection = false,
 	productUrl
 }: AddToCartButtonProps) {
+
+	const t = useTranslations('shop.productCard')
+
 	const [isLoading, setIsLoading] = useState(false)
 	const [showGiftModal, setShowGiftModal] = useState(false)
-	const { addToCart, subtotal } = useCheckout()
+	const { cartItems, addToCart, removeItem, subtotal } = useCheckout()
 
 	const hasPrice = product.basePriceEurCents !== null
 	const isQuoteProduct = !hasPrice
 
-	// If product requires selection or is quote product, show navigation button
+	// Check if product is already in cart
+	const cartItem = cartItems.find(item => item.productId === product.id)
+	const isInCart = !!cartItem
+
+	// If product requires selection or is quote product, link to product page
 	if (requiresSelection && productUrl) {
 		return (
 			<Button asChild
-				variant={isQuoteProduct ? "secondary" : "default"}
+				variant="default"
 				size={size}
-				className={cn("gap-2 shadow-sm transition-all", className)}
+				className={cn("gap-2 shadow-sm transition-all cursor-pointer hover:scale-105 hover:bg-foreground hover:text-background", className)}
 			>
 				<Link href={productUrl}>
-					{isQuoteProduct ? <Calculator className="h-4 w-4" /> : <ArrowRight className="h-4 w-4" />}
-					{isQuoteProduct ? "View & Quote" : "View Product"}
+					<ArrowRight className="h-4 w-4" />
+					{t('customize')}
 				</Link>
 			</Button>
 		)
@@ -65,22 +73,27 @@ export function AddToCartButton({
 		e.preventDefault()
 		e.stopPropagation()
 
-		if (isQuoteProduct) {
-			console.log("Redirecting to calculator/quote page for:", product.id)
+		if (isQuoteProduct && productUrl) {
+			window.location.href = productUrl
 			return
 		}
 
 		setIsLoading(true)
 
-		// Add to cart via context
-		addToCart(
-			product.id,
-			product.quantity || 1,
-			product.selectedOptions
-		)
+		// If already in cart, remove it. Otherwise add it.
+		if (isInCart && cartItem) {
+			removeItem(cartItem.id)
+		} else {
+			// Add to cart via context
+			addToCart(
+				product.id,
+				product.quantity || 1,
+				product.selectedOptions
+			)
 
-		// Show gift modal with product name
-		setShowGiftModal(true)
+			// Show gift modal with product name
+			setShowGiftModal(true)
+		}
 
 		setTimeout(() => setIsLoading(false), 500)
 	}
@@ -88,23 +101,37 @@ export function AddToCartButton({
 	return (
 		<>
 			<Button
-				variant={variant}
+				variant={isInCart ? "secondary" : variant}
 				size={size}
-				className={cn("gap-2 shadow-sm transition-all active:scale-95", className)}
+				className={cn(
+					"gap-2 shadow-sm transition-all cursor-pointer hover:scale-105 active:scale-95",
+					isInCart
+						? "bg-muted/50 text-foreground hover:bg-muted hover:text-foreground"
+						: "text-white hover:bg-foreground hover:text-background",
+					className
+				)}
 				onClick={handleClick}
 				disabled={isLoading || disabled}
 			>
 				{isLoading ? (
-					<span className="animate-pulse">Adding...</span>
+					<>
+						<Loader2 className="h-4 w-4 animate-spin" />
+						{isInCart ? t('addToCart') : t('addToCart')}
+					</>
 				) : isQuoteProduct ? (
 					<>
-						<Calculator className="h-4 w-4" />
-						Request Quote
+						<ArrowRight className="h-4 w-4" />
+						{t('customize')}
+					</>
+				) : isInCart ? (
+					<>
+						<Check className="h-4 w-4" />
+						{t('addToCart')}
 					</>
 				) : (
 					<>
 						<ShoppingCart className="h-4 w-4" />
-						Add to Cart
+						{t('addToCart')}
 					</>
 				)}
 			</Button>
