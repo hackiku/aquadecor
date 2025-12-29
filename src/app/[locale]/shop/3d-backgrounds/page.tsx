@@ -143,21 +143,15 @@ export default async function BackgroundsPage({ params }: Props) {
 					</div>
 				</section>
 
-				{/* Mix & Match CTA */}
-				<div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
-					<WaveDivider position="bottom" color="black" />
-				</div>
 
-				<WaveContainer className="relative mt-16 py-12">
-					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
+
+				<WaveContainer className="relative -mt-16">
+					<div className="max-w-7xl mx-auto px-4 pb-24">
 						<div className="text-center space-y-8 mb-12">
 							<div className="max-w-2xl mx-auto space-y-4">
 								<h2 className="text-3xl md:text-4xl font-display font-light text-white">
 									{t('sections.mixAndMatch')}
 								</h2>
-								<p className="text-lg text-cyan-100/80 font-display font-light">
-									Create a complete ecosystem by combining backgrounds with our decorations for a truly immersive aquascape
-								</p>
 							</div>
 
 							<Button
@@ -173,7 +167,7 @@ export default async function BackgroundsPage({ params }: Props) {
 						</div>
 
 						{/* Trust signals */}
-						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
+						{/* <div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
 								<span>{t('trustSignals.freeShipping')}</span>
@@ -186,7 +180,7 @@ export default async function BackgroundsPage({ params }: Props) {
 								<span className="text-cyan-300 text-lg">✓</span>
 								<span>{t('trustSignals.lifetimeWarranty')}</span>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</WaveContainer>
 			</main>

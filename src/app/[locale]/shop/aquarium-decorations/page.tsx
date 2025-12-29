@@ -141,19 +141,19 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 					</div>
 				</section>
 
-				<div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
+				{/* <div className="relative -mb-16 py-12 z-20 bg-transparent __rotate-180">
 					<WaveDivider position="bottom" color="black" />
-				</div>
+				</div> */}
 
 				{/* Safe for All Species */}
 				<section className="relative py-16 md:py-20 overflow-hidden">
-					<div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
+					<div className="absolute inset-0 bg-linear-to-br from-cyan-500/5 via-blue-500/5 to-transparent" />
 					<div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 					<div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
 
 					<div className="px-4 max-w-7xl mx-auto relative z-10">
 						<div className="grid md:grid-cols-2 gap-12 items-center">
-							<div className="relative aspect-square rounded-2xl overflow-hidden order-2 md:order-1 shadow-2xl">
+							<div className="relative aspect-square overflow-hidden order-2 md:order-1">
 								<Image
 									src="/media/images/additional-items_500px.webp"
 									alt="Neutral Materials"
@@ -217,16 +217,16 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 				</section>
 
 				{/* Mix & Match CTA */}
-				<WaveContainer className="relative mt-16 py-12">
-					<div className="max-w-7xl mx-auto px-4 pt-32 pb-24">
+				<WaveContainer className="relative -mt-16">
+					<div className="max-w-7xl mx-auto px-4 pb-24">
 						<div className="text-center space-y-8 mb-12">
 							<div className="max-w-2xl mx-auto space-y-4">
 								<h2 className="text-3xl md:text-4xl font-display font-light text-white">
 									{t('sections.mixAndMatch')}
 								</h2>
-								<p className="text-lg text-cyan-100/80 font-display font-light">
+								{/* <p className="text-lg text-cyan-100/80 font-display font-light">
 									Create a complete ecosystem by combining decorations with our custom 3D backgrounds for a truly immersive aquascape
-								</p>
+								</p> */}
 							</div>
 
 							<Button
@@ -243,7 +243,7 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 						</div>
 
 						{/* Trust signals */}
-						<div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
+						{/* <div className="flex flex-wrap items-center justify-center gap-8 text-sm font-display font-light text-white/90 pt-8 border-white/10">
 							<div className="flex items-center gap-2">
 								<span className="text-cyan-300 text-lg">✓</span>
 								<span>{t('trustSignals.freeShipping')}</span>
@@ -256,7 +256,7 @@ export default async function AquariumDecorationsPage({ params }: Props) {
 								<span className="text-cyan-300 text-lg">✓</span>
 								<span>{t('trustSignals.lifetimeWarranty')}</span>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</WaveContainer>
 			</main>
