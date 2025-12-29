@@ -31,60 +31,51 @@ export default function NotFound() {
 					<h2 className="text-3xl md:text-4xl font-display font-light">
 						{t('notFound.title')}
 					</h2>
-					<p className="text-lg text-muted-foreground font-display font-light leading-relaxed max-w-md mx-auto">
-						{t('notFound.description')}
-					</p>
+					<p
+						className="text-lg text-muted-foreground font-display font-light leading-relaxed max-w-md mx-auto"
+						dangerouslySetInnerHTML={{ __html: t.raw('notFound.description') }}
+					/>
 				</div>
 
 				{/* Quick Links */}
-				<div className="grid sm:grid-cols-3 gap-4 pt-4">
-					<Link
-						href="/shop"
-						className="group p-4 rounded-2xl border bg-card/50 hover:bg-card transition-all hover:scale-[1.02]"
-					>
-						<div className="text-sm font-display font-medium group-hover:text-primary transition-colors">
-							{t('notFound.links.shop')}
-						</div>
-					</Link>
-					<Link
-						href="/calculator"
-						className="group p-4 rounded-2xl border bg-card/50 hover:bg-card transition-all hover:scale-[1.02]"
-					>
-						<div className="text-sm font-display font-medium group-hover:text-primary transition-colors">
-							{t('notFound.links.calculator')}
-						</div>
-					</Link>
-					<Link
-						href="/faq"
-						className="group p-4 rounded-2xl border bg-card/50 hover:bg-card transition-all hover:scale-[1.02]"
-					>
-						<div className="text-sm font-display font-medium group-hover:text-primary transition-colors">
-							{t('notFound.links.faq')}
-						</div>
-					</Link>
-				</div>
-
-				{/* Actions */}
-				<div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-					<Button
-						onClick={() => window.history.back()}
-						variant="outline"
-						size="lg"
-						className="rounded-full"
-					>
-						<ArrowLeft className="mr-2 h-4 w-4" />
-						{t('notFound.goBack')}
-					</Button>
+				<div className="flex flex-wrap gap-3 justify-center pt-4">
 					<Link href="/">
 						<Button
 							size="lg"
-							className="rounded-full w-full sm:w-auto"
+							className="rounded-full cursor-pointer"
 						>
 							<Home className="mr-2 h-4 w-4" />
-							{t('notFound.goHome')}
+							{t('notFound.links.home')}
+						</Button>
+					</Link>
+					<Link href="/shop">
+						<Button
+							variant="outline"
+							size="lg"
+							className="rounded-full cursor-pointer"
+						>
+							{t('notFound.links.shop')}
+						</Button>
+					</Link>
+					<Link href="/calculator">
+						<Button
+							variant="outline"
+							size="lg"
+							className="rounded-full cursor-pointer"
+						>
+							{t('notFound.links.calculator')}
 						</Button>
 					</Link>
 				</div>
+
+				{/* Back Link */}
+				<button
+					onClick={() => window.history.back()}
+					className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors pt-2"
+				>
+					<ArrowLeft className="h-4 w-4" />
+					{t('notFound.goBack')}
+				</button>
 			</div>
 		</main>
 	);

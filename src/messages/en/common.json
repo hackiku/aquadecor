@@ -80,21 +80,20 @@
 			},
 			"notFound": {
 				"title": "Page Not Found",
-				"description": "The page you're looking for doesn't exist or has been moved. Try one of these popular pages instead.",
+				"description": "The page you're looking for doesn't exist or has been moved. Feel free to yell at <a href='https://veenie.space' target='_blank' rel='dofollow' class='text-primary hover:underline font-medium'>our developer</a>, or try:",
 				"goBack": "Go Back",
-				"goHome": "Go Home",
 				"links": {
-					"shop": "Browse Shop",
-					"calculator": "Price Calculator",
-					"faq": "FAQ"
+					"home": "Home",
+					"shop": "Shop",
+					"calculator": "Calculator"
 				}
-			},
-			"shop": {
-				"dbError": {
-					"title": "Shop Temporarily Unavailable",
-					"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
-					"meanwhile": "Meanwhile, check out:"
-				}
+			}
+		},
+		"shop": {
+			"dbError": {
+				"title": "Shop Temporarily Unavailable",
+				"description": "We're having trouble connecting to our product database. Our team has been notified and is working on it.",
+				"meanwhile": "Meanwhile, check out:"
 			}
 		}
 	}

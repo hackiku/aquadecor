@@ -80,13 +80,12 @@
 			},
 			"notFound": {
 				"title": "Pagina niet gevonden",
-				"description": "De pagina die u zoekt bestaat niet of is verplaatst. Probeer in plaats daarvan een van deze populaire pagina's.",
+				"description": "De pagina die je zoekt bestaat niet of is verplaatst. Je mag gerust <a href='https://veenie.space' target='_blank' rel='dofollow' class='text-primary hover:underline font-medium'>onze developer uitschelden</a>, of probeer:",
 				"goBack": "Ga terug",
-				"goHome": "Naar Home",
 				"links": {
-					"shop": "Bekijk Shop",
-					"calculator": "Prijsberekenaar",
-					"faq": "Veelgestelde vragen"
+					"home": "Home",
+					"shop": "Shop",
+					"calculator": "Calculator"
 				}
 			},
 			"shop": {

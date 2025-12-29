@@ -80,13 +80,12 @@
 			},
 			"notFound": {
 				"title": "Seite nicht gefunden",
-				"description": "Die von Ihnen gesuchte Seite existiert nicht oder wurde verschoben. Versuchen Sie stattdessen eine dieser beliebten Seiten.",
-				"goBack": "Zurückgehen",
-				"goHome": "Zur Startseite",
+				"description": "Die Seite, die du suchst, existiert nicht oder wurde verschoben. Du darfst gerne <a href='https://veenie.space' target='_blank' rel='dofollow' class='text-primary hover:underline font-medium'>unseren Entwickler anschreien</a>, oder versuche:",
+				"goBack": "Zurück",
 				"links": {
-					"shop": "Shop durchsuchen",
-					"calculator": "Preisrechner",
-					"faq": "FAQ"
+					"home": "Startseite",
+					"shop": "Shop",
+					"calculator": "Rechner"
 				}
 			},
 			"shop": {

@@ -80,13 +80,12 @@
 			},
 			"notFound": {
 				"title": "Pagina non trovata",
-				"description": "La pagina che stai cercando non esiste o è stata spostata. Prova invece una di queste pagine popolari.",
-				"goBack": "Torna indietro",
-				"goHome": "Torna alla Home",
+				"description": "La pagina che stai cercando non esiste o è stata spostata. Sentiti libero di in*zzarti con il nostro <a href='https://veenie.space' target='_blank' rel='dofollow' class='text-primary hover:underline font-medium'>sviluppatore Marchigiano</a>, oppure prova:",
+				"goBack": "Indietro",
 				"links": {
-					"shop": "Sfoglia lo Shop",
-					"calculator": "Calcolatore Prezzi",
-					"faq": "FAQ"
+					"home": "Home",
+					"shop": "Shop",
+					"calculator": "Calcolatore"
 				}
 			},
 			"shop": {
