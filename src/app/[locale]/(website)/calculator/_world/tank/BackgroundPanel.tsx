@@ -2,7 +2,7 @@
 "use client";
 
 import { ProceduralRockSheet } from "./ProceduralRockSheet";
-import type { SidePanelsType } from "../calculator-types";
+import type { SidePanelsType } from "../../calculator-types";
 
 interface BackgroundPanelProps {
 	width: number;       // cm - INTERNAL width

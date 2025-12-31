@@ -182,6 +182,61 @@ export const calculatorRouter = createTRPCRouter({
 			};
 		}),
 
+
+
+	// Add this endpoint to your calculator.ts router
+
+
+	// Get additional items (decorations) for calculator
+	getCalculatorAddons: publicProcedure
+		.input(z.object({
+			locale: z.string().default("en"),
+		}))
+		.query(async ({ ctx, input }) => {
+			// Fetch featured products from aquarium-decorations line
+			const results = await ctx.db
+				.select({
+					id: products.id,
+					name: productTranslations.name,
+					slug: products.slug,
+					sku: products.sku,
+					description: productTranslations.shortDescription,
+					baseRatePerSqM: productPricing.baseRatePerSqM,
+					image: media.storageUrl,
+					sortOrder: products.sortOrder,
+				})
+				.from(products)
+				.innerJoin(categories, eq(categories.id, products.categoryId))
+				.leftJoin(productTranslations, and(
+					eq(productTranslations.productId, products.id),
+					eq(productTranslations.locale, input.locale)
+				))
+				.leftJoin(productPricing, and(
+					eq(productPricing.productId, products.id),
+					eq(productPricing.isActive, true)
+				))
+				.leftJoin(media, and(
+					eq(media.productId, products.id),
+					eq(media.usageType, "product"),
+					eq(media.sortOrder, 0),
+					eq(media.isActive, true)
+				))
+				.where(and(
+					eq(categories.productLine, "aquarium-decorations"),
+					eq(products.isFeatured, true),
+					eq(products.isActive, true)
+				))
+				.orderBy(products.sortOrder);
+
+			return results.map(item => ({
+				id: item.id,
+				name: item.name || item.slug,
+				description: item.description || "Aquarium decoration",
+				priceCents: item.baseRatePerSqM || 2500, // Fallback to €25
+				image: item.image || "/media/images/decoration-placeholder.png",
+			}));
+		}),
+
 	createQuote: publicProcedure
 		.input(createQuoteSchema)
 		.mutation(async ({ ctx, input }) => {
