@@ -5,10 +5,11 @@ import { Package, AlertCircle } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { api, HydrateClient } from "~/trpc/server";
 import { ProductGrid } from "~/components/shop/product/ProductGrid";
-import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { db } from '~/server/db';
 import { categories, categoryTranslations } from '~/server/db/schema';
 import { eq, and } from 'drizzle-orm';
+// seo
+import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 
 // ⚡ ISR: Regenerate every hour
 export const revalidate = 3600;

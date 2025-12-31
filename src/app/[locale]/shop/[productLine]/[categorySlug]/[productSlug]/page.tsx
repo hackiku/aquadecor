@@ -19,6 +19,7 @@ import { getTranslations } from "next-intl/server";
 // seo
 import { generateSEOMetadata } from "~/i18n/seo/hreflang";
 import { generateProductSchema, generateBreadcrumbSchema } from "~/i18n/seo/json-ld";
+import { WaveDivider } from "~/components/ui/water/wave-divider";
 
 // ⚡ ISR: Regenerate pages every hour, but serve stale while revalidating
 export const revalidate = 3600; // 1 hour
@@ -391,10 +392,13 @@ export default async function ProductDetailPage({ params, searchParams }: Produc
 							</div>
 						</div>
 					</div>
+
 				</section>
+				
 
 				{productsForGrid.length > 0 && (
-					<section className="py-12 md:py-16 bg-muted/10">
+					<section className="py-12 md:py-16">
+						
 						<div className="px-4 max-w-7xl mx-auto space-y-8">
 							<h2 className="text-3xl font-display font-normal text-center">
 								{t('sections.moreFrom', { category: categoryDisplayName })}
