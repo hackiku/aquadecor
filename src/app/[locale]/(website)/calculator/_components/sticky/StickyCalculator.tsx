@@ -28,7 +28,7 @@ export function StickyCalculator({
 	hasSubcategory = false,
 	isVisible = true,
 }: StickyCalculatorProps) {
-	const { isCalculatorExpanded, setIsCalculatorExpanded } = useCalculatorLayout();
+	const { isCalculatorExpanded, setIsCalculatorExpanded, config } = useCalculatorLayout();
 	const [mobileDetailsOpen, setMobileDetailsOpen] = useState(false);
 
 	// Cleanup on unmount
@@ -116,7 +116,7 @@ export function StickyCalculator({
 							)}
 						>
 							<div className="p-4 space-y-4">
-								<PriceBreakdown estimate={estimate} />
+								<PriceBreakdown estimate={estimate} config={config} />
 
 								<div className="p-3 bg-accent/5 rounded-xl border flex items-center gap-3">
 									<div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">

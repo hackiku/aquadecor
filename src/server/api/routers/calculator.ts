@@ -14,6 +14,7 @@ import {
 import { eq, and, min, sql, desc } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
+// UPDATED: Schema now supports left/right individual panels and additional items
 const createQuoteSchema = z.object({
 	modelCategoryId: z.string().min(1),
 	subcategoryId: z.string().optional().nullable(),
@@ -24,7 +25,7 @@ const createQuoteSchema = z.object({
 		depth: z.number().optional(),
 	}),
 	unit: z.enum(["cm", "inch"]),
-	sidePanels: z.enum(["none", "single", "both"]),
+	sidePanels: z.enum(["none", "left", "right", "both"]), // UPDATED: Added left/right
 	sidePanelWidth: z.number().optional(),
 	filtrationType: z.string(),
 	filtrationCustomNotes: z.string().optional(),
@@ -32,6 +33,10 @@ const createQuoteSchema = z.object({
 	name: z.string().optional(),
 	email: z.string().email(),
 	notes: z.string().optional(),
+	additionalItems: z.array(z.object({ // NEW: Track additional items
+		id: z.string(),
+		quantity: z.number().min(1),
+	})).optional(),
 });
 
 export const calculatorRouter = createTRPCRouter({
@@ -120,9 +125,6 @@ export const calculatorRouter = createTRPCRouter({
 				return { products: [] };
 			}
 
-			// Import productTranslations at the top of file if not already
-			// import { productTranslations } from "~/server/db/schema";
-
 			// Fetch products with their translations and hero images
 			const productsWithMedia = await ctx.db
 				.select({
@@ -181,11 +183,6 @@ export const calculatorRouter = createTRPCRouter({
 				}))
 			};
 		}),
-
-
-
-	// Add this endpoint to your calculator.ts router
-
 
 	// Get additional items (decorations) for calculator
 	getCalculatorAddons: publicProcedure
@@ -288,11 +285,14 @@ export const calculatorRouter = createTRPCRouter({
 			const basePrice = Math.round(surfaceAreaM2 * baseRatePerSqMCents);
 			const flexUpcharge = input.flexibility === "flexible" ? Math.round(basePrice * 0.20) : 0;
 
+			// UPDATED: Side panel calculation for left/right/both
 			let sidePanelCost = 0;
 			if (input.sidePanels !== "none" && sidePanelWidthCm > 0) {
 				const panelAreaM2 = (sidePanelWidthCm * heightCm) / 10000;
 				const singlePanelCost = Math.round(panelAreaM2 * baseRatePerSqMCents);
-				sidePanelCost = input.sidePanels === "both" ? singlePanelCost * 2 : singlePanelCost;
+				// Both = 2 panels, left or right = 1 panel
+				const panelCount = input.sidePanels === "both" ? 2 : 1;
+				sidePanelCost = singlePanelCost * panelCount;
 			}
 
 			const filtrationCost = input.filtrationType !== "none" ? 5000 : 0;
@@ -315,11 +315,12 @@ export const calculatorRouter = createTRPCRouter({
 						height: input.dimensions.height,
 						depth: input.dimensions.depth,
 						unit: input.unit,
-						sidePanels: input.sidePanels,
+						sidePanels: input.sidePanels, // Now stores "left" | "right" | "both" | "none"
 						sidePanelWidth: input.sidePanelWidth,
 						filtrationCutout: input.filtrationType !== "none",
 						filtrationType: input.filtrationType,
-						notes: input.filtrationCustomNotes
+						notes: input.filtrationCustomNotes,
+						additionalItems: input.additionalItems, // Store additional items
 					} as any,
 					estimatedPriceEurCents: totalEstimatedCents,
 					status: "pending",

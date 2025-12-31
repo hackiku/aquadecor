@@ -6,7 +6,6 @@ import { UnitProvider } from "./_context/UnitContext";
 import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
 import { ProgressBar } from "./_components/sticky/ProgressBar";
 import { StickyCalculator } from "./_components/sticky/StickyCalculator";
-import { QuoteModal } from "./_components/quote/QuoteModal";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
 import { cn } from "~/lib/utils";
 
@@ -15,24 +14,25 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
 	const hasAutoExpanded = useRef(false);
 
-	const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 	const [config, setConfig] = useState<QuoteConfig | null>(null);
 	const [estimate, setEstimate] = useState<PriceEstimate | null>(null);
 	const [completionPercent, setCompletionPercent] = useState(0);
 
-	const handleQuoteSubmit = async (data: any) => {
-		console.log("Quote submission:", { config, estimate, ...data });
-		setIsQuoteModalOpen(false);
-		alert("Quote request submitted! We'll email you within 24 hours.");
-	};
-
-	const handleDepositPayment = async (data: any) => {
-		console.log("Deposit payment:", { config, estimate, ...data });
-		alert("Redirecting to payment...");
-	};
-
 	// Whether to show the calculator at all
 	const hasModelSelected = !!config?.modelCategory && !!estimate;
+
+	// Fallback estimate with all required fields
+	const fallbackEstimate: PriceEstimate = {
+		base: 0,
+		flexibility: 0,
+		sidePanels: 0,
+		filtration: 0,
+		additionalItems: 0, // Include additionalItems
+		subtotal: 0,
+		discount: 0,
+		total: 0,
+		surfaceAreaM2: 0.5,
+	};
 
 	return (
 		<UnitProvider>
@@ -41,9 +41,9 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 					isCalculatorExpanded,
 					setIsCalculatorExpanded,
 					hasAutoExpanded,
-					isQuoteModalOpen,
-					openQuoteModal: () => setIsQuoteModalOpen(true),
-					closeQuoteModal: () => setIsQuoteModalOpen(false),
+					isQuoteModalOpen: false, // Not used anymore but keep for compatibility
+					openQuoteModal: () => { }, // No-op
+					closeQuoteModal: () => { }, // No-op
 					config,
 					setConfig,
 					estimate,
@@ -52,7 +52,7 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 					setCompletionPercent,
 				}}
 			>
-				{/* Main Content Area - NO FRAMER MOTION */}
+				{/* Main Content Area */}
 				<div
 					className={cn(
 						"min-h-screen relative z-0 transition-[margin-right] duration-500 ease-out",
@@ -70,24 +70,12 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 				{/* The Calculator - ALWAYS RENDERED (just hidden until model selected) */}
 				<StickyCalculator
 					dimensions={config?.dimensions ?? { width: 100, height: 50, depth: 40 }}
-					estimate={estimate ?? { base: 0, flexibility: 0, sidePanels: 0, filtration: 0, subtotal: 0, discount: 0, total: 0, surfaceAreaM2: 0.5 }}
+					estimate={estimate ?? fallbackEstimate}
 					sidePanels={config?.sidePanels ?? "none"}
 					sidePanelWidth={config?.sidePanelWidth}
 					hasSubcategory={!!(config?.subcategory && config.subcategory !== "skip")}
 					isVisible={hasModelSelected}
 				/>
-
-				{/* Modal */}
-				{config && estimate && (
-					<QuoteModal
-						config={config}
-						estimate={estimate}
-						isOpen={isQuoteModalOpen}
-						onClose={() => setIsQuoteModalOpen(false)}
-						onSubmit={handleQuoteSubmit}
-						onDepositPayment={handleDepositPayment}
-					/>
-				)}
 			</CalculatorLayoutContext.Provider>
 		</UnitProvider>
 	);

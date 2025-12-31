@@ -14,8 +14,9 @@ import { FiltrationSelector } from "./options/FiltrationSelector";
 import { CountrySelect } from "./options/CountrySelect";
 import { useQuoteEstimate } from "../_hooks/useQuoteEstimate";
 import type { QuoteConfig, CalculatorCategory } from "../calculator-types";
-import { Button } from "~/components/ui/button";
 import { AdditionalItemsGrid } from "./product/AdditionalItemsGrid";
+import { QuoteSection } from "./quote/QuoteSection";
+import { api } from "~/trpc/react";
 
 
 const DEFAULT_CONFIG: QuoteConfig = {
@@ -41,11 +42,12 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 		setConfig,
 		setEstimate,
 		setCompletionPercent,
-		openQuoteModal,
 		setIsCalculatorExpanded,
 		hasAutoExpanded
 	} = useCalculatorLayout();
 
+	// tRPC mutation for quote submission
+	const createQuoteMutation = api.calculator.createQuote.useMutation();
 
 	// Sync local config and estimate to global layout context (for StickyCalculator)
 	useEffect(() => {
@@ -79,7 +81,7 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 		}
 	}, [localConfig.modelCategory, setIsCalculatorExpanded, hasAutoExpanded]);
 
-	// Handler for adding additional items
+	// Handler for adding additional items - FIXED TypeScript error
 	const handleAddItem = (itemId: string, quantity: number) => {
 		setLocalConfig((prev) => {
 			const currentItems = prev.additionalItems || [];
@@ -88,10 +90,13 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 			if (existingItemIndex >= 0) {
 				// Update existing item quantity
 				const updatedItems = [...currentItems];
-				updatedItems[existingItemIndex] = {
-					id: itemId,
-					quantity: updatedItems[existingItemIndex].quantity + quantity,
-				};
+				const existingItem = updatedItems[existingItemIndex];
+				if (existingItem) { // TypeScript safety check
+					updatedItems[existingItemIndex] = {
+						id: itemId,
+						quantity: existingItem.quantity + quantity,
+					};
+				}
 				return { ...prev, additionalItems: updatedItems };
 			} else {
 				// Add new item
@@ -101,6 +106,39 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 				};
 			}
 		});
+	};
+
+	// Handler for quote submission
+	const handleQuoteSubmit = async (data: { firstName: string; lastName: string; email: string; notes?: string }) => {
+		if (!localConfig.modelCategory) return;
+
+		try {
+			await createQuoteMutation.mutateAsync({
+				modelCategoryId: localConfig.modelCategory.id,
+				subcategoryId: localConfig.subcategory,
+				flexibility: localConfig.flexibility,
+				dimensions: {
+					width: localConfig.dimensions.width,
+					height: localConfig.dimensions.height,
+					depth: localConfig.dimensions.depth,
+				},
+				unit: localConfig.unit,
+				sidePanels: localConfig.sidePanels,
+				sidePanelWidth: localConfig.sidePanelWidth,
+				filtrationType: localConfig.filtrationType,
+				filtrationCustomNotes: localConfig.filtrationCustomNotes,
+				country: localConfig.country,
+				name: `${data.firstName} ${data.lastName}`,
+				email: data.email,
+				notes: data.notes,
+				additionalItems: localConfig.additionalItems,
+			});
+
+			console.log("Quote submitted successfully!");
+		} catch (error) {
+			console.error("Failed to submit quote:", error);
+			throw error;
+		}
 	};
 
 	const canRequestQuote = localConfig.modelCategory !== null && localConfig.country !== "";
@@ -199,36 +237,39 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 						<AdditionalItemsGrid onItemAdd={handleAddItem} />
 					</section>
 
-					{/* CTA Section */}
-					<section className="py-12">
-						<div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border-2 border-primary/20">
-							<div className="space-y-6 text-center">
-								<h2 className="text-3xl font-display font-light">
-									Ready to Get Your Custom Quote?
-								</h2>
-								<p className="text-muted-foreground font-display font-light text-lg">
-									Submit your configuration and receive a detailed quote within 24 hours.
-								</p>
+					{/* Quote Section - Replaces CTA + Modal */}
+					{canRequestQuote && (
+						<QuoteSection
+							config={localConfig}
+							estimate={estimate}
+							onSubmit={handleQuoteSubmit}
+						/>
+					)}
 
-								<Button
-									onClick={openQuoteModal}
-									disabled={!canRequestQuote}
-									className="w-full md:w-auto px-12 py-6 bg-primary text-white hover:bg-primary/90 font-display font-medium text-lg rounded-full shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-								>
-									{canRequestQuote
-										? "Request Custom Quote"
-										: "Complete configuration to continue"}
-								</Button>
-
-								{!canRequestQuote && (
-									<p className="text-sm text-muted-foreground font-display font-light">
-										{!localConfig.modelCategory && "• Select a model"}
-										{!localConfig.country && " • Choose shipping country"}
-									</p>
-								)}
+					{/* Show message if not ready */}
+					{!canRequestQuote && (
+						<section className="py-12">
+							<div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-muted/50 to-muted/30 rounded-2xl border-2 border-border">
+								<div className="space-y-4 text-center">
+									<h2 className="text-2xl font-display font-light">
+										Complete Configuration to Continue
+									</h2>
+									<div className="space-y-2">
+										{!localConfig.modelCategory && (
+											<p className="text-sm text-muted-foreground font-display font-light">
+												• Select a model
+											</p>
+										)}
+										{!localConfig.country && (
+											<p className="text-sm text-muted-foreground font-display font-light">
+												• Choose shipping country
+											</p>
+										)}
+									</div>
+								</div>
 							</div>
-						</div>
-					</section>
+						</section>
+					)}
 				</div>
 			)}
 		</div>
