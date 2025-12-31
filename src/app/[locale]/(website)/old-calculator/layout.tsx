@@ -1,6 +1,7 @@
 // src/app/(website)/calculator/layout.tsx
 "use client";
 
+import { motion } from "framer-motion";
 import { useState, useRef } from "react";
 import { UnitProvider } from "./_context/UnitContext";
 import { CalculatorLayoutContext } from "./_context/CalculatorLayoutContext";
@@ -8,10 +9,9 @@ import { ProgressBar } from "./_components/sticky/ProgressBar";
 import { StickyCalculator } from "./_components/sticky/StickyCalculator";
 import { QuoteModal } from "./_components/quote/QuoteModal";
 import type { QuoteConfig, PriceEstimate } from "./calculator-types";
-import { cn } from "~/lib/utils";
 
 export default function CalculatorLayout({ children }: { children: React.ReactNode }) {
-
+	
 	const [isCalculatorExpanded, setIsCalculatorExpanded] = useState(false);
 	const hasAutoExpanded = useRef(false);
 
@@ -31,9 +31,6 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 		alert("Redirecting to payment...");
 	};
 
-	// Whether to show the calculator at all
-	const hasModelSelected = !!config?.modelCategory && !!estimate;
-
 	return (
 		<UnitProvider>
 			<CalculatorLayoutContext.Provider
@@ -52,30 +49,37 @@ export default function CalculatorLayout({ children }: { children: React.ReactNo
 					setCompletionPercent,
 				}}
 			>
-				{/* Main Content Area - NO FRAMER MOTION */}
-				<div
-					className={cn(
-						"min-h-screen relative z-0 transition-[margin-right] duration-500 ease-out",
-						isCalculatorExpanded && hasModelSelected && "lg:mr-[400px]"
-					)}
+				{/* Main Content Area */}
+				<motion.div
+					animate={{
+						marginRight: isCalculatorExpanded ? "28rem" : "0",
+					}}
+					transition={{
+						duration: 0.5,
+						ease: [0.32, 0.72, 0, 1],
+					}}
+					className="will-change-[margin-right] min-h-screen relative z-0"
 				>
 					{children}
-				</div>
+				</motion.div>
 
 				{/* Progress Bar */}
-				{hasModelSelected && (
+				{config?.modelCategory && (
 					<ProgressBar completionPercent={completionPercent} />
 				)}
 
-				{/* The Calculator - ALWAYS RENDERED (just hidden until model selected) */}
-				<StickyCalculator
-					dimensions={config?.dimensions ?? { width: 100, height: 50, depth: 40 }}
-					estimate={estimate ?? { base: 0, flexibility: 0, sidePanels: 0, filtration: 0, subtotal: 0, discount: 0, total: 0, surfaceAreaM2: 0.5 }}
-					sidePanels={config?.sidePanels ?? "none"}
-					sidePanelWidth={config?.sidePanelWidth}
-					hasSubcategory={!!(config?.subcategory && config.subcategory !== "skip")}
-					isVisible={hasModelSelected}
-				/>
+				{/* The Calculator - NO TEXTURES */}
+				{config?.modelCategory && estimate && (
+					<StickyCalculator
+						dimensions={config.dimensions}
+						estimate={estimate}
+						sidePanels={config.sidePanels}
+						sidePanelWidth={config.sidePanelWidth}
+						hasSubcategory={!!config.subcategory && config.subcategory !== "skip"}
+					/>
+				)}
+
+
 
 				{/* Modal */}
 				{config && estimate && (

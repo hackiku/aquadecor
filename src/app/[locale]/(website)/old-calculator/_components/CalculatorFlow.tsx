@@ -1,7 +1,7 @@
 // src/app/(website)/calculator/_components/CalculatorFlow.tsx
 "use client";
 
-import { useState, useEffect, startTransition } from "react";
+import { useState, useEffect } from "react";
 
 import { useCalculatorLayout } from "../_context/CalculatorLayoutContext";
 import { ModelCategoryGrid } from "./product/ModelCategoryGrid";
@@ -15,7 +15,7 @@ import { CountrySelect } from "./options/CountrySelect";
 import { useQuoteEstimate } from "../_hooks/useQuoteEstimate";
 import type { QuoteConfig, CalculatorCategory } from "../calculator-types";
 import { Button } from "~/components/ui/button";
-import { AdditionalItemsGrid } from "./product/AdditionalItemsGrid";
+import { AdditionalItemCard } from "./product/AdditionalItemCard";
 
 
 const DEFAULT_CONFIG: QuoteConfig = {
@@ -64,17 +64,11 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 	}, [localConfig, estimate, setConfig, setEstimate, setCompletionPercent]);
 
 	// AUTO-EXPAND: When user selects a category, immediately expand the sticky calculator
-	// BUT: Use a micro-delay to allow React to finish rendering before expanding
 	useEffect(() => {
+		// Only expand if we have a category AND we haven't done it yet
 		if (localConfig.modelCategory && !hasAutoExpanded.current) {
-			// Use startTransition to defer this state update until React finishes current work
-			startTransition(() => {
-				// Small delay to let the SubcategorySelector mount and start its query
-				setTimeout(() => {
-					setIsCalculatorExpanded(true);
-					hasAutoExpanded.current = true;
-				}, 100); // 100ms delay - enough for tRPC to initialize
-			});
+			setIsCalculatorExpanded(true);
+			hasAutoExpanded.current = true; // Mark as done
 		}
 	}, [localConfig.modelCategory, setIsCalculatorExpanded, hasAutoExpanded]);
 
@@ -162,23 +156,21 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 					/>
 
 					{/* Step 7: additional items */}
-					<section className="py-12 space-y-6">
-						<div className="space-y-3">
-							<h2 className="text-2xl md:text-3xl font-display font-light">
-								7. Add Additional Items (Optional)
-							</h2>
-							<p className="text-muted-foreground font-display font-light text-lg">
-								Enhance your aquarium with our hand-crafted decorations and accessories.
-							</p>
-						</div>
 
-						<AdditionalItemsGrid
-							onItemAdd={(itemId, quantity) => {
-								// TODO: Store added items in localConfig
-								console.log(`Added ${quantity}x of ${itemId}`);
-							}}
-						/>
-					</section>
+					<div className="space-y-3">
+						<h2 className="text-2xl md:text-3xl font-display font-light">
+							Add additional items
+						</h2>
+						<p className="text-muted-foreground font-display font-light text-lg">
+							We recommend adding some of our hand-made additional items along with the backgrounds to enhance the beauty of your fish tank.
+						</p>
+					</div>
+					<div className="h-[50vh] w-full rounded-3xl border bg-card">
+					
+						{/* TODO: write additional item grid */}
+						{/* <AdditionalItemGrid /> */}
+						
+					</div>
 
 					{/* CTA Section */}
 					<section className="py-12">
