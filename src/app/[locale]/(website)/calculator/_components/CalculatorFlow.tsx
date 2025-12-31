@@ -31,6 +31,7 @@ const DEFAULT_CONFIG: QuoteConfig = {
 	sidePanels: "none",
 	filtrationType: "none",
 	country: "",
+	additionalItems: [], // Initialize empty array
 };
 
 export function CalculatorFlow({ initialCategories }: { initialCategories: CalculatorCategory[] }) {
@@ -78,6 +79,29 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 		}
 	}, [localConfig.modelCategory, setIsCalculatorExpanded, hasAutoExpanded]);
 
+	// Handler for adding additional items
+	const handleAddItem = (itemId: string, quantity: number) => {
+		setLocalConfig((prev) => {
+			const currentItems = prev.additionalItems || [];
+			const existingItemIndex = currentItems.findIndex((item) => item.id === itemId);
+
+			if (existingItemIndex >= 0) {
+				// Update existing item quantity
+				const updatedItems = [...currentItems];
+				updatedItems[existingItemIndex] = {
+					id: itemId,
+					quantity: updatedItems[existingItemIndex].quantity + quantity,
+				};
+				return { ...prev, additionalItems: updatedItems };
+			} else {
+				// Add new item
+				return {
+					...prev,
+					additionalItems: [...currentItems, { id: itemId, quantity }],
+				};
+			}
+		});
+	};
 
 	const canRequestQuote = localConfig.modelCategory !== null && localConfig.country !== "";
 
@@ -161,7 +185,7 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 						onChange={(country) => setLocalConfig({ ...localConfig, country })}
 					/>
 
-					{/* Step 7: additional items */}
+					{/* Step 7: Additional Items */}
 					<section className="py-12 space-y-6">
 						<div className="space-y-3">
 							<h2 className="text-2xl md:text-3xl font-display font-light">
@@ -172,12 +196,7 @@ export function CalculatorFlow({ initialCategories }: { initialCategories: Calcu
 							</p>
 						</div>
 
-						<AdditionalItemsGrid
-							onItemAdd={(itemId, quantity) => {
-								// TODO: Store added items in localConfig
-								console.log(`Added ${quantity}x of ${itemId}`);
-							}}
-						/>
+						<AdditionalItemsGrid onItemAdd={handleAddItem} />
 					</section>
 
 					{/* CTA Section */}

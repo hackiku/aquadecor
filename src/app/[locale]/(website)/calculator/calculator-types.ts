@@ -26,7 +26,7 @@ export interface CalculatorSubcategory {
 // --- Configuration Types ---
 
 export type FlexibilityType = "solid" | "flexible";
-export type SidePanelsType = "none" | "single" | "both";
+export type SidePanelsType = "none" | "left" | "right" | "both"; // UPDATED: Now supports individual sides
 export type Unit = "cm" | "inch";
 
 export type FiltrationType =
@@ -59,6 +59,7 @@ export interface QuoteConfig {
 	name?: string;
 	email?: string;
 	notes?: string;
+	additionalItems?: Array<{ id: string; quantity: number }>; // NEW: Track additional items
 }
 
 export interface PriceEstimate {

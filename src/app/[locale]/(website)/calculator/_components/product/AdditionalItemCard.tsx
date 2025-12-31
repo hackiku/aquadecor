@@ -38,7 +38,7 @@ export function AdditionalItemCard({
 	const handleAdd = () => {
 		if (quantity > 0) {
 			onAdd(quantity);
-			// Optional: Reset quantity or show success state
+			setQuantity(0); // Reset after adding
 		}
 	};
 
@@ -102,7 +102,7 @@ export function AdditionalItemCard({
 							<Button
 								variant="ghost"
 								size="icon"
-								className="h-8 w-8 rounded-md hover:bg-background hover:text-destructive"
+								className="h-8 w-8 rounded-md hover:bg-background hover:text-destructive cursor-pointer"
 								onClick={() => setQuantity(Math.max(0, quantity - 1))}
 								disabled={quantity === 0}
 							>
@@ -112,7 +112,7 @@ export function AdditionalItemCard({
 							<Button
 								variant="ghost"
 								size="icon"
-								className="h-8 w-8 rounded-md hover:bg-background hover:text-primary"
+								className="h-8 w-8 rounded-md hover:bg-background hover:text-primary cursor-pointer"
 								onClick={() => setQuantity(quantity + 1)}
 							>
 								<Plus className="h-3 w-3" />
@@ -125,7 +125,7 @@ export function AdditionalItemCard({
 							onClick={handleAdd}
 							disabled={quantity === 0}
 							className={cn(
-								"flex-1 gap-2 transition-all",
+								"flex-1 gap-2 transition-all cursor-pointer",
 								quantity > 0 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted"
 							)}
 						>

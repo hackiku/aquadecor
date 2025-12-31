@@ -1,4 +1,4 @@
-// src/app/(website)/calculator/_world/BackgroundPanel.tsx
+// src/app/(website)/calculator/_world/tank/BackgroundPanel.tsx
 "use client";
 
 import { ProceduralRockSheet } from "./ProceduralRockSheet";
@@ -27,6 +27,10 @@ export function BackgroundPanel({
 	const sideDm = sidePanelWidth / 10;
 	const dDm = depth / 10;
 
+	// Determine which panels to show
+	const showLeftPanel = sidePanels === "left" || sidePanels === "both";
+	const showRightPanel = sidePanels === "right" || sidePanels === "both";
+
 	return (
 		<group>
 			{/* --- BACK PANEL --- */}
@@ -44,7 +48,7 @@ export function BackgroundPanel({
 			</group>
 
 			{/* --- RIGHT PANEL --- */}
-			{(sidePanels === "single" || sidePanels === "both") && (
+			{showRightPanel && (
 				<group
 					position={[wDm / 2 - dDm / 2, 0, sideDm / 2]}
 					rotation={[0, -Math.PI / 2, 0]}
@@ -62,7 +66,7 @@ export function BackgroundPanel({
 			)}
 
 			{/* --- LEFT PANEL --- */}
-			{sidePanels === "both" && (
+			{showLeftPanel && (
 				<group
 					position={[-wDm / 2 + dDm / 2, 0, sideDm / 2]}
 					rotation={[0, Math.PI / 2, 0]}
