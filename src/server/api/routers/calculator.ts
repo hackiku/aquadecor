@@ -1,5 +1,3 @@
-// src/server/api/routers/calculator.ts
-
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import {
@@ -11,10 +9,14 @@ import {
 	categoryTranslations,
 	media
 } from "~/server/db/schema";
-import { eq, and, min, sql, desc } from "drizzle-orm";
+import { eq, and, min, sql, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { calculateQuote } from "~/lib/calculator/engine";
 
-// UPDATED: Schema now supports left/right individual panels and additional items
+// ============================================================================
+// VALIDATION SCHEMAS
+// ============================================================================
+
 const createQuoteSchema = z.object({
 	modelCategoryId: z.string().min(1),
 	subcategoryId: z.string().optional().nullable(),
@@ -25,27 +27,31 @@ const createQuoteSchema = z.object({
 		depth: z.number().optional(),
 	}),
 	unit: z.enum(["cm", "inch"]),
-	sidePanels: z.enum(["none", "left", "right", "both"]), // UPDATED: Added left/right
+	sidePanels: z.enum(["none", "left", "right", "both"]),
 	sidePanelWidth: z.number().optional(),
 	filtrationType: z.string(),
 	filtrationCustomNotes: z.string().optional(),
 	country: z.string().min(1),
+	// Contact Info
 	name: z.string().optional(),
 	email: z.string().email(),
 	notes: z.string().optional(),
-	additionalItems: z.array(z.object({ // NEW: Track additional items
+	// Addons
+	additionalItems: z.array(z.object({
 		id: z.string(),
 		quantity: z.number().min(1),
 	})).optional(),
 });
 
+// ============================================================================
+// ROUTER
+// ============================================================================
+
 export const calculatorRouter = createTRPCRouter({
 
-	// Get calculator categories (models) with their category-level placeholder images
+	// 1. Get Models (Categories)
 	getCalculatorModels: publicProcedure
-		.input(z.object({
-			locale: z.string().default("en"),
-		}))
+		.input(z.object({ locale: z.string().default("en") }))
 		.query(async ({ ctx, input }) => {
 			const results = await ctx.db
 				.select({
@@ -88,119 +94,83 @@ export const calculatorRouter = createTRPCRouter({
 
 			return results.map(cat => ({
 				...cat,
+				// Fallback rate if none found (25000 cents = €250)
 				baseRatePerM2: cat.baseRatePerSqM ? cat.baseRatePerSqM / 100 : 250,
 				hasSubcategories: cat.productCount > 1,
-				// Use category image or fallback
 				textureUrl: cat.image || "/media/images/background-placeholder.png"
 			}));
 		}),
 
-	// NEW: Get subcategories (products) for a specific category with their product images
+	// 2. Get Subcategories (Products)
 	getSubcategories: publicProcedure
 		.input(z.object({
-			categoryId: z.string().optional(),
 			categorySlug: z.string().optional(),
 			locale: z.string().default("en"),
 		}))
 		.query(async ({ ctx, input }) => {
-			if (!input.categoryId && !input.categorySlug) {
-				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message: "Either categoryId or categorySlug is required"
-				});
-			}
+			if (!input.categorySlug) return { products: [] };
 
-			// Find category first
-			const categoryFilter = input.categoryId
-				? eq(categories.id, input.categoryId)
-				: eq(categories.slug, input.categorySlug!);
-
-			const category = await ctx.db
-				.select({ id: categories.id })
-				.from(categories)
-				.where(categoryFilter)
-				.limit(1);
-
-			if (!category[0]) {
-				return { products: [] };
-			}
-
-			// Fetch products with their translations and hero images
-			const productsWithMedia = await ctx.db
+			// Join Categories -> Products -> Media -> Pricing -> Translations
+			const rows = await ctx.db
 				.select({
 					id: products.id,
 					slug: products.slug,
 					sku: products.sku,
-					// Get translated fields
 					name: productTranslations.name,
 					shortDescription: productTranslations.shortDescription,
-					baseRatePerSqM: productPricing.baseRatePerSqM,
-					// Get the hero image (sortOrder 0) or first available
+					baseRate: productPricing.baseRatePerSqM,
 					heroImage: media.storageUrl,
-					sortOrder: products.sortOrder,
 				})
-				.from(products)
+				.from(categories)
+				.innerJoin(products, eq(products.categoryId, categories.id))
 				.leftJoin(productTranslations, and(
 					eq(productTranslations.productId, products.id),
 					eq(productTranslations.locale, input.locale)
 				))
-				.leftJoin(productPricing, and(
-					eq(productPricing.productId, products.id),
-					eq(productPricing.isActive, true)
-				))
+				.leftJoin(productPricing, eq(productPricing.productId, products.id))
 				.leftJoin(media, and(
 					eq(media.productId, products.id),
-					eq(media.usageType, "product"),
-					eq(media.sortOrder, 0), // Hero image priority
-					eq(media.isActive, true)
+					eq(media.sortOrder, 0)
 				))
 				.where(and(
-					eq(products.categoryId, category[0].id),
+					eq(categories.slug, input.categorySlug),
 					eq(products.isActive, true)
 				))
 				.orderBy(products.sortOrder);
 
-			// Group by product to get unique products with their first hero image
-			const uniqueProducts = new Map();
-			for (const p of productsWithMedia) {
-				if (!uniqueProducts.has(p.id)) {
-					uniqueProducts.set(p.id, p);
-				}
+			// Remove duplicates (if any) and format
+			const unique = new Map();
+			for (const r of rows) {
+				if (!unique.has(r.id)) unique.set(r.id, r);
 			}
 
-			// Format response with fallback images
 			return {
-				products: Array.from(uniqueProducts.values()).map(p => ({
+				products: Array.from(unique.values()).map(p => ({
 					id: p.id,
 					slug: p.slug,
 					sku: p.sku,
-					name: p.name || p.slug, // Fallback to slug if no translation
-					shortDescription: p.shortDescription || "Custom fit design",
-					baseRatePerM2: p.baseRatePerSqM ? p.baseRatePerSqM / 100 : 250,
-					// CRITICAL: Use product image with proper fallback
-					heroImageUrl: p.heroImage || "/media/images/background-placeholder.png",
-					textureUrl: p.heroImage || "/media/images/background-placeholder.png",
+					name: p.name || p.slug,
+					shortDescription: p.shortDescription,
+					baseRatePerM2: p.baseRate ? p.baseRate / 100 : 250,
+					heroImageUrl: p.heroImage,
+					textureUrl: p.heroImage, // Using hero as texture for now
 				}))
 			};
 		}),
 
-	// Get additional items (decorations) for calculator
+	// 3. Get Addons
 	getCalculatorAddons: publicProcedure
-		.input(z.object({
-			locale: z.string().default("en"),
-		}))
+		.input(z.object({ locale: z.string().default("en") }))
 		.query(async ({ ctx, input }) => {
-			// Fetch featured products from aquarium-decorations line
-			const results = await ctx.db
+			const items = await ctx.db
 				.select({
 					id: products.id,
 					name: productTranslations.name,
 					slug: products.slug,
-					sku: products.sku,
+					// ADDED: Fetch the description
 					description: productTranslations.shortDescription,
-					baseRatePerSqM: productPricing.baseRatePerSqM,
+					basePrice: productPricing.unitPriceEurCents,
 					image: media.storageUrl,
-					sortOrder: products.sortOrder,
 				})
 				.from(products)
 				.innerJoin(categories, eq(categories.id, products.categoryId))
@@ -208,144 +178,203 @@ export const calculatorRouter = createTRPCRouter({
 					eq(productTranslations.productId, products.id),
 					eq(productTranslations.locale, input.locale)
 				))
-				.leftJoin(productPricing, and(
-					eq(productPricing.productId, products.id),
-					eq(productPricing.isActive, true)
-				))
+				.leftJoin(productPricing, eq(productPricing.productId, products.id))
 				.leftJoin(media, and(
 					eq(media.productId, products.id),
-					eq(media.usageType, "product"),
-					eq(media.sortOrder, 0),
-					eq(media.isActive, true)
+					eq(media.sortOrder, 0)
 				))
 				.where(and(
 					eq(categories.productLine, "aquarium-decorations"),
 					eq(products.isFeatured, true),
 					eq(products.isActive, true)
-				))
-				.orderBy(products.sortOrder);
+				));
 
-			return results.map(item => ({
-				id: item.id,
-				name: item.name || item.slug,
-				description: item.description || "Aquarium decoration",
-				priceCents: item.baseRatePerSqM || 2500, // Fallback to €25
-				image: item.image || "/media/images/decoration-placeholder.png",
+			return items.map(i => ({
+				id: i.id,
+				name: i.name || i.slug,
+				// ADDED: Pass it through
+				description: i.description,
+				priceCents: i.basePrice || 0,
+				image: i.image
 			}));
 		}),
 
+	// 4. Create Quote (The Big Logic)
 	createQuote: publicProcedure
 		.input(createQuoteSchema)
 		.mutation(async ({ ctx, input }) => {
-			let baseRatePerSqMCents = 0;
-			let productIdResolved: string | undefined = undefined;
+			// A. Resolve Base Rate & Strategy Flags
+			// We try to find the specific product (subcategory) rate first.
+			// If that fails or isn't selected, we fallback to the Category's default rate.
 
+			let baseRateCents = 25000; // Default €250
+			let categorySlug = "";
+
+			// Try fetching specific product pricing
 			if (input.subcategoryId && input.subcategoryId !== "skip") {
-				const productPrice = await ctx.db
-					.select({ rate: productPricing.baseRatePerSqM, id: products.id })
+				const productData = await ctx.db
+					.select({
+						rate: productPricing.baseRatePerSqM,
+						catSlug: categories.slug
+					})
 					.from(products)
+					.innerJoin(categories, eq(categories.id, products.categoryId))
 					.leftJoin(productPricing, eq(productPricing.productId, products.id))
 					.where(eq(products.id, input.subcategoryId))
 					.limit(1);
 
-				if (productPrice.length > 0 && productPrice[0]?.rate) {
-					baseRatePerSqMCents = productPrice[0].rate;
-					productIdResolved = productPrice[0].id;
+				if (productData[0]) {
+					if (productData[0].rate) baseRateCents = productData[0].rate;
+					categorySlug = productData[0].catSlug;
 				}
 			}
 
-			if (baseRatePerSqMCents === 0) {
-				const category = await ctx.db
-					.select({ id: categories.id })
+			// If no product found or skipped, get Category defaults
+			if (!categorySlug) {
+				const catData = await ctx.db
+					.select({
+						slug: categories.slug,
+						// Get lowest rate in category as fallback
+						minRate: min(productPricing.baseRatePerSqM)
+					})
 					.from(categories)
-					.where(input.modelCategoryId.includes("-")
-						? eq(categories.slug, input.modelCategoryId)
-						: eq(categories.id, input.modelCategoryId)
-					)
+					.leftJoin(products, eq(products.categoryId, categories.id))
+					.leftJoin(productPricing, eq(productPricing.productId, products.id))
+					.where(eq(categories.id, input.modelCategoryId))
+					.groupBy(categories.id, categories.slug)
 					.limit(1);
 
-				if (category.length > 0 && category[0]) {
-					const minRate = await ctx.db
-						.select({ minRate: min(productPricing.baseRatePerSqM) })
-						.from(products)
-						.leftJoin(productPricing, eq(productPricing.productId, products.id))
-						.where(eq(products.categoryId, category[0].id));
-
-					baseRatePerSqMCents = minRate[0]?.minRate ?? 25000;
-				} else {
-					baseRatePerSqMCents = 25000;
+				if (catData[0]) {
+					categorySlug = catData[0].slug;
+					if (catData[0].minRate) baseRateCents = catData[0].minRate;
 				}
 			}
 
-			const widthCm = input.unit === "inch" ? input.dimensions.width * 2.54 : input.dimensions.width;
-			const heightCm = input.unit === "inch" ? input.dimensions.height * 2.54 : input.dimensions.height;
-			const sidePanelWidthCm = input.sidePanelWidth ? (input.unit === "inch" ? input.sidePanelWidth * 2.54 : input.sidePanelWidth) : 0;
+			// B. Calculate Additional Items Cost
+			let additionalItemsTotalCents = 0;
+			if (input.additionalItems && input.additionalItems.length > 0) {
+				const itemIds = input.additionalItems.map(i => i.id);
+				const itemPrices = await ctx.db
+					.select({
+						id: products.id,
+						price: productPricing.unitPriceEurCents
+					})
+					.from(products)
+					.leftJoin(productPricing, eq(productPricing.productId, products.id))
+					.where(inArray(products.id, itemIds));
 
-			const surfaceAreaM2 = (widthCm * heightCm) / 10000;
-			const basePrice = Math.round(surfaceAreaM2 * baseRatePerSqMCents);
-			const flexUpcharge = input.flexibility === "flexible" ? Math.round(basePrice * 0.20) : 0;
+				// Map prices for O(1) lookup
+				const priceMap = new Map(itemPrices.map(i => [i.id, i.price || 0]));
 
-			// UPDATED: Side panel calculation for left/right/both
-			let sidePanelCost = 0;
-			if (input.sidePanels !== "none" && sidePanelWidthCm > 0) {
-				const panelAreaM2 = (sidePanelWidthCm * heightCm) / 10000;
-				const singlePanelCost = Math.round(panelAreaM2 * baseRatePerSqMCents);
-				// Both = 2 panels, left or right = 1 panel
-				const panelCount = input.sidePanels === "both" ? 2 : 1;
-				sidePanelCost = singlePanelCost * panelCount;
+				for (const item of input.additionalItems) {
+					const price = priceMap.get(item.id) || 0;
+					additionalItemsTotalCents += price * item.quantity;
+				}
 			}
 
-			const filtrationCost = input.filtrationType !== "none" ? 5000 : 0;
-			const totalEstimatedCents = basePrice + flexUpcharge + sidePanelCost + filtrationCost;
+			// C. Run The Math Engine
+			// Helper to convert Zod input to Engine input
+			const isInch = input.unit === "inch";
 
+			const strategy = resolvePricingStrategy(categorySlug);
+
+			const calculation = calculateQuote({
+				widthCm: isInch ? input.dimensions.width * 2.54 : input.dimensions.width,
+				heightCm: isInch ? input.dimensions.height * 2.54 : input.dimensions.height,
+				baseRatePerM2Cents: baseRateCents,
+				countryCode: input.country,
+
+				// Strategy Flags
+				isPremiumModel: strategy.isPremium,
+				isLargeTankPenalty: strategy.isLargeTankPenalty,
+
+				// User Options
+				isFlexible: input.flexibility === "flexible",
+				hasFiltration: input.filtrationType !== "none",
+				sidePanelsCount: input.sidePanels === "both" ? 2 : (input.sidePanels !== "none" ? 1 : 0),
+				sidePanelWidthCm: input.sidePanelWidth ? (isInch ? input.sidePanelWidth * 2.54 : input.sidePanelWidth) : 0,
+			});
+
+			const finalTotalCents = calculation.totalCents + additionalItemsTotalCents;
+
+			// D. Save to DB
 			const fullName = input.name?.trim() ?? "Guest";
-			const spaceIdx = fullName.indexOf(" ");
-			const firstName = spaceIdx > 0 ? fullName.substring(0, spaceIdx) : fullName;
-			const lastName = spaceIdx > 0 ? fullName.substring(spaceIdx + 1) : "";
+			const [firstName, ...rest] = fullName.split(" ");
+			const lastName = rest.join(" ");
 
-			try {
-				const [savedQuote] = await ctx.db.insert(quotes).values({
-					productId: productIdResolved,
-					email: input.email,
-					firstName: firstName,
-					lastName: lastName,
-					country: input.country,
-					dimensions: {
-						width: input.dimensions.width,
-						height: input.dimensions.height,
-						depth: input.dimensions.depth,
-						unit: input.unit,
-						sidePanels: input.sidePanels, // Now stores "left" | "right" | "both" | "none"
-						sidePanelWidth: input.sidePanelWidth,
-						filtrationCutout: input.filtrationType !== "none",
-						filtrationType: input.filtrationType,
-						notes: input.filtrationCustomNotes,
-						additionalItems: input.additionalItems, // Store additional items
-					} as any,
-					estimatedPriceEurCents: totalEstimatedCents,
-					status: "pending",
-					customerNotes: input.notes,
-				}).returning();
+			const [savedQuote] = await ctx.db.insert(quotes).values({
+				// Product ID is nullable in your schema, linking to the specific design if chosen
+				productId: (input.subcategoryId && input.subcategoryId !== "skip") ? input.subcategoryId : undefined,
+				email: input.email,
+				firstName: firstName || "Guest",
+				lastName: lastName || "",
+				country: input.country,
 
-				if (!savedQuote) {
-					throw new TRPCError({
-						code: "INTERNAL_SERVER_ERROR",
-						message: "Failed to return quote ID"
-					});
+				// Store the full configuration
+				dimensions: {
+					width: input.dimensions.width,
+					height: input.dimensions.height,
+					depth: input.dimensions.depth,
+					unit: input.unit,
+					sidePanels: input.sidePanels,
+					sidePanelWidth: input.sidePanelWidth,
+					filtrationType: input.filtrationType,
+					notes: input.filtrationCustomNotes,
+					additionalItems: input.additionalItems
+				},
+
+				estimatedPriceEurCents: finalTotalCents,
+				status: "pending",
+				customerNotes: input.notes,
+			}).returning();
+
+			if (!savedQuote) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+			// E. Return
+			return {
+				success: true,
+				quoteId: savedQuote.id,
+				estimatedPriceEur: finalTotalCents / 100,
+				breakdown: {
+					...calculation,
+					additionalItemsCents: additionalItemsTotalCents
 				}
-
-				return {
-					success: true,
-					quoteId: savedQuote.id,
-					estimatedPriceEur: totalEstimatedCents / 100,
-				};
-
-			} catch (error) {
-				console.error("Quote submission error:", error);
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: "Could not submit quote. Please try again."
-				});
-			}
+			};
 		}),
 });
+
+
+// ============================================================================
+// HELPER: STRATEGY RESOLVER
+// ============================================================================
+
+/**
+ * Maps legacy "Strategy" logic to boolean flags based on category slug.
+ * This effectively replaces the "StrategyResolver" and "Factory" classes 
+ * from the old C# backend.
+ */
+function resolvePricingStrategy(categorySlug: string): { isPremium: boolean; isLargeTankPenalty: boolean } {
+	const slug = categorySlug.toLowerCase();
+
+	// 1. Premium Models (Old: ExpensiveShippingBackgroundCalculationStrategy)
+	// These models are complex and cost 50% more base rate.
+	// You should verify these slugs against your actual DB data.
+	const premiumSlugs = [
+		"massive-rock",
+		"canyon-rock",
+		"premium-slate"
+	];
+
+	// 2. Large Tank Penalty (Old: ExpensiveSquareMeterBackgroundCalculationStrategy)
+	// These models get expensive only if they are huge (>2m2)
+	const penaltySlugs = [
+		"amazon",
+		"river-bed",
+		"roots"
+	];
+
+	return {
+		isPremium: premiumSlugs.some(s => slug.includes(s)),
+		isLargeTankPenalty: penaltySlugs.some(s => slug.includes(s)),
+	};
+}

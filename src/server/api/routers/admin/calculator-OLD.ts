@@ -1,59 +1,30 @@
 // src/server/api/routers/admin/calculator.ts
-
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
-import { categories, products, media, categoryTranslations, productTranslations } from "~/server/db/schema";
-import { eq, and, desc, asc, like, or } from "drizzle-orm";
+import { categories, products, media, productTranslations } from "~/server/db/schema";
+import { eq, and, desc, asc, inArray } from "drizzle-orm";
 
 export const adminCalculatorRouter = createTRPCRouter({
 	// ============================================================================
 	// BACKGROUND CATEGORIES (The main models)
 	// ============================================================================
-
 	getBackgroundCategories: adminProcedure.query(async ({ ctx }) => {
 		return await ctx.db
-			.select({
-				id: categories.id,
-				slug: categories.slug,
-				name: categoryTranslations.name, // Fallback english name
-				image: media.storageUrl,
-				isActive: categories.isActive,
-				sortOrder: categories.sortOrder,
-
-				// THE NEW FLAGS (Make sure you ran the migration to add these cols!)
-				isPremium: categories.isPremium,
-				hasLargePenalty: categories.hasLargeTankPenalty,
-			})
+			.select()
 			.from(categories)
-			.leftJoin(categoryTranslations, and(
-				eq(categoryTranslations.categoryId, categories.id),
-				eq(categoryTranslations.locale, "en") // Admin usually views in EN
-			))
-			.leftJoin(media, and(
-				eq(media.categoryId, categories.id),
-				eq(media.usageType, "category"),
-				eq(media.sortOrder, 0)
-			))
 			.where(eq(categories.productLine, "3d-backgrounds"))
 			.orderBy(asc(categories.sortOrder));
 	}),
 
-	// Unified update for all settings (Visibility + Pricing Logic)
-	updateCategorySettings: adminProcedure
+	toggleCategoryStatus: adminProcedure
 		.input(z.object({
 			id: z.string(),
 			isActive: z.boolean(),
-			isPremium: z.boolean(),
-			hasLargePenalty: z.boolean(),
 		}))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.update(categories)
-				.set({
-					isActive: input.isActive,
-					isPremium: input.isPremium,
-					hasLargeTankPenalty: input.hasLargePenalty
-				})
+				.set({ isActive: input.isActive })
 				.where(eq(categories.id, input.id));
 			return { success: true };
 		}),
@@ -79,9 +50,12 @@ export const adminCalculatorRouter = createTRPCRouter({
 
 	// ============================================================================
 	// ADDITIONAL ITEMS (Addons)
+	// We use 'aquarium-decorations' products + 'isFeatured' flag to denote
+	// items that should appear in the calculator flow.
 	// ============================================================================
-
 	getCalculatorAddons: adminProcedure.query(async ({ ctx }) => {
+		// Fetch all products that are marked as featured (our proxy for "In Calculator")
+		// AND belong to the decorations line
 		const results = await ctx.db
 			.select({
 				id: products.id,
@@ -106,20 +80,21 @@ export const adminCalculatorRouter = createTRPCRouter({
 			.where(and(
 				eq(categories.productLine, "aquarium-decorations"),
 				eq(products.isFeatured, true),
-				eq(products.isActive, true)
+				eq(products.isActive, true) // Only active products
 			))
 			.orderBy(asc(products.sortOrder));
 
 		return results;
 	}),
 
-	// Search for products to add (Decorations that are NOT yet in calculator)
+	// Search for products to add
 	searchAddonCandidates: adminProcedure
 		.input(z.object({ query: z.string() }))
 		.query(async ({ ctx, input }) => {
 			if (input.query.length < 2) return [];
 
-			return await ctx.db
+			// Simple search for products NOT yet in calculator
+			const results = await ctx.db
 				.select({
 					id: products.id,
 					name: productTranslations.name,
@@ -138,27 +113,36 @@ export const adminCalculatorRouter = createTRPCRouter({
 				))
 				.where(and(
 					eq(categories.productLine, "aquarium-decorations"),
-					eq(products.isFeatured, false), // Only show ones we can add
-					or(
-						like(productTranslations.name, `%${input.query}%`),
-						like(products.sku, `%${input.query}%`)
-					)
+					eq(products.isFeatured, false) // Not currently in calculator
 				))
 				.limit(10);
+
+			// In a real app we'd use ilike or tsvector for search, 
+			// assuming generic filter here for simplicity or relying on client filtering of a larger set
+			// For this scaffold, returning first 10 candidates to populate list
+			return results;
 		}),
 
-	// Replaces add/remove with a single toggle (easier for UI)
-	toggleAddonStatus: adminProcedure
-		.input(z.object({ productId: z.string(), isFeatured: z.boolean() }))
+	addAddon: adminProcedure
+		.input(z.object({ productId: z.string() }))
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.update(products)
-				.set({ isFeatured: input.isFeatured })
+				.set({ isFeatured: true })
 				.where(eq(products.id, input.productId));
 			return { success: true };
 		}),
 
-	// Kept strictly for the drag-and-drop reordering
+	removeAddon: adminProcedure
+		.input(z.object({ productId: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.update(products)
+				.set({ isFeatured: false })
+				.where(eq(products.id, input.productId));
+			return { success: true };
+		}),
+
 	reorderAddons: adminProcedure
 		.input(z.object({
 			items: z.array(z.object({

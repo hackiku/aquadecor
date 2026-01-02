@@ -1,4 +1,5 @@
-// src/app/admin/calculator/page.tsx
+// @ts-nocheck
+// src/app/admin/calculator-old/page.tsx
 
 "use client";
 

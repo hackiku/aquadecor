@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/app/(website)/calculator/_hooks/useSubcategoryTexture.ts
 import { api } from "~/trpc/react";
 

@@ -18,6 +18,10 @@ export const categories = createTable(
 		sortOrder: d.integer().default(0).notNull(),
 		isActive: d.boolean().default(true).notNull(),
 
+		// for calculator
+		isPremium: d.boolean().default(false).notNull(),
+		hasLargeTankPenalty: d.boolean().default(false).notNull(),
+
 		contentBlocks: jsonb().$type<{
 			icon?: string;
 			emoji?: string;
@@ -332,10 +336,12 @@ export const quotes = createTable(
 			height: number;
 			depth?: number;
 			unit: "cm" | "inch";
-			sidePanels: "none" | "single" | "both";
+			sidePanels: "none" | "left" | "right" | "both";
 			sidePanelWidth?: number;
 			filtrationCutout?: boolean;
+			filtrationType: string;
 			notes?: string;
+			additionalItems?: Array<{ id: string; quantity: number }>; // for calculator quotes
 		}>(),
 
 		estimatedPriceEurCents: d.integer().notNull(),

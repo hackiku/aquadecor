@@ -14,11 +14,13 @@ import { adminMediaRouter } from "./routers/admin/media";
 import { adminCategoryRouter } from "~/server/api/routers/admin/category";
 import { adminProductRouter } from "~/server/api/routers/admin/product";
 import { adminPricingRouter } from "./routers/admin/pricing";
-import { adminCalculatorRouter } from "./routers/admin/calculator";
-import { adminOrderRouter } from "./routers/admin/order";
 import { adminPromoterRouter } from "./routers/admin/promoter";
 import { adminSaleRouter } from "./routers/admin/sale";
 import { adminFaqRouter } from "./routers/admin/faq";
+// selling
+import { adminCalculatorRouter } from "./routers/admin/calculator";
+import { adminQuoteRouter } from "./routers/admin/quote";
+import { adminOrderRouter } from "./routers/admin/order";
 // payments
 import { checkoutRouter } from "./routers/checkout";
 // TEMPORARY: Supabase testing router (delete after migration)
@@ -46,6 +48,7 @@ export const appRouter = createTRPCRouter({
 		pricing: adminPricingRouter,
 		media: adminMediaRouter, // Admin media (old CDN)
 		calculator: adminCalculatorRouter,
+		quote: adminQuoteRouter,
 		order: adminOrderRouter,
 		promoter: adminPromoterRouter,
 		sale: adminSaleRouter,
