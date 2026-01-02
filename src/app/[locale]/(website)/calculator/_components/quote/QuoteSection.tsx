@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Button } from "~/components/ui/button";
 import type { QuoteConfig, PriceEstimate } from "../../calculator-types";
 import { formatEUR } from "../../_hooks/useQuoteEstimate";
@@ -22,7 +22,7 @@ export function QuoteSection({ config, estimate, onSubmit }: QuoteSectionProps) 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => { 
 		e.preventDefault();
 		setIsSubmitting(true);
 

@@ -2,8 +2,8 @@
 
 import { z } from "zod";
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
-import { quotes, orders, orderItems, products, productTranslations } from "~/server/db/schema";
-import { eq, desc, asc, like, or, and, sql } from "drizzle-orm";
+import { quotes, orders, orderItems, products, productTranslations, emailSubscribers } from "~/server/db/schema";
+import { eq, desc, asc, like, or, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 export const adminQuoteRouter = createTRPCRouter({
@@ -89,29 +89,57 @@ export const adminQuoteRouter = createTRPCRouter({
 			const orderNumber = `ORD-${year}-${random}`;
 
 			return await ctx.db.transaction(async (tx) => {
+				// A.5. Check for subscriber discount
+				const subscriber = await tx.query.emailSubscribers.findFirst({
+					where: and(
+						eq(emailSubscribers.email, quote.email),
+						eq(emailSubscribers.isActive, true),
+						eq(emailSubscribers.discountUsed, false)
+					)
+				});
+
+				// Calculate discount if subscriber exists
+				const discountAmount = subscriber ? Math.round(quote.estimatedPriceEurCents * 0.1) : 0; // 10% off
+				const finalTotal = quote.estimatedPriceEurCents - discountAmount;
+
 				// B. Insert Order Header
-				const [newOrder] = await tx.insert(orders).values({
+				const newOrders = await tx.insert(orders).values({
 					orderNumber: orderNumber,
 					email: quote.email,
-					firstName: quote.firstName,
-					lastName: quote.lastName,
+					firstName: quote.firstName ?? undefined,
+					lastName: quote.lastName ?? undefined,
 
-					// Money Logic
+					// Money Logic (with subscriber discount)
 					subtotal: quote.estimatedPriceEurCents,
+					discount: discountAmount,
 					shipping: 0, // Shipping is technically inside the estimated price in your calculator logic
 					tax: 0,
-					total: quote.estimatedPriceEurCents,
+					total: finalTotal,
 					currency: "EUR",
 					market: "ROW", // Defaulting to ROW, or map from quote.country
-					countryCode: quote.country,
+					countryCode: quote.country ?? undefined,
+
+					// Subscriber linking
+					discountCode: subscriber?.discountCode ?? undefined,
+					subscriberId: subscriber?.id ?? undefined,
 
 					status: "pending", // Waiting for payment
 					paymentStatus: "pending",
 
 					// Link back to source
-					internalNotes: `Generated from Quote ID: ${quote.id}`,
-					customerNotes: quote.customerNotes,
+					internalNotes: subscriber
+						? `Generated from Quote ID: ${quote.id}. Subscriber discount (${subscriber.discountCode}) applied.`
+						: `Generated from Quote ID: ${quote.id}`,
+					customerNotes: quote.customerNotes ?? undefined,
 				}).returning();
+
+				const newOrder = newOrders[0];
+				if (!newOrder) {
+					throw new TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: "Failed to create order"
+					});
+				}
 
 				// C. Insert Order Item (The Custom Background)
 				// We need to construct the JSONB snapshot
@@ -119,7 +147,7 @@ export const adminQuoteRouter = createTRPCRouter({
 
 				await tx.insert(orderItems).values({
 					orderId: newOrder.id,
-					productId: quote.productId || "CUSTOM-BG-ID", // Fallback if no specific product linked
+					productId: quote.productId ?? "CUSTOM-BG-ID", // Fallback if no specific product linked
 					productName: "Custom 3D Background Configuration", // Or fetch real name
 					sku: "CUSTOM-CFG",
 
@@ -159,10 +187,24 @@ export const adminQuoteRouter = createTRPCRouter({
 
 				// D. Mark Quote as Accepted
 				await tx.update(quotes)
-					.set({ status: "accepted", finalPriceEurCents: quote.estimatedPriceEurCents })
+					.set({ status: "accepted", finalPriceEurCents: finalTotal })
 					.where(eq(quotes.id, quote.id));
 
-				return { orderId: newOrder.id };
+				// E. Mark subscriber discount as used (if applicable)
+				if (subscriber) {
+					await tx.update(emailSubscribers)
+						.set({
+							discountUsed: true,
+							discountUsedAt: new Date()
+						})
+						.where(eq(emailSubscribers.id, subscriber.id));
+				}
+
+				return {
+					orderId: newOrder.id,
+					discountApplied: !!subscriber,
+					discountAmount: discountAmount,
+				};
 			});
 		}),
 });

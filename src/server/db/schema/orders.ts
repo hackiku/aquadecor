@@ -6,10 +6,11 @@ import { products } from "./shop";
 import { promoters } from "./promoters";
 import { sales } from "./sales";
 import { countries } from "./countries";
+import { emailSubscribers } from "./subscribers";
 
 // ============================================================================
 // ORDERS
-// Full order lifecycle from cart → checkout → payment → fulfillment
+// Full order lifecycle from cart â†’ checkout â†’ payment â†’ fulfillment
 // ============================================================================
 
 export const orders = createTable(
@@ -49,6 +50,7 @@ export const orders = createTable(
 		discountCode: d.text(), // Code used (e.g., "JOEY15")
 		promoterId: d.text().references(() => promoters.id),
 		saleId: d.text().references(() => sales.id),
+		subscriberId: d.text().references(() => emailSubscribers.id), // For subscriber discounts
 
 		// Shipping
 		shippingAddress: jsonb().$type<{
@@ -89,6 +91,7 @@ export const orders = createTable(
 		index("order_discount_code_idx").on(t.discountCode),
 		index("order_promoter_idx").on(t.promoterId),
 		index("order_sale_idx").on(t.saleId),
+		index("order_subscriber_idx").on(t.subscriberId),
 		index("order_created_at_idx").on(t.createdAt),
 	],
 );
@@ -210,6 +213,10 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
 	sale: one(sales, {
 		fields: [orders.saleId],
 		references: [sales.id],
+	}),
+	subscriber: one(emailSubscribers, {
+		fields: [orders.subscriberId],
+		references: [emailSubscribers.id],
 	}),
 }));
 
