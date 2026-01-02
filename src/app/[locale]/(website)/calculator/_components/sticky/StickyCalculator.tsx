@@ -10,6 +10,7 @@ import { useCalculatorLayout } from "../../_context/CalculatorLayoutContext";
 import { ChevronUp, ChevronDown, Maximize2 } from "lucide-react";
 import type { Dimensions, PriceEstimate, SidePanelsType } from "../../calculator-types";
 import { cn } from "~/lib/utils";
+import { VeenieKitBadge } from "../VeenieKitBadge";
 
 interface StickyCalculatorProps {
 	dimensions: Dimensions;
@@ -73,6 +74,8 @@ export function StickyCalculator({
 								cameraPreset="default"
 							/>
 						</div>
+						
+						
 
 						{/* Unit Toggle */}
 						<div className="absolute top-2 left-2 z-10 hidden lg:block">
@@ -91,6 +94,10 @@ export function StickyCalculator({
 
 					{/* DETAILS PANEL */}
 					<div className="flex-1 bg-card flex flex-col min-h-0 relative z-10 animate-in slide-in-from-bottom-10 duration-500">
+						
+						<div className="mx-auto mt-2">
+							<VeenieKitBadge />
+						</div>
 						{/* MOBILE HEADER */}
 						<div className="lg:hidden shrink-0 border-t bg-card">
 							<button
